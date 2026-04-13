@@ -1,0 +1,20 @@
+CD nama-folder
+npm init -y
+npm install -D tailwindcss
+buat folder assets/src
+buat file input.css
+
+isi input.css dengan
+
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #1fb6ff;
+  --font-sans: "Inter", sans-serif;
+}
+
+lanjut ke terminal dan jalankan perintah berikut untuk membangun file CSS akhir:
+npx tailwindcss -i assets/src/input.css -o assets/src/output.css --watch
+
+tambahkan link ke output.css di file HTMLnya:
+<link href="assets/src/output.css" rel="stylesheet">
