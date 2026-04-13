@@ -134,8 +134,17 @@
     let tutorialRunTriggered = false;
     let tutorialMinimized = false;
     let tutorialAutoMinimized = false;
+    let tutorialRestoreTimeout = null;
+
+    function clearTutorialRestoreTimeout() {
+        if (tutorialRestoreTimeout) {
+            clearTimeout(tutorialRestoreTimeout);
+            tutorialRestoreTimeout = null;
+        }
+    }
 
     function minimizeTutorialPanel() {
+        clearTutorialRestoreTimeout();
         if (!tutorialPanel || !tutorialMinimizedBar) return;
         tutorialPanel.classList.add('hidden');
         tutorialMinimizedBar.classList.remove('hidden');
@@ -144,6 +153,7 @@
     }
 
     function restoreTutorialPanel() {
+        clearTutorialRestoreTimeout();
         if (!tutorialPanel || !tutorialMinimizedBar) return;
         tutorialMinimizedBar.classList.add('hidden');
         tutorialPanel.classList.remove('hidden');
@@ -152,6 +162,7 @@
     }
 
     function autoMinimizeTutorialPanel() {
+        clearTutorialRestoreTimeout();
         if (!tutorialPanel || !tutorialMinimizedBar || tutorialMinimized) return;
         tutorialPanel.classList.add('hidden');
         tutorialMinimizedBar.classList.remove('hidden');
@@ -211,9 +222,15 @@
             const nextText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
             btnNextTut.innerText = nextText;
             if (tutorialMinimized && nextText.includes('Benar! Lanjut')) {
-                restoreTutorialPanel();
+                clearTutorialRestoreTimeout();
+                tutorialRestoreTimeout = setTimeout(() => {
+                    if (tutorialMinimized && !tutorialAutoMinimized) {
+                        restoreTutorialPanel();
+                    }
+                }, 3000);
             }
         } else {
+            clearTutorialRestoreTimeout();
             btnNextTut.disabled = true;
             btnNextTut.className = "px-5 py-2 bg-slate-300 text-slate-500 rounded-lg font-bold transition-all cursor-not-allowed";
             btnNextTut.innerText = step.requireRun ? "Tunggu Dijalankan..." : "Susun Blok...";
