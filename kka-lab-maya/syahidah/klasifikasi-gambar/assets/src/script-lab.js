@@ -563,7 +563,7 @@ function showResult(actualType) {
         let sisaPersen = 100 - maxPct;
 
         if (noiseMistakes > 0) {
-            alasan = `Akurasi KA dipengaruhi oleh <b>${noiseMistakes} data tidak relevan (misalnya apel/mobil)</b> yang dimasukkan ke kotak hewan di tahap latih. KA mendeteksi pola dari benda tersebut sebagai ciri-ciri hewan, yang menyebabkan hasil prediksi menjadi tidak akurat.`;
+            alasan = `Akurasi KA dipengaruhi oleh <b>${noiseMistakes} data tidak relevan </b> yang dimasukkan ke kotak hewan di tahap latih. KA mendeteksi pola dari benda tersebut sebagai ciri-ciri hewan, yang menyebabkan hasil prediksi menjadi tidak akurat.`;
         } else if (isRealAnomaly) {
             alasan = `Gambar ini adalah <b>Data Baru</b> yang belum pernah diajarkan. KA memecah gambar dan mencari pola <b>garis, warna, dan bentuk</b>. Karena pola pada gambar ini tidak memiliki kecocokan yang kuat dengan data latih, KA mendeteksi kemiripan terdekat dengan <b>${winningCat.name}</b> sebesar ${maxPct}%.`;
         } else {
