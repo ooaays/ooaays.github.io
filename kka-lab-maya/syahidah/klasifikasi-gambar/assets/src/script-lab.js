@@ -1,549 +1,622 @@
-    // ================= ENGINE STATE =================
-    let isRunning = false; let currentRunId = 0; 
-    let activeSprite = 'robot'; let idCounter = 0;
+// === Palet Warna Realistis Hewan ===
+const colorsKucing = ["#f97316", "#94a3b8", "#475569", "#fcd34d", "#d1d5db", "#fb923c"];
+const colorsAnjing = ["#d97706", "#78716c", "#292524", "#fef3c7", "#8b4513", "#a8a29e"];
+const colorsKuda = ["#57534e", "#78716c", "#44403c", "#d6d3d1", "#8b4513", "#292524"];
+const colorsSinga = ["#fbbf24", "#f59e0b", "#d97706", "#eab308", "#b45309", "#fcd34d"];
+
+// === Generator SVG Hewan ===
+function getCatSVG(color, pose) {
+    let p = pose; let inner = '';
     
-    let globalVars = { battery: 90, answer: "" };
-    let messagesFired = {}; let messageResolvers = []; // Untuk sinkronisasi event
-    const appData = { robot: { scripts: [] }, battery: { scripts: [] } }; 
+    if (p === 0) {
+        inner = `<path d="M 130 160 C 170 160 180 110 160 90" fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"/><ellipse cx="100" cy="145" rx="40" ry="45" fill="${color}" /><polygon points="55,40 50,90 95,70" fill="${color}" /><polygon points="145,40 150,90 105,70" fill="${color}" /><ellipse cx="100" cy="90" rx="50" ry="42" fill="${color}" /><circle cx="75" cy="85" r="8" fill="#fff" /><circle cx="75" cy="85" r="4" fill="#1e293b" /><circle cx="125" cy="85" r="8" fill="#fff" /><circle cx="125" cy="85" r="4" fill="#1e293b" /><polygon points="95,100 105,100 100,106" fill="#fda4af" />`;
+    } else if (p === 1) {
+        inner = `<g transform="translate(10, 10) rotate(15, 100, 100)"><path d="M 130 160 C 170 160 180 110 160 90" fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"/><ellipse cx="100" cy="145" rx="40" ry="45" fill="${color}" /><polygon points="55,40 50,90 95,70" fill="${color}" /><polygon points="145,40 150,90 105,70" fill="${color}" /><ellipse cx="100" cy="90" rx="50" ry="42" fill="${color}" /><circle cx="75" cy="85" r="8" fill="#fff" /><circle cx="75" cy="85" r="4" fill="#1e293b" /><circle cx="125" cy="85" r="8" fill="#fff" /><circle cx="125" cy="85" r="4" fill="#1e293b" /><polygon points="95,100 105,100 100,106" fill="#fda4af" /></g>`;
+    } else if (p === 2) {
+        inner = `<path d="M 140 160 C 180 160 185 120 150 110" fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"/><ellipse cx="105" cy="155" rx="50" ry="30" fill="${color}" /><ellipse cx="65" cy="145" rx="40" ry="35" fill="${color}" /><polygon points="35,120 30,80 65,110" fill="${color}" /><polygon points="85,110 95,70 65,100" fill="${color}" /><path d="M 45 145 Q 55 155 65 145" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/><path d="M 75 145 Q 85 155 95 145" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/><circle cx="70" cy="155" r="3" fill="#fda4af" />`;
+    } else if (p === 3) {
+        inner = `<path d="M 130 100 Q 150 40 160 30" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round"/><rect x="50" y="90" width="80" height="45" rx="22" fill="${color}" /><rect x="60" y="120" width="12" height="40" rx="6" fill="${color}" /><rect x="80" y="120" width="12" height="40" rx="6" fill="${color}" /><rect x="110" y="120" width="12" height="40" rx="6" fill="${color}" /><ellipse cx="50" cy="90" rx="35" ry="30" fill="${color}" /><polygon points="25,70 20,30 50,55" fill="${color}" /><polygon points="75,70 80,30 50,55" fill="${color}" /><circle cx="40" cy="85" r="5" fill="#fff" /><circle cx="40" cy="85" r="2.5" fill="#1e293b" /><circle cx="65" cy="85" r="5" fill="#fff" /><circle cx="65" cy="85" r="2.5" fill="#1e293b" /><polygon points="50,95 56,95 53,100" fill="#fda4af" />`;
+    } else if (p === 4) {
+        inner = `<path d="M 130 160 C 170 160 180 110 160 90" fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"/><ellipse cx="100" cy="145" rx="40" ry="45" fill="${color}" /><polygon points="55,40 50,90 95,70" fill="${color}" /><polygon points="145,40 150,90 105,70" fill="${color}" /><ellipse cx="100" cy="90" rx="50" ry="42" fill="${color}" /><ellipse cx="140" cy="120" rx="12" ry="18" fill="#fff" opacity="0.9" transform="rotate(45, 140, 120)" /><ellipse cx="85" cy="180" rx="12" ry="15" fill="#fff" opacity="0.9"/><circle cx="75" cy="85" r="8" fill="#fff" /><circle cx="75" cy="85" r="4" fill="#1e293b" /><circle cx="125" cy="85" r="8" fill="#fff" /><circle cx="125" cy="85" r="4" fill="#1e293b" /><polygon points="95,100 105,100 100,106" fill="#fda4af" />`;
+    } else {
+        inner = `<g transform="translate(0, 30)"><path d="M 100 120 C 140 120 150 90 140 60" fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"/><ellipse cx="100" cy="100" rx="40" ry="30" fill="${color}" /><polygon points="55,0 50,50 95,30" fill="${color}" /><polygon points="145,0 150,50 105,30" fill="${color}" /><ellipse cx="100" cy="50" rx="50" ry="42" fill="${color}" /><circle cx="75" cy="45" r="8" fill="#fff" /><circle cx="75" cy="45" r="4" fill="#1e293b" /><circle cx="125" cy="45" r="8" fill="#fff" /><circle cx="125" cy="45" r="4" fill="#1e293b" /><polygon points="95,60 105,60 100,66" fill="#fda4af" /></g>`;
+    }
     
-    const initialSpriteState = {
-        robot: { x: 0, y: 0, visible: true },
-        battery: { x: 100, y: 100, visible: true }
+    if (pose >= 4) {
+        return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" /><g transform="translate(200, 0) scale(-1, 1)">${inner}</g></svg>`;
+    }
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" />${inner}</svg>`;
+}
+
+function getDogSVG(color, pose) {
+    let p = pose; let inner = '';
+    if (p === 0) {
+        inner = `<path d="M 60 180 C 60 120, 140 120, 140 180 Z" fill="${color}" /><ellipse cx="100" cy="95" rx="45" ry="40" fill="${color}" /><path d="M 65 75 C 30 70, 30 140, 50 135 C 65 130, 70 100, 70 85 Z" fill="${color}" /><path d="M 135 75 C 170 70, 170 140, 150 135 C 135 130, 130 100, 130 85 Z" fill="${color}" /><ellipse cx="100" cy="110" rx="28" ry="22" fill="#fff" opacity="0.9" /><ellipse cx="100" cy="100" rx="12" ry="8" fill="#1e293b" /><ellipse cx="80" cy="80" rx="6" ry="9" fill="#1e293b" /><ellipse cx="120" cy="80" rx="6" ry="9" fill="#1e293b" />`;
+    } else if (p === 1) {
+        inner = `<g transform="translate(0, 5) rotate(-5, 100, 100)"><path d="M 60 180 C 60 120, 140 120, 140 180 Z" fill="${color}" /><ellipse cx="100" cy="95" rx="45" ry="40" fill="${color}" /><path d="M 65 75 C 20 60, 10 90, 30 110 C 50 120, 70 100, 70 85 Z" fill="${color}" /><path d="M 135 75 C 180 60, 190 90, 170 110 C 150 120, 130 100, 130 85 Z" fill="${color}" /><ellipse cx="100" cy="110" rx="28" ry="22" fill="#fff" opacity="0.9" /><ellipse cx="100" cy="100" rx="12" ry="8" fill="#1e293b" /><ellipse cx="80" cy="80" rx="6" ry="9" fill="#1e293b" /><ellipse cx="120" cy="80" rx="6" ry="9" fill="#1e293b" /></g>`;
+    } else if (p === 2) {
+        inner = `<path d="M 60 180 C 60 120, 140 120, 140 180 Z" fill="${color}" /><ellipse cx="100" cy="95" rx="45" ry="40" fill="${color}" /><path d="M 65 75 C 30 40, 40 10, 50 35 C 60 50, 70 80, 70 85 Z" fill="${color}" /><path d="M 135 75 C 170 70, 170 140, 150 135 C 135 130, 130 100, 130 85 Z" fill="${color}" /><ellipse cx="100" cy="110" rx="28" ry="22" fill="#fff" opacity="0.9" /><path d="M 90 120 C 90 140, 110 140, 110 120 Z" fill="#f43f5e" /><ellipse cx="100" cy="100" rx="12" ry="8" fill="#1e293b" /><circle cx="80" cy="80" r="10" fill="#fff" /><circle cx="80" cy="80" r="6" fill="#1e293b" /><circle cx="120" cy="80" r="10" fill="#fff" /><circle cx="120" cy="80" r="6" fill="#1e293b" />`;
+    } else if (p === 3) {
+        inner = `<ellipse cx="100" cy="160" rx="60" ry="25" fill="${color}" /><ellipse cx="35" cy="165" rx="20" ry="12" fill="${color}" /><ellipse cx="165" cy="165" rx="20" ry="12" fill="${color}" /><ellipse cx="100" cy="115" rx="40" ry="35" fill="${color}" /><path d="M 65 100 C 30 95, 30 140, 50 135 C 65 130, 70 115, 70 105 Z" fill="${color}" /><path d="M 135 100 C 170 95, 170 140, 150 135 C 135 130, 130 115, 130 105 Z" fill="${color}" /><ellipse cx="100" cy="125" rx="22" ry="16" fill="#fff" opacity="0.9" /><ellipse cx="100" cy="118" rx="10" ry="6" fill="#1e293b" /><path d="M 80 100 Q 85 95 90 100" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/><path d="M 110 100 Q 115 95 120 100" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>`;
+    } else if (p === 4) {
+        inner = `<ellipse cx="100" cy="140" rx="35" ry="50" fill="${color}" /><ellipse cx="70" cy="180" rx="16" ry="12" fill="${color}" /><ellipse cx="130" cy="180" rx="16" ry="12" fill="${color}" /><ellipse cx="85" cy="130" rx="12" ry="20" fill="${color}" transform="rotate(30, 85, 130)" /><ellipse cx="115" cy="130" rx="12" ry="20" fill="${color}" transform="rotate(-30, 115, 130)" /><ellipse cx="100" cy="85" rx="45" ry="40" fill="${color}" /><path d="M 65 65 C 30 60, 30 130, 50 125 C 65 120, 70 90, 70 75 Z" fill="${color}" /><path d="M 135 65 C 170 60, 170 130, 150 125 C 135 120, 130 90, 130 75 Z" fill="${color}" /><ellipse cx="100" cy="100" rx="28" ry="22" fill="#fff" opacity="0.9" /><ellipse cx="100" cy="90" rx="12" ry="8" fill="#1e293b" /><ellipse cx="80" cy="70" rx="6" ry="9" fill="#1e293b" /><ellipse cx="120" cy="70" rx="6" ry="9" fill="#1e293b" />`;
+    } else {
+        inner = `<g transform="rotate(-15, 100, 150)"><path d="M 60 160 C 60 100, 140 80, 140 140 Z" fill="${color}" /><ellipse cx="55" cy="160" rx="16" ry="12" fill="${color}" /><ellipse cx="145" cy="140" rx="16" ry="12" fill="${color}" /><ellipse cx="100" cy="120" rx="45" ry="40" fill="${color}" /><path d="M 65 100 C 30 95, 30 165, 50 160 C 65 155, 70 125, 70 110 Z" fill="${color}" /><path d="M 135 100 C 170 95, 170 165, 150 160 C 135 155, 130 125, 130 110 Z" fill="${color}" /><ellipse cx="100" cy="135" rx="28" ry="22" fill="#fff" opacity="0.9" /><ellipse cx="100" cy="125" rx="12" ry="8" fill="#1e293b" /><ellipse cx="80" cy="105" rx="6" ry="9" fill="#1e293b" /><ellipse cx="120" cy="105" rx="6" ry="9" fill="#1e293b" /></g>`;
+    }
+    
+    if (pose >= 4) {
+        return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" /><g transform="translate(200, 0) scale(-1, 1)">${inner}</g></svg>`;
+    }
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" />${inner}</svg>`;
+}
+
+function getHorseSVG(color, pose) {
+    let p = pose; let inner = '';
+    if (p === 0) {
+        inner = `<path d="M 50 140 C 50 110, 130 110, 140 140 C 140 160, 50 160, 50 140 Z" fill="${color}" /><rect x="60" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="80" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="110" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="130" y="140" width="10" height="35" rx="4" fill="${color}" /><path d="M 120 115 C 140 70, 160 50, 155 40 C 135 30, 115 70, 110 110 Z" fill="${color}" /><ellipse cx="155" cy="55" rx="14" ry="26" fill="${color}" transform="rotate(30, 155, 55)" /><polygon points="125,40 135,20 145,40" fill="${color}" /><path d="M 115 95 C 105 75, 120 40, 130 35" fill="none" stroke="#292524" stroke-width="8" stroke-linecap="round" /><circle cx="145" cy="50" r="3" fill="#fff" /><circle cx="145" cy="50" r="2" fill="#1e293b" />`;
+    } else if (p === 1) {
+        inner = `<g transform="translate(-5, 0)"><path d="M 50 140 C 50 110, 130 110, 140 140 C 140 160, 50 160, 50 140 Z" fill="${color}" /><rect x="60" y="140" width="10" height="35" rx="4" fill="${color}" transform="rotate(20, 60, 140)" /><rect x="80" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="110" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="130" y="140" width="10" height="35" rx="4" fill="${color}" transform="rotate(-15, 130, 140)" /><path d="M 120 115 C 140 70, 160 50, 155 40 C 135 30, 115 70, 110 110 Z" fill="${color}" /><ellipse cx="155" cy="55" rx="14" ry="26" fill="${color}" transform="rotate(30, 155, 55)" /><polygon points="125,40 135,20 145,40" fill="${color}" /><path d="M 115 95 C 105 75, 120 40, 130 35" fill="none" stroke="#292524" stroke-width="8" stroke-linecap="round" /><circle cx="145" cy="50" r="3" fill="#fff" /><circle cx="145" cy="50" r="2" fill="#1e293b" /></g>`;
+    } else if (p === 2) {
+        inner = `<path d="M 50 140 C 50 110, 130 110, 140 140 C 140 160, 50 160, 50 140 Z" fill="${color}" /><rect x="60" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="80" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="110" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="130" y="140" width="10" height="35" rx="4" fill="${color}" /><g transform="translate(15, 40) rotate(55, 120, 115)"><path d="M 120 115 C 140 70, 160 50, 155 40 C 135 30, 115 70, 110 110 Z" fill="${color}" /><ellipse cx="155" cy="55" rx="14" ry="26" fill="${color}" transform="rotate(30, 155, 55)" /><polygon points="125,40 135,20 145,40" fill="${color}" /><path d="M 115 95 C 105 75, 120 40, 130 35" fill="none" stroke="#292524" stroke-width="8" stroke-linecap="round" /><circle cx="145" cy="50" r="3" fill="#fff" /><circle cx="145" cy="50" r="2" fill="#1e293b" /></g>`;
+    } else if (p === 3) {
+        inner = `<g transform="translate(-10, 40) rotate(-25, 100, 150)"><path d="M 50 140 C 50 110, 130 110, 140 140 C 140 160, 50 160, 50 140 Z" fill="${color}" /><rect x="60" y="140" width="10" height="35" rx="4" fill="${color}" /><rect x="80" y="140" width="10" height="35" rx="4" fill="${color}" /><path d="M 115 140 L 115 160 L 125 165 L 125 140 Z" fill="${color}" /><path d="M 135 140 L 135 160 L 145 165 L 145 140 Z" fill="${color}" /><path d="M 120 115 C 140 70, 160 50, 155 40 C 135 30, 115 70, 110 110 Z" fill="${color}" /><ellipse cx="155" cy="55" rx="14" ry="26" fill="${color}" transform="rotate(30, 155, 55)" /><polygon points="125,40 135,20 145,40" fill="${color}" /><path d="M 115 95 C 105 75, 120 40, 130 35" fill="none" stroke="#292524" stroke-width="8" stroke-linecap="round" /><circle cx="145" cy="50" r="3" fill="#fff" /><circle cx="145" cy="50" r="2" fill="#1e293b" /></g>`;
+    } else if (p === 4) {
+        inner = `<path d="M 60 200 C 60 120, 140 120, 140 200 Z" fill="${color}" /><path d="M 100 150 C 140 70, 160 40, 150 30 C 120 10, 90 70, 80 130 Z" fill="${color}" /><ellipse cx="150" cy="50" rx="18" ry="35" fill="${color}" transform="rotate(35, 150, 50)" /><polygon points="110,30 125,5 140,30" fill="${color}" /><path d="M 100 110 C 85 80, 110 30, 125 20" fill="none" stroke="#292524" stroke-width="12" stroke-linecap="round" /><circle cx="135" cy="45" r="5" fill="#fff" /><circle cx="135" cy="45" r="3" fill="#1e293b" />`;
+    } else {
+        inner = `<path d="M 40 160 C 40 130, 140 130, 150 160 Z" fill="${color}" /><rect x="50" y="150" width="30" height="10" rx="4" fill="${color}" transform="rotate(-20, 50, 150)" /><rect x="110" y="150" width="30" height="10" rx="4" fill="${color}" /><path d="M 140 140 C 160 100, 170 80, 160 70 C 140 60, 120 100, 110 130 Z" fill="${color}" /><ellipse cx="160" cy="85" rx="10" ry="20" fill="${color}" transform="rotate(30, 160, 85)" /><polygon points="140,65 150,45 160,65" fill="${color}" /><path d="M 135 115 C 125 95, 140 65, 150 60" fill="none" stroke="#292524" stroke-width="6" stroke-linecap="round" /><circle cx="155" cy="75" r="3" fill="#fff" /><circle cx="155" cy="75" r="2" fill="#1e293b" />`;
+    }
+    
+    if (pose >= 4) {
+        return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" /><g transform="translate(200, 0) scale(-1, 1)">${inner}</g></svg>`;
+    }
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" />${inner}</svg>`;
+}
+
+function getLionSVG(color, pose) {
+    let p = pose; let inner = '';
+    if (p === 0) {
+        inner = `<ellipse cx="100" cy="145" rx="45" ry="35" fill="${color}" /><path d="M 100 25 C 150 25, 165 60, 155 105 C 145 135, 60 135, 45 105 C 35 60, 50 25, 100 25 Z" fill="#b45309" /><circle cx="100" cy="85" r="35" fill="${color}" /><circle cx="75" cy="65" r="10" fill="${color}" /><circle cx="125" cy="65" r="10" fill="${color}" /><circle cx="85" cy="80" r="5" fill="#fff" /><circle cx="85" cy="80" r="3" fill="#1e293b" /><circle cx="115" cy="80" r="5" fill="#fff" /><circle cx="115" cy="80" r="3" fill="#1e293b" /><polygon points="95,95 105,95 100,103" fill="#451a03" />`;
+    } else if (p === 1) {
+        inner = `<g transform="translate(5, 0) rotate(10, 100, 100)"><ellipse cx="100" cy="145" rx="45" ry="35" fill="${color}" /><path d="M 100 25 C 150 25, 165 60, 155 105 C 145 135, 60 135, 45 105 C 35 60, 50 25, 100 25 Z" fill="#b45309" /><circle cx="100" cy="85" r="35" fill="${color}" /><circle cx="75" cy="65" r="10" fill="${color}" /><circle cx="125" cy="65" r="10" fill="${color}" /><circle cx="85" cy="80" r="5" fill="#fff" /><circle cx="85" cy="80" r="3" fill="#1e293b" /><circle cx="115" cy="80" r="5" fill="#fff" /><circle cx="115" cy="80" r="3" fill="#1e293b" /><polygon points="95,95 105,95 100,103" fill="#451a03" /></g>`;
+    } else if (p === 2) {
+        inner = `<ellipse cx="100" cy="145" rx="45" ry="35" fill="${color}" /><path d="M 100 15 C 160 15, 175 60, 165 115 C 150 145, 55 145, 35 115 C 25 60, 40 15, 100 15 Z" fill="#b45309" /><circle cx="100" cy="85" r="35" fill="${color}" /><circle cx="75" cy="65" r="10" fill="${color}" /><circle cx="125" cy="65" r="10" fill="${color}" /><path d="M 75 75 L 90 82" stroke="#1e293b" stroke-width="3" /><path d="M 125 75 L 110 82" stroke="#1e293b" stroke-width="3" /><circle cx="85" cy="85" r="3" fill="#1e293b" /><circle cx="115" cy="85" r="3" fill="#1e293b" /><ellipse cx="100" cy="110" rx="10" ry="14" fill="#451a03" /><path d="M 92 110 Q 100 100 108 110" fill="none" stroke="#fff" stroke-width="3" />`;
+    } else if (p === 3) {
+        inner = `<ellipse cx="100" cy="155" rx="60" ry="25" fill="${color}" /><ellipse cx="60" cy="165" rx="15" ry="10" fill="${color}" /><ellipse cx="140" cy="165" rx="15" ry="10" fill="${color}" /><path d="M 100 45 C 140 45, 150 75, 140 115 C 130 140, 70 140, 60 115 C 50 75, 60 45, 100 45 Z" fill="#b45309" /><circle cx="100" cy="100" r="30" fill="${color}" /><circle cx="80" cy="80" r="8" fill="${color}" /><circle cx="120" cy="80" r="8" fill="${color}" /><circle cx="90" cy="95" r="4" fill="#fff" /><circle cx="90" cy="95" r="2" fill="#1e293b" /><circle cx="110" cy="95" r="4" fill="#fff" /><circle cx="110" cy="95" r="2" fill="#1e293b" /><polygon points="95,105 105,105 100,110" fill="#451a03" />`;
+    } else if (p === 4) {
+        inner = `<rect x="50" y="120" width="80" height="40" rx="20" fill="${color}" /><rect x="60" y="150" width="12" height="30" rx="6" fill="${color}" /><rect x="75" y="150" width="12" height="25" rx="6" fill="${color}" /><rect x="110" y="150" width="12" height="30" rx="6" fill="${color}" /><path d="M 50 130 Q 30 130 20 100" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round" /><circle cx="130" cy="110" r="35" fill="#b45309" /><circle cx="130" cy="110" r="25" fill="${color}" /><circle cx="115" cy="105" r="4" fill="#fff" /><circle cx="115" cy="105" r="2" fill="#1e293b" /><circle cx="145" cy="105" r="4" fill="#fff" /><circle cx="145" cy="105" r="2" fill="#1e293b" /><polygon points="125,115 135,115 130,120" fill="#451a03" />`;
+    } else {
+        inner = `<ellipse cx="100" cy="165" rx="55" ry="25" fill="${color}" /><ellipse cx="60" cy="175" rx="15" ry="10" fill="${color}" /><path d="M 140 165 C 160 165, 170 140, 150 130" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round" /><circle cx="90" cy="150" r="35" fill="#b45309" /><circle cx="90" cy="150" r="25" fill="${color}" /><path d="M 75 145 Q 80 150 85 145" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/><path d="M 95 145 Q 100 150 105 145" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/><polygon points="87,155 93,155 90,160" fill="#451a03" />`;
+    }
+    
+    if (pose >= 4) {
+        return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" /><g transform="translate(200, 0) scale(-1, 1)">${inner}</g></svg>`;
+    }
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="${color}" opacity="0.1" />${inner}</svg>`;
+}
+
+// === GENERATOR HEWAN BARU UNTUK FASE UJI ===
+function getRabbitSVG() {
+    let inner = `
+        <ellipse cx="100" cy="150" rx="40" ry="30" fill="#ffffff" />
+        <ellipse cx="70" cy="160" rx="15" ry="10" fill="#ffffff" />
+        <ellipse cx="130" cy="160" rx="20" ry="12" fill="#ffffff" />
+        <ellipse cx="100" cy="110" rx="25" ry="25" fill="#ffffff" />
+        <ellipse cx="90" cy="60" rx="8" ry="30" fill="#ffffff" />
+        <ellipse cx="90" cy="60" rx="4" ry="20" fill="#fbcfe8" />
+        <ellipse cx="110" cy="60" rx="8" ry="30" fill="#ffffff" />
+        <ellipse cx="110" cy="60" rx="4" ry="20" fill="#fbcfe8" />
+        <circle cx="90" cy="105" r="4" fill="#1e293b" />
+        <circle cx="110" cy="105" r="4" fill="#1e293b" />
+        <polygon points="98,115 102,115 100,118" fill="#fca5a5" />
+    `;
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="#cbd5e1" opacity="0.5" />${inner}</svg>`;
+}
+
+function getCowSVG() {
+    let inner = `
+        <rect x="50" y="100" width="90" height="50" rx="20" fill="#fff" />
+        <path d="M 70 100 Q 80 120 90 100 Z" fill="#1e293b" />
+        <path d="M 110 130 Q 120 150 130 130 Z" fill="#1e293b" />
+        <rect x="60" y="140" width="12" height="30" rx="4" fill="#fff" />
+        <rect x="110" y="140" width="12" height="30" rx="4" fill="#fff" />
+        <rect x="140" y="80" width="40" height="40" rx="15" fill="#fff" />
+        <ellipse cx="160" cy="110" rx="15" ry="12" fill="#fca5a5" />
+        <circle cx="150" cy="95" r="4" fill="#1e293b" />
+        <circle cx="170" cy="95" r="4" fill="#1e293b" />
+        <polygon points="140,80 145,65 150,80" fill="#f1f5f9" />
+        <polygon points="170,80 175,65 180,80" fill="#f1f5f9" />
+        <path d="M 145 75 Q 150 60 155 75" fill="none" stroke="#1e293b" stroke-width="3" />
+        <path d="M 165 75 Q 170 60 175 75" fill="none" stroke="#1e293b" stroke-width="3" />
+    `;
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="#4ade80" opacity="0.3" />${inner}</svg>`;
+}
+
+function getDuckSVG() {
+    let inner = `
+        <path d="M 60 140 C 60 170, 140 170, 150 130 C 130 130, 90 120, 60 140 Z" fill="#fde047" />
+        <circle cx="140" cy="90" r="25" fill="#fde047" />
+        <path d="M 160 90 Q 180 95 160 100 Z" fill="#f97316" />
+        <circle cx="145" cy="85" r="4" fill="#1e293b" />
+        <path d="M 90 135 C 110 135, 120 145, 110 155 C 90 155, 80 145, 90 135 Z" fill="#fef08a" />
+        <rect x="80" y="160" width="6" height="15" fill="#f97316" />
+        <rect x="110" y="160" width="6" height="15" fill="#f97316" />
+    `;
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="#22d3ee" opacity="0.3" />${inner}</svg>`;
+}
+
+// === KARTU NOISE (Jebakan Benda Mati) ===
+function getNoiseSVG(type) {
+    let inner = '';
+    if (type === 'apple') {
+        inner = `
+            <path d="M100 35 Q110 20 125 25" stroke="#166534" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M125 25 C100 40 90 20 100 35" fill="#22c55e" />
+            <ellipse cx="100" cy="115" rx="45" ry="45" fill="#ef4444" />
+            <path d="M75 100 Q65 110 75 125" stroke="#fca5a5" stroke-width="4" stroke-linecap="round" fill="none"/>
+        `;
+    } else { // Car
+        inner = `
+            <path d="M 40 110 L 45 80 L 80 60 L 130 60 L 155 80 L 160 110 Z" fill="#ef4444" />
+            <path d="M 30 110 L 170 110 L 170 140 L 30 140 Z" fill="#dc2626" />
+            <circle cx="65" cy="140" r="15" fill="#1e293b" /><circle cx="65" cy="140" r="6" fill="#cbd5e1" />
+            <circle cx="135" cy="140" r="15" fill="#1e293b" /><circle cx="135" cy="140" r="6" fill="#cbd5e1" />
+            <polygon points="50,85 80,65 95,65 95,85" fill="#e0f2fe" />
+            <polygon points="105,65 125,65 150,85 105,85" fill="#e0f2fe" />
+        `;
+    }
+    return `<svg viewBox="0 0 200 200" class="w-[85px] h-[85px] drop-shadow-sm"><circle cx="100" cy="100" r="90" fill="#f1f5f9" opacity="0.5" />${inner}</svg>`;
+}
+
+// === Konfigurasi Kategori ===
+const catConfig = { id: 1, name: 'Kucing', icon: '🐱', svg: getCatSVG, colors: colorsKucing, theme: { bg: 'bg-orange-50', border: 'border-orange-100', textLabel: 'text-orange-400', textCount: 'text-orange-600', textTitle: 'text-orange-500', barGradient: 'from-orange-400 to-orange-500', dropClass: 'drop-zone-kucing' } };
+const dogConfig = { id: 2, name: 'Anjing', icon: '🐶', svg: getDogSVG, colors: colorsAnjing, theme: { bg: 'bg-rose-50', border: 'border-rose-100', textLabel: 'text-rose-400', textCount: 'text-rose-600', textTitle: 'text-rose-500', barGradient: 'from-rose-400 to-rose-500', dropClass: 'drop-zone-anjing' } };
+const horseConfig = { id: 3, name: 'Kuda', icon: '🐴', svg: getHorseSVG, colors: colorsKuda, theme: { bg: 'bg-stone-50', border: 'border-stone-200', textLabel: 'text-stone-500', textCount: 'text-stone-700', textTitle: 'text-stone-600', barGradient: 'from-stone-400 to-stone-500', dropClass: 'drop-zone-kuda' } };
+const lionConfig = { id: 4, name: 'Singa', icon: '🦁', svg: getLionSVG, colors: colorsSinga, theme: { bg: 'bg-yellow-50', border: 'border-yellow-200', textLabel: 'text-yellow-500', textCount: 'text-yellow-700', textTitle: 'text-yellow-500', barGradient: 'from-yellow-400 to-yellow-500', dropClass: 'drop-zone-singa' } };
+
+const levels = {
+    1: { title: 'Level 1', cats: [catConfig, dogConfig] },
+    2: { title: 'Level 2', cats: [horseConfig, lionConfig] },
+    3: { title: 'Level 3', cats: [catConfig, dogConfig, horseConfig, lionConfig] }
+};
+
+// === State Variables ===
+let selectedCard = null;
+let currentLevel = 1;
+let trainingAccuracy = {}; 
+let globalCardId = 0;
+let noiseMistakes = 0;
+window.predictionInterval = null;
+
+// === FUNGSI UTAMA ===
+function goToLevel(lv) {
+    if (!levels[lv]) return;
+    currentLevel = lv;
+    const currentCats = levels[currentLevel].cats;
+    
+    document.getElementById('level-badge').innerHTML = `🌟 Level ${lv}`;
+    document.getElementById('eval-level-num').innerText = currentLevel;
+    
+    document.getElementById('stats-container').innerHTML = currentCats.map(c => `
+        <div id="stat${c.id}-bg" class="${c.theme.bg} px-4 py-2 rounded-xl border ${c.theme.border} text-center flex-1 min-w-[80px]">
+            <span class="block text-[10px] sm:text-xs font-bold ${c.theme.textLabel} uppercase tracking-wider">${c.name}</span>
+            <span id="count${c.id}" class="text-xl sm:text-2xl font-black ${c.theme.textCount}">0</span>
+        </div>
+    `).join('');
+
+    const gridCols = currentCats.length > 2 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2';
+    document.getElementById('drop-zones-container').className = `grid grid-cols-1 ${gridCols} gap-6 mb-10`;
+    document.getElementById('drop-zones-container').innerHTML = currentCats.map(c => `
+        <div class="bg-white p-4 rounded-[32px] shadow-sm border border-slate-100 relative">
+            <div class="text-center mb-4 mt-2">
+                <h3 class="text-xl sm:text-2xl font-bold ${c.theme.textTitle} flex justify-center items-center gap-2">${c.icon} ${c.name}</h3>
+            </div>
+            <div class="drop-zone ${c.theme.dropClass}" id="kotak${c.id}" onclick="placeCard('${c.id}')"></div>
+        </div>
+    `).join('');
+
+    document.getElementById('prediction-bars').innerHTML = currentCats.map(c => `
+        <div>
+            <div class="flex justify-between mb-2">
+                <span class="font-bold ${c.theme.textCount}">${c.name}</span>
+                <span id="pct${c.id}Text" class="font-bold ${c.theme.textCount}">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-6 overflow-hidden border border-slate-200">
+                <div id="bar${c.id}" class="bg-gradient-to-r ${c.theme.barGradient} h-6 rounded-full progress-fill w-0"></div>
+            </div>
+        </div>
+    `).join('');
+
+    resetLevelState();
+}
+
+function resetLevelState() {
+    trainingAccuracy = {};
+    selectedCard = null;
+    noiseMistakes = 0;
+    if(window.predictionInterval) clearInterval(window.predictionInterval);
+    
+    document.getElementById('fase-training').style.display = 'block';
+    document.getElementById('deteksi-area').classList.add('hidden');
+    document.getElementById('hasil-prediksi').classList.add('hidden'); 
+    document.getElementById('action-buttons-eval').classList.add('hidden');
+    
+    setStepper(1);
+    initCards();
+}
+
+function setStepper(step) {
+    for(let i=1; i<=4; i++) {
+        let circle = document.getElementById(`step${i}-circle`);
+        let text = document.getElementById(`step${i}-text`);
+        let line = document.getElementById(`line${i}`);
+        
+        if (!circle) continue;
+        
+        if (i < step) {
+            circle.className = "step-circle w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold z-10";
+            circle.innerHTML = "✓";
+            text.className = "text-sm mt-2 text-indigo-600 font-bold text-center";
+            if(line) line.classList.add('active');
+        } else if (i === step) {
+            circle.className = "step-circle w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg ring-4 ring-indigo-50 font-bold z-10 animate-pulse";
+            circle.innerHTML = i;
+            text.className = "text-sm mt-2 text-indigo-600 font-black text-center";
+            if(line) line.classList.remove('active');
+        } else {
+            circle.className = "step-circle w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10";
+            circle.innerHTML = i;
+            text.className = "text-sm mt-2 text-slate-400 text-center";
+            if(line) line.classList.remove('active');
+        }
+    }
+}
+
+function initCards() {
+    const currentCats = levels[currentLevel].cats;
+    const container = document.getElementById('sampleCards');
+    container.innerHTML = '';
+    
+    const cardsPerCat = currentLevel === 3 ? 2 : 4; 
+    
+    // Training data uses poses 0 to 3
+    currentCats.forEach(cat => {
+        for(let i=0; i<cardsPerCat; i++) {
+            let color = cat.colors[i % cat.colors.length];
+            container.innerHTML += `<div id="train-card-${globalCardId++}" class="animal-card" data-type="${cat.id}" onclick="selectCard(this)">${cat.svg(color, i)}</div>`;
+        }
+    });
+
+    container.innerHTML += `<div id="train-card-${globalCardId++}" class="animal-card" data-type="noise" onclick="selectCard(this)">${getNoiseSVG('apple')}</div>`;
+    container.innerHTML += `<div id="train-card-${globalCardId++}" class="animal-card" data-type="noise" onclick="selectCard(this)">${getNoiseSVG('car')}</div>`;
+
+    for (let i = container.children.length; i >= 0; i--) {
+        container.appendChild(container.children[Math.random() * i | 0]);
+    }
+}
+
+function selectCard(el){
+    if(el.classList.contains('disabled')) return;
+    document.querySelectorAll('.animal-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCard = el;
+}
+
+function placeCard(categoryId){
+    if(!selectedCard){ 
+        alert("Pilih satu gambar di atas terlebih dahulu!"); 
+        return; 
+    }
+    
+    const originalId = selectedCard.id;
+    const cloned = selectedCard.cloneNode(true);
+    cloned.classList.remove('selected', 'disabled');
+    cloned.classList.add('placed'); 
+    cloned.removeAttribute('id');
+    cloned.onclick = null; 
+    
+    const removeBtn = document.createElement('div');
+    removeBtn.className = 'remove-btn';
+    removeBtn.innerHTML = '✕';
+    removeBtn.onclick = (e) => {
+        e.stopPropagation(); 
+        removePlacedCard(originalId, cloned);
     };
-    let spriteState = JSON.parse(JSON.stringify(initialSpriteState));
+    cloned.appendChild(removeBtn);
 
-    const scriptArea = document.getElementById('script-area');
-    const blocksContainer = document.getElementById('blocks-container');
-    const elSprites = { robot: document.getElementById('sprite-robot'), battery: document.getElementById('sprite-battery') };
-    const elBubbles = { robot: document.getElementById('bubble-robot'), battery: document.getElementById('bubble-battery') };
+    const targetBox = document.getElementById(`kotak${categoryId}`);
+    targetBox.appendChild(cloned);
     
-    const defaultVals = {
-        whenReceive: { val: 'pesan 1' }, broadcast: { val: 'pesan 1' },
-        changeX: { mode: 'number', value: 10 }, changeY: { mode: 'number', value: 10 },
-        say: { mode: 'text', value: "Halo" }, ask: { mode: 'text', value: "Siapa namamu?" },
-        setBattery: { mode: 'number', value: 90 }, changeBattery: { mode: 'number', value: 10 },
-        repeat: { mode: 'number', value: 10 },
-        condition: { type: 'touching', target: 'robot', left: { mode: 'variable', value: 'VAR_battery' }, op: '==', right: { mode: 'number', value: 100 } } 
-    };
+    selectedCard.dataset.placed = categoryId;
+    selectedCard.classList.add('disabled');
+    selectedCard.classList.remove('selected');
+    selectedCard = null;
 
-    // ALUR BARU: #, Aa, var, opr, ab
-    const inputModes = [
-        { id: 'number', label: '#', type: 'number' },
-        { id: 'text', label: 'Aa', type: 'text' },
-        { id: 'variable', label: 'v', type: 'variable' },
-        { id: 'operator', label: 'opr', type: 'operator', op: '+' }, 
-        { id: 'join', label: 'ab', type: 'join' }
-    ];
+    updateCounts();
+}
 
-    function resolveValue(valObj, targetSprite) {
-        if (!valObj) return 0;
-        if (typeof valObj !== 'object') return valObj; 
-
-        if (valObj.mode === 'number') return parseFloat(valObj.value) || 0;
-        if (valObj.mode === 'text') return String(valObj.value);
-        if (valObj.mode === 'variable') {
-            if (valObj.value === 'VAR_battery') return globalVars.battery;
-            if (valObj.value === 'VAR_answer') return globalVars.answer;
-            if (valObj.value === 'VAR_posX') return Math.round(spriteState[targetSprite].x);
-            if (valObj.value === 'VAR_posY') return Math.round(spriteState[targetSprite].y);
-        }
-        if (valObj.mode === 'operator') {
-            let left = parseFloat(resolveValue(valObj.left, targetSprite)) || 0;
-            let right = parseFloat(resolveValue(valObj.right, targetSprite)) || 0;
-            switch (valObj.op) { 
-                case '+': return left+right; case '-': return left-right; case '*': return left*right; 
-                case '/': return right!==0?left/right:0; case 'mod': return left%right; 
-                case '==': return left==right; case '!=': return left!=right;
-                case '>': return left>right; case '<': return left<right;
-            }
-        }
-        if (valObj.mode === 'join') {
-            return String(resolveValue(valObj.left, targetSprite)) + String(resolveValue(valObj.right, targetSprite));
-        }
-        return 0;
+function removePlacedCard(originalId, cloneEl) {
+    cloneEl.remove();
+    const originalCard = document.getElementById(originalId);
+    if(originalCard) {
+        originalCard.classList.remove('disabled');
+        delete originalCard.dataset.placed;
     }
+    updateCounts();
+}
 
-    // ================= TUTORIAL ENGINE =================
-    function hasBlock(sprite, type) { return appData[sprite].scripts.some(b => b.type === type); }
-    function hasBlockWithValue(sprite, type, field, expectedVal) {
-        return appData[sprite].scripts.some(b => {
-            if (b.type !== type) return false;
-            let val = resolveValue(b[field], sprite);
-            if (typeof b[field] === 'string') return b[field] === expectedVal; 
-            if (typeof expectedVal === 'string') return String(val).toLowerCase().includes(expectedVal.toLowerCase());
-            return val == expectedVal;
-        });
+function updateCounts() {
+    const currentCats = levels[currentLevel].cats;
+    currentCats.forEach(c => {
+        const count = document.querySelectorAll(`#kotak${c.id} .animal-card.placed`).length;
+        document.getElementById(`count${c.id}`).innerText = count;
+    });
+}
+
+function checkDataBeforeTraining() {
+    const cards = document.querySelectorAll('#sampleCards .animal-card');
+    let totalPlaced = 0;
+    cards.forEach(c => { if(c.dataset.placed) totalPlaced++; });
+
+    if(totalPlaced < (currentLevel === 3 ? 6 : 4)){ 
+        alert("Kelompokkan lebih banyak gambar agar KA punya cukup data untuk belajar!"); 
+        return; 
     }
+    document.getElementById('modal-disclaimer').classList.remove('hidden');
+}
 
-    const experiments = [
-        {
-            title: "Percobaan 1 – Menggerakkan Robot",
-            steps: [
-                { text: "Susun blok untuk menggerakkan robot ke kanan.<br><br>Gunakan blok <b>(➔ Ubah X sebesar 10)</b><br>Kemudian klik <b>▶ Jalankan</b>.<br>Amati perubahan posisi robot.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 10) },
-                { text: "Coba ubah value <b>ubah X</b> menjadi <b>100</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 100) },
-                { text: "Sekarang coba gunakan blok <b>(⬆ Ubah Y sebesar 10)</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 10) },
-                { text: "Coba ubah value <b>ubah Y</b> menjadi <b>100</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 100) }
-            ]
-        },
-        {
-            title: "Percobaan 2 - Interaksi Baterai",
-            steps: [
-                { text: "<b>1.</b> Klik <b>🔋 Skrip baterai</b>.", check: () => activeSprite === 'battery' },
-                { text: "<b>2.</b> Pasang Blok <b>🔁 Selamanya</b>.", check: () => hasBlock('battery', 'forever') },
-                { text: "<b>3.</b> Pasang blok <b>🔀 Jika [kondisi] maka</b> di dalamnya.", check: () => hasBlock('battery', 'if') },
-                { text: "<b>4.</b> Buat menjadi <b>jika menyentuh robot maka</b>.", check: () => appData.battery.scripts.some(b => b.type === 'if' && b.condition.type === 'touching' && b.condition.target === 'robot') },
-                { text: "<b>5.</b> Pasang Blok <b>Sembunyikan</b> di dalam Jika.", check: () => hasBlock('battery', 'hide') },
-                { text: "<b>6.</b> Pasang blok <b>Ubah baterai sebesar 10</b>.", check: () => hasBlockWithValue('battery', 'changeBattery', 'val', 10) },
-                { text: "<b>7.</b> Pasang blok <b>📢 Kirim pesan [pesan 1]</b> (sebelum akhiri jika).", check: () => hasBlockWithValue('battery', 'broadcast', 'val', 'pesan 1') },
-                { text: "<b>8.</b> Pasang blok <b>Akhiri Jika</b>.", check: () => hasBlock('battery', 'endIf') },
-                { text: "<b>9.</b> Pasang Blok <b>Akhiri Selamanya</b>.<br><i>(Jalankan program untuk mengetes)</i>", requireRun: true, check: () => hasBlock('battery', 'endForever') }
-            ]
-        },
-        {
-            title: "Percobaan 3 - Sinkronisasi Pesan",
-            steps: [
-                { text: "<b>1.</b> Klik <b>🤖 Skrip Robot</b>.", check: () => activeSprite === 'robot' },
-                { text: "<b>2.</b> Pasang blok <b>🚩 Ketika menerima pesan [pesan 1]</b> agar robot menunggunya.", check: () => hasBlockWithValue('robot', 'whenReceive', 'val', 'pesan 1') },
-                { text: "<b>3.</b> Pasang blok <b>🔀 Jika [kondisi] Maka</b> di bawahnya.", check: () => hasBlock('robot', 'if') },
-                { text: "<b>4.</b> Pilih Jika (operator) agar otomatis masuk isian <b>(Baterai) == 100</b>.", check: () => appData.robot.scripts.some(b => b.type === 'if' && b.condition.type === 'operator' && b.condition.left.value === 'VAR_battery' && b.condition.right.value == 100) },
-                { text: "<b>5.</b> Pasang blok <b>Katakan [\"Halo\"]</b> di dalam Jika.", check: () => hasBlock('robot', 'say') },
-                { text: "<b>6 & 7.</b> Klik tombol <b>[ # ]</b> pada blok Katakan. Klik terus siklusnya (#, Aa, v, opr) sampai menemukan tombol <b>ab (gabung)</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join') },
-                { text: "<b>8.</b> Tuliskan <b>\"Status Baterai \"</b> pada kolom Aa kiri.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.left.mode === 'text' && String(b.val.left.value).toLowerCase().includes('status')) },
-                { text: "<b>9 & 10.</b> Klik Tombol Aa terakhir (kolom kanan) sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>Baterai</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.mode === 'variable' && b.val.right.value === 'VAR_battery') },
-                { text: "<b>11.</b> Pasang blok <b>Akhiri Jika</b> di paling bawah (setelah blok Katakan).", check: () => hasBlock('robot', 'endIf') },
-                { text: "<b>12.</b> Klik <b>⏹ Reset</b> terlebih dahulu untuk memunculkan baterai kembali, kemudian klik <b>▶ Jalankan</b>. (Robot akan berdiam menunggu sinyal baterai tersentuh!)", requireRun: true, check: () => true }
-            ]
-        },
-        {
-            title: "Percobaan 4 - Tanya Nama",
-            steps: [
-                { text: "<b>1.</b> Tambahkan <b>Katakan [\"Terimakasih\"]</b>.", check: () => hasBlockWithValue('robot', 'say', 'val', "Terima") },
-                { text: "<b>2.</b> Masukkan <b>❓ Tanya & tunggu</b>.", check: () => hasBlock('robot', 'ask') },
-                { text: "<b>3.</b> Masukkan Blok Katakan lagi, Klik tombol siklus hingga menjadi <b>ab (gabung)</b>.", check: () => appData.robot.scripts.filter(b => b.type === 'say' && b.val.mode === 'join').length > 0 },
-                { text: "<b>4.</b> Tuliskan <b>\"Halo \"</b> pada kolom Aa pertama.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && String(b.val.left.value).toLowerCase().includes('halo')) },
-                { text: "<b>5.</b> Klik kolom Aa kedua sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>\"Jawaban\"</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.value === 'VAR_answer') },
-                { text: "<b>6.</b> Klik <b>⏹ Reset</b> terlebih dahulu, kemudian klik <b>▶ Jalankan</b>. Selamat bereksperimen!", requireRun: true, check: () => true }
-            ]
-        }
-    ];
+function closeDisclaimer() {
+    document.getElementById('modal-disclaimer').classList.add('hidden');
+}
 
-    let currentExpIndex = 0; let currentStepIndex = 0; let unlockedExpIndex = 0;
-    const tutorialPanel = document.getElementById('tutorial-panel');
-    const btnNextTut = document.getElementById('btn-next-tut');
-    let tutorialRunTriggered = false;
-
-    function renderDots() {
-        const dotsContainer = document.getElementById('dots-container');
-        dotsContainer.innerHTML = '<div class="absolute top-1/2 left-6 right-6 h-1 bg-white/20 -mt-0.5 z-0"></div>';
-        
-        experiments.forEach((exp, index) => {
-            const btn = document.createElement('button');
-            if (index === currentExpIndex) {
-                btn.className = "w-8 h-8 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center shadow-md"; btn.innerText = index + 1;
-            } else if (index <= unlockedExpIndex) {
-                btn.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center"; btn.innerText = "✓"; btn.onclick = () => switchExp(index);
-            } else {
-                btn.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center"; btn.innerText = index + 1;
-            }
-            dotsContainer.appendChild(btn);
-        });
-    }
-
-    function switchExp(index) {
-        if (index > unlockedExpIndex) return; 
-        currentExpIndex = index; currentStepIndex = 0; tutorialRunTriggered = false;
-        renderDots(); tutorialPanel.classList.remove('hidden'); renderTutorialStep();
-    }
-
-    function renderTutorialStep() {
-        const exp = experiments[currentExpIndex]; const step = exp.steps[currentStepIndex];
-        document.getElementById('tutorial-title').innerHTML = exp.title;
-        document.getElementById('tutorial-content').innerHTML = step.text;
-        document.getElementById('tutorial-counter').innerText = `Langkah ${currentStepIndex + 1} / ${exp.steps.length}`;
-        tutorialRunTriggered = false;
-        checkStepValidation();
-        tutorialPanel.classList.remove('tutorial-anim'); void tutorialPanel.offsetWidth; tutorialPanel.classList.add('tutorial-anim');
-    }
-
-    function checkStepValidation() {
-        if (tutorialPanel.classList.contains('hidden')) return;
-        const step = experiments[currentExpIndex].steps[currentStepIndex];
-        let isValid = step.check();
-        
-        if (step.requireRun && !tutorialRunTriggered) isValid = false;
-
-        if (isValid) {
-            btnNextTut.disabled = false;
-            btnNextTut.className = "px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold shadow-md transition-all animate-pulse";
-            btnNextTut.innerText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
-        } else {
-            btnNextTut.disabled = true;
-            btnNextTut.className = "px-5 py-2 bg-slate-300 text-slate-500 rounded-lg font-bold transition-all cursor-not-allowed";
-            btnNextTut.innerText = step.requireRun ? "Tunggu Dijalankan..." : "Susun Blok...";
-        }
-    }
-
-    function nextStep() {
-        if (currentStepIndex < experiments[currentExpIndex].steps.length - 1) {
-            currentStepIndex++; renderTutorialStep();
-        } else {
-            if (currentExpIndex < experiments.length - 1) {
-                unlockedExpIndex = Math.max(unlockedExpIndex, currentExpIndex + 1);
-                switchExp(currentExpIndex + 1);
-            } else {
-                unlockedExpIndex = 4; renderDots();
-                document.getElementById('success-overlay').classList.remove('hidden');
-            }
-        }
-    }
-
-    // ================= RICH INPUT SYSTEM =================
-    function createRichInput(valObj, onChange, isChild = false) {
-        if (!valObj || typeof valObj !== 'object') valObj = { mode: 'number', value: typeof valObj === 'number' ? valObj : 0 };
-
-        const container = document.createElement('div');
-        container.className = 'inline-flex items-center bg-black/10 rounded-full pl-1 pr-1.5 py-0.5 gap-1 shadow-inner border border-black/5 mx-1 relative';
-
-        const modeBtn = document.createElement('button');
-        modeBtn.className = 'bg-white hover:bg-gray-100 rounded-full h-5 px-2 shadow-sm text-[11px] font-black text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 z-10 shrink-0';
-        
-        if (['operator', 'join'].includes(valObj.mode)) {
-            modeBtn.classList.remove('bg-white', 'hover:bg-gray-100', 'text-slate-700');
-            modeBtn.classList.add('bg-yellow-300', 'hover:bg-yellow-400', 'text-yellow-900', 'border-2', 'border-yellow-500', 'scale-110');
-            modeBtn.title = "Klik untuk ganti mode";
-        }
-
-        let currentModeId = 'number';
-        if (valObj.mode === 'text') currentModeId = 'text';
-        if (valObj.mode === 'variable') currentModeId = 'variable';
-        if (valObj.mode === 'join') currentModeId = 'join';
-        if (valObj.mode === 'operator') currentModeId = 'operator';
-        
-        const availableModes = isChild 
-            ? inputModes.filter(m => ['text', 'variable', 'number'].includes(m.type))
-            : inputModes;
-
-        let currentModeObj = availableModes.find(m => m.id === currentModeId) || availableModes[0];
-        modeBtn.innerText = currentModeObj.label;
-
-        modeBtn.onclick = () => {
-            let idx = availableModes.findIndex(m => m.id === currentModeId);
-            let next = availableModes[(idx + 1) % availableModes.length];
-            
-            let newVal = { mode: next.type };
-            if (next.type === 'operator') {
-                newVal.op = next.op; newVal.left = { mode: 'number', value: 0 }; newVal.right = { mode: 'number', value: 0 };
-            } else if (next.type === 'join') {
-                newVal.left = { mode: 'text', value: "Halo " }; newVal.right = { mode: 'text', value: "Dunia" };
-            } else if (next.type === 'variable') { newVal.value = "VAR_battery";
-            } else if (next.type === 'number') { newVal.value = 0;
-            } else if (next.type === 'text') { newVal.value = ""; }
-            
-            onChange(newVal, true); 
-        };
-
-        container.appendChild(modeBtn);
-
-        if (valObj.mode === 'operator' || valObj.mode === 'join') {
-            const bodyContainer = document.createElement('div');
-            bodyContainer.className = "flex items-center bg-white/50 rounded-full px-1 py-0.5 border border-black/10 shadow-sm ml-0.5";
-            
-            bodyContainer.appendChild(createRichInput(valObj.left, (n, r) => onChange({...valObj, left: n}, r), true));
-            
-            if (valObj.mode === 'operator') {
-                const opSel = document.createElement('select');
-                opSel.className = "text-[12px] font-black text-slate-800 bg-transparent outline-none cursor-pointer mx-1 appearance-none text-center px-1 border-b-2 border-slate-400";
-                ['+', '-', '*', '/', 'mod', '==', '!=', '>', '<'].forEach(op => {
-                    const opt = document.createElement('option');
-                    opt.value = op; opt.innerText = op;
-                    if(valObj.op === op) opt.selected = true;
-                    opSel.appendChild(opt);
-                });
-                opSel.onchange = e => onChange({...valObj, op: e.target.value}, true);
-                bodyContainer.appendChild(opSel);
-            } else {
-                const opLabel = document.createElement('span');
-                opLabel.className = "text-[11px] font-black text-slate-700 mx-1.5 drop-shadow-sm uppercase tracking-wide";
-                opLabel.innerText = 'gabung';
-                bodyContainer.appendChild(opLabel);
-            }
-            
-            bodyContainer.appendChild(createRichInput(valObj.right, (n, r) => onChange({...valObj, right: n}, r), true));
-            container.appendChild(bodyContainer);
-        } else {
-            if (valObj.mode === 'number') {
-                const inp = document.createElement('input'); inp.type = 'number'; inp.value = valObj.value;
-                inp.className = 'w-12 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-mono font-bold shadow-inner';
-                inp.oninput = e => onChange({ ...valObj, value: parseFloat(e.target.value)||0 }, false);
-                container.appendChild(inp);
-            } else if (valObj.mode === 'text') {
-                const inp = document.createElement('input'); inp.type = 'text'; inp.value = valObj.value;
-                inp.className = 'w-24 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-sans font-bold shadow-inner';
-                inp.oninput = e => onChange({ ...valObj, value: e.target.value }, false);
-                container.appendChild(inp);
-            } else if (valObj.mode === 'variable') {
-                const sel = document.createElement('select');
-                sel.className = 'text-[11px] h-5 rounded-full px-2 text-white bg-orange-500 hover:bg-orange-600 outline-none cursor-pointer font-bold appearance-none shadow-sm';
-                sel.innerHTML = `<option value="VAR_battery" ${valObj.value==='VAR_battery'?'selected':''}>Baterai</option><option value="VAR_answer" ${valObj.value==='VAR_answer'?'selected':''}>Jawaban</option><option value="VAR_posX" ${valObj.value==='VAR_posX'?'selected':''}>Pos X</option><option value="VAR_posY" ${valObj.value==='VAR_posY'?'selected':''}>Pos Y</option>`;
-                sel.onchange = e => onChange({ ...valObj, value: e.target.value }, true); 
-                container.appendChild(sel);
-            }
-        }
-        return container;
-    }
-
-    // ================= SCRIPT MANAGEMENT =================
-    function switchSprite(spriteId) {
-        activeSprite = spriteId;
-        document.getElementById('tab-robot').className = spriteId === 'robot' ? 'flex-1 py-3 font-bold text-sm tab-active-robot' : 'flex-1 py-3 font-bold text-sm tab-inactive';
-        document.getElementById('tab-battery').className = spriteId === 'battery' ? 'flex-1 py-3 font-bold text-sm tab-active-battery' : 'flex-1 py-3 font-bold text-sm tab-inactive';
-        scriptArea.className = spriteId === 'robot' ? 'flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-robot pb-10 transition-colors relative scroll-smooth' : 'flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-battery pb-10 transition-colors relative scroll-smooth';
-        document.getElementById('active-sprite-name').innerText = spriteId === 'robot' ? 'Robot' : 'Baterai';
-        tutorialRunTriggered = false;
-        renderScript(); checkStepValidation();
-    }
-
-    function addBlock(type) {
-        let block = { id: idCounter++, type: type };
-        if(defaultVals[type]) block.val = typeof defaultVals[type] === 'object' && defaultVals[type] !== null ? JSON.parse(JSON.stringify(defaultVals[type])) : defaultVals[type];
-        if(type === 'if') { block.condition = JSON.parse(JSON.stringify(defaultVals.condition)); block.condition.target = activeSprite === 'battery' ? 'robot' : 'battery'; }
-        if(type === 'broadcast') block.val = 'pesan 1';
-        if(type === 'whenReceive') block.val = 'pesan 1';
-        
-        appData[activeSprite].scripts.push(block);
-        tutorialRunTriggered = false;
-        renderScript(); setTimeout(() => scriptArea.scrollTop = scriptArea.scrollHeight, 50);
-    }
-
-    function removeBlock(id) { appData[activeSprite].scripts = appData[activeSprite].scripts.filter(b => b.id !== id); tutorialRunTriggered = false; renderScript(); }
-    function clearScript() { appData[activeSprite].scripts = []; tutorialRunTriggered = false; renderScript(); }
+function startTrainingAnimation() {
+    closeDisclaimer();
+    setStepper(2); 
+    document.getElementById('fase-training').style.display = 'none';
     
-    function updateBlockVal(id, field, value, shouldRender = true) { 
-        const block = appData[activeSprite].scripts.find(b => b.id === id); 
-        if(block) block[field] = value; 
-        tutorialRunTriggered = false; 
-        checkStepValidation(); 
-        if (shouldRender) renderScript(); 
-    }
+    const animModal = document.getElementById('modal-training-anim');
+    animModal.classList.remove('hidden');
+    
+    const desc = document.getElementById('training-anim-desc');
+    const bar = document.getElementById('training-progress-bar');
+    
+    setTimeout(() => { desc.innerText = "Mengubah gambar menjadi angka piksel..."; bar.style.width = '25%'; }, 1000);
+    setTimeout(() => { desc.innerText = "Mendeteksi Garis, Pola, & Bentuk Dasar..."; bar.style.width = '50%'; }, 3500);
+    setTimeout(() => { desc.innerText = "Menganalisis sebaran Warna & Bentuk..."; bar.style.width = '80%'; }, 6000);
+    setTimeout(() => { desc.innerText = "Selesai menyusun kecerdasan matematis!"; bar.style.width = '100%'; }, 8500);
+    
+    setTimeout(() => {
+        animModal.classList.add('hidden');
+        processTrainingLogic();
+        setStepper(3);
+        document.getElementById('deteksi-area').classList.remove('hidden');
+    }, 9500);
+}
 
-    function moveBlock(index, direction) {
-        const scripts = appData[activeSprite].scripts;
-        if (direction === -1 && index > 0) [scripts[index], scripts[index - 1]] = [scripts[index - 1], scripts[index]];
-        else if (direction === 1 && index < scripts.length - 1) [scripts[index], scripts[index + 1]] = [scripts[index + 1], scripts[index]];
-        renderScript();
-    }
+function processTrainingLogic(){
+    const currentCats = levels[currentLevel].cats;
+    const cards = document.querySelectorAll('#sampleCards .animal-card');
+    
+    let placedCounts = {};
+    let categoryTotals = {};
+    noiseMistakes = 0;
 
-    function getMessageDropdown(val, onChangeFn) {
-        const sel = document.createElement('select');
-        sel.className = 'text-xs rounded-full px-2 py-0.5 outline-none font-bold text-yellow-900 bg-white shadow-sm ml-1 cursor-pointer';
-        ['pesan 1', 'pesan 2', 'pesan 3'].forEach(m => {
-            const opt = document.createElement('option'); opt.value = m; opt.innerText = m;
-            if(val === m) opt.selected = true;
-            sel.appendChild(opt);
+    cards.forEach(c => {
+        let t = c.dataset.type; 
+        if (t !== 'noise') {
+            categoryTotals[t] = (categoryTotals[t] || 0) + 1;
+        }
+        if(c.dataset.placed) {
+            if (t === 'noise') {
+                noiseMistakes++;
+            } else if(c.dataset.placed === t) {
+                placedCounts[t] = (placedCounts[t] || 0) + 1;
+            }
+        }
+    });
+
+    currentCats.forEach(cat => {
+        let correct = placedCounts[cat.id.toString()] || 0;
+        let total = categoryTotals[cat.id.toString()] || 1;
+        
+        let baseAcc = correct / total;
+        let penalty = noiseMistakes * 0.15; 
+        let finalAcc = baseAcc - penalty;
+        if (finalAcc < 0) finalAcc = 0;
+        trainingAccuracy[cat.id] = finalAcc;
+    });
+
+    const testContainer = document.getElementById('testCards');
+    testContainer.innerHTML = '';
+    
+    // Generate data testing 
+    if (currentLevel === 1) {
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[5], 5)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 2)">${getDogSVG(colorsAnjing[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getRabbitSVG()}</div>`;
+    } else if (currentLevel === 2) {
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 3)">${getHorseSVG(colorsKuda[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 4)">${getLionSVG(colorsSinga[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 4)">${getLionSVG(colorsSinga[5], 5)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getCowSVG()}</div>`;
+    } else {
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 2)">${getDogSVG(colorsAnjing[5], 5)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 3)">${getHorseSVG(colorsKuda[4], 4)}</div>`;
+        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getDuckSVG()}</div>`;
+    }
+}
+
+function startPrediction(cardEl, actualType) {
+    document.querySelectorAll('#testCards .animal-card').forEach(c => c.classList.remove('selected'));
+    cardEl.classList.add('selected');
+
+    document.getElementById('hasil-prediksi').classList.remove('hidden');
+    document.getElementById('prediction-results').classList.add('hidden');
+    document.getElementById('laporanAI').classList.add('hidden');
+    document.getElementById('explanation-box').classList.add('hidden');
+    document.getElementById('ai-thinking-box').classList.remove('hidden');
+    document.getElementById('action-buttons-eval').classList.add('hidden');
+
+    const currentCats = levels[currentLevel].cats;
+    currentCats.forEach(c => {
+        document.getElementById(`bar${c.id}`).style.width = '0%';
+        document.getElementById(`pct${c.id}Text`).innerText = '0%';
+    });
+
+    const steps = ['step-feature-1', 'step-feature-2', 'step-feature-3'];
+    steps.forEach(s => {
+        const el = document.getElementById(s);
+        if(el) {
+            el.classList.add('opacity-50', 'bg-slate-100');
+            el.classList.remove('bg-indigo-100', 'ring-2', 'ring-indigo-400', 'shadow-md', 'scale-110');
+        }
+    });
+    
+    if(window.predictionInterval) clearInterval(window.predictionInterval);
+    let stepIndex = 0;
+    
+    window.predictionInterval = setInterval(() => {
+        if(stepIndex > 0) {
+            let prevEl = document.getElementById(steps[stepIndex-1]);
+            if(prevEl) {
+                prevEl.classList.remove('bg-indigo-100', 'ring-2', 'ring-indigo-400', 'shadow-md', 'scale-110');
+                prevEl.classList.add('bg-slate-100');
+            }
+        }
+        if(stepIndex < steps.length) {
+            let el = document.getElementById(steps[stepIndex]);
+            if(el) {
+                el.classList.remove('opacity-50', 'bg-slate-100');
+                el.classList.add('bg-indigo-100', 'ring-2', 'ring-indigo-400', 'shadow-md', 'scale-110');
+            }
+            stepIndex++;
+        } else {
+            clearInterval(window.predictionInterval);
+            showResult(actualType); 
+        }
+    }, 700); 
+}
+
+function showResult(actualType) {
+    document.getElementById('ai-thinking-box').classList.add('hidden');
+    document.getElementById('prediction-results').classList.remove('hidden');
+    setStepper(4); 
+
+    const currentCats = levels[currentLevel].cats;
+    let probabilities = {};
+
+    let isRealAnomaly = (actualType === 'Anomali');
+    let baseConfidence = Math.floor(Math.random() * 15) + 75;
+    
+    if (isRealAnomaly) {
+        let closestCat = currentCats[Math.floor(Math.random() * currentCats.length)];
+        let anomalyConfidence = Math.floor(Math.random() * 20) + 45; 
+        probabilities[closestCat.id] = anomalyConfidence;
+        let remaining = 100 - anomalyConfidence;
+        let otherCats = currentCats.filter(c => c.id !== closestCat.id);
+        otherCats.forEach((c, idx) => {
+            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
+            else {
+                let val = Math.floor(Math.random() * remaining * 0.7);
+                probabilities[c.id] = val;
+                remaining -= val;
+            }
         });
-        sel.onchange = onChangeFn;
-        return sel;
-    }
+    } else {
+        let multiplier = 0.3 + (0.7 * (trainingAccuracy[actualType] || 0)); 
+        let finalMainPct = Math.floor(baseConfidence * multiplier);
+        probabilities[actualType] = finalMainPct;
+        let remaining = 100 - finalMainPct;
 
-    function renderScript() {
-        blocksContainer.innerHTML = ''; let indentLevel = 0;
-        appData[activeSprite].scripts.forEach((block, index) => {
-            if (['endIf', 'endForever', 'endRepeat', 'else'].includes(block.type)) indentLevel = Math.max(0, indentLevel - 1);
-
-            const wrapper = document.createElement('div'); wrapper.style.marginLeft = `${indentLevel * 24}px`;
-            const el = document.createElement('div'); el.id = `block-ui-${block.id}`; el.className = `code-block flex justify-between relative`;
-            
-            if (['changeX', 'changeY'].includes(block.type)) el.classList.add('block-motion');
-            else if (['say', 'show', 'hide'].includes(block.type)) el.classList.add('block-looks');
-            else if (['setBattery', 'changeBattery'].includes(block.type)) el.classList.add('block-data');
-            else if (['forever', 'endForever', 'if', 'endIf', 'else', 'repeat', 'endRepeat'].includes(block.type)) el.classList.add('block-control');
-            else if (['ask'].includes(block.type)) el.classList.add('block-sensing');
-            else if (['broadcast', 'whenReceive'].includes(block.type)) el.classList.add('block-events');
-
-            const leftContent = document.createElement('div'); leftContent.className = "flex items-center gap-1 flex-wrap flex-grow py-0.5";
-
-            if (block.type === 'changeX') { leftContent.append(`➔ Ubah X sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeY') { leftContent.append(`⬆ Ubah Y sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'setBattery') { leftContent.append(`⚡ Set Baterai ke `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeBattery') { leftContent.append(`⚡ Ubah Baterai sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'repeat') { leftContent.append(`🔄 Ulangi `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` kali`); }
-            else if (block.type === 'say') { leftContent.append(`💬 Katakan `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'ask') { leftContent.append(`❓ Tanya `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` & tunggu`); } 
-            else if (block.type === 'show') leftContent.innerHTML = `👁️ Tampilkan`; else if (block.type === 'hide') leftContent.innerHTML = `👻 Sembunyikan`; 
-            else if (block.type === 'forever') leftContent.innerHTML = `🔁 Selamanya`; else if (block.type === 'endForever') leftContent.innerHTML = `↩ Akhiri Selamanya`; 
-            else if (block.type === 'endRepeat') leftContent.innerHTML = `↩ Akhiri Ulangi`; else if (block.type === 'else') leftContent.innerHTML = `🔀 Jika Tidak`; else if (block.type === 'endIf') leftContent.innerHTML = `↩ Akhiri Jika`;
-            else if (block.type === 'broadcast') { leftContent.append(`📢 Kirim Pesan`); leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
-            else if (block.type === 'whenReceive') { leftContent.append(`🚩 Ketika menerima pesan`); leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
-            else if (block.type === 'if') {
-                leftContent.innerHTML = `🔀 Jika `;
-                const condWrap = document.createElement('div'); condWrap.className = "condition-wrapper ml-1 flex items-center";
-                
-                const typeSel = document.createElement('select'); typeSel.className = "bg-transparent text-white font-bold outline-none cursor-pointer";
-                typeSel.innerHTML = `<option class="text-black" value="touching" ${block.condition.type==='touching'?'selected':''}>Menyentuh</option><option class="text-black" value="operator" ${block.condition.type==='operator'?'selected':''}>Operator</option>`;
-                typeSel.onchange = (e) => { 
-                    if(e.target.value === 'operator') updateBlockVal(block.id, 'condition', { type: 'operator', op: '==', left: { mode: 'variable', value: 'VAR_battery' }, right: { mode: 'number', value: 100 } }, true); 
-                    else updateBlockVal(block.id, 'condition', { type: 'touching', target: activeSprite === 'battery' ? 'robot' : 'battery' }, true);
-                };
-                condWrap.appendChild(typeSel);
-
-                if (block.condition.type === 'touching') {
-                    const targetSel = document.createElement('select'); targetSel.className = "bg-transparent text-white font-bold outline-none cursor-pointer";
-                    targetSel.innerHTML = `<option class="text-black" value="robot" ${block.condition.target==='robot'?'selected':''}>Robot</option><option class="text-black" value="battery" ${block.condition.target==='battery'?'selected':''}>Baterai</option>`;
-                    targetSel.onchange = (e) => { updateBlockVal(block.id, 'condition', {...block.condition, target: e.target.value}, true); };
-                    condWrap.appendChild(targetSel);
-                } else if (block.condition.type === 'operator') {
-                    condWrap.appendChild(createRichInput(block.condition.left, (n, r) => updateBlockVal(block.id, 'condition', {...block.condition, left: n}, r), true));
-                    const opSel = document.createElement('select'); opSel.className = "bg-transparent text-yellow-300 font-bold outline-none cursor-pointer mx-1 border-b-2 border-yellow-300";
-                    ['==', '!=', '>', '<'].forEach(op => {
-                        const opt = document.createElement('option'); opt.className = "text-black"; opt.value = op; opt.innerText = op;
-                        if(block.condition.op === op) opt.selected = true;
-                        opSel.appendChild(opt);
-                    });
-                    opSel.onchange = (e) => { updateBlockVal(block.id, 'condition', {...block.condition, op: e.target.value}, true); };
-                    condWrap.append(opSel, createRichInput(block.condition.right, (n, r) => updateBlockVal(block.id, 'condition', {...block.condition, right: n}, r), true));
-                }
-                leftContent.appendChild(condWrap); leftContent.append(` Maka`);
+        let otherCats = currentCats.filter(c => c.id !== actualType);
+        otherCats.forEach((c, idx) => {
+            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
+            else {
+                let val = Math.floor(Math.random() * remaining);
+                probabilities[c.id] = val;
+                remaining -= val;
             }
-
-            const actionBtns = document.createElement('div'); actionBtns.className = 'flex items-center gap-0.5 ml-auto flex-shrink-0 bg-black/10 rounded-lg p-0.5';
-            const upBtn = document.createElement('button'); upBtn.innerHTML = '▲'; upBtn.className = 'text-white/80 hover:text-white px-1 py-0.5 rounded text-xs'; upBtn.onclick = () => moveBlock(index, -1);
-            const downBtn = document.createElement('button'); downBtn.innerHTML = '▼'; downBtn.className = 'text-white/80 hover:text-white px-1 py-0.5 rounded text-xs'; downBtn.onclick = () => moveBlock(index, 1);
-            const delBtn = document.createElement('button'); delBtn.innerHTML = '✖'; delBtn.className = 'text-white/80 hover:text-red-300 px-1 py-0.5 rounded text-xs ml-1'; delBtn.onclick = () => removeBlock(block.id);
-            actionBtns.append(upBtn, downBtn, delBtn); el.append(leftContent, actionBtns); wrapper.appendChild(el); blocksContainer.appendChild(wrapper);
-
-            if (['if', 'forever', 'repeat', 'else'].includes(block.type)) indentLevel++;
         });
-        checkStepValidation();
     }
 
-    // ================= EXECUTION ENGINE =================
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    let maxPct = -1;
+    let maxCatId = null;
 
-    function buildAST(flatScript) {
-        let root = []; let stack = [{ children: root }]; 
-        for (let i = 0; i < flatScript.length; i++) {
-            let block = Object.assign({}, flatScript[i]);
-            if (block.type === 'if') {
-                block.childrenTrue = []; block.childrenFalse = []; block.children = block.childrenTrue; 
-                stack[stack.length - 1].children.push(block); stack.push({ node: block, children: block.childrenTrue });
-            } else if (block.type === 'else') {
-                if (stack.length > 1) { let p = stack[stack.length - 1]; if (p.node.type === 'if') p.children = p.node.childrenFalse; }
-            } else if (['forever', 'repeat'].includes(block.type)) {
-                block.children = []; stack[stack.length - 1].children.push(block); stack.push({ node: block, children: block.children });
-            } else if (['endIf', 'endForever', 'endRepeat'].includes(block.type)) {
-                if (stack.length > 1) stack.pop(); 
-            } else { stack[stack.length - 1].children.push(block); }
+    setTimeout(() => {
+        currentCats.forEach(c => {
+            let pct = probabilities[c.id];
+            document.getElementById(`bar${c.id}`).style.width = pct + "%";
+            document.getElementById(`pct${c.id}Text`).innerText = pct + "%";
+            if(pct > maxPct) { maxPct = pct; maxCatId = c.id; }
+        });
+        
+        const finalDecisionEl = document.getElementById('final-decision');
+        let winningCat = currentCats.find(c => c.id === maxCatId);
+        
+        finalDecisionEl.innerHTML = `<span class='${winningCat.theme.textTitle}'>${winningCat.name.toUpperCase()}</span>`;
+
+        const explainBox = document.getElementById('explanation-box');
+        const explainText = document.getElementById('explanation-text');
+        
+        let alasan = "";
+        let sisaPersen = 100 - maxPct;
+
+        if (noiseMistakes > 0) {
+            alasan = `Akurasi KA dipengaruhi oleh <b>${noiseMistakes} data tidak relevan (misalnya apel/mobil)</b> yang dimasukkan ke kotak hewan di tahap latih. KA mendeteksi pola dari benda tersebut sebagai ciri-ciri hewan, yang menyebabkan hasil prediksi menjadi tidak akurat.`;
+        } else if (isRealAnomaly) {
+            alasan = `Gambar ini adalah <b>Data Baru</b> yang belum pernah diajarkan. KA memecah gambar dan mencari pola <b>garis, warna, dan bentuk</b>. Karena pola pada gambar ini tidak memiliki kecocokan yang kuat dengan data latih, KA mendeteksi kemiripan terdekat dengan <b>${winningCat.name}</b> sebesar ${maxPct}%.`;
+        } else {
+            alasan = `AI mendeteksi gambar ini sebagai <b>${winningCat.name}</b> dengan tingkat kecocokan <b>${maxPct}%</b>. KA membandingkan komposisi <b>pola garis, warna, dan bentuk</b> pada gambar ini dengan data latih yang kamu berikan. Sisa ${sisaPersen}% didistribusikan ke kategori lain karena adanya kemiripan sebagian kecil pola warna atau garis dengan hewan lain.`;
         }
-        return root;
-    }
+        
+        explainText.innerHTML = alasan;
+        explainBox.classList.remove('hidden');
 
-    function evaluateCondition(cond, targetSprite) {
-        if (!cond) return false;
-        if (cond.type === 'touching') {
-            const el1 = elSprites[targetSprite]; const el2 = elSprites[cond.target];
-            if (!el1 || !el2 || !spriteState[targetSprite].visible || !spriteState[cond.target].visible) return false;
-            const r1 = el1.getBoundingClientRect(); const r2 = el2.getBoundingClientRect();
-            return !(r2.left > r1.right || r2.right < r1.left || r2.top > r1.bottom || r2.bottom < r1.top);
-        } else if (cond.type === 'operator') {
-            const leftVal = resolveValue(cond.left, targetSprite); const rightVal = resolveValue(cond.right, targetSprite);
-            if (cond.op === '==') return leftVal == rightVal; if (cond.op === '!=') return leftVal != rightVal; 
-            if (cond.op === '>') return parseFloat(leftVal) > parseFloat(rightVal); if (cond.op === '<') return parseFloat(leftVal) < parseFloat(rightVal);
+        document.getElementById('action-buttons-eval').classList.remove('hidden');
+        
+        const btnNext = document.getElementById('btn-next-level');
+        btnNext.classList.remove('hidden');
+        
+        if (currentLevel < 3) {
+            btnNext.innerHTML = `Lanjut ke Level ${currentLevel + 1}`;
+            btnNext.onclick = () => goToLevel(currentLevel + 1);
+        } else {
+            btnNext.innerHTML = `Selesai & Lihat Refleksi`;
+            btnNext.onclick = () => showReflection();
         }
-        return false;
-    }
 
-    function updateVisuals(spriteId) {
-        const state = spriteState[spriteId];
-        elSprites[spriteId].style.transform = `translate(${state.x}px, ${-state.y}px)`;
-        elSprites[spriteId].style.opacity = state.visible ? 1 : 0;
-        document.getElementById('var-posx').innerText = Math.round(spriteState.robot.x);
-        document.getElementById('var-posy').innerText = Math.round(spriteState.robot.y);
-        document.getElementById('var-battery').innerText = globalVars.battery;
-        document.getElementById('var-answer').innerText = globalVars.answer || '-';
-    }
+    }, 100);
 
-    function stopProgram() {
-        isRunning = false; currentRunId++; 
-        messageResolvers.forEach(r => r.resolve());
-        messageResolvers = []; messagesFired = {};
+    const laporanBox = document.getElementById('laporanAI');
+    laporanBox.classList.remove('hidden');
+    
+    const accuracyHtml = currentCats.map(c => {
+        let acc = Math.round((trainingAccuracy[c.id] || 0) * 100);
+        return `
+            <div class="${c.theme.bg} p-4 rounded-2xl border ${c.theme.border} text-center">
+                <p class="text-xs ${c.theme.textCount} font-semibold mb-1">Akurasi Latihan ${c.name}</p>
+                <p class="text-3xl font-black ${c.theme.textTitle}">${acc}%</p>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('accuracy-report').innerHTML = accuracyHtml;
+}
 
-        spriteState = JSON.parse(JSON.stringify(initialSpriteState)); globalVars = { battery: 90, answer: "" };
-        elBubbles.robot.classList.add('hidden'); elBubbles.battery.classList.add('hidden'); document.getElementById('ask-ui').classList.add('hidden');
-        updateVisuals('robot'); updateVisuals('battery');
-        document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
-    }
+function resetLevel(){
+    const currentCats = levels[currentLevel].cats;
+    currentCats.forEach(c => {
+        const kotak = document.getElementById(`kotak${c.id}`);
+        if(kotak) kotak.innerHTML = ''; 
+        const count = document.getElementById(`count${c.id}`);
+        if(count) count.innerText = '0';
+    });
+    resetLevelState();
+}
 
-    async function runProgram() {
-        if (isRunning) return; stopProgram(); isRunning = true; const myRunId = currentRunId;
-        tutorialRunTriggered = true; checkStepValidation();
-        await Promise.all([ executeAST(buildAST(appData.robot.scripts), 'robot', myRunId), executeAST(buildAST(appData.battery.scripts), 'battery', myRunId) ]);
-        if (myRunId === currentRunId) { isRunning = false; document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block')); }
-    }
+function showReflection() {
+    document.getElementById('modal-reflection').classList.remove('hidden');
+}
 
-    async function executeAST(nodes, targetSprite, expectedRunId) {
-        if(!nodes) return;
-        for (let node of nodes) {
-            if (!isRunning || expectedRunId !== currentRunId) break;
-            
-            // Highlight khusus sprite aktif
-            if (targetSprite === activeSprite) {
-                document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
-                const uiEl = document.getElementById(`block-ui-${node.id}`);
-                if(uiEl) { 
-                    uiEl.classList.add('active-block'); 
-                    // Scroll dengan aman tanpa memengaruhi keseluruhan halaman
-                    scriptArea.scrollTo({ top: uiEl.offsetTop - (scriptArea.clientHeight / 2) + (uiEl.clientHeight / 2), behavior: 'smooth' });
-                }
-            }
-
-            const val = resolveValue(node.val, targetSprite); const numVal = parseFloat(val) || 0;
-
-            if (node.type === 'changeX') { spriteState[targetSprite].x += numVal; updateVisuals(targetSprite); await sleep(300); } 
-            else if (node.type === 'changeY') { spriteState[targetSprite].y += numVal; updateVisuals(targetSprite); await sleep(300); }
-            else if (node.type === 'show') { spriteState[targetSprite].visible = true; updateVisuals(targetSprite); await sleep(200); }
-            else if (node.type === 'hide') { spriteState[targetSprite].visible = false; updateVisuals(targetSprite); await sleep(200); }
-            else if (node.type === 'setBattery') { globalVars.battery = numVal; updateVisuals(targetSprite); await sleep(200); }
-            else if (node.type === 'changeBattery') { globalVars.battery += numVal; updateVisuals(targetSprite); await sleep(200); }
-            else if (node.type === 'broadcast') {
-                const msg = node.val;
-                messagesFired[msg] = true; 
-                messageResolvers.filter(r => r.msg === msg).forEach(r => r.resolve());
-                await sleep(100);
-            }
-            else if (node.type === 'whenReceive') {
-                const msg = node.val;
-                if (!messagesFired[msg]) {
-                    await new Promise(resolve => messageResolvers.push({ msg: msg, resolve: resolve }));
-                }
-                if (!isRunning || expectedRunId !== currentRunId) break; 
-            }
-            else if (node.type === 'say') { 
-                elBubbles[targetSprite].innerText = val; elBubbles[targetSprite].classList.remove('hidden'); 
-                setTimeout(() => { if(currentRunId === expectedRunId) elBubbles[targetSprite].classList.add('hidden'); }, 3000); await sleep(500);
-            }
-            else if (node.type === 'ask') {
-                elBubbles[targetSprite].innerText = val; elBubbles[targetSprite].classList.remove('hidden');
-                document.getElementById('ask-ui').classList.remove('hidden'); 
-                const askInput = document.getElementById('ask-input'); 
-                askInput.value = ''; 
-                // Mencegah browser scroll otomatis ketika form di-focus
-                askInput.focus({ preventScroll: true }); 
-                await new Promise(resolve => {
-                    const handleSubmit = () => { globalVars.answer = askInput.value; updateVisuals(targetSprite); document.getElementById('ask-ui').classList.add('hidden'); elBubbles[targetSprite].classList.add('hidden'); document.getElementById('ask-btn').removeEventListener('click', handleSubmit); askInput.removeEventListener('keypress', handleKey); resolve(); };
-                    const handleKey = e => { if(e.key === 'Enter') handleSubmit(); };
-                    document.getElementById('ask-btn').addEventListener('click', handleSubmit); askInput.addEventListener('keypress', handleKey);
-                });
-            }
-            else if (node.type === 'if') {
-                if (evaluateCondition(node.condition, targetSprite)) await executeAST(node.childrenTrue, targetSprite, expectedRunId);
-                else if (node.childrenFalse && node.childrenFalse.length > 0) await executeAST(node.childrenFalse, targetSprite, expectedRunId);
-            }
-            else if (node.type === 'repeat') { for (let i = 0; i < numVal; i++) { if (!isRunning || expectedRunId !== currentRunId) break; await executeAST(node.children, targetSprite, expectedRunId); } }
-            else if (node.type === 'forever') { while (isRunning && expectedRunId === currentRunId) { await executeAST(node.children, targetSprite, expectedRunId); await sleep(50); } }
-            
-            await sleep(50);
-        }
-    }
-
-    // INIT
-    updateVisuals('robot'); switchExp(0);
+goToLevel(1);

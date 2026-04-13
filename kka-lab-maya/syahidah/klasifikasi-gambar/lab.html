@@ -2,14 +2,14 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280">
-    <title>Instruksi Untuk Roborumdik </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksperimen Klasifikasi oleh KA</title>
     <link href="assets/src/output.css" rel="stylesheet">
     <link href="assets/src/style-lab.css" rel="stylesheet">
-
+    
 </head>
+<body class="text-slate-800 pb-20">
 
-<body class="bg-slate-100 h-screen flex flex-col min-w-[1280px] overflow-hidden">
 <div class="header-bg flex justify-between items-center px-6 py-4">
     <div class="flex items-center gap-4">
         <img src="assets/img/kemendikdasmen.webp" class="h-14">
@@ -27,159 +27,235 @@
     </div>
 </div>
 
-    <div class="bg-white border-b-2 border-slate-200 px-6 py-3 flex items-center justify-between shadow-sm z-30 relative">
-        <div class="flex items-center gap-5">
-            
-            <!-- INI TOMBOL KEMBALINYA -->
-           <a href="index.html" class="btn-kembali">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-    </svg>
-    Kembali
-</a>
-
-            <!-- Judul Asli Bawaan Lab Anda -->
-            <div class="text-2xl font-black text-slate-800 tracking-tight">Instruksi Untuk Roborumdik</div>
-        </div>
-        
-        
-            <div id="dots-container" class="flex items-center gap-2">
-<div class="absolute top-1/2 left-6 right-6 h-1 bg-white/20 -mt-0.5 z-0"></div>
-                <!-- Diisi otomatis oleh JS -->
+<header class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/homepage-klasifikasi-gambar/" 
+               class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-indigo-100 hover:text-indigo-600 transition-colors shadow-sm" title="Kembali ke Beranda">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <div class="flex items-center gap-3 border-l-2 border-slate-100 pl-4">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-200">AI</div>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight">Eksperimen <span class="text-indigo-600">Klasifikasi oleh KA</span></h1>
             </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span id="level-badge" class="bg-indigo-100 text-indigo-700 text-sm font-bold px-4 py-1.5 rounded-full border border-indigo-200 shadow-sm flex items-center gap-2">
+                Level 1
+            </span>
+        </div>
+    </div>
+</header>
 
-
-        <div class="flex gap-2 items-center justify-end">
-            <button onclick="runProgram()" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-6 rounded-full shadow-[0_4px_0_#16a34a] active:shadow-[0_0px_0_#16a34a] active:translate-y-1 transition-all">
-                ▶ Jalankan
-            </button>
-            <button onclick="stopProgram()" class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-6 rounded-full shadow-[0_4px_0_#dc2626] active:shadow-[0_0px_0_#dc2626] active:translate-y-1 transition-all">
-                ⏹ Reset
-            </button>
+<main class="max-w-5xl mx-auto px-6 mt-8">
+    <!-- Stepper UI 4 Tahap -->
+    <div class="flex items-center justify-center max-w-3xl mx-auto mb-10">
+        <div class="flex flex-col items-center flex-1">
+            <div id="step1-circle" class="step-circle w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg ring-4 ring-indigo-50 font-bold z-10">1</div>
+            <span id="step1-text" class="text-sm font-bold text-indigo-600 mt-2 text-center">Data<br>Masukan</span>
+        </div>
+        <div id="line1" class="step-line"></div>
+        <div class="flex flex-col items-center flex-1">
+            <div id="step2-circle" class="step-circle w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10">2</div>
+            <span id="step2-text" class="text-sm mt-2 text-slate-400 text-center">Proses<br>Latih</span>
+        </div>
+        <div id="line2" class="step-line"></div>
+        <div class="flex flex-col items-center flex-1">
+            <div id="step3-circle" class="step-circle w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10">3</div>
+            <span id="step3-text" class="text-sm mt-2 text-slate-400 text-center">Uji<br>Model</span>
+        </div>
+        <div id="line3" class="step-line"></div>
+        <div class="flex flex-col items-center flex-1">
+            <div id="step4-circle" class="step-circle w-10 h-10 rounded-full bg-white border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold z-10">4</div>
+            <span id="step4-text" class="text-sm mt-2 text-slate-400 text-center">Hasil<br>Evaluasi</span>
         </div>
     </div>
 
-    <main class="flex-1 w-full p-4 grid grid-cols-12 gap-4 overflow-hidden relative">
-        <!-- PANEL 1: PALET BLOK -->
-        <section class="col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col overflow-hidden h-full">
-            <h2 class="font-bold text-slate-700 mb-2 border-b pb-2 shrink-0">📦 Palet Blok</h2>
-            <div class="overflow-y-auto flex-1 pr-2 space-y-4 pb-10">
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Kejadian</h3>
-                    <button onclick="addBlock('whenReceive')" class="w-full text-left code-block block-events">🚩 Ketika Menerima</button>
-                    <button onclick="addBlock('broadcast')" class="w-full text-left code-block block-events">📢 Kirim Pesan</button>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Gerakan</h3>
-                    <button onclick="addBlock('changeX')" class="w-full text-left code-block block-motion">➔ Ubah X sbsr</button>
-                    <button onclick="addBlock('changeY')" class="w-full text-left code-block block-motion">⬆ Ubah Y sbsr</button>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Tampilan</h3>
-                    <button onclick="addBlock('say')" class="w-full text-left code-block block-looks">💬 Katakan</button>
-                    <button onclick="addBlock('show')" class="w-full text-left code-block block-looks">👁️ Tampilkan</button>
-                    <button onclick="addBlock('hide')" class="w-full text-left code-block block-looks">👻 Sembunyikan</button>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Sensor</h3>
-                    <button onclick="addBlock('ask')" class="w-full text-left code-block block-sensing">❓ Tanya & tunggu</button>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Data</h3>
-                    <button onclick="addBlock('setBattery')" class="w-full text-left code-block block-data">⚡ Set Baterai ke</button>
-                    <button onclick="addBlock('changeBattery')" class="w-full text-left code-block block-data">⚡ Ubah Baterai sbsr</button>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-slate-400 uppercase mb-2">Kontrol Logika</h3>
-                    <button onclick="addBlock('forever')" class="w-full text-left code-block block-control">🔁 Selamanya</button>
-                    <button onclick="addBlock('endForever')" class="w-full text-left code-block block-control">↩ Akhiri Selamanya</button>
-                    <button onclick="addBlock('repeat')" class="w-full text-left code-block block-control">🔄 Ulangi</button>
-                    <button onclick="addBlock('endRepeat')" class="w-full text-left code-block block-control">↩ Akhiri Ulangi</button>
-                    <button onclick="addBlock('if')" class="w-full text-left code-block block-control">🔀 Jika [Kondisi] maka</button>
-                    <button onclick="addBlock('else')" class="w-full text-left code-block block-control">🔀 Jika Tidak</button>
-                    <button onclick="addBlock('endIf')" class="w-full text-left code-block block-control">↩ Akhiri Jika</button>
-                </div>
+    <!-- FASE 1: TRAINING -->
+    <section id="fase-training" class="bg-white rounded-[40px] shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
+        <div class="flex justify-between items-end mb-8 border-b border-slate-100 pb-6 flex-wrap gap-4">
+            <div class="max-w-xl">
+                <h3 class="text-xl font-black text-slate-800 flex items-center gap-2 mb-1">
+                    <span class="p-2 bg-indigo-100 rounded-lg text-indigo-600">📥</span> Pengumpulan Data Latih
+                </h3>
+                <p class="text-slate-500 text-sm font-medium">
+                    Masukkan gambar ke dalam kotak kategorinya yang sesuai. <br>
+                    <b class="text-red-500">Hati-hati! Ada gambar "Noise/Sampah" (Apel/Mobil)</b>. Jangan masukkan gambar yang tidak relevan agar KA tidak mengira pola benda mati adalah bagian dari bentuk hewan!
+                </p>
             </div>
-        </section>
+            <div id="stats-container" class="flex flex-wrap gap-3"></div>
+        </div>
 
-        <!-- PANEL 2: AREA SKRIP -->
-        <section class="col-span-4 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-full">
-            <div class="flex border-b border-slate-200 bg-slate-50 shrink-0">
-                <button id="tab-robot" onclick="switchSprite('robot')" class="flex-1 py-3 font-bold text-sm tab-active-robot">🤖 Skrip Robot</button>
-                <button id="tab-battery" onclick="switchSprite('battery')" class="flex-1 py-3 font-bold text-sm tab-inactive">🔋 Skrip Baterai</button>
-            </div>
-            <div class="p-3 flex justify-between items-center border-b border-slate-100 bg-white shadow-sm z-10 shrink-0">
-                <h2 class="font-bold text-slate-700 text-sm">🧩 Area Skrip (<span id="active-sprite-name">Robot</span>)</h2>
-                <button onclick="clearScript()" class="text-xs text-red-500 font-bold hover:underline">Hapus Semua</button>
-            </div>
-            <div id="script-area" class="flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-robot pb-10 transition-colors relative scroll-smooth">
-                <div id="blocks-container" class="relative z-10 flex flex-col min-w-max"></div>
-            </div>
-        </section>
+        <div class="flex justify-center flex-wrap gap-4 mb-10" id="sampleCards"></div>
+        <div id="drop-zones-container" class="grid gap-6 mb-10"></div>
 
-        <!-- PANEL 3: STAGE & VARIABEL -->
-        <section class="col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col h-full overflow-hidden items-center relative">
-            <div class="w-[480px] flex justify-between items-center mb-2 px-1 shrink-0">
-                <h2 class="font-bold text-slate-700">🎭 Stage</h2>
+        <div class="text-center">
+            <button onclick="checkDataBeforeTraining()" class="group relative px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg rounded-2xl shadow-xl shadow-indigo-200 hover:shadow-indigo-300 transition-all focus:outline-none overflow-hidden">
+                <span class="relative z-10 flex items-center gap-2">Mulai Latih KA 🧠</span>
+                <div class="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/10"></div>
+            </button>
+        </div>
+    </section>
+
+    <!-- FASE 2 & 3: PENGUJIAN & HASIL -->
+    <section id="deteksi-area" class="bg-white rounded-[40px] shadow-xl shadow-slate-200/50 p-8 border border-slate-100 hidden">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-black text-slate-800 mb-3">Uji Model AI</h2>
+            <p class="text-slate-500 font-medium">AI sudah selesai membangun model matematika! Sekarang, pilih satu gambar baru di bawah ini untuk melihat hasil deteksinya.</p>
+        </div>
+
+        <div class="flex justify-center gap-4 mb-10 flex-wrap" id="testCards"></div>
+
+        <!-- Hasil Analisis -->
+        <div id="hasil-prediksi" class="bg-slate-50 p-8 rounded-[32px] border border-slate-200 hidden">
+            <!-- KA Berpikir Ujian -->
+            <div id="ai-thinking-box" class="text-center py-6 hidden">
+                <div class="inline-block w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+                <h3 class="text-xl font-bold text-indigo-900 mb-2">AI memecah gambar menjadi pola piksel...</h3>
+                <p class="text-slate-500 text-sm mb-4">AI mencari tingkat kecocokan matematis dari Garis, Warna, dan Bentuk</p>
+                <div class="flex justify-center gap-4 mt-4 text-sm font-semibold text-slate-500 flex-wrap">
+                    <span id="step-feature-1" class="transition-all duration-300 p-3 rounded-xl bg-slate-100 w-28 text-center">Ekstrak<br>Garis</span>
+                    <span id="step-feature-2" class="transition-all duration-300 p-3 rounded-xl bg-slate-100 w-28 text-center">Sebaran<br>Warna</span>
+                    <span id="step-feature-3" class="transition-all duration-300 p-3 rounded-xl bg-slate-100 w-28 text-center">Cocokkan<br>Pola</span>
+                </div>
             </div>
-            <div id="stage-area" class="relative rounded-lg overflow-hidden border-2 border-slate-300 shrink-0" style="width: 480px; height: 360px;">
-                <div class="absolute left-1/2 top-1/2 w-4 h-4 -ml-2 -mt-2 opacity-20 pointer-events-none">
-                    <div class="w-full h-[1px] bg-black absolute top-1/2"></div>
-                    <div class="h-full w-[1px] bg-black absolute left-1/2"></div>
+
+            <!-- Result Progress Bars -->
+            <div id="prediction-results" class="hidden space-y-6">
+                <div class="text-center mb-6">
+                    <p class="text-slate-500 font-bold uppercase tracking-wider text-sm mb-1">Hasil Deteksi Pola Terdekat:</p>
+                    <h3 id="final-decision" class="text-4xl font-black mt-1"></h3>
+                </div>
+                <div id="prediction-bars" class="space-y-4 max-w-2xl mx-auto"></div>
+            </div>
+
+            <!-- Penjelasan Mengapa Persentasenya Begitu -->
+            <div id="explanation-box" class="hidden mt-8 max-w-3xl mx-auto bg-white p-6 rounded-2xl border-l-8 border-indigo-500 shadow-sm">
+                <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2"><i class="fas fa-microchip text-indigo-500"></i> Penjelasan Model AI</h4>
+                <p id="explanation-text" class="text-slate-600 font-medium leading-relaxed"></p>
+            </div>
+
+            <!-- Laporan Evaluasi -->
+            <div id="laporanAI" class="hidden mt-10 pt-8 border-t-2 border-dashed border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">📈</span> Evaluasi Model KA (Level <span id="eval-level-num"></span>)
+                </h3>
+
+                <!-- Penjelasan Akurasi Pelatihan -->
+                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 mb-6">
+                    <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">📌 Apa itu "Akurasi Latihan"?</h4>
+                    <p class="text-sm text-amber-800 leading-relaxed font-medium">
+                        <b>Akurasi Latihan</b> adalah nilai yang menggambarkan seberapa tepat kumpulan data yang kamu masukkan ke dalam kotak. Ini membuktikan bahwa manusia memegang kendali atas kualitas AI. Jika kamu salah mengelompokkan data, model matematika yang dihasilkan oleh KA juga akan keliru saat melakukan prediksi.
+                    </p>
                 </div>
 
-                <div id="sprite-robot" class="sprite-container absolute left-1/2 top-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center text-5xl z-10">
-                    🤖<div id="bubble-robot" class="speech-bubble hidden font-bold shadow-lg"></div>
-                </div>
-                <div id="sprite-battery" class="sprite-container absolute left-1/2 top-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center text-5xl z-10" style="transform: translate(100px, -100px);">
-                    🔋<div id="bubble-battery" class="speech-bubble hidden font-bold shadow-lg"></div>
-                </div>
+                <div id="accuracy-report" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"></div>
 
-                <div id="ask-ui" class="hidden absolute bottom-0 left-0 w-full bg-white/95 p-3 border-t-2 border-slate-300 flex gap-2 z-50 items-center justify-center">
-                    <input type="text" id="ask-input" class="flex-1 border-2 border-blue-400 rounded-lg px-3 py-1.5 outline-none font-bold text-slate-800" placeholder="Ketik jawaban...">
-                    <button id="ask-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-lg font-bold">OK</button>
+                <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100">
+                    <h4 class="font-bold text-indigo-900 mb-2 flex items-center gap-2">💡 Bagaimana Cara Kerja Model Ini?</h4>
+                    <p class="text-sm text-indigo-800 leading-relaxed font-medium mb-3">
+                        Komputer tidak memiliki mata untuk melihat wujud hewan seperti halnya manusia. Bagi komputer, gambar hanyalah representasi angka. Saat model ini bekerja, ia melakukan hal berikut:
+                    </p>
+                    <ul class="list-disc ml-5 text-sm text-indigo-800 leading-relaxed font-medium space-y-1">
+                        <li>Memecah seluruh gambar menjadi komponen piksel.</li>
+                        <li>Mengekstrak ciri-ciri matematis dasar seperti sebaran <b>Warna</b>, susunan <b>Garis</b> lurus, dan lengkungan <b>Bentuk</b>.</li>
+                        <li>Mencari pola angka mana yang paling mendekati susunan data yang kamu berikan sebelumnya di tahap pengumpulan data.</li>
+                    </ul>
                 </div>
-            </div>
-            
-            <div class="w-[480px] mt-4 grid grid-cols-4 gap-2 shrink-0">
-                <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1 text-center shadow-inner">
-                    <span class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase mx-auto">Baterai</span>
-                    <span id="var-battery" class="font-mono text-orange-600 font-bold text-base mt-auto">90</span>
-                </div>
-                <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1 text-center shadow-inner">
-                    <span class="bg-purple-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase mx-auto">Jawaban</span>
-                    <span id="var-answer" class="font-mono text-purple-600 font-bold text-sm mt-auto truncate">-</span>
-                </div>
-                <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1 text-center shadow-inner">
-                    <span class="bg-blue-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase mx-auto">Pos X</span>
-                    <span id="var-posx" class="font-mono text-blue-600 font-bold text-base mt-auto">0</span>
-                </div>
-                <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 flex flex-col gap-1 text-center shadow-inner">
-                    <span class="bg-blue-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase mx-auto">Pos Y</span>
-                    <span id="var-posy" class="font-mono text-blue-600 font-bold text-base mt-auto">0</span>
-                </div>
-            </div>
-            
-            <div id="success-overlay" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
-                <div class="text-7xl mb-4">🎉🤖✨</div>
-                <h2 class="text-3xl font-black text-teal-600 mb-2">Luar Biasa!</h2>
-                <p class="text-slate-700 font-bold mb-6">Kamu telah berhasil menyelesaikan semua 4 percobaan dengan sempurna.</p>
-                <button onclick="document.getElementById('success-overlay').classList.add('hidden'); tutorialPanel.classList.add('hidden');" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all text-lg border-b-4 border-blue-700 active:border-b-0 active:translate-y-1">Bebas Berkreasi & Mainkan!</button>
-            </div>
-        </section>
-
-        <!-- UI POP-UP TUTORIAL -->
-        <div id="tutorial-panel" class="hidden fixed bottom-8 right-8 w-[450px] bg-white border-4 border-yellow-400 rounded-2xl shadow-2xl z-50 overflow-hidden tutorial-anim">
-            <div class="bg-yellow-400 text-yellow-900 px-4 py-3 font-black flex justify-between items-center text-[15px]" id="tutorial-title"></div>
-            <div class="p-5 text-[14.5px] leading-relaxed text-slate-700 bg-yellow-50 min-h-[160px]" id="tutorial-content"></div>
-            
-            <div class="bg-white px-4 py-3 border-t border-slate-200 flex justify-between items-center">
-                <span id="tutorial-counter" class="text-xs text-slate-500 font-bold bg-slate-100 px-2 py-1 rounded"></span>
-                <button id="btn-next-tut" onclick="nextStep()" class="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-bold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed">Lanjut ➔</button>
             </div>
         </div>
-    </main>
+
+        <div class="text-center mt-12 flex justify-center gap-4 flex-wrap hidden" id="action-buttons-eval">
+            <button onclick="resetLevel()" class="px-8 py-3 rounded-xl font-bold text-indigo-600 bg-indigo-50 border-2 border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 transition-all focus:outline-none">
+                Ulangi Level Ini
+            </button>
+            <button id="btn-next-level" class="px-8 py-3 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-indigo-500/30 transition-all focus:outline-none hidden">
+                Lanjut ke Level Berikutnya
+            </button>
+        </div>
+    </section>
+</main>
+
+<!-- MODAL DISCLAIMER DATA IDEAL -->
+<div id="modal-disclaimer" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+        <div class="bg-indigo-600 p-6 text-white text-center">
+            <span class="text-5xl mb-2 block">🧠</span>
+            <h3 class="text-2xl font-black">Proses Pembuatan Model AI</h3>
+        </div>
+        <div class="p-8 text-center text-slate-700 font-medium">
+            <p class="mb-4 text-left">Sebelum sistem membangun model, pahami bahwa <b>kepintaran KA bergantung pada pola data yang kamu berikan.</b></p>
+            <ul class="text-left bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 space-y-3 text-sm">
+                <li>✅ <b>AI memproses angka, bukan gambar visual.</b> Ia menghitung kecocokan pola matematis pada garis, warna, dan bentuk.</li>
+                <li>✅ Kuantitas data menentukan seberapa baik KA belajar mengenali pola tersebut.</li>
+                <li>❌ Jika ada data noise (seperti gambar mobil) yang masuk ke kelompok hewan, KA akan mengira pola garis mobil adalah bagian dari ciri hewan!</li>
+            </ul>
+            <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 p-3 rounded-xl mb-6 text-sm text-left shadow-inner">
+                💡 <b>Catatan Penting:</b> Pada simulasi laboratorium ini, kita hanya menggunakan <b>sedikit sampel data</b> (4 per kategori) agar memudahkan pemahaman. Pada pengembangan model nyata di industri, KA dilatih menggunakan <b>puluhan ribu hingga jutaan data gambar</b> untuk mencapai akurasi tinggi.
+            </div>
+            <button onclick="startTrainingAnimation()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                Saya Paham, Mulai Bangun Model AI
+            </button>
+            <button onclick="closeDisclaimer()" class="mt-4 text-slate-400 hover:text-slate-600 font-bold underline">Tunggu, saya ingin cek data saya lagi</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ANIMASI TRAINING (PROSESING) -->
+<div id="modal-training-anim" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4">
+    <div class="text-center w-full max-w-md">
+        <div class="relative w-32 h-32 mx-auto mb-8">
+            <div class="absolute inset-0 border-8 border-indigo-200 border-t-indigo-500 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-5xl animate-pulse">⚙️</div>
+        </div>
+        <h2 class="text-3xl font-black text-white mb-2" id="training-anim-title">Membangun Jaringan AI</h2>
+        <p class="text-indigo-200 text-lg font-semibold h-8" id="training-anim-desc">Mengubah gambar menjadi perhitungan matematis...</p>
+        
+        <div class="w-full bg-slate-700 rounded-full h-3 mt-8 overflow-hidden">
+            <div id="training-progress-bar" class="bg-indigo-500 h-full w-0 transition-all duration-500"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL REFLEKSI (AKHIR LEVEL 3) -->
+<div id="modal-reflection" class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white text-center">
+            <span class="text-6xl mb-2 block">🎓</span>
+            <h3 class="text-3xl font-black">Selamat! Misi Selesai</h3>
+        </div>
+        <div class="p-8 text-slate-700 font-medium">
+            <p class="mb-4 text-center text-lg">Kamu telah berhasil menyelesaikan semua tahapan klasifikasi. Mari ingat kembali materi yang telah kita pelajari:</p>
+            <div class="space-y-4">
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <h4 class="font-bold text-indigo-900 mb-1">1. KA Belajar dari Kumpulan Data</h4>
+                    <p class="text-sm">Model KA membutuhkan contoh data agar bisa membangun pola. Di sinilah peran manusia sangat penting untuk menyediakan data latih.</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h4 class="font-bold text-blue-900 mb-1">2. Klasifikasi Melalui Pola Matematis</h4>
+                    <p class="text-sm">AI tidak bisa "melihat" bentuk utuh seperti telinga atau hidung. KA memecah gambar menjadi angka piksel dan melakukan perhitungan matematis terhadap sebaran <b>garis, warna, dan bentuk</b>.</p>
+                </div>
+                <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
+                    <h4 class="font-bold text-rose-900 mb-1">3. Dampak Data Tidak Relevan</h4>
+                    <p class="text-sm">Jika data awal mengandung kesalahan (noise), maka model akhir akan memberikan prediksi yang keliru. <i>"Garbage In, Garbage Out!"</i>.</p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                    <h4 class="font-bold text-amber-900 mb-1">4. Prediksi Bersifat Kemiripan Pola</h4>
+                    <p class="text-sm">Saat dihadapkan pada gambar asing (anomali), KA akan mencari pola yang paling mendekati dari rentang data yang pernah ia pelajari, sehingga persentase prediksinya didistribusikan berdasarkan tingkat kecocokan pola tersebut.</p>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/homepage-klasifikasi-gambar/" class="inline-block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                    Kembali ke Beranda Utama
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="assets/src/script-lab.js"></script>
+
 </body>
 </html>
