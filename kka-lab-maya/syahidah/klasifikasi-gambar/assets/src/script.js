@@ -22,8 +22,38 @@ setTimeout(showText,1000)
 // SCRIPT MODAL CAPAIAN PEMBELAJARAN
 // ==============================================
 const cpModal = document.getElementById('cpModal');
-function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+const startBtn = document.getElementById('startBtn');
+let hasSeenTujuan = false;
+let hasSeenCara = false;
+
+function updateStartButton() {
+    const unlocked = hasSeenTujuan && hasSeenCara;
+    if (!startBtn) return;
+
+    if (unlocked) {
+        startBtn.classList.remove('opacity-50', 'pointer-events-none', 'cursor-not-allowed');
+        startBtn.classList.add('cursor-pointer');
+        startBtn.setAttribute('href', 'lab.html');
+        startBtn.removeAttribute('aria-disabled');
+        startBtn.title = 'Klik untuk mulai percobaan';
+    } else {
+        startBtn.classList.add('opacity-50', 'pointer-events-none', 'cursor-not-allowed');
+        startBtn.classList.remove('cursor-pointer');
+        startBtn.removeAttribute('href');
+        startBtn.setAttribute('aria-disabled', 'true');
+        startBtn.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu untuk mulai percobaan';
+    }
+}
+
+function openCPModal() {
+    hasSeenTujuan = true;
+    updateStartButton();
+    cpModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
 function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+updateStartButton();
 
 // ==============================================
 // SCRIPT MODAL CARA PENGGUNAAN (9 SLIDES)
@@ -33,6 +63,8 @@ let currentSlide = 0;
 const totalSlides = 5;
 
 function openCaraModal() {
+    hasSeenCara = true;
+    updateStartButton();
     caraModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
