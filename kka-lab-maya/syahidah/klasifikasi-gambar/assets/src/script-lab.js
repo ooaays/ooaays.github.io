@@ -567,7 +567,7 @@ function showResult(actualType) {
         } else if (isRealAnomaly) {
             alasan = `Gambar ini adalah <b>Data Baru</b> yang belum pernah diajarkan. KA memecah gambar dan mencari pola <b>garis, warna, dan bentuk</b>. Karena pola pada gambar ini tidak memiliki kecocokan yang kuat dengan data latih, KA mendeteksi kemiripan terdekat dengan <b>${winningCat.name}</b> sebesar ${maxPct}%.`;
         } else {
-            alasan = `AI mendeteksi gambar ini sebagai <b>${winningCat.name}</b> dengan tingkat kecocokan <b>${maxPct}%</b>. KA membandingkan komposisi <b>pola garis, warna, dan bentuk</b> pada gambar ini dengan data latih yang kamu berikan. Sisa ${sisaPersen}% didistribusikan ke kategori lain karena adanya kemiripan sebagian kecil pola warna atau garis dengan hewan lain.`;
+            alasan = `KA mendeteksi gambar ini sebagai <b>${winningCat.name}</b> dengan tingkat kecocokan <b>${maxPct}%</b>. KA membandingkan komposisi <b>pola garis, warna, dan bentuk</b> pada gambar ini dengan data latih yang kamu berikan. Sisa ${sisaPersen}% didistribusikan ke kategori lain karena adanya kemiripan sebagian kecil pola warna atau garis dengan hewan lain.`;
         }
         
         explainText.innerHTML = alasan;

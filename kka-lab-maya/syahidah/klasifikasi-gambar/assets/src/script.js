@@ -4,7 +4,7 @@
 const texts = [
 "Hai Murid Hebat!",
 "Selamat datang di Lab Klasifikasi",
-"Kita akan melatih AI untuk mengenali hewan",
+"Kita akan melatih Kecerdasan Artifisial untuk mengklasifikasi hewan",
 "Yuk, mulai percobaannya!"
 ]
 let index=0
