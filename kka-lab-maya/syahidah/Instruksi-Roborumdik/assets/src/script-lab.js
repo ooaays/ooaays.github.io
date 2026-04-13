@@ -518,6 +518,7 @@
         if (myRunId === currentRunId) {
             isRunning = false;
             document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
+            await sleep(3000);
             autoRestoreTutorialPanel();
         }
     }
