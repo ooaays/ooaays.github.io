@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKA Lab Maya - Portal Proyek</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="glass-header sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-600 text-white p-2 rounded-lg shadow-md shadow-brand-500/30">
+                    <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-none">KKA Lab Maya</h1>
+                    <span class="text-xs text-slate-500 font-medium">Portal Eksperimen & Pembelajaran</span>
+                </div>
+            </div>
+            <div class="hidden sm:flex gap-4 text-sm font-medium text-slate-500">
+                <a href="#jeremia" class="hover:text-brand-600 transition-colors">Jeremia</a>
+                <a href="#ramli" class="hover:text-brand-600 transition-colors">Ramli</a>
+                <a href="#syahidah" class="hover:text-brand-600 transition-colors">Syahidah</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 pt-12 pb-8">
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm relative overflow-hidden">
+            <!-- Decorative Background blob -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-brand-50 blur-3xl opacity-60"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 rounded-full bg-indigo-50 blur-3xl opacity-60"></div>
+            
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 text-brand-600 text-xs font-semibold mb-6 border border-brand-100">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>Direktori Aktif</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight">Jelajahi Eksperimen <br> KKA Lab Maya</h2>
+                <p class="text-slate-500 text-base sm:text-lg mb-8 leading-relaxed">
+                    Kumpulan Lab Maya Tim KKA
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content: Projects Grid -->
+    <main class="max-w-7xl mx-auto px-6 pb-24 space-y-16">
+
+        <!-- SECTION: JEREMIA -->
+        <section id="jeremia" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">J</div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800">Developer : Jeremia R N</h3>
+                    <p class="text-sm text-slate-500">5 Lab Maya</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Project Card -->
+                <a href="./jeremia/algoritma-jalur-tercepat/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="route" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Algoritma Jalur Tercepat</h4>
+                    <p class="text-xs text-slate-500 font-medium">Penerapan Langkah-Langkah Sistematis untuk Menyelesaikan Masalah</p>
+                </a>
+
+                <a href="./jeremia/eksperimen-nlp/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Eksperimen NLP</h4>
+                    <p class="text-xs text-slate-500 font-medium">Kecerdasan Artifisial sebagai Alat Bantu Manusia</p>
+                </a>
+
+                <a href="./jeremia/eksplorasi-markov-chain/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="network" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Eksplorasi Markov Chain</h4>
+                    <p class="text-xs text-slate-500 font-medium">Konsep dan Cara Kerja Kecerdasan Artifisial Generatif</p>
+                </a>
+
+                <a href="./jeremia/pengolahan-penyajian-data/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Pengolahan & Penyajian Data</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pengolahan dan Penyajian Data dalam Konteks yang Lebih Luas</p>
+                </a>
+
+                <a href="./jeremia/prediksi-kemacetan/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="car-front" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Prediksi Kemacetan</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pemanfaatan Kecerdasan Artifisial di Berbagai Bidang</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+
+        <!-- SECTION: RAMLI -->
+        <section id="ramli" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">R</div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800">Developer : Ramli JM</h3>
+                    <p class="text-sm text-slate-500">5 Lab Maya</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Project Card -->
+                <a href="./ramli/detektif-data-kantin/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="search" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Detektif Data Kantin</h4>
+                    <p class="text-xs text-slate-500 font-medium">Teknologi untuk Mengolah Data</p>
+                </a>
+
+                <a href="./ramli/logika-percabangan-pemilah-sampah/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="recycle" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Logika Pemilah Sampah</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pemecahan Masalah Sederhana dalam Situasi Kehidupan</p>
+                </a>
+
+                <a href="./ramli/representasi-angka/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="binary" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Representasi Angka</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pengelolaan Data dalam Situasi Kehidupan (Data Angka)</p>
+                </a>
+
+                <a href="./ramli/representasi-gambar/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="image" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Representasi Gambar</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pengelolaan Data dalam Situasi Kehidupan (Data Gambar) </p>
+                </a>
+
+                <a href="./ramli/robot-pena-ajaib/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="pen-tool" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-emerald-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Robot Pena Ajaib</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pengembangan dan Pengujian Instruksi</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+
+        <!-- SECTION: SYAHIDAH -->
+        <section id="syahidah" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">S</div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800">Developer : Syahidah</h3>
+                    <p class="text-sm text-slate-500">5 Lab Maya</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Project Card -->
+                <a href="./syahidah/data-latih/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-violet-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-violet-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="database" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-violet-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Data Latih</h4>
+                    <p class="text-xs text-slate-500 font-medium">Data Latih dalam Pengembangan KA</p>
+                </a>
+
+                <a href="./syahidah/Instruksi-Roborumdik/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-violet-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-violet-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="file-code" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-violet-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Instruksi Roborumdik</h4>
+                    <p class="text-xs text-slate-500 font-medium">Penyusunan dan Perbaikan Instruksi yang Lebih Kompleks</p>
+                </a>
+
+                <a href="./syahidah/klasifikasi-gambar/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-violet-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-violet-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="layout-grid" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-violet-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Klasifikasi Gambar</h4>
+                    <p class="text-xs text-slate-500 font-medium">Eksperimen Klasifikasi oleh KA</p>
+                </a>
+
+                <a href="./syahidah/lampu-smarthome/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-violet-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-violet-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="lightbulb" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-violet-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Lampu Smarthome</h4>
+                    <p class="text-xs text-slate-500 font-medium">Pengembangan Solusi Efektif untuk Permasalahan yang Kompleks</p>
+                </a>
+
+                <a href="./syahidah/simulasi-kasir/" class="group block p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-violet-300 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-violet-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                            <i data-lucide="calculator" class="w-6 h-6"></i>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-300 group-hover:text-violet-600 transition-colors"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800 mb-1">Simulasi Kasir</h4>
+                    <p class="text-xs text-slate-500 font-medium">Menuliskan Instruksi Menggunakan Teknologi atau Pemrograman Dasar</p>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center text-slate-500 text-sm">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="folder-tree" class="w-4 h-4"></i>
+                <span class="font-semibold">KKA Lab Maya Directory</span>
+            </div>
+            <p>&copy; 2026. Dibuat sebagai halaman beranda untuk mempermudah akses modul.</p>
+        </div>
+    </footer>
+
+    <!-- Initialize Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
