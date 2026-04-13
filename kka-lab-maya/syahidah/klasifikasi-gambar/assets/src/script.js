@@ -35,14 +35,12 @@ function updateStartButton() {
         startBtn.classList.add('cursor-pointer');
         startBtn.setAttribute('href', 'lab.html');
         startBtn.removeAttribute('aria-disabled');
-        startBtn.removeAttribute('tabindex');
         startBtn.title = 'Klik untuk mulai percobaan';
     } else {
-        startBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
         startBtn.classList.remove('cursor-pointer');
         startBtn.removeAttribute('href');
         startBtn.setAttribute('aria-disabled', 'true');
-        startBtn.setAttribute('tabindex', '-1');
         startBtn.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu untuk mulai percobaan';
     }
 }
