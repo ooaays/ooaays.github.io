@@ -193,7 +193,7 @@ function goToLevel(lv) {
     currentLevel = lv;
     const currentCats = levels[currentLevel].cats;
     
-    document.getElementById('level-badge').innerHTML = `🌟 Level ${lv}`;
+    document.getElementById('level-badge').innerHTML = `Level ${lv}`;
     document.getElementById('eval-level-num').innerText = currentLevel;
     
     document.getElementById('stats-container').innerHTML = currentCats.map(c => `

@@ -78,10 +78,10 @@
         <div class="flex justify-between items-end mb-8 border-b border-slate-100 pb-6 flex-wrap gap-4">
             <div class="max-w-xl">
                 <h3 class="text-xl font-black text-slate-800 flex items-center gap-2 mb-1">
-                    <span class="p-2 bg-indigo-100 rounded-lg text-indigo-600">📥</span> Pengumpulan Data Latih
+                    Pengumpulan Data Latih
                 </h3>
                 <p class="text-slate-500 text-sm font-medium">
-                    Masukkan gambar ke dalam kotak kategorinya yang sesuai. <br>
+                    Masukkan gambar ke dalam kotak kategorinya yang sesuai dengan cara klik gambar dan tempel ke kotak kategorinya. <br>
                     <b class="text-red-500">Hati-hati! Ada gambar "Noise/Sampah" (Apel/Mobil)</b>. Jangan masukkan gambar yang tidak relevan agar KA tidak mengira pola benda mati adalah bagian dari bentuk hewan!
                 </p>
             </div>
@@ -93,7 +93,7 @@
 
         <div class="text-center">
             <button onclick="checkDataBeforeTraining()" class="group relative px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg rounded-2xl shadow-xl shadow-indigo-200 hover:shadow-indigo-300 transition-all focus:outline-none overflow-hidden">
-                <span class="relative z-10 flex items-center gap-2">Mulai Latih KA 🧠</span>
+                <span class="relative z-10 flex items-center gap-2">Mulai Latih KA </span>
                 <div class="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/10"></div>
             </button>
         </div>
@@ -140,12 +140,12 @@
             <!-- Laporan Evaluasi -->
             <div id="laporanAI" class="hidden mt-10 pt-8 border-t-2 border-dashed border-slate-200">
                 <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <span class="text-2xl">📈</span> Evaluasi Model KA (Level <span id="eval-level-num"></span>)
+                     Evaluasi Model KA (Level <span id="eval-level-num"></span>)
                 </h3>
 
                 <!-- Penjelasan Akurasi Pelatihan -->
                 <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 mb-6">
-                    <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">📌 Apa itu "Akurasi Latihan"?</h4>
+                    <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">Apa itu "Akurasi Latihan"?</h4>
                     <p class="text-sm text-amber-800 leading-relaxed font-medium">
                         <b>Akurasi Latihan</b> adalah nilai yang menggambarkan seberapa tepat kumpulan data yang kamu masukkan ke dalam kotak. Ini membuktikan bahwa manusia memegang kendali atas kualitas AI. Jika kamu salah mengelompokkan data, model matematika yang dihasilkan oleh KA juga akan keliru saat melakukan prediksi.
                     </p>
@@ -182,18 +182,18 @@
 <div id="modal-disclaimer" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
         <div class="bg-indigo-600 p-6 text-white text-center">
-            <span class="text-5xl mb-2 block">🧠</span>
+            
             <h3 class="text-2xl font-black">Proses Pembuatan Model AI</h3>
         </div>
         <div class="p-8 text-center text-slate-700 font-medium">
             <p class="mb-4 text-left">Sebelum sistem membangun model, pahami bahwa <b>kepintaran KA bergantung pada pola data yang kamu berikan.</b></p>
             <ul class="text-left bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 space-y-3 text-sm">
-                <li>✅ <b>AI memproses angka, bukan gambar visual.</b> Ia menghitung kecocokan pola matematis pada garis, warna, dan bentuk.</li>
-                <li>✅ Kuantitas data menentukan seberapa baik KA belajar mengenali pola tersebut.</li>
-                <li>❌ Jika ada data noise (seperti gambar mobil) yang masuk ke kelompok hewan, KA akan mengira pola garis mobil adalah bagian dari ciri hewan!</li>
+                <li> <b>AI memproses angka, bukan gambar visual.</b> Ia menghitung kecocokan pola matematis pada garis, warna, dan bentuk.</li>
+                <li> Kuantitas data menentukan seberapa baik KA belajar mengenali pola tersebut.</li>
+                <li> Jika ada data noise (seperti gambar mobil) yang masuk ke kelompok hewan, KA akan mengira pola garis mobil adalah bagian dari ciri hewan!</li>
             </ul>
             <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 p-3 rounded-xl mb-6 text-sm text-left shadow-inner">
-                💡 <b>Catatan Penting:</b> Pada simulasi laboratorium ini, kita hanya menggunakan <b>sedikit sampel data</b> (4 per kategori) agar memudahkan pemahaman. Pada pengembangan model nyata di industri, KA dilatih menggunakan <b>puluhan ribu hingga jutaan data gambar</b> untuk mencapai akurasi tinggi.
+                 <b>Catatan Penting:</b> Pada simulasi laboratorium ini, kita hanya menggunakan <b>sedikit sampel data</b> (4 per kategori) agar memudahkan pemahaman. Pada pengembangan model nyata di industri, KA dilatih menggunakan <b>puluhan ribu hingga jutaan data gambar</b> untuk mencapai akurasi tinggi.
             </div>
             <button onclick="startTrainingAnimation()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
                 Saya Paham, Mulai Bangun Model AI
@@ -223,8 +223,7 @@
 <div id="modal-reflection" class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
         <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white text-center">
-            <span class="text-6xl mb-2 block">🎓</span>
-            <h3 class="text-3xl font-black">Selamat! Misi Selesai</h3>
+            <h3 class="text-3xl font-black">Selamat! </h3>
         </div>
         <div class="p-8 text-slate-700 font-medium">
             <p class="mb-4 text-center text-lg">Kamu telah berhasil menyelesaikan semua tahapan klasifikasi. Mari ingat kembali materi yang telah kita pelajari:</p>
@@ -247,7 +246,7 @@
                 </div>
             </div>
             <div class="mt-8 text-center">
-                <a href="index.html class="inline-block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
+                <a href="index.html" class="inline-block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">
                     Kembali ke Beranda Utama
                 </a>
             </div>
