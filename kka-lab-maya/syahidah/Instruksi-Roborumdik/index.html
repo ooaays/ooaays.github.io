@@ -474,23 +474,15 @@ Dalam kegiatan ini murid juga belajar melakukan pengujian terhadap instruksi yan
     </div>
 </div>
 
-<div id="lockedPopup" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden">
-        <div class="flex flex-col items-center gap-4">
-            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-orange-100 text-orange-600 shadow-inner ring-2 ring-orange-200">
-                <i class="fa-solid fa-shield-exclamation fa-2x"></i>
-            </div>
-            <h3 class="text-3xl md:text-4xl font-black text-slate-900 text-center">Belum Bisa Dibuka</h3>
-            <p class="text-slate-600 text-base md:text-lg leading-8 text-center max-w-prose">
-                Sebelum mulai, pastikan kamu sudah membaca bagian <strong>Tujuan</strong> dan <strong>Cara Penggunaan</strong> terlebih dahulu. Setelah itu, tombol <strong>Mulai Percobaan</strong> akan aktif.
-            </p>
-        </div>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <button onclick="closeLockedPopup()" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-2xl shadow-xl shadow-sky-500/20 transition-all duration-150">
-                <i class="fa-solid fa-check"></i>
-                Oke, Mengerti!
-            </button>
-        </div>
+<div id="lockedPopup" class="fixed inset-0 bg-slate-900/70 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2rem] p-6 max-w-lg w-full shadow-2xl text-center">
+        <h3 class="text-2xl font-bold text-slate-900 mb-4">Belum Bisa Dibuka</h3>
+        <p class="text-slate-700 text-lg leading-relaxed mb-6">
+            Silakan baca dulu bagian <strong>Tujuan</strong> dan <strong>Cara Penggunaan</strong> sebelum memulai percobaan.
+        </p>
+        <button onclick="closeStartLockedPopup()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-150">
+            Oke, Mengerti
+        </button>
     </div>
 </div>
 
