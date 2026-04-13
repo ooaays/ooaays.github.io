@@ -148,5 +148,43 @@ function updateSlideView() {
 // SCRIPT MODAL BIODATA PENGEMBANG
 // ==============================================
 const bioModal = document.getElementById('bioModal');
-function openBioModal() { bioModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+let bioCurrentSlide = 0;
+const bioTotalSlides = 2;
+
+function openBioModal() {
+    bioCurrentSlide = 0;
+    updateBioSlideView();
+    bioModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
 function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+function changeBioSlide(direction) {
+    bioCurrentSlide += direction;
+    if (bioCurrentSlide < 0) bioCurrentSlide = 0;
+    if (bioCurrentSlide >= bioTotalSlides) bioCurrentSlide = bioTotalSlides - 1;
+
+    const contentArea = document.querySelector('#bioModal .overflow-y-auto');
+    if (contentArea) contentArea.scrollTop = 0;
+
+    updateBioSlideView();
+}
+
+function updateBioSlideView() {
+    for (let i = 0; i < bioTotalSlides; i++) {
+        const slide = document.getElementById('bio-slide-' + i);
+        if (slide) {
+            slide.classList.toggle('hidden', i !== bioCurrentSlide);
+        }
+    }
+
+    const prevBtn = document.getElementById('bioPrevBtn');
+    const nextBtn = document.getElementById('bioNextBtn');
+
+    if (prevBtn) {
+        prevBtn.style.visibility = bioCurrentSlide === 0 ? 'hidden' : 'visible';
+    }
+    if (nextBtn) {
+        nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
+    }
+}
