@@ -79,22 +79,22 @@
         {
             title: "Percobaan 1 – Menggerakkan Robot",
             steps: [
-                { text: "Susun blok untuk menggerakkan robot ke kanan.<br><br>Gunakan blok <b>(➔ Ubah X sebesar 10)</b><br>Kemudian klik <b>▶ Jalankan</b>.<br>Amati perubahan posisi robot.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 10) },
-                { text: "Coba ubah value <b>ubah X</b> menjadi <b>100</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 100) },
-                { text: "Sekarang coba gunakan blok <b>(⬆ Ubah Y sebesar 10)</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 10) },
-                { text: "Coba ubah value <b>ubah Y</b> menjadi <b>100</b><br><br>Kemudian klik <b>▶ Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 100) }
+                { text: "Susun blok untuk menggerakkan robot ke kanan.<br><br>Gunakan blok <b>(<i class='fa-solid fa-arrow-right'></i> Ubah X sebesar 10)</b><br>Kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>.<br>Amati perubahan posisi robot.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 10) },
+                { text: "Coba ubah value <b>ubah X</b> menjadi <b>100</b><br><br>Kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeX', 'val', 100) },
+                { text: "Sekarang coba gunakan blok <b>(<i class='fa-solid fa-arrow-up'></i> Ubah Y sebesar 10)</b><br><br>Kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 10) },
+                { text: "Coba ubah value <b>ubah Y</b> menjadi <b>100</b><br><br>Kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>.", requireRun: true, check: () => hasBlockWithValue('robot', 'changeY', 'val', 100) }
             ]
         },
         {
             title: "Percobaan 2 - Interaksi Baterai",
             steps: [
-                { text: "<b>1.</b> Klik <b>🔋 Skrip baterai</b>.", check: () => activeSprite === 'battery' },
-                { text: "<b>2.</b> Pasang Blok <b>🔁 Selamanya</b>.", check: () => hasBlock('battery', 'forever') },
-                { text: "<b>3.</b> Pasang blok <b>🔀 Jika [kondisi] maka</b> di dalamnya.", check: () => hasBlock('battery', 'if') },
+                { text: "<b>1.</b> Klik <b><i class='fa-solid fa-battery-full'></i> Skrip baterai</b>.", check: () => activeSprite === 'battery' },
+                { text: "<b>2.</b> Pasang Blok <b><i class='fa-solid fa-infinity'></i> Selamanya</b>.", check: () => hasBlock('battery', 'forever') },
+                { text: "<b>3.</b> Pasang blok <b><i class='fa-solid fa-code-branch'></i> Jika [kondisi] maka</b> di dalamnya.", check: () => hasBlock('battery', 'if') },
                 { text: "<b>4.</b> Buat menjadi <b>jika menyentuh robot maka</b>.", check: () => appData.battery.scripts.some(b => b.type === 'if' && b.condition.type === 'touching' && b.condition.target === 'robot') },
                 { text: "<b>5.</b> Pasang Blok <b>Sembunyikan</b> di dalam Jika.", check: () => hasBlock('battery', 'hide') },
                 { text: "<b>6.</b> Pasang blok <b>Ubah baterai sebesar 10</b>.", check: () => hasBlockWithValue('battery', 'changeBattery', 'val', 10) },
-                { text: "<b>7.</b> Pasang blok <b>📢 Kirim pesan [pesan 1]</b> (sebelum akhiri jika).", check: () => hasBlockWithValue('battery', 'broadcast', 'val', 'pesan 1') },
+                { text: "<b>7.</b> Pasang blok <b><i class='fa-solid fa-bullhorn'></i> Kirim pesan [pesan 1]</b> (sebelum akhiri jika).", check: () => hasBlockWithValue('battery', 'broadcast', 'val', 'pesan 1') },
                 { text: "<b>8.</b> Pasang blok <b>Akhiri Jika</b>.", check: () => hasBlock('battery', 'endIf') },
                 { text: "<b>9.</b> Pasang Blok <b>Akhiri Selamanya</b>.<br><i>(Jalankan program untuk mengetes)</i>", requireRun: true, check: () => hasBlock('battery', 'endForever') }
             ]
@@ -102,27 +102,27 @@
         {
             title: "Percobaan 3 - Sinkronisasi Pesan",
             steps: [
-                { text: "<b>1.</b> Klik <b>🤖 Skrip Robot</b>.", check: () => activeSprite === 'robot' },
-                { text: "<b>2.</b> Pasang blok <b>🚩 Ketika menerima pesan [pesan 1]</b> agar robot menunggunya.", check: () => hasBlockWithValue('robot', 'whenReceive', 'val', 'pesan 1') },
-                { text: "<b>3.</b> Pasang blok <b>🔀 Jika [kondisi] Maka</b> di bawahnya.", check: () => hasBlock('robot', 'if') },
+                { text: "<b>1.</b> Klik <b><i class='fa-solid fa-robot'></i> Skrip Robot</b>.", check: () => activeSprite === 'robot' },
+                { text: "<b>2.</b> Pasang blok <b><i class='fa-solid fa-flag'></i> Ketika menerima pesan [pesan 1]</b> agar robot menunggunya.", check: () => hasBlockWithValue('robot', 'whenReceive', 'val', 'pesan 1') },
+                { text: "<b>3.</b> Pasang blok <b><i class='fa-solid fa-code-branch'></i> Jika [kondisi] Maka</b> di bawahnya.", check: () => hasBlock('robot', 'if') },
                 { text: "<b>4.</b> Pilih Jika (operator) agar otomatis masuk isian <b>(Baterai) == 100</b>.", check: () => appData.robot.scripts.some(b => b.type === 'if' && b.condition.type === 'operator' && b.condition.left.value === 'VAR_battery' && b.condition.right.value == 100) },
                 { text: "<b>5.</b> Pasang blok <b>Katakan [\"Halo\"]</b> di dalam Jika.", check: () => hasBlock('robot', 'say') },
-                { text: "<b>6 & 7.</b> Klik tombol <b>[ # ]</b> pada blok Katakan. Klik terus siklusnya (#, Aa, v, opr) sampai menemukan tombol <b>ab (gabung)</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join') },
-                { text: "<b>8.</b> Tuliskan <b>\"Status Baterai \"</b> pada kolom Aa kiri.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.left.mode === 'text' && String(b.val.left.value).toLowerCase().includes('status')) },
-                { text: "<b>9 & 10.</b> Klik Tombol Aa terakhir (kolom kanan) sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>Baterai</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.mode === 'variable' && b.val.right.value === 'VAR_battery') },
-                { text: "<b>11.</b> Pasang blok <b>Akhiri Jika</b> di paling bawah (setelah blok Katakan).", check: () => hasBlock('robot', 'endIf') },
-                { text: "<b>12.</b> Klik <b>⏹ Reset</b> terlebih dahulu untuk memunculkan baterai kembali, kemudian klik <b>▶ Jalankan</b>. (Robot akan berdiam menunggu sinyal baterai tersentuh!)", requireRun: true, check: () => true }
+                { text: "<b>6.</b> Klik tombol <b>[ Aa ]</b> pada blok Katakan. Klik terus siklusnya (Aa, v, opr) sampai menemukan tombol <b>ab (gabung)</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join') },
+                { text: "<b>7.</b> Tuliskan <b>\"Status Baterai \"</b> pada kolom Aa kiri.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.left.mode === 'text' && String(b.val.left.value).toLowerCase().includes('status')) },
+                { text: "<b>8.</b> Klik Tombol Aa terakhir (kolom kanan) sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>Baterai</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.mode === 'variable' && b.val.right.value === 'VAR_battery') },
+                { text: "<b>9.</b> Pasang blok <b>Akhiri Jika</b> di paling bawah (setelah blok Katakan).", check: () => hasBlock('robot', 'endIf') },
+                { text: "<b>10.</b> Klik <b><i class='fa-solid fa-stop'></i> Reset</b> terlebih dahulu untuk memunculkan baterai kembali, kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>. (Robot akan berdiam menunggu sinyal baterai tersentuh!)", requireRun: true, check: () => true }
             ]
         },
         {
             title: "Percobaan 4 - Tanya Nama",
             steps: [
                 { text: "<b>1.</b> Tambahkan <b>Katakan [\"Terimakasih\"]</b>.", check: () => hasBlockWithValue('robot', 'say', 'val', "Terima") },
-                { text: "<b>2.</b> Masukkan <b>❓ Tanya & tunggu</b>.", check: () => hasBlock('robot', 'ask') },
+                { text: "<b>2.</b> Masukkan <b><i class='fa-solid fa-question-circle'></i> Tanya & tunggu</b>.", check: () => hasBlock('robot', 'ask') },
                 { text: "<b>3.</b> Masukkan Blok Katakan lagi, Klik tombol siklus hingga menjadi <b>ab (gabung)</b>.", check: () => appData.robot.scripts.filter(b => b.type === 'say' && b.val.mode === 'join').length > 0 },
                 { text: "<b>4.</b> Tuliskan <b>\"Halo \"</b> pada kolom Aa pertama.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && String(b.val.left.value).toLowerCase().includes('halo')) },
                 { text: "<b>5.</b> Klik kolom Aa kedua sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>\"Jawaban\"</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.value === 'VAR_answer') },
-                { text: "<b>6.</b> Klik <b>⏹ Reset</b> terlebih dahulu, kemudian klik <b>▶ Jalankan</b>. Selamat bereksperimen!", requireRun: true, check: () => true }
+                { text: "<b>6.</b> Klik <b><i class='fa-solid fa-stop'></i> Reset</b> terlebih dahulu, kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>. Selamat bereksperimen!", requireRun: true, check: () => true }
             ]
         }
     ];
@@ -254,8 +254,10 @@
         if (isValid) {
             btnNextTut.disabled = false;
             btnNextTut.className = "px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold shadow-md transition-all animate-pulse";
-            const nextText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
-            btnNextTut.innerText = nextText;
+            const nextText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1)
+                ? "Selesai Tahap Ini <i class='fa-solid fa-check ml-2'></i>"
+                : "Benar! Lanjut <i class='fa-solid fa-arrow-right ml-2'></i>";
+            btnNextTut.innerHTML = nextText;
             if (tutorialMinimized && nextText.includes('Benar! Lanjut')) {
                 startTutorialRestoreCountdown(3);
             }
@@ -446,20 +448,19 @@
 
             const leftContent = document.createElement('div'); leftContent.className = "flex items-center gap-1 flex-wrap flex-grow py-0.5";
 
-            if (block.type === 'changeX') { leftContent.append(`➔ Ubah X sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeY') { leftContent.append(`⬆ Ubah Y sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'setBattery') { leftContent.append(`⚡ Set Baterai ke `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeBattery') { leftContent.append(`⚡ Ubah Baterai sbsr `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'repeat') { leftContent.append(`🔄 Ulangi `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` kali`); }
-            else if (block.type === 'say') { leftContent.append(`💬 Katakan `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'ask') { leftContent.append(`❓ Tanya `); leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` & tunggu`); } 
-            else if (block.type === 'show') leftContent.innerHTML = `👁️ Tampilkan`; else if (block.type === 'hide') leftContent.innerHTML = `👻 Sembunyikan`; 
-            else if (block.type === 'forever') leftContent.innerHTML = `🔁 Selamanya`; else if (block.type === 'endForever') leftContent.innerHTML = `↩ Akhiri Selamanya`; 
-            else if (block.type === 'endRepeat') leftContent.innerHTML = `↩ Akhiri Ulangi`; else if (block.type === 'else') leftContent.innerHTML = `🔀 Jika Tidak`; else if (block.type === 'endIf') leftContent.innerHTML = `↩ Akhiri Jika`;
-            else if (block.type === 'broadcast') { leftContent.append(`📢 Kirim Pesan`); leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
-            else if (block.type === 'whenReceive') { leftContent.append(`🚩 Ketika menerima pesan`); leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
-            else if (block.type === 'if') {
-                leftContent.innerHTML = `🔀 Jika `;
+            if (block.type === 'changeX') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-right mr-2'></i>Ubah X sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'changeY') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-up mr-2'></i>Ubah Y sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'setBattery') { leftContent.innerHTML = `<i class='fa-solid fa-bolt mr-2'></i>Set Baterai ke `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'changeBattery') { leftContent.innerHTML = `<i class='fa-solid fa-bolt mr-2'></i>Ubah Baterai sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'repeat') { leftContent.innerHTML = `<i class='fa-solid fa-repeat mr-2'></i>Ulangi `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` kali`); }
+            else if (block.type === 'say') { leftContent.innerHTML = `<i class='fa-solid fa-comment mr-2'></i>Katakan `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'ask') { leftContent.innerHTML = `<i class='fa-solid fa-question-circle mr-2'></i>Tanya `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` & tunggu`); } 
+            else if (block.type === 'show') leftContent.innerHTML = `<i class='fa-solid fa-eye mr-2'></i>Tampilkan`; else if (block.type === 'hide') leftContent.innerHTML = `<i class='fa-solid fa-ghost mr-2'></i>Sembunyikan`; 
+            else if (block.type === 'forever') leftContent.innerHTML = `<i class='fa-solid fa-infinity mr-2'></i>Selamanya`; else if (block.type === 'endForever') leftContent.innerHTML = `<i class='fa-solid fa-rotate-left mr-2'></i>Akhiri Selamanya`; 
+            else if (block.type === 'endRepeat') leftContent.innerHTML = `<i class='fa-solid fa-rotate-left mr-2'></i>Akhiri Ulangi`; else if (block.type === 'else') leftContent.innerHTML = `<i class='fa-solid fa-code-branch mr-2'></i>Jika Tidak`; else if (block.type === 'endIf') leftContent.innerHTML = `<i class='fa-solid fa-rotate-left mr-2'></i>Akhiri Jika`;
+            else if (block.type === 'broadcast') { leftContent.innerHTML = `<i class='fa-solid fa-bullhorn mr-2'></i>Kirim Pesan`; leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
+            else if (block.type === 'whenReceive') { leftContent.innerHTML = `<i class='fa-solid fa-flag mr-2'></i>Ketika menerima pesan`; leftContent.appendChild(getMessageDropdown(block.val, e => updateBlockVal(block.id, 'val', e.target.value, true))); }
+            else if (block.type === 'if') { leftContent.innerHTML = `<i class='fa-solid fa-code-branch mr-2'></i>Jika `;
                 const condWrap = document.createElement('div'); condWrap.className = "condition-wrapper ml-1 flex items-center";
                 
                 const typeSel = document.createElement('select'); typeSel.className = "bg-transparent text-white font-bold outline-none cursor-pointer";
