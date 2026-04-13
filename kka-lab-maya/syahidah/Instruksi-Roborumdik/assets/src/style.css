@@ -2,6 +2,8 @@ body{
 font-family:'Segoe UI',sans-serif;
 background:linear-gradient(135deg,#e0e7ff,#f8fafc);
 min-height:100vh;
+min-width:1200px;
+overflow-x:auto;
 }
 
 /* CUSTOM SCROLLBAR UNTUK MODAL */
