@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lab Virtual Instruksi untuk Roborumdik</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+min-height:100vh;
+}
+
+/* CUSTOM SCROLLBAR UNTUK MODAL */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* HEADER */
+.header-bg{
+background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+color:white;
+box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* SPEECH */
+.speech{
+position:absolute;
+top:-90px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+border-radius:14px;
+padding:12px 16px;
+font-weight:bold;
+border:2px solid #cbd5e1;
+box-shadow:0 6px 10px rgba(0,0,0,0.1);
+opacity:0;
+transition:opacity .5s;
+color:#1e293b;
+width:250px;
+text-align:center;
+}
+
+.speech::after{
+content:"";
+position:absolute;
+bottom:-12px;
+left:50%;
+transform:translateX(-50%);
+border-width:10px;
+border-style:solid;
+border-color:white transparent transparent transparent;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header-bg flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+            Direktorat Sekolah Menengah Pertama<br>
+            Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan Pendidikan Menengah<br>
+            Kementerian Pendidikan Dasar dan Menengah
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+    </div>
+</div>
+
+
+<div class="flex flex-col items-center justify-center text-center py-12 px-4">
+
+    <h1 class="text-3xl md:text-5xl font-black text-indigo-700 mb-2">
+        Ilustrasi Percobaan Klasifikasi Gambar 
+    </h1>
+
+    <p class="text-slate-600 md:text-xl font-semibold mb-6">
+        Eksperimen Klasifikasi oleh Kecerdasan Artifisial
+    </p>
+
+    <div class="relative mt-28 md:mt-32">
+    <div id="speech" class="speech">
+        Hai Murid Hebat !
+    </div>
+
+    <!-- SVG KLASIFIKASI AI (KUCING & ANJING) -->
+    <svg width="500" height="150" viewBox="0 0 500 150" style="max-width:100%; height:auto;">
+        
+        <!-- KUCING (Kiri) -->
+        <g transform="translate(60, 15) scale(0.6)">
+            <circle cx="100" cy="100" r="90" fill="#FFA500" opacity="0.15" />
+            <polygon points="55,40 50,90 95,70" fill="#FFA500"/>
+            <polygon points="145,40 150,90 105,70" fill="#FFA500"/>
+            <ellipse cx="100" cy="90" rx="50" ry="42" fill="#FFA500" />
+            <circle cx="75" cy="85" r="8" fill="#fff" /><circle cx="75" cy="85" r="4" fill="#333" />
+            <circle cx="125" cy="85" r="8" fill="#fff" /><circle cx="125" cy="85" r="4" fill="#333" />
+            <polygon points="95,100 105,100 100,106" fill="#ff7675" />
+            <path d="M 85 110 Q 100 120 100 106 Q 100 120 115 110" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- Garis Panah Kiri -->
+        <path d="M 210 75 L 185 75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="4,4" fill="none"/>
+        <polygon points="185,68 175,75 185,82" fill="#94a3b8"/>
+
+        <!-- OTAK AI (Tengah) -->
+        <g transform="translate(250, 75)">
+            <rect x="-35" y="-35" width="70" height="70" rx="16" fill="#e0e7ff" stroke="#4f46e5" stroke-width="4"/>
+            <circle cx="0" cy="0" r="14" fill="#4f46e5" />
+            <line x1="-20" y1="-20" x2="-8" y2="-8" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+            <line x1="20" y1="-20" x2="8" y2="-8" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+            <line x1="-20" y1="20" x2="-8" y2="8" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+            <line x1="20" y1="20" x2="8" y2="8" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+            <text x="0" y="55" font-family="Arial" font-weight="bold" font-size="16" fill="#4f46e5" text-anchor="middle">MODEL AI</text>
+        </g>
+
+        <!-- Garis Panah Kanan -->
+        <path d="M 290 75 L 315 75" stroke="#94a3b8" stroke-width="4" stroke-dasharray="4,4" fill="none"/>
+        <polygon points="315,68 325,75 315,82" fill="#94a3b8"/>
+
+        <!-- ANJING (Kanan) -->
+        <g transform="translate(320, 15) scale(0.6)">
+            <circle cx="100" cy="100" r="90" fill="#d2b48c" opacity="0.15" />
+            <path d="M 65 75 C 30 70, 30 140, 50 135 C 65 130, 70 100, 70 85 Z" fill="#d2b48c" />
+            <path d="M 135 75 C 170 70, 170 140, 150 135 C 135 130, 130 100, 130 85 Z" fill="#d2b48c" />
+            <ellipse cx="100" cy="95" rx="45" ry="40" fill="#d2b48c" />
+            <ellipse cx="100" cy="110" rx="28" ry="22" fill="#fff" opacity="0.95" />
+            <ellipse cx="100" cy="100" rx="12" ry="8" fill="#333" />
+            <ellipse cx="80" cy="80" rx="6" ry="9" fill="#333" /><circle cx="78" cy="77" r="2.5" fill="#fff" />
+            <ellipse cx="120" cy="80" rx="6" ry="9" fill="#333" /><circle cx="118" cy="77" r="2.5" fill="#fff" />
+            <path d="M 92 122 C 92 145, 108 145, 108 122 Z" fill="#ff7675" />
+            <path d="M 83 115 Q 100 125 100 122 Q 100 125 117 115" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+
+    </svg>
+    </div>
+
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+
+        <!-- Tombol Mulai (Diarahkan ke # atau link lab virtual Anda) -->
+        <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/syahidah/homepage-klasifikasi-gambar/percobaan-klasifikasi-gambar" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
+            </div>
+        </a>
+
+        <button onclick="openCPModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Capaian Pembelajaran</span>
+            </div>
+        </button>
+
+        <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            </div>
+        </button>
+
+        <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            </div>
+        </button>
+
+    </div>
+</div>
+
+<!-- MODAL CAPAIAN PEMBELAJARAN -->
+<div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[2rem] p-8 max-w-3xl w-full shadow-2xl relative">
+        
+        <h2 class="text-3xl md:text-4xl font-bold text-blue-700 text-center mb-8">
+            Capaian Pembelajaran
+        </h2>
+
+        <div class="flex flex-col gap-4 mb-8">
+            
+            <div class="bg-slate-50 border-l-[6px] border-blue-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
+                <p class="text-slate-800 text-lg">Pemanfaatan dan Pengembangan Kecerdasan Artifisial</p>
+            </div>
+
+            <div class="bg-[#faf5ff] border-l-[6px] border-purple-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-purple-900 mb-2">Capaian Pembelajaran</h3>
+                <p class="text-slate-800 text-lg leading-relaxed">
+                    Menggunakan perangkat KA sederhana dengan kritis dan mampu menuliskan input bermakna ke dalam sistem KA.
+                </p>
+            </div>
+
+            <div class="bg-[#f0fdf4] border-l-[6px] border-emerald-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Pembelajaran</h3>
+                <p class="text-slate-800 text-lg leading-relaxed">
+                    Eksperimen Klasifikasi oleh Kecerdasan Artifisial
+                </p>
+            </div>
+
+        </div>
+
+        <div class="flex justify-center">
+            <button onclick="closeCPModal()"  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-12 rounded-xl transition-all duration-200 text-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                OK, Mengerti!
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL CARA PENGGUNAAN -->
+<div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+        
+        <div class="shrink-0 mb-4">
+            <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+            <div class="flex justify-center gap-2 flex-wrap">
+                <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
+                <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-4" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+        </div>
+    </div>
+    
+    <div class="text-left flex-1 overflow-y-auto pr-4 my-2">
+        
+        <div id="slide-0" class="slide-content">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                1. Fase Training (Melatih AI)
+                </h3>
+                <p class="text-lg text-slate-700 mb-4">
+                Pada tahap ini kamu berperan sebagai guru bagi AI. Langkah-langkah:
+                </p>
+                <ul class="list-decimal ml-6 text-lg text-slate-700 space-y-2">
+                    <li>Perhatikan beberapa gambar hewan yang muncul di bagian atas.</li>
+                    <li>Klik salah satu gambar hewan.</li>
+                    <li>Setelah gambar terpilih, klik kotak kategori yang sesuai: Kotak <b>Kucing</b> atau Kotak <b>Anjing</b>.</li>
+                    <li>Ulangi langkah tersebut hingga minimal 4 gambar sudah diklasifikasikan.</li>
+                    <li>Setelah selesai, klik tombol <b>“Selesai & Lanjut Uji Model AI”</b>.</li>
+                </ul>
+                <div class="mt-5 bg-orange-200 text-orange-900 p-4 rounded-xl font-medium text-md">
+                    🎯 Tujuan tahap ini adalah mengajarkan AI mengenali perbedaan antara kucing dan anjing.
+                </div>
+            </div>
+        </div>
+
+        <div id="slide-1" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                2. Fase Testing (Menguji AI)
+                </h3>
+                <p class="text-lg text-slate-700 mb-4">
+                Pada tahap ini kamu akan menguji kemampuan AI yang sudah dilatih.
+                </p>
+                <ul class="list-decimal ml-6 text-lg text-slate-700 space-y-2">
+                    <li>Klik salah satu gambar hewan yang muncul.</li>
+                    <li>AI akan menganalisis gambar tersebut.</li>
+                    <li>Perhatikan dua batang persentase prediksi: Kucing & Anjing.</li>
+                    <li>AI akan menampilkan hasil keputusan berdasarkan persentase terbesar.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="slide-2" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                3. Menguji Data Anomali
+                </h3>
+                <p class="text-lg text-slate-700 mb-4">
+                Kamu juga akan melihat hewan yang tidak pernah diajarkan kepada AI, seperti Kuda atau Ayam. Coba klik gambar tersebut dan perhatikan bahwa:
+                </p>
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-2">
+                    <li>AI tetap akan menebak kucing atau anjing.</li>
+                    <li>Persentasenya biasanya tidak terlalu yakin (sekitar 40-60%).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="slide-3" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                4. Reset Simulasi
+                </h3>
+                <p class="text-lg text-slate-700 mb-4">
+                Jika ingin mengulang percobaan, klik tombol <b>Mulai dari Awal</b>. Semua data training akan dihapus.
+                </p>
+            </div>
+        </div>
+
+        <div id="slide-4" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2 flex items-center gap-2">
+                💡 Konsep yang Dipelajari
+                </h3>
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-3">
+                    <li>AI belajar dari data pelatihan (<i>training data</i>).</li>
+                    <li>AI membuat prediksi berdasarkan pola yang dipelajari.</li>
+                    <li>AI dapat mengalami kesalahan jika menemukan data yang belum pernah dipelajari (anomali).</li>
+                </ul>
+                <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl mt-6">
+                Selamat Melatih AI Kamu! 🚀
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
+            <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+            <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
+            <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BIODATA -->
+<div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+        
+        <div class="shrink-0 mb-6">
+            <h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
+        </div>
+
+        <div class="flex-1 overflow-y-auto pr-4 grid grid-cols-1 md:grid-cols-2 gap-8 text-left pb-4">
+            <div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
+                <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-lime-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Pengembang Materi</h3>
+                <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                </div>
+            </div>
+            <div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
+                <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-teal-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
+                <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 pt-6 flex justify-center border-t-2 border-lime-50">
+            <button onclick="closeBioModal()" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">OK, Mengerti!</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// ==============================================
+// SCRIPT ANIMASI BALON TEKS ROBOT (TEMA AI)
+// ==============================================
+const texts = [
+"Hai Murid Hebat!",
+"Selamat datang di Lab Klasifikasi",
+"Kita akan melatih AI untuk mengenali hewan",
+"Yuk, mulai percobaannya!"
+]
+let index=0
+const speech=document.getElementById("speech")
+function showText(){
+    speech.innerText=texts[index]
+    speech.style.opacity=1
+    setTimeout(()=>{ speech.style.opacity=0 },3500)
+    index++
+    if(index<texts.length){ setTimeout(showText,4000) }
+}
+setTimeout(showText,1000)
+
+// ==============================================
+// SCRIPT MODAL CAPAIAN PEMBELAJARAN
+// ==============================================
+const cpModal = document.getElementById('cpModal');
+function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+// ==============================================
+// SCRIPT MODAL CARA PENGGUNAAN (9 SLIDES)
+// ==============================================
+const caraModal = document.getElementById('caraModal');
+let currentSlide = 0;
+const totalSlides = 5;
+
+function openCaraModal() {
+    caraModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    currentSlide = 0; 
+    updateSlideView();
+}
+
+function closeCaraModal() {
+    caraModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+    
+    // Auto scroll konten ke atas saat pindah slide
+    const contentArea = document.querySelector('#caraModal .overflow-y-auto');
+    if(contentArea) contentArea.scrollTop = 0;
+
+    updateSlideView();
+}
+
+function updateSlideView() {
+    for (let i = 0; i < totalSlides; i++) {
+        let slide = document.getElementById('slide-' + i);
+        if (slide) slide.classList.add('hidden');
+        
+        let dot = document.getElementById('dot-' + i);
+        if (dot) {
+            dot.classList.remove('bg-orange-500', 'w-8');
+            dot.classList.add('bg-slate-300', 'w-3');
+        }
+    }
+    
+    let activeSlide = document.getElementById('slide-' + currentSlide);
+    if (activeSlide) activeSlide.classList.remove('hidden');
+    
+    let activeDot = document.getElementById('dot-' + currentSlide);
+    if (activeDot) {
+        activeDot.classList.remove('bg-slate-300', 'w-3');
+        activeDot.classList.add('bg-orange-500', 'w-8');
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (currentSlide === 0) { 
+        if (prevBtn) prevBtn.style.visibility = 'hidden'; 
+    } else { 
+        if (prevBtn) prevBtn.style.visibility = 'visible'; 
+    }
+    
+    if (currentSlide === totalSlides - 1) { 
+        if (nextBtn) nextBtn.style.visibility = 'hidden'; 
+    } else { 
+        if (nextBtn) nextBtn.style.visibility = 'visible'; 
+    }
+}
+
+// ==============================================
+// SCRIPT MODAL BIODATA PENGEMBANG
+// ==============================================
+const bioModal = document.getElementById('bioModal');
+function openBioModal() { bioModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+</script>
+
+</body>
+</html>

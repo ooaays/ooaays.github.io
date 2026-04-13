@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lab Virtual Instruksi untuk Roborumdik</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+min-height:100vh;
+}
+
+/* CUSTOM SCROLLBAR UNTUK MODAL */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* HEADER */
+.header-bg{
+background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+color:white;
+box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* SPEECH */
+.speech{
+position:absolute;
+top:-90px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+border-radius:14px;
+padding:12px 16px;
+font-weight:bold;
+border:2px solid #cbd5e1;
+box-shadow:0 6px 10px rgba(0,0,0,0.1);
+opacity:0;
+transition:opacity .5s;
+color:#1e293b;
+width:250px;
+text-align:center;
+}
+
+.speech::after{
+content:"";
+position:absolute;
+bottom:-12px;
+left:50%;
+transform:translateX(-50%);
+border-width:10px;
+border-style:solid;
+border-color:white transparent transparent transparent;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header-bg flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+            Direktorat Sekolah Menengah Pertama<br>
+            Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan Pendidikan Menengah<br>
+            Kementerian Pendidikan Dasar dan Menengah
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+    </div>
+</div>
+
+
+<div class="flex flex-col items-center justify-center text-center py-12 px-4">
+
+    <h1 class="text-3xl md:text-5xl font-black text-indigo-700 mb-2">
+        Program Kasir Sederhana
+    </h1>
+
+    <p class="text-slate-600 md:text-xl font-semibold mb-6">
+        Belajar Variabel dan Operator dengan Python
+    </p>
+
+    <div class="relative mt-28 md:mt-32">
+    <div id="speech" class="speech">
+        Hai Murid Hebat !
+    </div>
+
+    <!-- SVG KASIR -->
+    <svg width="340" height="260" viewBox="0 0 340 260" style="max-width:100%; height:auto;">
+    <g transform="scale(0.425)">
+                <!-- Background Wall -->
+                
+
+                <!-- Rak Belanja (Kiri) -->
+                <g id="shelf">
+                    <rect x="50" y="75" width="300" height="320" rx="10" fill="#e2e6eb" />
+                    <line x1="50" y1="155" x2="350" y2="155" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="50" y1="235" x2="350" y2="235" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="50" y1="315" x2="350" y2="315" stroke="#cbd5e1" stroke-width="6" />
+                    <rect x="70" y="105" width="30" height="50" rx="3" fill="#fa8e93" />
+                    <rect x="110" y="115" width="40" height="40" rx="3" fill="#fcd36c" />
+                    <rect x="250" y="185" width="20" height="50" rx="2" fill="#8cbdf7" />
+                    <rect x="90" y="265" width="60" height="50" rx="4" fill="#59d8a1" />
+                </g>
+
+                <!-- Grup Interaktif: Pembeli & Troli (Gaya Animasi 2D Profesional) -->
+                <g id="grup-pembeli" class="svg-interactive">
+                    <!-- Kaki & Sepatu -->
+                    <ellipse cx="186" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                    <ellipse cx="218" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                    <path d="M 172 408 C 172 395, 200 395, 200 408 Z" fill="#334155" />
+                    <path d="M 204 408 C 204 395, 232 395, 232 408 Z" fill="#334155" />
+                    
+                    <!-- Celana Biru -->
+                    <path d="M 175 305 L 205 305 L 200 400 L 175 400 Z" fill="#1d4ed8" />
+                    <path d="M 205 305 L 240 305 L 230 400 L 200 400 Z" fill="#2563eb" />
+
+                    <!-- Lengan Kiri (Istirahat di pinggang) -->
+                    <path d="M 175 220 C 145 250, 155 290, 180 295" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
+                    <circle cx="180" cy="295" r="8" fill="#ffe4d6" />
+
+                    <!-- Badan (Kemeja Putih & Dasi Biru) -->
+                    <path d="M 170 215 C 170 215, 160 260, 175 305 L 245 305 C 255 260, 245 215, 245 215 Z" fill="#ffffff" />
+                    <path d="M 185 215 L 210 235 L 235 215 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+                    <polygon points="205,230 215,230 220,270 210,285 200,270" fill="#1d4ed8" />
+                    <polygon points="203,228 217,228 215,235 205,235" fill="#1e3a8a" />
+                    <rect x="225" y="245" width="12" height="15" rx="1" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <!-- Sabuk Coklat & Gesper Emas -->
+                    <rect x="172" y="295" width="76" height="10" fill="#451a03" />
+                    <rect x="203" y="293" width="14" height="14" rx="2" fill="#fbbf24" />
+                    <rect x="205" y="295" width="10" height="10" rx="1" fill="#451a03" />
+                    <rect x="207" y="295" width="6" height="10" fill="#fbbf24" />
+
+                    <!-- Telinga -->
+                    <path d="M 165 155 C 150 150, 150 170, 165 170" fill="#ffe4d6" />
+                    <path d="M 160 158 Q 165 160, 162 165" fill="none" stroke="#eab308" stroke-width="1.5" opacity="0.3" />
+
+                    <!-- Kepala & Wajah -->
+                    <circle cx="210" cy="155" r="48" fill="#ffe4d6" />
+                    
+                    <!-- Rambut Hitam Bertekstur -->
+                    <path d="M 150 145 C 150 90, 260 90, 260 145 Z" fill="#1e293b" />
+                    <path d="M 145 140 Q 165 110, 190 120 Q 210 130, 220 120 Q 240 100, 265 140 Q 245 125, 230 135 Q 210 145, 190 135 Q 165 125, 145 140 Z" fill="#334155" />
+                    <path d="M 160 115 Q 180 95, 205 105 Q 225 90, 250 115 Z" fill="#475569" opacity="0.4"/>
+
+                    <!-- Detail Wajah (Mata besar, pipi merah, senyum, alis) -->
+                    <path d="M 185 140 Q 195 135, 205 142" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+                    <path d="M 220 142 Q 230 135, 240 140" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="195" cy="155" r="8" fill="#3e2723" />
+                    <circle cx="192" cy="152" r="3" fill="#ffffff" />
+                    <circle cx="197" cy="158" r="1.5" fill="#ffffff" />
+                    <circle cx="230" cy="155" r="8" fill="#3e2723" />
+                    <circle cx="227" cy="152" r="3" fill="#ffffff" />
+                    <circle cx="232" cy="158" r="1.5" fill="#ffffff" />
+                    <ellipse cx="182" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <ellipse cx="242" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <path d="M 212 162 Q 215 166, 218 162" fill="none" stroke="#e2b8a5" stroke-width="2.5" stroke-linecap="round" />
+                    <path d="M 205 175 Q 212 182, 220 175" fill="none" stroke="#3e2723" stroke-width="2.5" stroke-linecap="round" />
+
+                    <!-- Lengan Kanan (Memegang Troli) -->
+                    <path d="M 235 220 Q 280 260, 310 315" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
+                    <circle cx="315" cy="320" r="8" fill="#ffe4d6" />
+                    <path d="M 310 315 L 325 320" stroke="#e2b8a5" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Troli Belanja (Gaya Premium) -->
+                    <polygon points="295,325 435,325 420,435 315,435" fill="#f8fafc" opacity="0.8" />
+                    
+                    <!-- Barang-barang Imut di Troli -->
+                    <rect x="325" y="350" width="40" height="85" rx="4" fill="#ffffff" />
+                    <rect x="325" y="380" width="40" height="30" fill="#0ea5e9" />
+                    <path d="M 335 350 L 345 335 L 355 350 Z" fill="#ffffff" />
+                    <rect x="375" y="380" width="45" height="55" rx="5" fill="#f59e0b" />
+                    <rect x="380" y="390" width="35" height="20" rx="2" fill="#fcd34d" />
+                    
+                    <!-- Rangka Troli -->
+                    <polygon points="295,325 435,325 420,435 315,435" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linejoin="round" />
+                    <line x1="302" y1="360" x2="428" y2="360" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="308" y1="395" x2="423" y2="395" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="335" y1="325" x2="340" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="375" y1="325" x2="375" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="415" y1="325" x2="405" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    
+                    <!-- Roda -->
+                    <circle cx="325" cy="455" r="14" fill="#334155" />
+                    <circle cx="325" cy="455" r="4" fill="#94a3b8" />
+                    <circle cx="405" cy="455" r="14" fill="#334155" />
+                    <circle cx="405" cy="455" r="4" fill="#94a3b8" />
+                </g>
+
+                <!-- Grup Interaktif: Kasir & Meja (Gaya Animasi 2D Profesional) -->
+                <g id="grup-kasir" class="svg-interactive">
+                    <!-- Meja Kasir Latar -->
+                    <rect x="495" y="375" width="305" height="225" fill="#78350f" />
+                    <rect x="485" y="345" width="315" height="30" rx="6" fill="#b45309" />
+                    
+                    <!-- Karakter Kasir -->
+                    <path d="M 640 200 Q 680 200, 720 200 L 730 345 L 630 345 Z" fill="#ef4444" />
+                    <path d="M 660 200 L 680 230 L 700 200 Z" fill="#ffe4d6" />
+                    <polygon points="655,200 680,235 705,200 680,225" fill="#dc2626" />
+                    
+                    <circle cx="680" cy="145" r="45" fill="#ffe4d6" />
+                    <circle cx="735" cy="125" r="22" fill="#1f2937" />
+                    <circle cx="735" cy="125" r="16" fill="#374151" />
+                    <path d="M 635 145 C 630 80, 730 80, 725 145 Z" fill="#1f2937" />
+                    <path d="M 635 135 Q 660 115, 680 125 Q 700 105, 725 125 Q 710 95, 680 95 Q 650 95, 635 135 Z" fill="#374151" />
+                    
+                    <ellipse cx="648" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <ellipse cx="712" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <circle cx="660" cy="145" r="7" fill="#4a2c11" />
+                    <circle cx="662" cy="142" r="2.5" fill="#ffffff" />
+                    <circle cx="700" cy="145" r="7" fill="#4a2c11" />
+                    <circle cx="702" cy="142" r="2.5" fill="#ffffff" />
+                    <path d="M 670 165 Q 680 175, 690 165" fill="none" stroke="#4a2c11" stroke-width="2.5" stroke-linecap="round" />
+                    
+                    <rect x="643" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
+                    <rect x="683" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
+                    <line x1="675" y1="142" x2="685" y2="142" stroke="#1f2937" stroke-width="4" />
+                    
+                    <path d="M 640 230 Q 600 260, 595 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
+                    <circle cx="595" cy="315" r="10" fill="#ffe4d6" />
+                    <path d="M 720 230 Q 750 260, 740 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
+                    
+                    <!-- Komputer Kasir & Scanner (Tumpang tindih di atas karakter) -->
+                    <rect x="490" y="355" width="20" height="40" rx="3" fill="#ef4444" />
+                    <rect x="495" y="360" width="10" height="30" rx="2" fill="#7f1d1d" />
+                    
+                    <rect x="560" y="325" width="20" height="25" fill="#475569" />
+                    <rect x="545" y="345" width="50" height="12" rx="3" fill="#334155" />
+                    <rect x="520" y="260" width="100" height="75" rx="8" fill="#1e293b" />
+                    <rect x="530" y="270" width="80" height="55" rx="4" fill="#0ea5e9" />
+                    <rect x="535" y="275" width="40" height="8" rx="2" fill="#38bdf8" />
+                    <rect x="535" y="288" width="70" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                    <rect x="535" y="298" width="50" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                    <rect x="535" y="308" width="60" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                </g>
+
+                <!-- Balon Percakapan -->
+                <g id="calloutGrup" display="none" transform="translate(450, 20)">
+                    <path d="M 0 0 h 300 v 140 h -220 l -40 40 v -40 h -40 z" fill="#ffffff" stroke="#94a3b8" stroke-width="4" filter="drop-shadow(3px 5px 8px rgba(0,0,0,0.2))"/>
+                    <text id="calloutText" x="25" y="35" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="bold" fill="#1e293b"></text>
+                </g>
+            </svg>
+</div>
+
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+
+        <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/syahidah/homepage-kasir/kasir" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
+            </div>
+        </a>
+
+        <button onclick="openCPModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Capaian Pembelajaran</span>
+            </div>
+        </button>
+
+        <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            </div>
+        </button>
+
+        <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            </div>
+        </button>
+
+    </div>
+</div>
+
+
+
+<div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[2rem] p-8 max-w-3xl w-full shadow-2xl relative">
+        
+        <h2 class="text-3xl md:text-4xl font-bold text-blue-700 text-center mb-8">
+            Capaian Pembelajaran
+        </h2>
+
+        <!-- KUNCI PERBAIKAN: Tambahkan 'flex flex-col gap-4' atau 'space-y-4' di sini -->
+        <div class="flex flex-col gap-4 mb-8">
+            
+            <!-- Kotak 1: Elemen -->
+            <div class="bg-slate-50 border-l-[6px] border-blue-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
+                <p class="text-slate-800 text-lg">Berpikir Komputasional</p>
+            </div>
+
+            <!-- Kotak 2: Capaian Pembelajaran -->
+            <div class="bg-[#faf5ff] border-l-[6px] border-purple-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-purple-900 mb-2">Capaian Pembelajaran</h3>
+                <p class="text-slate-800 text-lg leading-relaxed">
+                    Menerapkan pengelolaan data serta pemecahan masalah sederhana dalam kehidupan sehari-hari secara sistematis, dan mampu menuliskan instruksi untuk menyelesaikan suatu permasalahan.
+                </p>
+            </div>
+
+            <!-- Kotak 3: Tujuan Pembelajaran -->
+            <div class="bg-[#f0fdf4] border-l-[6px] border-emerald-500 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Pembelajaran</h3>
+                <p class="text-slate-800 text-lg leading-relaxed">
+                    Murid mampu menuliskan instruksi menggunakan teknologi atau pemrograman dasar untuk menyelesaikan permasalahan sederhana.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="flex justify-center">
+            <button onclick="closeCPModal()"  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-12 rounded-xl transition-all duration-200 text-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                OK, Mengerti!
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+        
+        <div class="shrink-0 mb-4">
+            <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+            <div class="flex justify-center gap-2 flex-wrap">
+                <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
+                <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-4" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-5" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-6" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-7" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-8" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+        </div>
+    </div>
+    
+    <div class="text-left flex-1 overflow-y-auto pr-4 my-2">
+        
+        <div id="slide-0" class="slide-content">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                1. Mengenal Tampilan Lab Kasir
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Lab virtual ini menampilkan simulasi sebuah toko dengan kasir dan pembeli.
+                </p>
+
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-2">
+                <li>🧍 Pembeli membawa keranjang belanja</li>
+                <li>🛒 Troli berisi barang yang akan dihitung</li>
+                <li>🧑‍💼 Kasir yang akan memproses pembayaran</li>
+                <li>💬 Balon percakapan untuk menampilkan hasil program</li>
+                </ul>
+
+                <p class="text-lg text-slate-700 mt-4">
+                Simulasi ini digunakan untuk memahami bagaimana sebuah program kasir bekerja.
+                </p>
+            </div>
+        </div>
+
+        <div id="slide-1" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                2. Tujuan Percobaan
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Dalam lab ini kamu akan membuat program kasir sederhana menggunakan konsep Python.
+                </p>
+
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-2">
+                <li>Menggunakan <b>variabel</b> untuk menyimpan data harga</li>
+                <li>Menggunakan <b>operator matematika</b> untuk menghitung total</li>
+                <li>Menghitung <b>kembalian uang pembeli</b></li>
+                <li>Menampilkan hasil transaksi</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="slide-2" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                3. Variabel yang Digunakan
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Program kasir menggunakan beberapa variabel berikut:
+                </p>
+
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-2">
+                <li><b>harga_roti</b> → harga satu roti</li>
+                <li><b>harga_susu</b> → harga satu susu</li>
+                <li><b>jumlah_roti</b> → jumlah roti yang dibeli</li>
+                <li><b>jumlah_susu</b> → jumlah susu yang dibeli</li>
+                <li><b>uang_pembeli</b> → uang yang dibayar pembeli</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="slide-3" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                4. Menghitung Total Belanja
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Total belanja dihitung menggunakan operator matematika.
+                </p>
+
+                <div class="bg-slate-900 text-green-400 p-5 rounded-xl font-mono text-lg">
+                total = (jumlah_roti × harga_roti) + (jumlah_susu × harga_susu)
+                </div>
+
+                <p class="text-lg text-slate-700 mt-4">
+                Program akan menjumlahkan seluruh harga barang yang dibeli.
+                </p>
+            </div>
+        </div>
+
+        <div id="slide-4" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                5. Menghitung Kembalian
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Setelah total belanja diketahui, program akan menghitung kembalian.
+                </p>
+
+                <div class="bg-slate-900 text-green-400 p-5 rounded-xl font-mono text-lg">
+                kembalian = uang_pembeli - total
+                </div>
+
+                <p class="text-lg text-slate-700 mt-4">
+                Jika uang pembeli lebih besar dari total belanja, maka kasir memberikan kembalian.
+                </p>
+            </div>
+        </div>
+
+        <div id="slide-5" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                6. Fungsi Sapaan Kasir
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Program juga memiliki fungsi untuk menyapa pembeli.
+                </p>
+
+                <div class="bg-slate-900 text-green-400 p-5 rounded-xl font-mono text-lg">
+                def menyapa():
+                    return "Halo, selamat datang!"
+                </div>
+
+                <p class="text-lg text-slate-700 mt-4">
+                Fungsi ini akan menampilkan pesan dari kasir kepada pembeli.
+                </p>
+            </div>
+        </div>
+
+        <div id="slide-6" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                7. Menjalankan Program
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Setelah semua variabel dan rumus dimasukkan, program akan dijalankan.
+                </p>
+
+                <ul class="list-disc ml-6 text-lg text-slate-700 space-y-2">
+                <li>Kasir menyapa pembeli</li>
+                <li>Program menghitung total belanja</li>
+                <li>Program menghitung kembalian</li>
+                <li>Hasil transaksi ditampilkan</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="slide-7" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+                <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+                8. Hasil Program
+                </h3>
+
+                <p class="text-lg text-slate-700 mb-4">
+                Jika program berjalan dengan benar, maka akan muncul hasil seperti berikut:
+                </p>
+
+                <div class="bg-slate-900 text-green-400 p-5 rounded-xl font-mono text-lg">
+                Halo, selamat datang!
+                Total Belanja: Rp 17000
+                Kembalian: Rp 3000
+                Terima kasih telah berbelanja!
+                </div>
+            </div>
+        </div>
+
+        <div id="slide-8" class="slide-content hidden">
+            <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-2">
+
+                <h3 class="text-3xl font-black text-orange-900 mb-6 text-center">
+                9. Tips Praktikum
+                </h3>
+
+                <ul class="list-none ml-0 text-xl text-slate-700 space-y-4">
+
+                <li>✔ Perhatikan nilai variabel yang digunakan.</li>
+                <li>✔ Gunakan operator matematika dengan benar.</li>
+                <li>✔ Pastikan perhitungan total dan kembalian sesuai.</li>
+                <li>✔ Coba ubah jumlah barang untuk melihat hasil berbeda.</li>
+
+                </ul>
+
+                <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl mt-6">
+                Selamat mencoba Program Kasir! 🚀
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
+            <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+            <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
+            <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+        
+        <div class="shrink-0 mb-6">
+            <h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
+        </div>
+
+        <div class="flex-1 overflow-y-auto pr-4 grid grid-cols-1 md:grid-cols-2 gap-8 text-left pb-4">
+            <div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
+                <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-lime-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Pengembang Materi</h3>
+                <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                </div>
+            </div>
+            <div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
+                <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-teal-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
+                <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                    <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">Dummy Data</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="shrink-0 pt-6 flex justify-center border-t-2 border-lime-50">
+            <button onclick="closeBioModal()" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">OK, Mengerti!</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// ==============================================
+// SCIPT ANIMASI BALON TEKS ROBOT
+// ==============================================
+const texts = [
+"Hai Murid Hebat!",
+"Selamat datang di Program Kasir",
+"Kita akan belajar membuat program kasir sederhana",
+"Menggunakan variabel dan operator Python",
+"Hitung total belanja dan kembalian",
+"Yuk mulai percobaannya!"
+]
+let index=0
+const speech=document.getElementById("speech")
+function showText(){
+    speech.innerText=texts[index]
+    speech.style.opacity=1
+    setTimeout(()=>{ speech.style.opacity=0 },3500)
+    index++
+    if(index<texts.length){ setTimeout(showText,4000) }
+}
+setTimeout(showText,1000)
+
+// ==============================================
+// SCRIPT MODAL CAPAIAN PEMBELAJARAN
+// ==============================================
+const cpModal = document.getElementById('cpModal');
+function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+// ==============================================
+// SCRIPT MODAL CARA PENGGUNAAN (9 SLIDES)
+// ==============================================
+const caraModal = document.getElementById('caraModal');
+let currentSlide = 0;
+const totalSlides = 9;
+
+function openCaraModal() {
+    caraModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    currentSlide = 0; 
+    updateSlideView();
+}
+
+function closeCaraModal() {
+    caraModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+    
+    // Auto scroll konten ke atas saat pindah slide
+    const contentArea = document.querySelector('#caraModal .overflow-y-auto');
+    if(contentArea) contentArea.scrollTop = 0;
+
+    updateSlideView();
+}
+
+function updateSlideView() {
+    for (let i = 0; i < totalSlides; i++) {
+        let slide = document.getElementById('slide-' + i);
+        if (slide) slide.classList.add('hidden');
+        
+        let dot = document.getElementById('dot-' + i);
+        if (dot) {
+            dot.classList.remove('bg-orange-500', 'w-8');
+            dot.classList.add('bg-slate-300', 'w-3');
+        }
+    }
+    
+    let activeSlide = document.getElementById('slide-' + currentSlide);
+    if (activeSlide) activeSlide.classList.remove('hidden');
+    
+    let activeDot = document.getElementById('dot-' + currentSlide);
+    if (activeDot) {
+        activeDot.classList.remove('bg-slate-300', 'w-3');
+        activeDot.classList.add('bg-orange-500', 'w-8');
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (currentSlide === 0) { 
+        if (prevBtn) prevBtn.style.visibility = 'hidden'; 
+    } else { 
+        if (prevBtn) prevBtn.style.visibility = 'visible'; 
+    }
+    
+    if (currentSlide === totalSlides - 1) { 
+        if (nextBtn) nextBtn.style.visibility = 'hidden'; 
+    } else { 
+        if (nextBtn) nextBtn.style.visibility = 'visible'; 
+    }
+}
+
+// ==============================================
+// SCRIPT MODAL BIODATA PENGEMBANG
+// ==============================================
+const bioModal = document.getElementById('bioModal');
+function openBioModal() { bioModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+</script>
+
+</body>
+</html>

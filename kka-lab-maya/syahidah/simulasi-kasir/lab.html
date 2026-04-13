@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorium Algoritma: Sistem Kasir</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython_stdlib.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- OPTIMASI TAMPILAN STANDAR (DIPERKECIL 2X) --- */
+        :root {
+            --bg-color: #e9ecef;
+            --panel-bg: #ffffff;
+            --border-color: #ced4da;
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #ff9800;
+            --danger: #dc3545;
+            --dark: #20232a;
+            --font-base: 13px; /* Font diperkecil agar proper di layar standar */
+        }
+
+        * { box-sizing: border-box; }
+
+        body { margin:0; display:flex; flex-direction: column; height:100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); overflow: hidden; font-size: var(--font-base); }
+
+        /* --- Header & 8 Dots Indicator --- */
+        header { background: var(--dark); color: white; padding: 8px 20px; display: flex; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10; justify-content: space-between; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        header h2 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Tombol Kembali */
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.25);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .step-indicator { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex: 1; }
+        .dot-wrapper { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .dot { width: 12px; height: 12px; background: #6c757d; border-radius: 50%; transition: 0.3s; border: 2px solid #adb5bd; }
+        .dot.active { background: var(--warning); border-color: #fff; box-shadow: 0 0 8px var(--warning); transform: scale(1.3); }
+        .dot.done { background: var(--success); border-color: #fff; }
+        .dot-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; text-align: center; }
+        .dot-wrapper.active .dot-label { color: var(--warning); }
+        .dot-wrapper.done .dot-label { color: var(--success); }
+
+        #main-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* --- Panel Kiri: Visual SVG --- */
+        #left-panel { flex: 1.2; min-width: 350px; background: var(--panel-bg); border-right: 3px solid var(--border-color); display: flex; flex-direction: column; position: relative; }
+        
+        #svgContainer { flex: 1; background: #f0e4d7; border-bottom: 3px solid var(--border-color); position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden;}
+        #kasirSvg { width: 100%; height: 100%; display: block; }
+
+        /* Interaktivitas Object SVG */
+        .svg-interactive { cursor: pointer; transition: 0.3s; transform-origin: center; }
+        .svg-interactive:hover { filter: brightness(1.1) drop-shadow(0px 0px 10px rgba(255,152,0,0.8)); transform: scale(1.02); }
+        .glow-active { animation: svgPulse 1.5s infinite; }
+        @keyframes svgPulse { 0% { filter: drop-shadow(0 0 5px var(--warning)); } 50% { filter: drop-shadow(0 0 25px var(--warning)); } 100% { filter: drop-shadow(0 0 5px var(--warning)); } }
+
+        /* Popup Center */
+        #popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; background: rgba(255, 255, 255, 0.95); border: 2px solid var(--dark); padding: 15px 20px; z-index: 20; border-radius: 10px; box-shadow: 0px 10px 25px rgba(0,0,0,0.4); font-size: 14px; text-align: center; min-width: 250px; backdrop-filter: blur(5px);}
+        #popup-btn { margin-top: 15px; padding: 8px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; transition: 0.2s;}
+        #popup-btn:active { transform: scale(0.95); }
+
+        /* Modul Percobaan di Bawah Gambar */
+        #modul-percobaan { padding: 12px; overflow-y: auto; height: 35%; background: white; }
+        .stage-card { background: #f8f9fa; border-left: 4px solid var(--border-color); padding: 12px; margin-bottom: 10px; border-radius: 0 6px 6px 0; transition: 0.3s; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .stage-card.active { border-left-color: var(--primary); background: #e6f2ff; display: block; animation: fadeIn 0.5s;}
+        .stage-card.done { display: none; }
+        .stage-title { font-weight: bold; margin-bottom: 6px; font-size: 15px; color: var(--primary); }
+        .stage-desc { font-size: 13px; color: #444; margin: 0; line-height: 1.4;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Panel Kanan: Workspace --- */
+        #right-panel { flex: 1.5; display: flex; flex-direction: column; background: #f8f9fa; position: relative; }
+        
+        #toolbox { background: #e0f7fa; padding: 10px 15px; border-bottom: 2px solid #b2ebf2; }
+        #toolbox h4 { margin: 0 0 6px 0; color: #006064; font-size: 14px; text-transform: uppercase;}
+        .tb-group { margin-bottom: 8px; }
+        
+        /* Tombol Variabel */
+        .clickable-var { display: inline-block; color: white; padding: 6px 12px; border-radius: 4px; margin: 3px; cursor: pointer; font-family: monospace; font-size: 13px; font-weight: bold; transition: 0.2s; border: 2px solid transparent; user-select: none;}
+        .var-btn { background: #00bcd4; border-color: #0097a7; }
+        .kw-btn { background: #c678dd; border-color: #a450bd; }
+        .fn-btn { background: #61afef; border-color: #3b8dcc; }
+        .clickable-var:active { filter: brightness(0.9); transform: scale(0.95); }
+        .clickable-var.selected { transform: scale(1.05); outline: 2px solid #ff9800; border-color: transparent; z-index: 5; position: relative; box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);}
+        .clickable-var.locked { opacity: 0.4; pointer-events: none; filter: grayscale(100%); }
+
+        #editor-container { flex: 1; background: #282c34; padding: 15px; overflow-y: auto; }
+        #interactiveCode { color: #abb2bf; font-family: 'Consolas', monospace; font-size: 14px; line-height: 1.8; }
+        
+        .code-section { padding: 10px; border-radius: 6px; transition: 0.3s; border: 2px solid transparent; margin-bottom: 10px; background: rgba(0,0,0,0.15);}
+        .code-section.locked { opacity: 0.4; pointer-events: none; filter: grayscale(50%); }
+        .code-section.active { border-color: #61afef; background: rgba(97, 175, 239, 0.15); box-shadow: inset 0 0 8px rgba(97, 175, 239, 0.2);}
+        
+        .line { margin-bottom: 6px; white-space: nowrap; }
+        .indent { padding-left: 30px; }
+        .comment { color: #5c6370; font-style: italic; }
+        .var { color: #e06c75; }
+        .string-val { color: #98c379; font-weight: normal; }
+        
+        /* Input & Pastezone */
+        .input-val { width: 100px; height: 30px; background: #3e4451; color: #e5c07b; border: 1px solid #5c6370; border-radius: 4px; font-family: monospace; padding: 3px 6px; outline: none; text-align: center; font-weight: bold; font-size: 14px; transition: 0.2s;}
+        .input-val:focus { border-color: #61afef; background: #2c313a; width: 120px;}
+        
+        .pastezone { display: inline-flex; align-items: center; justify-content: center; min-width: 90px; height: 30px; text-align: center; background: rgba(255,255,255,0.05); border: 2px dashed #abb2bf; padding: 3px 10px; border-radius: 4px; color: #abb2bf; cursor: pointer; font-size: 14px; vertical-align: middle; transition: 0.2s;}
+        .pastezone:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+        .pastezone.filled { background: #e5c07b; border: 2px solid #d19a66; color: #282c34; font-weight: bold; }
+
+        /* --- Panel Bawah --- */
+        #bottom-panel { height: 160px; background: #1e1e1e; border-top: 4px solid var(--primary); display: flex; flex-direction: column; }
+        .control-bar { padding: 10px 20px; background: #2d2d2d; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -2px 8px rgba(0,0,0,0.3); }
+        .btn-group { display: flex; gap: 10px; }
+        
+        button { padding: 8px 22px !important; font-size: 14px; cursor: pointer; border: none; border-radius: 6px; color: white; font-weight: bold; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
+        button:active { transform: scale(0.95); }
+        button:hover { filter: brightness(1.15); }
+        
+        #btnNext { background-color: var(--primary); color: white; box-shadow: 0 3px 10px rgba(0, 123, 255, 0.4); }
+        #btnAction { background-color: var(--warning); color: white; display: none; cursor: default; pointer-events: none;}
+        #runCodeBtn { background-color: var(--success); color: white; display: none; box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);}
+        #resetCode { background-color: var(--danger); color: white;}
+
+        #output { flex: 1; padding: 10px 20px; color: #0f0; font-family: monospace; font-size: 13px; overflow-y: auto; white-space: pre-wrap; margin: 0; line-height: 1.5;}
+        .header-bg {
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+    </style>
+</head>
+<body onload="brython()">
+    <div class="header-bg flex justify-between items-center px-4 py-2">
+        <div class="flex items-center gap-3">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-10">
+            <div class="text-xs leading-tight font-semibold hidden md:block">
+                Direktorat Sekolah Menengah Pertama<br>
+                Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+                Pendidikan Dasar, dan Pendidikan Menengah<br>
+                Kementerian Pendidikan Dasar dan Menengah
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-8 hidden sm:block">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-8">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-8 hidden sm:block">
+        </div>
+    </div>
+<header>
+    <div class="header-left">
+        <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/syahidah/homepage-kasir" class="back-btn">
+            &#8592; Kembali
+        </a>
+        <h2>🛒 Kasir Virtual</h2>
+    </div>
+    <div class="step-indicator">
+        <div class="dot-wrapper active" id="dw1"><div class="dot active"></div><span class="dot-label">1. Cek</span></div>
+        <div class="dot-wrapper" id="dw2"><div class="dot"></div><span class="dot-label">2. Data</span></div>
+        <div class="dot-wrapper" id="dw3"><div class="dot"></div><span class="dot-label">3. Sapaan</span></div>
+        <div class="dot-wrapper" id="dw4"><div class="dot"></div><span class="dot-label">4. Cek Isi</span></div>
+        <div class="dot-wrapper" id="dw5"><div class="dot"></div><span class="dot-label">5. F. Total</span></div>
+        <div class="dot-wrapper" id="dw6"><div class="dot"></div><span class="dot-label">6. Panggil</span></div>
+        <div class="dot-wrapper" id="dw7"><div class="dot"></div><span class="dot-label">7. Kembali</span></div>
+        <div class="dot-wrapper" id="dw8"><div class="dot"></div><span class="dot-label">8. Eksekusi</span></div>
+    </div>
+</header>
+
+<div id="main-container">
+    <div id="left-panel">
+        <div id="svgContainer">
+            <svg id="kasirSvg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+                <!-- Background Wall -->
+                <rect x="0" y="0" width="800" height="400" fill="#f2f4f6" />
+                
+                <!-- Floor -->
+                <rect x="0" y="395" width="800" height="205" fill="#d0d4d9" />
+
+                <!-- Rak Belanja (Kiri) -->
+                <g id="shelf">
+                    <rect x="50" y="75" width="300" height="320" rx="10" fill="#e2e6eb" />
+                    <line x1="50" y1="155" x2="350" y2="155" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="50" y1="235" x2="350" y2="235" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="50" y1="315" x2="350" y2="315" stroke="#cbd5e1" stroke-width="6" />
+                    <rect x="70" y="105" width="30" height="50" rx="3" fill="#fa8e93" />
+                    <rect x="110" y="115" width="40" height="40" rx="3" fill="#fcd36c" />
+                    <rect x="250" y="185" width="20" height="50" rx="2" fill="#8cbdf7" />
+                    <rect x="90" y="265" width="60" height="50" rx="4" fill="#59d8a1" />
+                </g>
+
+                <!-- Grup Interaktif: Pembeli & Troli (Gaya Animasi 2D Profesional) -->
+                <g id="grup-pembeli" class="svg-interactive">
+                    <!-- Kaki & Sepatu -->
+                    <ellipse cx="186" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                    <ellipse cx="218" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                    <path d="M 172 408 C 172 395, 200 395, 200 408 Z" fill="#334155" />
+                    <path d="M 204 408 C 204 395, 232 395, 232 408 Z" fill="#334155" />
+                    
+                    <!-- Celana Biru -->
+                    <path d="M 175 305 L 205 305 L 200 400 L 175 400 Z" fill="#1d4ed8" />
+                    <path d="M 205 305 L 240 305 L 230 400 L 200 400 Z" fill="#2563eb" />
+
+                    <!-- Lengan Kiri (Istirahat di pinggang) -->
+                    <path d="M 175 220 C 145 250, 155 290, 180 295" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
+                    <circle cx="180" cy="295" r="8" fill="#ffe4d6" />
+
+                    <!-- Badan (Kemeja Putih & Dasi Biru) -->
+                    <path d="M 170 215 C 170 215, 160 260, 175 305 L 245 305 C 255 260, 245 215, 245 215 Z" fill="#ffffff" />
+                    <path d="M 185 215 L 210 235 L 235 215 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+                    <polygon points="205,230 215,230 220,270 210,285 200,270" fill="#1d4ed8" />
+                    <polygon points="203,228 217,228 215,235 205,235" fill="#1e3a8a" />
+                    <rect x="225" y="245" width="12" height="15" rx="1" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+
+                    <!-- Sabuk Coklat & Gesper Emas -->
+                    <rect x="172" y="295" width="76" height="10" fill="#451a03" />
+                    <rect x="203" y="293" width="14" height="14" rx="2" fill="#fbbf24" />
+                    <rect x="205" y="295" width="10" height="10" rx="1" fill="#451a03" />
+                    <rect x="207" y="295" width="6" height="10" fill="#fbbf24" />
+
+                    <!-- Telinga -->
+                    <path d="M 165 155 C 150 150, 150 170, 165 170" fill="#ffe4d6" />
+                    <path d="M 160 158 Q 165 160, 162 165" fill="none" stroke="#eab308" stroke-width="1.5" opacity="0.3" />
+
+                    <!-- Kepala & Wajah -->
+                    <circle cx="210" cy="155" r="48" fill="#ffe4d6" />
+                    
+                    <!-- Rambut Hitam Bertekstur -->
+                    <path d="M 150 145 C 150 90, 260 90, 260 145 Z" fill="#1e293b" />
+                    <path d="M 145 140 Q 165 110, 190 120 Q 210 130, 220 120 Q 240 100, 265 140 Q 245 125, 230 135 Q 210 145, 190 135 Q 165 125, 145 140 Z" fill="#334155" />
+                    <path d="M 160 115 Q 180 95, 205 105 Q 225 90, 250 115 Z" fill="#475569" opacity="0.4"/>
+
+                    <!-- Detail Wajah (Mata besar, pipi merah, senyum, alis) -->
+                    <path d="M 185 140 Q 195 135, 205 142" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+                    <path d="M 220 142 Q 230 135, 240 140" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="195" cy="155" r="8" fill="#3e2723" />
+                    <circle cx="192" cy="152" r="3" fill="#ffffff" />
+                    <circle cx="197" cy="158" r="1.5" fill="#ffffff" />
+                    <circle cx="230" cy="155" r="8" fill="#3e2723" />
+                    <circle cx="227" cy="152" r="3" fill="#ffffff" />
+                    <circle cx="232" cy="158" r="1.5" fill="#ffffff" />
+                    <ellipse cx="182" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <ellipse cx="242" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <path d="M 212 162 Q 215 166, 218 162" fill="none" stroke="#e2b8a5" stroke-width="2.5" stroke-linecap="round" />
+                    <path d="M 205 175 Q 212 182, 220 175" fill="none" stroke="#3e2723" stroke-width="2.5" stroke-linecap="round" />
+
+                    <!-- Lengan Kanan (Memegang Troli) -->
+                    <path d="M 235 220 Q 280 260, 310 315" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
+                    <circle cx="315" cy="320" r="8" fill="#ffe4d6" />
+                    <path d="M 310 315 L 325 320" stroke="#e2b8a5" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Troli Belanja (Gaya Premium) -->
+                    <polygon points="295,325 435,325 420,435 315,435" fill="#f8fafc" opacity="0.8" />
+                    
+                    <!-- Barang-barang Imut di Troli -->
+                    <rect x="325" y="350" width="40" height="85" rx="4" fill="#ffffff" />
+                    <rect x="325" y="380" width="40" height="30" fill="#0ea5e9" />
+                    <path d="M 335 350 L 345 335 L 355 350 Z" fill="#ffffff" />
+                    <rect x="375" y="380" width="45" height="55" rx="5" fill="#f59e0b" />
+                    <rect x="380" y="390" width="35" height="20" rx="2" fill="#fcd34d" />
+                    
+                    <!-- Rangka Troli -->
+                    <polygon points="295,325 435,325 420,435 315,435" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linejoin="round" />
+                    <line x1="302" y1="360" x2="428" y2="360" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="308" y1="395" x2="423" y2="395" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="335" y1="325" x2="340" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="375" y1="325" x2="375" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    <line x1="415" y1="325" x2="405" y2="435" stroke="#94a3b8" stroke-width="4" />
+                    
+                    <!-- Roda -->
+                    <circle cx="325" cy="455" r="14" fill="#334155" />
+                    <circle cx="325" cy="455" r="4" fill="#94a3b8" />
+                    <circle cx="405" cy="455" r="14" fill="#334155" />
+                    <circle cx="405" cy="455" r="4" fill="#94a3b8" />
+                </g>
+
+                <!-- Grup Interaktif: Kasir & Meja (Gaya Animasi 2D Profesional) -->
+                <g id="grup-kasir" class="svg-interactive">
+                    <!-- Meja Kasir Latar -->
+                    <rect x="495" y="375" width="305" height="225" fill="#78350f" />
+                    <rect x="485" y="345" width="315" height="30" rx="6" fill="#b45309" />
+                    
+                    <!-- Karakter Kasir -->
+                    <path d="M 640 200 Q 680 200, 720 200 L 730 345 L 630 345 Z" fill="#ef4444" />
+                    <path d="M 660 200 L 680 230 L 700 200 Z" fill="#ffe4d6" />
+                    <polygon points="655,200 680,235 705,200 680,225" fill="#dc2626" />
+                    
+                    <circle cx="680" cy="145" r="45" fill="#ffe4d6" />
+                    <circle cx="735" cy="125" r="22" fill="#1f2937" />
+                    <circle cx="735" cy="125" r="16" fill="#374151" />
+                    <path d="M 635 145 C 630 80, 730 80, 725 145 Z" fill="#1f2937" />
+                    <path d="M 635 135 Q 660 115, 680 125 Q 700 105, 725 125 Q 710 95, 680 95 Q 650 95, 635 135 Z" fill="#374151" />
+                    
+                    <ellipse cx="648" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <ellipse cx="712" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                    <circle cx="660" cy="145" r="7" fill="#4a2c11" />
+                    <circle cx="662" cy="142" r="2.5" fill="#ffffff" />
+                    <circle cx="700" cy="145" r="7" fill="#4a2c11" />
+                    <circle cx="702" cy="142" r="2.5" fill="#ffffff" />
+                    <path d="M 670 165 Q 680 175, 690 165" fill="none" stroke="#4a2c11" stroke-width="2.5" stroke-linecap="round" />
+                    
+                    <rect x="643" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
+                    <rect x="683" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
+                    <line x1="675" y1="142" x2="685" y2="142" stroke="#dc2626" stroke-width="4" />
+                    
+                    <path d="M 640 230 Q 600 260, 595 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
+                    <circle cx="595" cy="315" r="10" fill="#ffe4d6" />
+                    <path d="M 720 230 Q 750 260, 740 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
+                    
+                    <!-- Komputer Kasir & Scanner (Tumpang tindih di atas karakter) -->
+                    <rect x="490" y="355" width="20" height="40" rx="3" fill="#ef4444" />
+                    <rect x="495" y="360" width="10" height="30" rx="2" fill="#7f1d1d" />
+                    
+                    <rect x="560" y="325" width="20" height="25" fill="#475569" />
+                    <rect x="545" y="345" width="50" height="12" rx="3" fill="#334155" />
+                    <rect x="520" y="260" width="100" height="75" rx="8" fill="#1e293b" />
+                    <rect x="530" y="270" width="80" height="55" rx="4" fill="#0ea5e9" />
+                    <rect x="535" y="275" width="40" height="8" rx="2" fill="#38bdf8" />
+                    <rect x="535" y="288" width="70" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                    <rect x="535" y="298" width="50" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                    <rect x="535" y="308" width="60" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
+                </g>
+
+                <!-- Balon Percakapan -->
+                <!-- BAGIAN SVG BALON DIPERBESAR -->
+                <g id="calloutGrup" display="none" transform="translate(430, 20)">
+                <path d="M 0 0 h 340 v 160 h -250 l -40 40 v -40 h -50 z"
+                fill="#ffffff"
+                stroke="#94a3b8"
+                stroke-width="4"
+                filter="drop-shadow(3px 5px 8px rgba(0,0,0,0.2))"/>
+                <text id="calloutText"
+                x="25"
+                y="35"
+                font-family="'Segoe UI', Arial, sans-serif"
+                font-size="20"
+                font-weight="bold"
+                fill="#1e293b"></text>
+                </g>
+            </svg>
+
+            <div id="popup">
+                <div id="popup-text" style="line-height: 1.6;"></div>
+                <button id="popup-btn">OK, Paham!</button>
+            </div>
+        </div>
+        
+        <div id="modul-percobaan">
+            <div class="stage-card active" id="stage1">
+                <div class="stage-title">Langkah 1: Inspeksi Awal</div>
+                <p class="stage-desc">Sebelum merakit program, <b>sentuh gambar pembeli & keranjangnya</b> di layar untuk mengecek data barang bawaan mereka!</p>
+            </div>
+            <div class="stage-card" id="stage2">
+                <div class="stage-title">Langkah 2: Inisialisasi Data ✍️</div>
+                <p class="stage-desc">Keranjang terdeteksi kosong! Buka panel kanan. Isi kotak <b>harga</b>, <b>jumlah</b>, dan <b>uang_pembeli</b>. Sentuh "Verifikasi & Lanjut" jika sudah.</p>
+            </div>
+            <div class="stage-card" id="stage3">
+                <div class="stage-title">Langkah 3: Tulis Sapaanmu! 🗣️</div>
+                <p class="stage-desc">Sentuh dan tempel di workspace <br>1. <code> def</code>,<br>2.  <code>menyapa():</code>, dan <br> 3.<code>return</code> <br> untuk merakit fungsi. Lalu <b>ketik kalimat sapaan karyamu</b> di kotak hijau.</p>
+            </div>
+            <div class="stage-card" id="stage4">
+                <div class="stage-title">Langkah 4: Cek Perubahan 🛒</div>
+                <p class="stage-desc">Hebat! Balon percakapan kasir kini muncul. Sekarang, <b>sentuh keranjang pembeli lagi</b> untuk melihat apakah data belanja yang kamu buat tersimpan.</p>
+            </div>
+            <div class="stage-card" id="stage5">
+                <div class="stage-title">Langkah 5: Sintaks Total 🧩</div>
+                <p class="stage-desc">Susun rumus fungsi <code>total():</code>.<br>Pola rumus: <i>(jumlah_roti × harga_roti) + (jumlah_susu × harga_susu)</i>.</p>
+            </div>
+            <div class="stage-card" id="stage6">
+                <div class="stage-title">Langkah 6: Panggil Kasir 👨‍💼</div>
+                <p class="stage-desc">Fungsi perhitungan selesai! <b>Sentuh karakter Kasir</b> di layar agar ia memproses total belanja menggunakan rumus buatanmu!</p>
+            </div>
+            <div class="stage-card" id="stage7">
+                <div class="stage-title">Langkah 7: Fungsi Kembalian 💵</div>
+                <p class="stage-desc">Rakit fungsi <code>kembalian(total_bayar)</code>. Gunakan variabel <code>uang_pembeli</code> dan kurangi dengan <code>total_bayar</code>.</p>
+            </div>
+            <div class="stage-card" id="stage8">
+                <div class="stage-title">Langkah 8: Eksekusi Akhir 🚀</div>
+                <p class="stage-desc">Kode cerdasmu telah terangkai penuh! <b>Sentuh kembali karakter Kasir</b> untuk menjalankan skrip Python & mencetak struk di konsol!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="right-panel">
+        <div id="toolbox">
+            <div class="tb-group">
+                <h4>Blok Perintah & Fungsi</h4>
+                <div class="clickable-var kw-btn" data-var="def">def</div>
+                <div class="clickable-var kw-btn" data-var="return">return</div>
+
+                <div class="clickable-var kw-btn" data-var="if">if</div>
+                <div class="clickable-var kw-btn" data-var="elif">elif</div>
+                <div class="clickable-var kw-btn" data-var="else:">else:</div>
+
+                <div class="clickable-var fn-btn" data-var="menyapa():">menyapa():</div>
+                <div class="clickable-var fn-btn" data-var="total():">total():</div>
+                <div class="clickable-var fn-btn" data-var="kembalian">kembalian</div>
+            </div>
+            <div class="tb-group">
+                <h4>Blok Variabel Data</h4>
+                <div class="clickable-var var-btn" data-var="harga_roti">harga_roti</div>
+                <div class="clickable-var var-btn" data-var="harga_susu">harga_susu</div>
+                <div class="clickable-var var-btn" data-var="jumlah_roti">jumlah_roti</div>
+                <div class="clickable-var var-btn" data-var="jumlah_susu">jumlah_susu</div>
+                <div class="clickable-var var-btn" data-var="uang_pembeli">uang_pembeli</div>
+                <div class="clickable-var var-btn" data-var="total_bayar">total_bayar</div>
+            </div>
+        </div>
+
+        <div id="editor-container">
+            <div id="interactiveCode">
+                <div class="code-section locked" id="sec-1">
+                    <div class="line comment"># --- ATUR DATA BELANJA ---</div>
+                    <div class="line"><span class="var">harga_roti</span> = <input type="number" class="input-val" id="val_hr" value="5000"></div>
+                    <div class="line"><span class="var">harga_susu</span> = <input type="number" class="input-val" id="val_hs" value="7000"></div>
+                    <div class="line"><span class="var">jumlah_roti</span> = <input type="number" class="input-val" id="val_jr" value="2"></div>
+                    <div class="line"><span class="var">jumlah_susu</span> = <input type="number" class="input-val" id="val_js" value="1"></div>
+                    <div class="line"><span class="var">uang_pembeli</span> = <input type="number" class="input-val" id="val_uang" value="20000"></div>
+                </div>
+                
+                <div class="code-section locked" id="sec-2">
+                    <div class="line comment"># --- FUNGSI SAPAAN KASIR ---</div>
+                    <div class="line"><span class="pastezone" id="dz_def0" data-val="">[perintah]</span> <span class="pastezone" id="dz_func0" data-val="">[nama fungsi]</span></div>
+                    <div class="line indent"><span class="pastezone" id="dz_ret0" data-val="">[perintah]</span> <span class="string-val">"</span><input type="text" class="input-val" id="val_sapa" style="width: 180px; text-align: left; background: #2c313a; color: #98c379;" value="Halo, selamat datang!"> <span class="string-val">"</span></div>
+                </div>
+
+                <div class="code-section locked" id="sec-3">
+                    <div class="line comment"># --- FUNGSI TOTAL BELANJA ---</div>
+                    <div class="line"><span class="pastezone" id="dz_def1" data-val="">[perintah]</span> <span class="pastezone" id="dz_func1" data-val="">[nama fungsi]</span></div>
+                    <div class="line indent"><span class="pastezone" id="dz_ret1" data-val="">[perintah]</span> (<span class="pastezone" id="dz1" data-val="">[var]</span> * <span class="pastezone" id="dz2" data-val="">[var]</span>) + (<span class="pastezone" id="dz3" data-val="">[var]</span> * <span class="pastezone" id="dz4" data-val="">[var]</span>)</div>
+                </div>
+
+                <div class="code-section locked" id="sec-4">
+                    <div class="line comment"># --- FUNGSI KEMBALIAN ---</div>
+
+                    <div class="line">
+                    <span class="pastezone" id="dz_def2"></span>
+                    <span class="pastezone" id="dz_func2"></span>(<span class="pastezone" id="dz_param"></span>):
+                    </div>
+
+                    <div class="line indent">
+                    <span class="pastezone" id="dz_if"></span> uang_pembeli > total_bayar:
+                    </div>
+
+                    <div class="line indent">
+                    <span class="pastezone" id="dz_ret2"></span> uang_pembeli - total_bayar
+                    </div>
+
+                    <div class="line indent">
+                    <span class="pastezone" id="dz_elif"></span> uang_pembeli < total_bayar:
+                    </div>
+
+                    <div class="line indent">
+                    return "Uang Anda kurang"
+                    </div>
+
+                    <div class="line indent">
+                    <span class="pastezone" id="dz_else"></span>
+                    </div>
+
+                    <div class="line indent">
+                    return "Uang Anda pas"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="bottom-panel">
+    <div class="control-bar">
+        <span style="color: white; font-weight: bold; font-size: 15px;">🖥️ Python Console Output</span>
+        <div class="btn-group">
+            <button id="resetCode">Reset Workspace</button>
+            <button id="btnAction">Sentuh Layar di Kiri...</button>
+            <button id="btnNext" style="display:none;">Verifikasi & Lanjut</button>
+            <button id="runCodeBtn" style="display:none;">Eksekusi Python</button>
+        </div>
+    </div>
+    <pre id="output">Sistem siap... Silakan ikuti instruksi pada Langkah 1.</pre>
+</div>
+
+<textarea id="hiddenPythonCode" style="display:none;"></textarea>
+
+<!-- BRYTHON BACKEND EXECUTION -->
+<script type="text/python">
+from browser import window, document
+import sys
+
+class MyOutput:
+    def write(self, data):
+        if data and data.strip():
+            out = document["output"]
+            out.text += "\n✅ [PYTHON OUTPUT] " + data.strip()
+            out.scrollTop = out.scrollHeight
+
+sys.stdout = MyOutput()
+
+def run_dynamic_code(*args):
+    code = document["hiddenPythonCode"].value
+    try:
+        exec_globals = {}
+        exec(code, exec_globals)
+    except Exception as e:
+        out = document["output"]
+        out.text += f"\n❌ [PYTHON ERROR] {str(e)}"
+        out.scrollTop = out.scrollHeight
+
+window.executePythonLogic = run_dynamic_code
+</script>
+
+<!-- JAVASCRIPT LOGIC -->
+<script type="text/javascript">
+// ================= SISTEM SVG & CALLOUT =================
+const grupPembeli = document.getElementById('grup-pembeli');
+const grupKasir = document.getElementById('grup-kasir');
+const popup = document.getElementById('popup');
+const popupText = document.getElementById('popup-text');
+
+// Fungsi Update Teks SVG (Mendukung Enter/Line-break)
+function updateSVGCallout(text) {
+    const calloutGrup = document.getElementById('calloutGrup');
+    const textNode = document.getElementById('calloutText');
+    
+    if(!text || text === "") {
+        calloutGrup.setAttribute('display', 'none');
+        return;
+    }
+    
+    calloutGrup.setAttribute('display', 'block');
+    textNode.innerHTML = ''; // Kosongkan
+    
+    const lines = text.split('\n');
+    lines.forEach((line, index) => {
+        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        tspan.setAttribute('x', '25');
+        tspan.setAttribute('y', 40 + (index * 24)); // Jarak antar baris
+        tspan.textContent = line;
+        textNode.appendChild(tspan);
+    });
+}
+
+// ================= SISTEM ALUR (8 LANGKAH) =================
+let currentStep = 1;
+const consoleOut = document.getElementById("output");
+
+function printConsole(msg, isError = false) {
+    const time = new Date().toLocaleTimeString('id-ID', {hour12:false});
+    consoleOut.textContent += `\n[${time}] ${isError ? "❌" : "✅"} ${msg}`;
+    consoleOut.scrollTop = consoleOut.scrollHeight;
+}
+
+const clickables = document.querySelectorAll('.clickable-var');
+const pastezones = document.querySelectorAll('.pastezone');
+let activeVar = null; 
+let defaultText = {};
+pastezones.forEach(z => defaultText[z.id] = z.textContent);
+
+// Event Listener Blok Kode (Tap untuk pilih, Tap ke Pastezone untuk pasang)
+clickables.forEach(item => {
+    item.addEventListener('click', () => {
+        if(item.classList.contains('locked')) return;
+        clickables.forEach(c => c.classList.remove('selected'));
+        activeVar = item.dataset.var; 
+        item.classList.add('selected');
+    });
+});
+
+pastezones.forEach(zone => {
+    zone.addEventListener('click', () => {
+        if (activeVar && !zone.closest('.code-section').classList.contains('locked')) {
+            zone.textContent = activeVar; 
+            zone.dataset.val = activeVar; 
+            zone.classList.add('filled'); 
+            
+            // Auto unselect var after placing to make it fluid
+            clickables.forEach(c => c.classList.remove('selected'));
+            activeVar = null;
+        } else if (!activeVar && zone.classList.contains('filled') && !zone.closest('.code-section').classList.contains('locked')) {
+            // Tap kembali pastezone yang terisi untuk menghapusnya (pengganti double-click)
+            zone.textContent = defaultText[zone.id]; 
+            zone.dataset.val = ""; 
+            zone.classList.remove('filled'); 
+        }
+    });
+});
+
+// ================= INTERAKSI LAYAR SENTUH (KLIK SVG) =================
+grupPembeli.addEventListener('click', () => {
+    if (currentStep === 1) {
+        popupText.innerHTML = "<b>KERANJANG KOSONG!</b><br><br>Belum ada data barang.<br>Uang Pembeli: Rp 0";
+        popup.style.display = 'block';
+    } 
+    else if (currentStep === 4) {
+        let jr = document.getElementById('val_jr').value; 
+        let js = document.getElementById('val_js').value;
+        let uang = document.getElementById('val_uang').value;
+        popupText.innerHTML = `<b>DATA KERANJANG TERSIMPAN:</b><br><br>🍞 Roti: ${jr} bungkus<br>🥛 Susu: ${js} kotak<br>💵 Uang Bawaan: Rp ${uang}`;
+        popup.style.display = 'block';
+    }
+});
+
+grupKasir.addEventListener('click', () => {
+    if (currentStep === 6) {
+
+        let hr = parseInt(document.getElementById('val_hr').value);
+        let hs = parseInt(document.getElementById('val_hs').value);
+        let jr = parseInt(document.getElementById('val_jr').value);
+        let js = parseInt(document.getElementById('val_js').value);
+        let sapaan = document.getElementById('val_sapa').value;
+
+        let total = (jr*hr) + (js*hs);
+
+        updateSVGCallout(
+        `"${sapaan}"
+        Total Belanja:
+        Rp ${total}`
+        );
+
+        printConsole("Kasir membaca fungsi total! Lanjut Step 7.");
+
+        setTimeout(() => {
+            currentStep = 7;
+            applyLogic();
+        }, 2500);
+
+    }
+    else if (currentStep === 8) {
+        document.getElementById('runCodeBtn').click();
+    }
+});
+
+document.getElementById('popup-btn').addEventListener('click', () => {
+    popup.style.display = 'none';
+    if(currentStep === 1) { printConsole("Inspeksi selesai. Editor Tahap 2 Terbuka."); currentStep = 2; applyLogic(); }
+    if(currentStep === 4) { printConsole("Isi keranjang berhasil dibaca! Buka Editor Tahap 5."); currentStep = 5; applyLogic(); }
+});
+
+function validateEditor() {
+    if (currentStep === 2) {
+        let hr = parseInt(document.getElementById('val_hr').value); let uang = parseInt(document.getElementById('val_uang').value);
+        if (hr > 0 && uang > 0) { printConsole("Data variabel berhasil disetup."); return true; }
+        printConsole("Gagal: Harga / Uang harus lebih dari 0!", true); return false;
+    }
+    if (currentStep === 3) {
+
+        let d1=document.getElementById('dz_def0').dataset.val
+        let d2=document.getElementById('dz_func0').dataset.val
+        let d3=document.getElementById('dz_ret0').dataset.val
+
+        let txt=document.getElementById('val_sapa').value.trim()
+
+        if(d1!=='def' || d2!=='menyapa():' || d3!=='return'){
+        printConsole("Gagal: Susunan 'def menyapa():' salah!",true)
+        return false
+        }
+
+        if(txt===""){
+        printConsole("Sapaan tidak boleh kosong!",true)
+        return false
+        }
+
+        printConsole("Fungsi Sapaan berhasil dirakit!")
+
+        updateSVGCallout(
+        `"${txt}"
+        `
+        )
+
+        return true
+        }
+    if (currentStep === 5) {
+        let d1=document.getElementById('dz_def1').dataset.val, d2=document.getElementById('dz_func1').dataset.val, d3=document.getElementById('dz_ret1').dataset.val;
+        if(d1!=='def' || d2!=='total():' || d3!=='return') { printConsole("Gagal: Susunan 'def total():' atau 'return' salah!", true); return false; }
+        
+        let z1=document.getElementById('dz1').dataset.val || "", z2=document.getElementById('dz2').dataset.val || "", z3=document.getElementById('dz3').dataset.val || "", z4=document.getElementById('dz4').dataset.val || "";
+        let p1 = (z1.includes('roti') && z2.includes('roti')) || (z1.includes('susu') && z2.includes('susu'));
+        let p2 = (z3.includes('roti') && z4.includes('roti')) || (z3.includes('susu') && z4.includes('susu'));
+        
+        if (p1 && p2 && z1!==z3) { printConsole("Fungsi Total berhasil dirakit!"); return true; }
+        printConsole("Gagal: Pastikan rumus kalinya (jumlah_roti*harga_roti) + (jumlah_susu*harga_susu)", true); return false;
+    }
+    if (currentStep === 7) {
+
+        let d1=document.getElementById('dz_def2').dataset.val
+        let d2=document.getElementById('dz_func2').dataset.val
+        let d3=document.getElementById('dz_param').dataset.val
+        let d4=document.getElementById('dz_ret2').dataset.val
+
+        if(d1!=='def' || d2!=='kembalian' || d3!=='total_bayar' || d4!=='return'){
+            printConsole("Gagal: Susunan fungsi kembalian salah!", true)
+            return false
+        }
+
+        let ifz=document.getElementById('dz_if').dataset.val
+        let elifz=document.getElementById('dz_elif').dataset.val
+        let elsez=document.getElementById('dz_else').dataset.val
+
+        if(ifz!=='if' || elifz!=='elif' || elsez!=='else:'){
+            printConsole("Susunan IF ELSE salah!",true)
+            return false
+        }
+
+        printConsole("Fungsi Kembalian berhasil dirakit!")
+
+        // ===== tampilkan balon hasil kembalian =====
+
+        let hr = parseInt(document.getElementById('val_hr').value)
+        let hs = parseInt(document.getElementById('val_hs').value)
+        let jr = parseInt(document.getElementById('val_jr').value)
+        let js = parseInt(document.getElementById('val_js').value)
+        let uang = parseInt(document.getElementById('val_uang').value)
+
+        let total = (jr*hr)+(js*hs)
+
+        let info=""
+
+        if(uang>total){
+            info=`Kembalian Anda:
+    Rp ${uang-total}`
+        }
+        else if(uang<total){
+            info=`Uang Anda kurang:
+    Rp ${total-uang}`
+        }
+        else{
+            info=`Uang Anda pas.
+    Terima kasih!`
+        }
+
+        updateSVGCallout(
+    `Transaksi Dihitung...
+
+    Total Belanja:
+    Rp ${total}
+
+    ${info}`
+    )
+
+        return true
+    }
+    return true;
+}
+
+function applyLogic() {
+    // Navigasi Tampilan Dot Step
+    for(let i=1; i<=8; i++) {
+        const dw = document.getElementById('dw'+i);
+        if(dw) {
+            if(i < currentStep) { dw.className = 'dot-wrapper done'; dw.querySelector('.dot').className = 'dot done'; }
+            else if(i === currentStep) { dw.className = 'dot-wrapper active'; dw.querySelector('.dot').className = 'dot active'; }
+            else { dw.className = 'dot-wrapper'; dw.querySelector('.dot').className = 'dot'; }
+        }
+        const sc = document.getElementById('stage'+i);
+        if(sc) {
+            if(i < currentStep) sc.className = 'stage-card done';
+            else if(i === currentStep) sc.className = 'stage-card active';
+            else sc.className = 'stage-card';
+        }
+    }
+
+    // Navigasi Kontrol UI & Panel Kanan
+    const btnNext = document.getElementById('btnNext');
+    const btnAction = document.getElementById('btnAction');
+    const runCodeBtn = document.getElementById('runCodeBtn');
+    const sec1 = document.getElementById('sec-1');
+    const sec2 = document.getElementById('sec-2');
+    const sec3 = document.getElementById('sec-3');
+    const sec4 = document.getElementById('sec-4');
+
+    btnNext.style.display = 'none';
+    btnAction.style.display = 'none';
+    runCodeBtn.style.display = 'none';
+
+    if (currentStep === 1) {
+        btnAction.style.display = 'block';
+        btnAction.textContent = 'Sentuh Pembeli di Kiri...';
+        grupPembeli.classList.add('glow-active');
+    } else if (currentStep === 2) {
+        grupPembeli.classList.remove('glow-active');
+        sec1.classList.remove('locked');
+        sec1.classList.add('active');
+        btnNext.style.display = 'block';
+    } else if (currentStep === 3) {
+        sec1.classList.remove('active');
+        sec2.classList.remove('locked');
+        sec2.classList.add('active');
+        btnNext.style.display = 'block';
+    } else if (currentStep === 4) {
+        sec2.classList.remove('active');
+        btnAction.style.display = 'block';
+        btnAction.textContent = '⏳ Sentuh Keranjang di Kiri...';
+        grupPembeli.classList.add('glow-active');
+    } else if (currentStep === 5) {
+        grupPembeli.classList.remove('glow-active');
+        sec3.classList.remove('locked');
+        sec3.classList.add('active');
+        btnNext.style.display = 'block';
+    } else if (currentStep === 6) {
+        sec3.classList.remove('active');
+        btnAction.style.display = 'block';
+        btnAction.textContent = '⏳ Sentuh Kasir di Kiri...';
+        grupKasir.classList.add('glow-active');
+    } else if (currentStep === 7) {
+        grupKasir.classList.remove('glow-active');
+        sec4.classList.remove('locked');
+        sec4.classList.add('active');
+        btnNext.style.display = 'block';
+    } else if (currentStep === 8) {
+        sec4.classList.remove('active');
+        btnAction.style.display = 'block';
+        btnAction.textContent = '⏳ Sentuh Kasir (Eksekusi)...';
+        grupKasir.classList.add('glow-active');
+        runCodeBtn.style.display = 'block';
+    }
+}
+
+document.getElementById('btnNext').addEventListener('click', () => {
+    if (validateEditor()) {
+        currentStep++;
+        applyLogic();
+    }
+});
+
+document.getElementById('resetCode').addEventListener('click',()=>{
+
+    document.querySelectorAll('.pastezone').forEach(zone=>{
+    zone.textContent=defaultText[zone.id]
+    zone.dataset.val=""
+    zone.classList.remove('filled')
+    })
+
+    document.querySelectorAll('.input-val').forEach(inp=>{
+    inp.value=inp.defaultValue
+    })
+
+    consoleOut.textContent="Workspace direset. Silakan mulai kembali."
+
+    updateSVGCallout("")
+
+    currentStep=1
+    applyLogic()
+
+    })
+
+document.getElementById('runCodeBtn').addEventListener('click', () => {
+    if(!validateEditor()) {
+        printConsole("Eksekusi digagalkan karena sintaks masih salah.", true);
+        return;
+    }
+    
+    grupKasir.classList.remove('glow-active');
+
+    let hr = document.getElementById('val_hr').value;
+    let hs = document.getElementById('val_hs').value;
+    let jr = document.getElementById('val_jr').value;
+    let js = document.getElementById('val_js').value;
+    let uang = document.getElementById('val_uang').value;
+    let sapa = document.getElementById('val_sapa').value;
+
+    // Script Python Virtual
+    const pyCode = `
+    harga_roti = ${hr}
+    harga_susu = ${hs}
+    jumlah_roti = ${jr}
+    jumlah_susu = ${js}
+    uang_pembeli = ${uang}
+
+    def menyapa():
+        return "${sapa}"
+
+    def total():
+        return (jumlah_roti * harga_roti) + (jumlah_susu * harga_susu)
+
+    def kembalian(total_bayar):
+
+        if uang_pembeli > total_bayar:
+            return f"Kembalian Anda: Rp {uang_pembeli-total_bayar}"
+
+        elif uang_pembeli < total_bayar:
+            return f"Uang Anda kurang: Rp {total_bayar-uang_pembeli}"
+
+        else:
+            return "Uang Anda pas. Terima kasih!"
+
+    print("--- STRUK VIRTUAL ---")
+    print(menyapa())
+
+    t = total()
+    print(f"Total Belanja Anda: Rp {t}")
+
+    print(kembalian(t))
+    `;
+
+    document.getElementById('hiddenPythonCode').value = pyCode;
+    printConsole("Mengeksekusi kode Python...");
+    
+    if (typeof window.executePythonLogic === "function") {
+        window.executePythonLogic();
+    } else {
+        printConsole("Sistem Python belum siap, mohon tunggu beberapa saat.", true);
+    }
+
+    updateSVGCallout("TRANSAKSI\nBERHASIL!\nTerima Kasih!");
+    let total=(jr*hr)+(js*hs)
+    uang=parseInt(uang)
+
+    let info=""
+
+    if(uang>total){
+    info=`Kembalian Anda:
+    Rp ${uang-total}`
+    }
+    else if(uang<total){
+    info=`Uang Anda kurang:
+    Rp ${total-uang}`
+    }
+    else{
+    info=`Uang Anda pas.
+    Terima kasih!`
+    }
+
+    updateSVGCallout(
+    `TRANSAKSI BERHASIL!
+
+    ${info}`
+    )
+    popupText.innerHTML = "<b>HEBAT! 🎉</b><br><br>Kamu berhasil menyelesaikan simulasi dan mengeksekusi program Kasir Virtual menggunakan Python!";
+    popup.style.display = 'block';
+});
+
+// Mulai inisialisasi tampilan
+applyLogic();
+</script>
+</body>
+</html>
