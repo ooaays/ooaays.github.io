@@ -129,8 +129,24 @@
 
     let currentExpIndex = 0; let currentStepIndex = 0; let unlockedExpIndex = 0;
     const tutorialPanel = document.getElementById('tutorial-panel');
+    const tutorialMinimizedBar = document.getElementById('tutorial-minimized-bar');
     const btnNextTut = document.getElementById('btn-next-tut');
     let tutorialRunTriggered = false;
+    let tutorialMinimized = false;
+
+    function minimizeTutorialPanel() {
+        if (!tutorialPanel || !tutorialMinimizedBar) return;
+        tutorialPanel.classList.add('hidden');
+        tutorialMinimizedBar.classList.remove('hidden');
+        tutorialMinimized = true;
+    }
+
+    function restoreTutorialPanel() {
+        if (!tutorialPanel || !tutorialMinimizedBar) return;
+        tutorialMinimizedBar.classList.add('hidden');
+        tutorialPanel.classList.remove('hidden');
+        tutorialMinimized = false;
+    }
 
     function renderDots() {
         const dotsContainer = document.getElementById('dots-container');
@@ -157,7 +173,7 @@
 
     function renderTutorialStep() {
         const exp = experiments[currentExpIndex]; const step = exp.steps[currentStepIndex];
-        document.getElementById('tutorial-title').innerHTML = exp.title;
+        document.getElementById('tutorial-title-text').innerHTML = exp.title;
         document.getElementById('tutorial-content').innerHTML = step.text;
         document.getElementById('tutorial-counter').innerText = `Langkah ${currentStepIndex + 1} / ${exp.steps.length}`;
         tutorialRunTriggered = false;
@@ -166,7 +182,7 @@
     }
 
     function checkStepValidation() {
-        if (tutorialPanel.classList.contains('hidden')) return;
+        if (tutorialPanel.classList.contains('hidden') && !tutorialMinimized) return;
         const step = experiments[currentExpIndex].steps[currentStepIndex];
         let isValid = step.check();
         
@@ -175,7 +191,11 @@
         if (isValid) {
             btnNextTut.disabled = false;
             btnNextTut.className = "px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold shadow-md transition-all animate-pulse";
-            btnNextTut.innerText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
+            const nextText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
+            btnNextTut.innerText = nextText;
+            if (tutorialMinimized && nextText.includes('Benar! Lanjut')) {
+                restoreTutorialPanel();
+            }
         } else {
             btnNextTut.disabled = true;
             btnNextTut.className = "px-5 py-2 bg-slate-300 text-slate-500 rounded-lg font-bold transition-all cursor-not-allowed";
