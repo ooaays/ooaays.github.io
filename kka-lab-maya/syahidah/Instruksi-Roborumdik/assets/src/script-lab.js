@@ -133,12 +133,14 @@
     const btnNextTut = document.getElementById('btn-next-tut');
     let tutorialRunTriggered = false;
     let tutorialMinimized = false;
+    let tutorialAutoMinimized = false;
 
     function minimizeTutorialPanel() {
         if (!tutorialPanel || !tutorialMinimizedBar) return;
         tutorialPanel.classList.add('hidden');
         tutorialMinimizedBar.classList.remove('hidden');
         tutorialMinimized = true;
+        tutorialAutoMinimized = false;
     }
 
     function restoreTutorialPanel() {
@@ -146,6 +148,21 @@
         tutorialMinimizedBar.classList.add('hidden');
         tutorialPanel.classList.remove('hidden');
         tutorialMinimized = false;
+        tutorialAutoMinimized = false;
+    }
+
+    function autoMinimizeTutorialPanel() {
+        if (!tutorialPanel || !tutorialMinimizedBar || tutorialMinimized) return;
+        tutorialPanel.classList.add('hidden');
+        tutorialMinimizedBar.classList.remove('hidden');
+        tutorialMinimized = true;
+        tutorialAutoMinimized = true;
+    }
+
+    function autoRestoreTutorialPanel() {
+        if (!tutorialAutoMinimized) return;
+        restoreTutorialPanel();
+        tutorialAutoMinimized = false;
     }
 
     function renderDots() {
@@ -495,9 +512,14 @@
 
     async function runProgram() {
         if (isRunning) return; stopProgram(); isRunning = true; const myRunId = currentRunId;
+        autoMinimizeTutorialPanel();
         tutorialRunTriggered = true; checkStepValidation();
         await Promise.all([ executeAST(buildAST(appData.robot.scripts), 'robot', myRunId), executeAST(buildAST(appData.battery.scripts), 'battery', myRunId) ]);
-        if (myRunId === currentRunId) { isRunning = false; document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block')); }
+        if (myRunId === currentRunId) {
+            isRunning = false;
+            document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
+            autoRestoreTutorialPanel();
+        }
     }
 
     async function executeAST(nodes, targetSprite, expectedRunId) {
