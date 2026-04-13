@@ -5,8 +5,7 @@
 const texts = [
 "Hai Murid Hebat !",
 "Namaku Roborumdik",
-"Bantu aku berikan aku instruksi",
-"Instruksi untuk gerakan tarian yang menarik",
+"Berikan aku instruksi",
 "Aku bisa mengikuti instruksi yang kamu berikan !",
 "Semangat ! Kita Pasti Bisa !"
 ]
