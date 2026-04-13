@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Maya Logika Percabangan - Pemilah Sampah Pintar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body{
+      font-family:'Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#eef2ff,#f8fafc);
+      min-height:100vh;
+      margin:0;
+      color:#1e293b;
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .header-bg{
+      background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+      color:white;
+      box-shadow:0 4px 14px rgba(0,0,0,.15);
+    }
+
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    .hero-wrap{
+      max-width:1320px;
+      margin:0 auto;
+      padding:56px 28px 84px;
+      display:grid;
+      grid-template-columns:minmax(520px,1fr) minmax(460px,560px);
+      gap:40px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      max-width:680px;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#fce7f3;
+      color:#be185d;
+      border:1px solid #f9a8d4;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:18px;
+    }
+
+    .hero-title{
+      font-size:clamp(36px,5vw,66px);
+      line-height:1.03;
+      font-weight:900;
+      color:#1e1b4b;
+      margin:0 0 14px;
+    }
+
+    .hero-subtitle{
+      font-size:clamp(16px,2vw,24px);
+      color:#475569;
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .hero-desc{
+      color:#64748b;
+      line-height:1.85;
+      max-width:640px;
+      margin-bottom:28px;
+      font-size:17px;
+    }
+
+    .hero-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      max-width:780px;
+    }
+
+    .menu-btn{
+      display:flex;
+      width:100%;
+      height:92px;
+      border-radius:20px;
+      overflow:hidden;
+      border:none;
+      padding:0;
+      cursor:pointer;
+      text-align:left;
+      box-shadow:0 8px 0 rgba(0,0,0,0.24);
+      transition:all .15s ease;
+    }
+
+    .menu-btn:active{
+      transform:translateY(8px);
+      box-shadow:0 0 0 rgba(0,0,0,0.24);
+    }
+
+    .menu-btn-icon{
+      width:96px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#3f3f46;
+      color:white;
+      flex-shrink:0;
+    }
+
+    .menu-btn-label{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:900;
+      font-size:24px;
+      text-transform:uppercase;
+      text-align:center;
+      padding:0 10px;
+      line-height:1.15;
+    }
+
+    .hero-card{
+      background:white;
+      border-radius:30px;
+      padding:24px;
+      box-shadow:0 18px 40px rgba(15,23,42,.10);
+      border:1px solid #e2e8f0;
+      position:relative;
+    }
+
+    .hero-card-title{
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:#64748b;
+      margin-bottom:10px;
+    }
+
+    .hero-preview{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .mini-rules{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:20px;
+      padding:14px;
+    }
+
+    .mini-rule{
+      background:#eef2ff;
+      border:1px solid #c7d2fe;
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:10px;
+      font-size:13px;
+      line-height:1.5;
+      color:#334155;
+      font-weight:700;
+    }
+
+    .mini-stage{
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+      border-radius:22px;
+      padding:16px;
+      color:white;
+      min-height:270px;
+    }
+
+    .mini-conveyor{
+      display:flex;
+      gap:8px;
+      background:#1e293b;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:10px;
+      overflow:hidden;
+      margin-bottom:16px;
+    }
+
+    .mini-item{
+      min-width:44px;
+      height:44px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:white;
+      color:#0f172a;
+      font-size:22px;
+      box-shadow:0 4px 10px rgba(0,0,0,.15);
+    }
+
+    .mini-bins{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .mini-bin{
+      border-radius:16px;
+      padding:14px 8px;
+      text-align:center;
+      color:white;
+      font-weight:900;
+      font-size:12px;
+    }
+
+    .lab-shell{
+      max-width:1440px;
+      margin:0 auto;
+      padding:28px 20px 48px;
+    }
+
+    .lab-top-card{
+      background:white;
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:20px 22px;
+      box-shadow:0 10px 24px rgba(15,23,42,.06);
+      margin-bottom:18px;
+    }
+
+    .lab-grid{
+      display:grid;
+      grid-template-columns:340px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:white;
+      border-radius:24px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 12px 28px rgba(15,23,42,.08);
+      padding:18px;
+    }
+
+    .section-title{
+      font-size:22px;
+      font-weight:900;
+      color:#1e293b;
+      margin-bottom:12px;
+    }
+
+    .builder-label{
+      font-size:13px;
+      font-weight:900;
+      color:#64748b;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .select-field{
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:700;
+      color:#334155;
+      background:white;
+      outline:none;
+    }
+
+    .select-field:focus{
+      border-color:#6366f1;
+      box-shadow:0 0 0 4px rgba(99,102,241,.12);
+    }
+
+    .rule-hint{
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      color:#1d4ed8;
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:14px;
+      line-height:1.7;
+      margin-bottom:12px;
+    }
+
+    .rule-feedback{
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:14px;
+      line-height:1.7;
+      margin-top:12px;
+    }
+
+    .rule-feedback.info{
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      color:#1d4ed8;
+    }
+
+    .rule-feedback.warn{
+      background:#fff7ed;
+      border:1px solid #fdba74;
+      color:#9a3412;
+    }
+
+    .rule-feedback.success{
+      background:#ecfdf5;
+      border:1px solid #86efac;
+      color:#166534;
+    }
+
+    .add-btn{
+      width:100%;
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:900;
+      cursor:pointer;
+      background:#4f46e5;
+      color:white;
+      margin-top:12px;
+      box-shadow:0 10px 18px rgba(79,70,229,.18);
+    }
+
+    .rules-list{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .rule-card{
+      border-radius:18px;
+      padding:14px;
+      border:1px solid #dbeafe;
+      background:#f8fafc;
+    }
+
+    .rule-tag{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      background:#ede9fe;
+      color:#6d28d9;
+      font-size:11px;
+      font-weight:900;
+      padding:4px 8px;
+      margin-bottom:8px;
+      text-transform:uppercase;
+    }
+
+    .rule-row-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .rule-actions{
+      display:flex;
+      gap:6px;
+      flex-shrink:0;
+    }
+
+    .mini-btn{
+      border:none;
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:900;
+      background:#e2e8f0;
+      color:#334155;
+    }
+
+    .else-card{
+      margin-top:14px;
+      border-radius:18px;
+      padding:14px;
+      background:#f8fafc;
+      border:1px dashed #94a3b8;
+      color:#334155;
+      line-height:1.7;
+    }
+
+    .sim-grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .sim-banner{
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      line-height:1.7;
+      font-weight:700;
+    }
+
+    .sim-banner.info{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+    }
+
+    .sim-banner.success{
+      background:#ecfdf5;
+      color:#166534;
+      border:1px solid #86efac;
+    }
+
+    .sim-banner.warn{
+      background:#fff7ed;
+      color:#9a3412;
+      border:1px solid #fdba74;
+    }
+
+    .conveyor-wrap{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:20px;
+      padding:14px;
+    }
+
+    .conveyor-title{
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#94a3b8;
+      margin-bottom:10px;
+    }
+
+    .conveyor{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      background:repeating-linear-gradient(
+        -45deg,
+        #334155,
+        #334155 10px,
+        #475569 10px,
+        #475569 20px
+      );
+      border-radius:16px;
+      padding:12px;
+      min-height:86px;
+      align-items:center;
+    }
+
+    .trash-card{
+      min-width:64px;
+      height:64px;
+      border-radius:14px;
+      background:white;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 6px 12px rgba(0,0,0,.15);
+      position:relative;
+      transition:transform .2s ease, opacity .2s ease;
+    }
+
+    .trash-card.current{
+      outline:4px solid #60a5fa;
+      transform:translateY(-4px) scale(1.04);
+    }
+
+    .trash-card.done{
+      opacity:.55;
+    }
+
+    .trash-emoji{
+      font-size:24px;
+      line-height:1;
+      margin-bottom:4px;
+    }
+
+    .trash-name{
+      font-size:10px;
+      font-weight:800;
+      text-align:center;
+      color:#334155;
+      padding:0 4px;
+      line-height:1.2;
+    }
+
+    .trash-badge{
+      position:absolute;
+      top:-8px;
+      right:-8px;
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:12px;
+      font-weight:900;
+      box-shadow:0 4px 10px rgba(0,0,0,.12);
+    }
+
+    .bins-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+
+    .bin-card{
+      border-radius:18px;
+      padding:14px 12px;
+      color:white;
+      min-height:170px;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 10px 18px rgba(0,0,0,.08);
+    }
+
+    .bin-title{
+      font-size:15px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      margin-bottom:10px;
+      text-align:center;
+    }
+
+    .bin-count{
+      font-size:12px;
+      font-weight:800;
+      text-align:center;
+      margin-bottom:10px;
+      opacity:.9;
+    }
+
+    .bin-items{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-content:flex-start;
+      justify-content:center;
+    }
+
+    .bin-item{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      background:rgba(255,255,255,.92);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      position:relative;
+    }
+
+    .bin-item.correct{
+      outline:3px solid #22c55e;
+    }
+
+    .bin-item.wrong{
+      outline:3px solid #ef4444;
+    }
+
+    .sim-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .sim-btn{
+      border:none;
+      border-radius:16px;
+      padding:14px 18px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .log-box{
+      background:#0f172a;
+      color:#dbeafe;
+      border-radius:18px;
+      padding:14px;
+      min-height:220px;
+      font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space:pre-wrap;
+      line-height:1.75;
+      overflow:auto;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .summary-box{
+      border-radius:18px;
+      padding:14px;
+      border:1px solid #dbeafe;
+      background:#f8fafc;
+      color:#334155;
+      line-height:1.8;
+    }
+
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.6);
+      backdrop-filter:blur(4px);
+      z-index:50;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+
+    .modal-backdrop.show{
+      display:flex;
+    }
+
+    .modal-card{
+      background:white;
+      border-radius:30px;
+      padding:26px;
+      max-width:1000px;
+      width:100%;
+      max-height:86vh;
+      overflow:auto;
+      box-shadow:0 20px 40px rgba(0,0,0,.18);
+      border:4px solid #dbeafe;
+    }
+
+    .example-box{
+      background:#0f172a;
+      color:#e2e8f0;
+      border-radius:18px;
+      padding:16px;
+      font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+      line-height:1.8;
+      overflow:auto;
+    }
+
+    .cara-dot{
+      height:12px;
+      border-radius:999px;
+      transition:all .25s ease;
+      background:#cbd5e1;
+      width:12px;
+    }
+
+    .cara-dot.active{
+      width:36px;
+      background:#f97316;
+    }
+
+    .cara-slide.hidden{
+      display:none;
+    }
+
+    @media (max-width:1180px){
+      .hero-wrap{
+        grid-template-columns:1fr;
+      }
+
+      .lab-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero-preview{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:960px){
+      .bins-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media (max-width:760px){
+      .hero-buttons{
+        grid-template-columns:1fr;
+      }
+
+      .sim-actions{
+        flex-direction:column;
+      }
+
+      .bins-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bg">
+    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
+      <div class="flex items-center gap-4 min-w-0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+          Direktorat Sekolah Menengah Pertama<br>
+          Direktorat Jenderal Pendidikan Anak Usia Dini,<br>
+          Pendidikan Dasar, dan Pendidikan Menengah<br>
+          Kementerian Pendidikan Dasar dan Menengah
+        </div>
+      </div>
+
+      <div class="flex items-center gap-5 shrink-0">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+      </div>
+    </div>
+  </div>
+
+  <!-- HOMEPAGE -->
+  <section id="homePage" class="page active">
+    <div class="hero-wrap">
+      <div class="hero-copy">
+        <div class="hero-badge">🧠 Berpikir Komputasional</div>
+        <h1 class="hero-title">Lab Maya: Logika Percabangan<br>Pemilah Sampah Pintar</h1>
+        <div class="hero-subtitle">
+          Susun aturan JIKA ... MAKA ..., lalu lihat sistem mengambil keputusan.
+        </div>
+        <p class="hero-desc">
+          Pada kegiatan ini, siswa belajar bahwa komputer tidak memilih secara acak.
+          Komputer mengambil keputusan berdasarkan aturan logika yang disusun dari atas ke bawah.
+          Jika aturan cocok, sistem memilih tong yang tepat. Jika tidak ada yang cocok, sistem memakai aturan cadangan.
+        </p>
+
+        <div class="hero-buttons">
+          <button onclick="showPage('labPage')" class="menu-btn">
+            <div class="menu-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
+                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="menu-btn-label" style="background:#06b6d4;">Mulai Percobaan</div>
+          </button>
+
+          <button onclick="openModal('tujuanModal')" class="menu-btn">
+            <div class="menu-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Pembelajaran</div>
+          </button>
+
+          <button onclick="openCaraModal()" class="menu-btn">
+            <div class="menu-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
+                <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
+              </svg>
+            </div>
+            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan</div>
+          </button>
+
+          <button onclick="openModal('bioModal')" class="menu-btn">
+            <div class="menu-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="menu-btn-label" style="background:#84cc16;">Biodata Pengembang</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-card-title">Pratinjau Sistem</div>
+        <div class="hero-preview">
+          <div class="mini-rules">
+            <div class="mini-rule">
+              <b>JIKA</b> jenis sampah = Organik<br>
+              <b>MAKA</b> masukkan ke Tong Hijau
+            </div>
+            <div class="mini-rule">
+              <b>JIKA</b> jenis sampah = Anorganik<br>
+              <b>MAKA</b> masukkan ke Tong Kuning
+            </div>
+            <div class="mini-rule">
+              <b>SELAIN ITU</b><br>
+              masukkan ke Tong Hitam
+            </div>
+          </div>
+
+          <div class="mini-stage">
+            <div class="mini-conveyor">
+              <div class="mini-item">🍌</div>
+              <div class="mini-item">🥤</div>
+              <div class="mini-item">🔋</div>
+              <div class="mini-item">📰</div>
+              <div class="mini-item">🧻</div>
+            </div>
+
+            <div class="text-slate-300 text-sm leading-7 mb-4">
+              Sistem membaca aturan dari atas ke bawah, lalu memilih tong yang sesuai.
+            </div>
+
+            <div class="mini-bins">
+              <div class="mini-bin" style="background:#22c55e;">ORGANIK</div>
+              <div class="mini-bin" style="background:#facc15; color:#713f12;">ANORGANIK</div>
+              <div class="mini-bin" style="background:#ef4444;">B3</div>
+              <div class="mini-bin" style="background:#3b82f6;">KERTAS</div>
+              <div class="mini-bin" style="background:#1e293b;">RESIDU</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAB PAGE -->
+  <section id="labPage" class="page">
+    <div class="lab-shell">
+      <div class="lab-top-card">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-slate-800">🤖 Lab Maya: Logika Percabangan (Pemilah Sampah)</h2>
+            <p class="text-slate-500 mt-2 leading-7">
+              Pecahkan masalah penumpukan sampah. Susun blok logika <b>JIKA ... MAKA ...</b> agar sistem dapat memilih tong yang benar secara otomatis.
+            </p>
+          </div>
+
+          <div class="flex gap-3 flex-wrap">
+            <button onclick="runSimulation()" id="runBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-5 py-3 rounded-xl">▶ Jalankan Simulasi</button>
+            <button onclick="resetSimulation(true)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-black px-5 py-3 rounded-xl">↻ Reset</button>
+            <button onclick="openModal('refleksiModal')" class="bg-sky-600 hover:bg-sky-700 text-white font-black px-5 py-3 rounded-xl">Refleksi</button>
+            <button onclick="showPage('homePage')" class="bg-gray-500 hover:bg-gray-600 text-white font-black px-5 py-3 rounded-xl">Kembali ke Beranda</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-grid">
+        <!-- LEFT -->
+        <div class="panel">
+          <div class="flex items-center justify-between mb-3">
+            <div class="section-title mb-0">🧠 Blok Logika</div>
+            <span class="text-xs font-black bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full">Koding</span>
+          </div>
+
+          <div class="rule-hint">
+            Susun aturan dari atas ke bawah. Sistem akan mengecek aturan pertama dulu. Jika tidak cocok, sistem lanjut ke aturan berikutnya.
+          </div>
+
+          <div class="builder-label">JIKA jenisnya</div>
+          <select id="conditionSelect" class="select-field">
+            <option value="">Pilih jenis sampah</option>
+            <option value="organik">Organik (Sisa Makanan, Daun)</option>
+            <option value="anorganik">Anorganik (Plastik, Botol, Kaleng)</option>
+            <option value="b3">B3 (Baterai, Elektronik)</option>
+            <option value="kertas">Kertas (Koran, Kardus)</option>
+          </select>
+
+          <div class="builder-label mt-4">MAKA masukkan ke tong</div>
+          <select id="actionSelect" class="select-field">
+            <option value="">Pilih tong tujuan</option>
+            <option value="hijau">Tong Hijau (Organik)</option>
+            <option value="kuning">Tong Kuning (Anorganik)</option>
+            <option value="merah">Tong Merah (B3)</option>
+            <option value="biru">Tong Biru (Kertas)</option>
+            <option value="hitam">Tong Hitam (Residu)</option>
+          </select>
+
+          <button class="add-btn" onclick="addRule()">＋ Tambah Aturan Baru</button>
+
+          <div id="builderFeedback" class="rule-feedback info">
+            Buat aturan pertama. Misalnya: JIKA jenis sampah = Organik, MAKA masuk ke Tong Hijau.
+          </div>
+
+          <div class="rules-list" id="rulesList"></div>
+
+          <div class="else-card">
+            <div class="text-sm font-black text-slate-700 uppercase tracking-wide mb-2">SELAIN ITU</div>
+            <div class="text-slate-600 leading-7">
+              Jika tidak ada aturan yang cocok, sistem otomatis memasukkan sampah ke <b>Tong Hitam (Residu)</b>.
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="panel">
+          <div class="section-title">🎮 Tampilan Simulasi</div>
+
+          <div id="simBanner" class="sim-banner info">
+            Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.
+          </div>
+
+          <div class="sim-grid">
+            <div class="conveyor-wrap">
+              <div class="conveyor-title">Ban Berjalan</div>
+              <div id="conveyor" class="conveyor"></div>
+            </div>
+
+            <div class="bins-grid" id="binsGrid"></div>
+
+            <div class="sim-actions">
+              <button onclick="runSimulation()" class="sim-btn bg-indigo-600 hover:bg-indigo-700 text-white">▶ Jalankan Simulasi</button>
+              <button onclick="resetSimulation(true)" class="sim-btn bg-slate-200 hover:bg-slate-300 text-slate-700">↻ Reset</button>
+              <button onclick="loadExampleRules()" class="sim-btn bg-emerald-500 hover:bg-emerald-600 text-emerald-950">Gunakan Aturan Contoh</button>
+            </div>
+
+            <div>
+              <div class="text-sm font-black uppercase tracking-wide text-slate-500 mb-2">Log Keputusan Sistem</div>
+              <div id="decisionLog" class="log-box">Belum ada simulasi. Jalankan sistem untuk melihat cara komputer memeriksa aturan.</div>
+            </div>
+
+            <div id="summaryBox" class="summary-box">
+              <b>Hasil Simulasi</b><br>
+              Sampah diproses: 0<br>
+              Benar: 0<br>
+              Salah: 0<br>
+              Akurasi: 0%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL PENJELASAN AWAL -->
+  <div id="introModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Sebelum Mulai</h2>
+      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
+        <p>Di kegiatan ini, kamu akan belajar bahwa komputer tidak memilih secara asal.</p>
+        <p>Komputer mengambil keputusan berdasarkan <b>aturan logika</b> yang disusun dari atas ke bawah.</p>
+        <p>Pada lab ini:</p>
+        <ol class="list-decimal ml-6 space-y-2">
+          <li>Kamu memilih kondisi <b>JIKA</b></li>
+          <li>Kamu menentukan aksi <b>MAKA</b></li>
+          <li>Sistem akan mengecek aturan satu per satu</li>
+          <li>Jika ada aturan yang cocok, sampah masuk ke tong yang sesuai</li>
+          <li>Jika tidak ada aturan yang cocok, sampah masuk ke <b>Tong Hitam (Residu)</b></li>
+        </ol>
+      </div>
+      <div class="pt-8 flex justify-center gap-4 flex-wrap">
+        <button onclick="closeModal('introModal')" class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Mulai Belajar</button>
+        <button onclick="closeModal('introModal'); openModal('exampleModal');" class="bg-sky-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Lihat Contoh Dulu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONTOH -->
+  <div id="exampleModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Contoh Logika Percabangan</h2>
+      <div class="bg-indigo-50 border-l-8 border-indigo-500 p-5 rounded-2xl text-slate-800 text-lg leading-relaxed mb-5">
+        Contoh paling sederhana:
+      </div>
+
+      <div class="example-box mb-5">
+JIKA jenis sampah = Organik
+MAKA masukkan ke Tong Hijau
+
+JIKA jenis sampah = Anorganik
+MAKA masukkan ke Tong Kuning
+
+SELAIN ITU
+masukkan ke Tong Hitam
+      </div>
+
+      <div class="grid gap-4">
+        <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 text-slate-700 leading-relaxed">
+          <b>Penjelasan:</b> Kalau sistem membaca sampah berupa sisa makanan atau daun, maka sampah itu akan dikirim ke Tong Hijau.
+          Kalau aturan pertama tidak cocok, sistem akan lanjut memeriksa aturan berikutnya.
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-slate-700 leading-relaxed">
+          <b>Intinya:</b> komputer bekerja dengan aturan yang kamu susun, bukan dengan tebakan.
+        </div>
+      </div>
+
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeModal('exampleModal')" class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Saya Paham</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TUJUAN -->
+  <div id="tujuanModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Tujuan Pembelajaran</h2>
+      <div class="bg-emerald-50 border-l-8 border-emerald-500 p-6 rounded-2xl text-slate-800 text-xl leading-relaxed">
+        Untuk memahami penerapan konsep dasar algoritma dan pemikiran komputasional, khususnya logika percabangan
+        <b>(If - Else If - Else)</b>, dalam mengotomatisasi pemecahan masalah di situasi kehidupan sehari-hari.
+        Murid diharapkan mampu menyusun urutan instruksi yang logis agar sistem dapat mengambil keputusan
+        berdasarkan kondisi tertentu.
+      </div>
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeModal('tujuanModal')" class="bg-indigo-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">OK, Mengerti!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CARA PENGGUNAAN -->
+  <div id="caraModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="mb-5">
+        <h2 class="text-4xl font-black text-orange-600 text-center mb-4">Cara Penggunaan</h2>
+        <div class="flex justify-center gap-2 flex-wrap">
+          <div id="caraDot-0" class="cara-dot active"></div>
+          <div id="caraDot-1" class="cara-dot"></div>
+          <div id="caraDot-2" class="cara-dot"></div>
+          <div id="caraDot-3" class="cara-dot"></div>
+          <div id="caraDot-4" class="cara-dot"></div>
+          <div id="caraDot-5" class="cara-dot"></div>
+          <div id="caraDot-6" class="cara-dot"></div>
+          <div id="caraDot-7" class="cara-dot"></div>
+        </div>
+      </div>
+
+      <div id="caraSlidesWrap" class="min-h-[360px]">
+        <div class="cara-slide">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">1. Kenali Tampilan Lab</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="bg-white rounded-2xl p-4 border border-orange-100">
+                <b>Panel Kiri: Blok Logika</b><br>
+                <span class="text-slate-600">Tempat memilih kondisi JIKA dan aksi MAKA, lalu menambahkan aturan baru.</span>
+              </div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100">
+                <b>Panel Kanan: Tampilan Simulasi</b><br>
+                <span class="text-slate-600">Menampilkan ban berjalan, tong sampah, log keputusan, dan skor akhir simulasi.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">2. Pilih Kondisi dan Aksi</h3>
+            <p class="text-lg text-slate-700 leading-8 mb-4">
+              Di panel kiri, pilih dulu:
+            </p>
+            <ol class="list-decimal ml-6 text-slate-700 space-y-2 text-lg">
+              <li>Dropdown <b>JIKA jenisnya</b></li>
+              <li>Dropdown <b>MAKA masukkan ke tong</b></li>
+            </ol>
+            <div class="bg-white rounded-2xl p-4 border border-orange-100 mt-4 text-slate-700 leading-7">
+              Contoh: JIKA jenis sampah = <b>Organik</b>, MAKA masukkan ke <b>Tong Hijau</b>.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">3. Tambah Aturan Baru</h3>
+            <p class="text-lg text-slate-700 leading-8">
+              Setelah kondisi dan aksi dipilih, tekan tombol <b>Tambah Aturan Baru</b>.
+            </p>
+            <div class="bg-white rounded-2xl p-4 border border-orange-100 mt-4 text-slate-700 leading-7">
+              Aturan yang ditambahkan akan muncul dalam daftar aturan. Sistem akan membaca aturan itu dari atas ke bawah.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">4. Atur Urutan Logika</h3>
+            <p class="text-lg text-slate-700 leading-8 mb-4">
+              Setiap aturan memiliki tombol:
+            </p>
+            <ul class="list-disc ml-6 text-slate-700 space-y-2 text-lg">
+              <li><b>↑</b> untuk memindahkan aturan ke atas</li>
+              <li><b>↓</b> untuk memindahkan aturan ke bawah</li>
+              <li><b>✕</b> untuk menghapus aturan</li>
+            </ul>
+            <div class="bg-yellow-50 border border-yellow-300 rounded-2xl p-4 mt-4 text-slate-700 leading-7">
+              Urutan aturan penting, karena sistem mengecek aturan pertama dulu. Kalau cocok, sistem langsung mengambil keputusan.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">5. Jalankan Simulasi</h3>
+            <p class="text-lg text-slate-700 leading-8">
+              Tekan tombol <b>Jalankan Simulasi</b> untuk memulai pemilahan sampah.
+            </p>
+            <div class="bg-white rounded-2xl p-4 border border-orange-100 mt-4 text-slate-700 leading-7">
+              Sistem akan memproses sampah satu per satu di ban berjalan, lalu memeriksa aturan yang kamu susun.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">6. Perhatikan Feedback dan Log</h3>
+            <p class="text-lg text-slate-700 leading-8 mb-4">
+              Saat simulasi berjalan, sistem akan menampilkan:
+            </p>
+            <ul class="list-disc ml-6 text-slate-700 space-y-2 text-lg">
+              <li>aturan mana yang sedang dicek</li>
+              <li>cocok atau tidak cocok</li>
+              <li>tong yang dipilih sistem</li>
+              <li>apakah hasilnya benar atau salah</li>
+            </ul>
+            <div class="bg-white rounded-2xl p-4 border border-orange-100 mt-4 text-slate-700 leading-7">
+              Jadi, kamu bisa memahami <b>cara sistem berpikir</b>, bukan hanya melihat hasil akhirnya.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">7. Baca Skor Akhir</h3>
+            <p class="text-lg text-slate-700 leading-8">
+              Setelah semua sampah diproses, sistem menampilkan:
+            </p>
+            <ul class="list-disc ml-6 text-slate-700 space-y-2 text-lg">
+              <li>jumlah sampah yang diproses</li>
+              <li>jumlah yang benar</li>
+              <li>jumlah yang salah</li>
+              <li>persentase akurasi</li>
+            </ul>
+            <div class="bg-white rounded-2xl p-4 border border-orange-100 mt-4 text-slate-700 leading-7">
+              Gunakan hasil ini untuk mengevaluasi apakah aturanmu sudah lengkap atau masih perlu diperbaiki.
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden">
+          <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">8. Gunakan Tombol Lainnya</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Reset</b><br><span class="text-slate-600">Mengacak ulang sampah dan mengembalikan sistem ke kondisi awal.</span></div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Gunakan Aturan Contoh</b><br><span class="text-slate-600">Memuat aturan awal agar kamu bisa belajar dari contoh yang benar.</span></div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Refleksi</b><br><span class="text-slate-600">Membantu kamu memahami konsep di balik simulasi.</span></div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Kembali ke Beranda</b><br><span class="text-slate-600">Kembali ke halaman awal media.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-5 border-t-2 border-orange-100 flex items-center justify-between gap-4">
+        <button id="caraPrevBtn" onclick="changeCaraSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
+          &larr; Sebelumnya
+        </button>
+
+        <button onclick="closeCaraModal()" class="bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">
+          Tutup
+        </button>
+
+        <button id="caraNextBtn" onclick="changeCaraSlide(1)" class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
+          Selanjutnya &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BIODATA -->
+  <div id="bioModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-4xl font-black text-lime-700 text-center mb-6">Biodata Pengembang</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-lime-50 border-t-8 border-lime-500 rounded-3xl p-6">
+          <div class="text-2xl font-black text-lime-900 mb-4">Pengembang Materi</div>
+          <p class="mb-3"><b>Nama:</b> DUMMY</p>
+          <p class="mb-3"><b>Kategori:</b> DUMMY</p>
+          <p><b>Status:</b> DUMMY</p>
+        </div>
+        <div class="bg-lime-50 border-t-8 border-lime-500 rounded-3xl p-6">
+          <div class="text-2xl font-black text-lime-900 mb-4">Pengembang Media</div>
+          <p class="mb-3"><b>Nama:</b> DUMMY</p>
+          <p class="mb-3"><b>Kategori:</b> DUMMY</p>
+          <p><b>Status:</b> DUMMY</p>
+        </div>
+      </div>
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeModal('bioModal')" class="bg-lime-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL REFLEKSI -->
+  <div id="refleksiModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Refleksi</h2>
+      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
+        <p>1. Mengapa sistem harus membaca aturan dari atas ke bawah?</p>
+        <p>2. Apa yang terjadi jika dua aturan memiliki kondisi yang sama tetapi tong tujuannya berbeda?</p>
+        <p>3. Mengapa aturan <b>SELAIN ITU</b> penting dalam logika percabangan?</p>
+        <p>4. Bagaimana komputer memutuskan pilihan tanpa menebak?</p>
+      </div>
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeModal('refleksiModal')" class="bg-indigo-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CATEGORY_LABEL = {
+      organik: 'Organik',
+      anorganik: 'Anorganik',
+      b3: 'B3',
+      kertas: 'Kertas',
+      residu: 'Residu'
+    };
+
+    const BIN_INFO = {
+      hijau: { name: 'Tong Hijau', label: 'ORGANIK', color: '#22c55e' },
+      kuning: { name: 'Tong Kuning', label: 'ANORGANIK', color: '#facc15', textColor: '#713f12' },
+      merah: { name: 'Tong Merah', label: 'B3', color: '#ef4444' },
+      biru: { name: 'Tong Biru', label: 'KERTAS', color: '#2563eb' },
+      hitam: { name: 'Tong Hitam', label: 'RESIDU', color: '#1e293b' }
+    };
+
+    const CORRECT_BIN = {
+      organik: 'hijau',
+      anorganik: 'kuning',
+      b3: 'merah',
+      kertas: 'biru',
+      residu: 'hitam'
+    };
+
+    const ITEMS = [
+      { emoji: '🍌', label: 'Kulit Pisang', category: 'organik' },
+      { emoji: '🥤', label: 'Botol Plastik', category: 'anorganik' },
+      { emoji: '🔋', label: 'Baterai Bekas', category: 'b3' },
+      { emoji: '📰', label: 'Koran Bekas', category: 'kertas' },
+      { emoji: '📦', label: 'Kardus', category: 'kertas' },
+      { emoji: '🍃', label: 'Daun Kering', category: 'organik' },
+      { emoji: '🥫', label: 'Kaleng Minuman', category: 'anorganik' },
+      { emoji: '🧻', label: 'Tisu Kotor', category: 'residu' }
+    ];
+
+    let rules = [];
+    let queue = [];
+    let placedItems = {};
+    let processedResults = [];
+    let currentIndex = -1;
+    let running = false;
+    let introShown = false;
+    let logs = [];
+    let bannerState = { text: 'Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.', tone: 'info' };
+    let score = { total: 0, correct: 0, wrong: 0 };
+    let currentCaraSlide = 0;
+
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (id === 'labPage') {
+        renderAll();
+        if (!introShown) {
+          introShown = true;
+          openModal('introModal');
+        }
+      }
+    }
+
+    function openModal(id){
+      document.getElementById(id).classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id){
+      document.getElementById(id).classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openCaraModal(){
+      openModal('caraModal');
+      currentCaraSlide = 0;
+      updateCaraSlideView();
+    }
+
+    function closeCaraModal(){
+      closeModal('caraModal');
+    }
+
+    function getCaraSlides(){
+      return document.querySelectorAll('.cara-slide');
+    }
+
+    function changeCaraSlide(direction){
+      const slides = getCaraSlides();
+      currentCaraSlide += direction;
+      if (currentCaraSlide < 0) currentCaraSlide = 0;
+      if (currentCaraSlide >= slides.length) currentCaraSlide = slides.length - 1;
+      updateCaraSlideView();
+    }
+
+    function updateCaraSlideView(){
+      const slides = getCaraSlides();
+      const total = slides.length;
+
+      slides.forEach((slide, index) => {
+        slide.classList.add('hidden');
+        const dot = document.getElementById(`caraDot-${index}`);
+        if (dot) dot.classList.remove('active');
+      });
+
+      if (slides[currentCaraSlide]) slides[currentCaraSlide].classList.remove('hidden');
+
+      const activeDot = document.getElementById(`caraDot-${currentCaraSlide}`);
+      if (activeDot) activeDot.classList.add('active');
+
+      document.getElementById('caraPrevBtn').style.visibility = currentCaraSlide === 0 ? 'hidden' : 'visible';
+      document.getElementById('caraNextBtn').style.visibility = currentCaraSlide === total - 1 ? 'hidden' : 'visible';
+    }
+
+    function setBuilderFeedback(text, tone='info'){
+      const el = document.getElementById('builderFeedback');
+      el.className = `rule-feedback ${tone}`;
+      el.textContent = text;
+    }
+
+    function setBanner(text, tone='info'){
+      bannerState = { text, tone };
+      renderBanner();
+    }
+
+    function renderBanner(){
+      const el = document.getElementById('simBanner');
+      el.className = `sim-banner ${bannerState.tone}`;
+      el.textContent = bannerState.text;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function addRule(){
+      if (running) return;
+
+      const condition = document.getElementById('conditionSelect').value;
+      const action = document.getElementById('actionSelect').value;
+
+      if (!condition || !action) {
+        setBuilderFeedback('Aturan belum lengkap. Pilih jenis sampah dan tong tujuan terlebih dahulu.', 'warn');
+        return;
+      }
+
+      const exactDuplicate = rules.find(r => r.condition === condition && r.action === action);
+      if (exactDuplicate) {
+        setBuilderFeedback('Aturan yang sama sudah ada. Periksa kembali agar tidak terjadi pengulangan yang tidak perlu.', 'warn');
+        return;
+      }
+
+      const sameCondition = rules.find(r => r.condition === condition);
+      rules.push({ condition, action });
+
+      document.getElementById('conditionSelect').value = '';
+      document.getElementById('actionSelect').value = '';
+
+      if (sameCondition) {
+        setBuilderFeedback(`Aturan untuk kategori ${CATEGORY_LABEL[condition]} sudah pernah dibuat. Urutan aturan akan memengaruhi hasil.`, 'warn');
+      } else {
+        setBuilderFeedback('Aturan berhasil ditambahkan. Sekarang kamu bisa menambah aturan lain atau langsung jalankan simulasi.', 'success');
+      }
+
+      renderRules();
+    }
+
+    function moveRule(index, direction){
+      if (running) return;
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= rules.length) return;
+      const temp = rules[index];
+      rules[index] = rules[newIndex];
+      rules[newIndex] = temp;
+      setBuilderFeedback('Urutan aturan diubah. Ingat: sistem membaca aturan dari atas ke bawah.', 'info');
+      renderRules();
+    }
+
+    function deleteRule(index){
+      if (running) return;
+      rules.splice(index, 1);
+      setBuilderFeedback('Aturan dihapus.', 'info');
+      renderRules();
+    }
+
+    function loadExampleRules(){
+      if (running) return;
+      rules = [
+        { condition: 'organik', action: 'hijau' },
+        { condition: 'anorganik', action: 'kuning' },
+        { condition: 'b3', action: 'merah' },
+        { condition: 'kertas', action: 'biru' }
+      ];
+      setBuilderFeedback('Aturan contoh berhasil dimuat. Jalankan simulasi untuk melihat hasilnya.', 'success');
+      renderRules();
+    }
+
+    function renderRules(){
+      const list = document.getElementById('rulesList');
+
+      if (!rules.length) {
+        list.innerHTML = `
+          <div class="rule-card">
+            <div class="text-slate-500 leading-7">
+              Belum ada aturan. Tambahkan aturan pertama dengan memilih <b>JIKA</b> dan <b>MAKA</b>, lalu tekan tombol <b>Tambah Aturan Baru</b>.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = rules.map((rule, index) => `
+        <div class="rule-card">
+          <div class="rule-row-top">
+            <div>
+              <div class="rule-tag">${index === 0 ? 'JIKA' : 'ELSE IF ' + (index + 1)}</div>
+              <div class="text-slate-800 font-black leading-7">
+                JIKA jenis sampah = ${CATEGORY_LABEL[rule.condition]}
+              </div>
+              <div class="text-slate-600 leading-7">
+                MAKA masukkan ke ${BIN_INFO[rule.action].name} (${BIN_INFO[rule.action].label})
+              </div>
+            </div>
+            <div class="rule-actions">
+              <button class="mini-btn" onclick="moveRule(${index}, -1)">↑</button>
+              <button class="mini-btn" onclick="moveRule(${index}, 1)">↓</button>
+              <button class="mini-btn" onclick="deleteRule(${index})">✕</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function shuffle(arr){
+      const copy = [...arr];
+      for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function resetSimulation(reseed = true){
+      if (running) return;
+
+      if (reseed || queue.length === 0) {
+        queue = shuffle(ITEMS);
+      }
+
+      placedItems = {
+        hijau: [],
+        kuning: [],
+        merah: [],
+        biru: [],
+        hitam: []
+      };
+
+      processedResults = new Array(queue.length).fill(null);
+      currentIndex = -1;
+      logs = [];
+      score = { total: queue.length, correct: 0, wrong: 0 };
+      setBanner('Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.', 'info');
+      renderSimulation();
+    }
+
+    function renderConveyor(){
+      const box = document.getElementById('conveyor');
+
+      if (!queue.length) {
+        box.innerHTML = `<div class="text-white/70 font-bold">Belum ada sampah yang dimuat.</div>`;
+        return;
+      }
+
+      box.innerHTML = queue.map((item, index) => {
+        const result = processedResults[index];
+        const badge = result
+          ? `<div class="trash-badge" style="background:${result.correct ? '#22c55e' : '#ef4444'}">${result.correct ? '✓' : '✕'}</div>`
+          : '';
+
+        return `
+          <div class="trash-card ${index === currentIndex ? 'current' : ''} ${result ? 'done' : ''}">
+            ${badge}
+            <div class="trash-emoji">${item.emoji}</div>
+            <div class="trash-name">${escapeHtml(item.label)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBins(){
+      const grid = document.getElementById('binsGrid');
+      const order = ['hijau', 'kuning', 'merah', 'biru', 'hitam'];
+
+      grid.innerHTML = order.map(key => {
+        const bin = BIN_INFO[key];
+        const items = placedItems[key] || [];
+        const color = bin.color;
+        const textColor = bin.textColor || '#ffffff';
+
+        return `
+          <div class="bin-card" style="background:${color}; color:${textColor};">
+            <div class="bin-title">${bin.label}</div>
+            <div class="bin-count">Isi: ${items.length}</div>
+            <div class="bin-items">
+              ${items.length
+                ? items.map(item => `<div class="bin-item ${item.correct ? 'correct' : 'wrong'}" title="${escapeHtml(item.label)}">${item.emoji}</div>`).join('')
+                : `<div class="text-white/80 text-xs font-bold mt-4" style="color:${textColor}; opacity:.9;">Belum ada isi</div>`
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLog(){
+      const box = document.getElementById('decisionLog');
+      box.textContent = logs.length
+        ? logs.join('\n')
+        : 'Belum ada simulasi. Jalankan sistem untuk melihat cara komputer memeriksa aturan.';
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function renderSummary(){
+      const accuracy = score.total ? Math.round((score.correct / score.total) * 100) : 0;
+      let note = 'Susun aturan lalu jalankan simulasi.';
+
+      if (score.correct + score.wrong > 0) {
+        if (accuracy === 100) {
+          note = 'Hebat! Semua sampah berhasil dipilah dengan benar. Ini berarti aturan logikamu sudah lengkap dan urutannya tepat.';
+        } else if (accuracy >= 70) {
+          note = 'Bagus. Aturanmu sudah cukup baik, tetapi masih ada beberapa sampah yang salah pilih tong. Periksa kembali kategori yang masih keliru.';
+        } else {
+          note = 'Aturanmu belum tepat. Periksa kembali urutan aturan dan kategori sampah agar hasilnya lebih baik.';
+        }
+      }
+
+      document.getElementById('summaryBox').innerHTML = `
+        <b>Hasil Simulasi</b><br>
+        Sampah diproses: ${score.total}<br>
+        Benar: ${score.correct}<br>
+        Salah: ${score.wrong}<br>
+        Akurasi: ${accuracy}%<br><br>
+        <span class="text-slate-600">${note}</span>
+      `;
+    }
+
+    function renderSimulation(){
+      renderBanner();
+      renderConveyor();
+      renderBins();
+      renderLog();
+      renderSummary();
+    }
+
+    function renderAll(){
+      renderRules();
+      renderSimulation();
+    }
+
+    function logLine(text){
+      logs.push(text);
+      renderLog();
+    }
+
+    function sleep(ms){
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function runSimulation(){
+      if (running) return;
+
+      if (!rules.length) {
+        setBanner('Tambahkan minimal satu aturan dulu sebelum simulasi dijalankan.', 'warn');
+        setBuilderFeedback('Belum ada aturan. Buat aturan dulu, baru jalankan simulasi.', 'warn');
+        return;
+      }
+
+      running = true;
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('runBtn').classList.add('opacity-60', 'cursor-not-allowed');
+
+      resetSimulation(true);
+      setBanner('Simulasi dimulai. Sistem akan membaca aturan dari atas ke bawah.', 'info');
+      await sleep(500);
+
+      for (let i = 0; i < queue.length; i++) {
+        currentIndex = i;
+        renderConveyor();
+
+        const item = queue[i];
+        logLine(`${i + 1}. Sampah: ${item.emoji} ${item.label}`);
+        await sleep(450);
+
+        let chosenBin = null;
+
+        for (let r = 0; r < rules.length; r++) {
+          const rule = rules[r];
+          logLine(`- Mengecek aturan ${r + 1}: JIKA ${CATEGORY_LABEL[rule.condition]} → ${BIN_INFO[rule.action].name}`);
+          await sleep(450);
+
+          if (item.category === rule.condition) {
+            chosenBin = rule.action;
+            logLine(`  ✓ Cocok dengan aturan ${r + 1}.`);
+            break;
+          } else {
+            logLine(`  ✗ Tidak cocok.`);
+          }
+          await sleep(250);
+        }
+
+        if (!chosenBin) {
+          chosenBin = 'hitam';
+          logLine(`- Tidak ada aturan yang cocok. Gunakan SELAIN ITU → ${BIN_INFO[chosenBin].name}.`);
+          await sleep(350);
+        }
+
+        const correctBin = CORRECT_BIN[item.category];
+        const isCorrect = chosenBin === correctBin;
+
+        processedResults[i] = {
+          chosen: chosenBin,
+          correct: isCorrect
+        };
+
+        placedItems[chosenBin].push({
+          emoji: item.emoji,
+          label: item.label,
+          correct: isCorrect
+        });
+
+        if (isCorrect) {
+          score.correct += 1;
+          logLine(`✅ Benar. ${item.label} masuk ke ${BIN_INFO[chosenBin].name}.`);
+          setBanner(`Benar! ${item.label} dipilah ke ${BIN_INFO[chosenBin].name}.`, 'success');
+        } else {
+          score.wrong += 1;
+          logLine(`❌ Salah. ${item.label} seharusnya masuk ke ${BIN_INFO[correctBin].name}, bukan ${BIN_INFO[chosenBin].name}.`);
+          setBanner(`Masih keliru. ${item.label} seharusnya masuk ke ${BIN_INFO[correctBin].name}.`, 'warn');
+        }
+
+        renderSimulation();
+        await sleep(900);
+      }
+
+      currentIndex = -1;
+      renderConveyor();
+
+      const accuracy = score.total ? Math.round((score.correct / score.total) * 100) : 0;
+      if (accuracy === 100) {
+        setBanner('Simulasi selesai. Semua sampah berhasil dipilah dengan benar.', 'success');
+      } else {
+        setBanner(`Simulasi selesai. Akurasi kamu ${accuracy}%. Periksa kembali aturan yang masih salah.`, 'warn');
+      }
+
+      running = false;
+      document.getElementById('runBtn').disabled = false;
+      document.getElementById('runBtn').classList.remove('opacity-60', 'cursor-not-allowed');
+    }
+
+    resetSimulation(true);
+    renderRules();
+    updateCaraSlideView();
+  </script>
+</body>
+</html>

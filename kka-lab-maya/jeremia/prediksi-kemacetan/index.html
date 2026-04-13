@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalur Tercepat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+            min-height: 100vh;
+        }
+
+        /* CUSTOM SCROLLBAR UNTUK MODAL */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* HEADER */
+        .header-bg {
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-bg flex justify-between items-center px-6 py-4">
+        <div class="flex items-center gap-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" alt="Logo Kemdikbud" class="h-14">
+            <div class="text-sm leading-tight font-semibold hidden md:block">
+                Direktorat Sekolah Menengah Pertama<br>
+                Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+                Pendidikan Dasar, dan Pendidikan Menengah<br>
+                Kementerian Pendidikan Dasar dan Menengah
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" alt="Logo SMP" class="h-12 hidden sm:block">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" alt="Logo Pendidikan Bermutu" class="h-12">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" alt="Logo Sekolah Ramah Anak" class="h-12 hidden sm:block">
+        </div>
+    </div>
+
+
+    <div class="flex flex-col items-center justify-center text-center py-12 px-4">
+        <h1 class="text-3xl md:text-5xl font-black text-indigo-700 mb-2">
+            Analisis Data Lalu Lintas
+        </h1>
+
+        <p class="text-slate-600 md:text-xl font-semibold mb-6">
+            Prediksi Kemacetan Kota
+        </p>
+
+        <div class="relative mt-8">
+            <div>
+                <img src="https://png.pngtree.com/png-vector/20230808/ourmid/pngtree-traffic-jam-vector-png-image_6948201.png" alt="Ilustrasi Kemacetan" width="200px" class="relative z-0">
+            </div>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl relative z-10">
+            <a href="https://sites.google.com/guru.smp.belajar.id/kka-lab-maya/jeremia/prediksi-kemacetan-kota/analisis-data-lalu-lintas" target="_blank" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer">
+                <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                        <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2 hover:bg-[#25add0] transition-colors">
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
+                </div>
+            </a>
+
+            <button onclick="openCPModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left hover:brightness-105">
+                <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                        <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Materi Pembelajaran</span>
+                </div>
+            </button>
+
+            <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left hover:brightness-105">
+                <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                        <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
+                    </svg>
+                </div>
+                <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+                </div>
+            </button>
+
+            <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left hover:brightness-105">
+                <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL CAPAIAN PEMBELAJARAN -->
+    <div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
+            
+            <div class="shrink-0 mb-6">
+                <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Materi Pembelajaran</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-4 space-y-6 text-left pb-4">
+                <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
+                    <h3 class="text-2xl md:text-3xl font-bold text-indigo-900 mb-2">Elemen</h3>
+                    <p class="text-xl md:text-2xl text-slate-800 font-medium">Pemanfaatan dan Pengembangan Kecerdasan Artifisial</p>
+                </div>
+                <div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
+                    <h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Pembelajaran</h3>
+                    <p class="text-lg md:text-xl text-slate-800 font-medium leading-relaxed text-justify">
+                        Memahami bagaimana sistem AI mengenali pola data historis dan membuat prediksi berdasarkan pola tersebut. Praktikum ini menekankan pada konsep pola berulang dalam dataset, penggunaan statistik sederhana (rata-rata), dan cara AI mengekstrak informasi untuk prediksi tanpa harus memprogram algoritma kompleks.
+                    </p>
+                </div>
+            </div>
+
+            <div class="shrink-0 pt-6 flex justify-center border-t-2 border-indigo-50">
+                <button onclick="closeCPModal()" class="bg-[#4f46e5] hover:bg-[#4338ca] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#3730a3] active:shadow-[0_0px_0_#3730a3] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">OK, Mengerti!</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL CARA PENGGUNAAN -->
+    <div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+            
+            <div class="shrink-0 mb-4">
+                <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+                <div class="flex justify-center gap-2 flex-wrap">
+                    <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
+                    <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                    <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                    <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                    <div id="dot-4" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                    <div id="dot-5" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                    <div id="dot-6" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                </div>
+            </div>
+            
+           <div class="text-left flex-1 overflow-y-auto pr-4 my-2">
+
+                <!-- SLIDE 1 -->
+<div id="slide-0" class="slide-content block">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+1️⃣ Amati Dataset Lalu Lintas
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Perhatikan tabel jumlah kendaraan selama <b>30 hari terakhir</b>. 
+Setiap baris menunjukkan jam, sedangkan setiap kolom menunjukkan tanggal.
+</p>
+
+<div class="bg-white p-4 border border-slate-200 rounded-xl shadow-sm flex items-center gap-4 mt-4">
+<span class="text-4xl">📊</span>
+<p class="text-slate-600 font-medium">
+Cobalah menemukan waktu ketika kendaraan paling ramai atau paling sepi.
+</p>
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 2 -->
+<div id="slide-1" class="slide-content hidden">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+2️⃣ Pilih Hari Analisis
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Gunakan menu <b>Pilih Hari</b> untuk menentukan hari yang ingin kamu prediksi.
+</p>
+
+<div class="bg-white p-5 border border-slate-200 rounded-xl shadow-sm text-center">
+<span class="text-5xl mb-3 block">📅</span>
+<p class="font-bold text-slate-800 text-lg">
+Setiap hari memiliki pola lalu lintas yang berbeda.
+</p>
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 3 -->
+<div id="slide-2" class="slide-content hidden">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+3️⃣ Tentukan Jam Pengamatan
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Pilih jam yang ingin dianalisis oleh sistem AI.
+</p>
+
+<div class="bg-blue-50 border border-blue-200 p-5 rounded-xl text-blue-900 shadow-sm">
+<ul class="space-y-2">
+<li>⏰ 07.00 → Jam berangkat sekolah / kerja</li>
+<li>⏰ 17.00 → Jam pulang kerja</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 4 -->
+<div id="slide-3" class="slide-content hidden">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+4️⃣ Tentukan Kondisi Cuaca
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Cuaca dapat memengaruhi jumlah kendaraan di jalan.
+</p>
+
+<div class="space-y-3">
+
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
+<div class="text-3xl">☀️</div>
+<div>Cerah</div>
+</div>
+
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
+<div class="text-3xl">🌧️</div>
+<div>Hujan Lebat</div>
+</div>
+
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
+<div class="text-3xl">🌊</div>
+<div>Banjir</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 5 -->
+<div id="slide-4" class="slide-content hidden">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+5️⃣ Atur Ambang Kemacetan
+</h3>
+
+<p class="text-lg text-slate-700 mb-6">
+Gunakan slider untuk menentukan jumlah kendaraan yang dianggap macet.
+</p>
+
+<div class="bg-white p-6 border border-slate-200 rounded-xl shadow-sm text-center">
+<span class="text-6xl">🎚️</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 6 -->
+<div id="slide-5" class="slide-content hidden">
+<div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
+
+<h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
+6️⃣ Jalankan Prediksi AI
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Klik tombol <b>Jalankan Prediksi Kemacetan Kota oleh AI</b>.
+</p>
+
+<div class="text-center">
+<span class="text-6xl">🤖</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- SLIDE 7 -->
+<div id="slide-6" class="slide-content hidden">
+<div class="bg-green-50 p-6 rounded-2xl border-l-8 border-green-500 mb-4">
+
+<h3 class="text-2xl font-black text-green-900 mb-4 border-b-2 border-green-200 pb-2">
+7️⃣ Amati Hasil Prediksi
+</h3>
+
+<p class="text-lg text-slate-700 mb-4">
+Sistem akan menampilkan kondisi lalu lintas dan rekomendasi perjalanan.
+</p>
+
+<div class="text-center text-5xl">🚦</div>
+
+</div>
+</div>
+
+</div>
+
+            <!-- BUTTON NAVIGASI MODAL PENGGUNAAN -->
+            <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
+                <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all flex gap-2 items-center">
+                    &larr; <span class="hidden md:inline">Sebelumnya</span>
+                </button>
+                <div class="flex-1 flex justify-end gap-4">
+                    <button id="closeCaraBtn" onclick="closeCaraModal()" style="display: none;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">
+                        Tutup
+                    </button>
+                    <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff5722] hover:bg-[#e64a19] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#bf360c] active:shadow-[0_0px_0_#bf360c] active:translate-y-[4px] transition-all flex gap-2 items-center">
+                        <span class="hidden md:inline">Selanjutnya</span> &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BIODATA -->
+    <div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-[24px] p-6 md:p-10 max-w-4xl w-full shadow-2xl border-[8px] border-[#eaf2dc] flex flex-col items-center max-h-[90vh] overflow-y-auto">
+            
+            <!-- Judul -->
+            <h2 class="text-3xl md:text-[34px] font-black text-[#5a9c33] text-center mb-8">
+                Biodata Pengembang
+            </h2>
+
+            <!-- Grid 2 Kolom untuk Kartu -->
+            <div class="flex flex-col md:flex-row gap-6 mb-10 w-full px-2 md:px-6">
+                
+                <!-- KARTU 1: PENGEMBANG MATERI -->
+                <div class="flex-1 bg-[#f4f8e2] rounded-[24px] border-t-[8px] border-[#93c74c] p-6 flex flex-col items-center shadow-md relative overflow-hidden">
+                    <!-- Icon -->
+                    <div class="w-[85px] h-[85px] bg-[#c5e888] rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-[#5c9425]">
+                            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    
+                    <!-- Role -->
+                    <h3 class="text-[22px] font-bold text-[#355b11] w-full text-center pb-3 mb-4 border-b-[1px] border-[#d4e4b5]">
+                        Pengembang Materi
+                    </h3>
+                    
+                    <!-- Data Diri -->
+                    <div class="w-full space-y-4 text-left px-2">
+                        <div>
+                            <p class="text-[10px] font-black text-[#689f28] tracking-widest uppercase mb-1">Nama</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#689f28] tracking-widest uppercase mb-1">Instansi</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#689f28] tracking-widest uppercase mb-1">Email</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KARTU 2: PENGEMBANG MEDIA -->
+                <div class="flex-1 bg-[#eefaf9] rounded-[24px] border-t-[8px] border-[#29b8b8] p-6 flex flex-col items-center shadow-md relative overflow-hidden">
+                    <!-- Icon -->
+                    <div class="w-[85px] h-[85px] bg-[#9cf0eb] rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-[#0f7a7a]">
+                            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    
+                    <!-- Role -->
+                    <h3 class="text-[22px] font-bold text-[#0c6a6a] w-full text-center pb-3 mb-4 border-b-[1px] border-[#b4eae6]">
+                        Pengembang Media
+                    </h3>
+                    
+                    <!-- Data Diri -->
+                    <div class="w-full space-y-4 text-left px-2">
+                        <div>
+                            <p class="text-[10px] font-black text-[#1e9b9b] tracking-widest uppercase mb-1">Nama</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#1e9b9b] tracking-widest uppercase mb-1">Instansi</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-[#1e9b9b] tracking-widest uppercase mb-1">Email</p>
+                            <p class="font-bold text-black text-[15px] leading-none">Dummy Data</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex justify-center w-full mt-2">
+                <button onclick="closeBioModal()" class="bg-[#86c544] hover:bg-[#78b33a] text-white text-[20px] font-black py-[12px] px-12 rounded-[16px] shadow-[0_6px_0_#69a630] active:shadow-[0_0px_0_#69a630] active:translate-y-[6px] transition-all">
+                    OK, Mengerti!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FUNGSI ANIMASI BALON KATA
+        setTimeout(() => {
+            const speech = document.getElementById('speech');
+            if(speech) speech.style.opacity = '1';
+        }, 800);
+
+        // MODAL CAPAIAN PEMBELAJARAN
+        function openCPModal() {
+            document.getElementById('cpModal').classList.remove('hidden');
+        }
+        function closeCPModal() {
+            document.getElementById('cpModal').classList.add('hidden');
+        }
+
+        // MODAL BIODATA
+        function openBioModal() {
+            document.getElementById('bioModal').classList.remove('hidden');
+        }
+        function closeBioModal() {
+            document.getElementById('bioModal').classList.add('hidden');
+        }
+
+        // MODAL CARA PENGGUNAAN & SLIDER
+        let currentSlide = 0;
+        const totalSlides = 7;
+
+        function openCaraModal() {
+            document.getElementById('caraModal').classList.remove('hidden');
+            currentSlide = 0;
+            updateSlide();
+        }
+
+        function closeCaraModal() {
+            document.getElementById('caraModal').classList.add('hidden');
+        }
+
+        function updateSlide() {
+            // Sembunyikan semua konten dan matikan indikator dots
+            for(let i = 0; i < totalSlides; i++) {
+                let slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    slide.classList.remove('block');
+                    slide.classList.add('hidden');
+                }
+                
+                let dot = document.getElementById(`dot-${i}`);
+                if (dot) {
+                    dot.classList.remove('w-8', 'bg-orange-500');
+                    dot.classList.add('w-3', 'bg-slate-300');
+                }
+            }
+            
+            // Tampilkan slide saat ini
+            let activeSlide = document.getElementById(`slide-${currentSlide}`);
+            if (activeSlide) {
+                activeSlide.classList.remove('hidden');
+                activeSlide.classList.add('block');
+            }
+            
+            let activeDot = document.getElementById(`dot-${currentSlide}`);
+            if (activeDot) {
+                activeDot.classList.remove('w-3', 'bg-slate-300');
+                activeDot.classList.add('w-8', 'bg-orange-500');
+            }
+
+            // Kontrol tombol Sebelumnya
+            if(currentSlide === 0) {
+                document.getElementById('prevBtn').style.visibility = 'hidden';
+            } else {
+                document.getElementById('prevBtn').style.visibility = 'visible';
+            }
+
+            // Kontrol tombol Selanjutnya / Tutup
+            if(currentSlide === totalSlides - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('closeCaraBtn').style.display = 'block';
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('closeCaraBtn').style.display = 'none';
+            }
+        }
+
+        function changeSlide(step) {
+            currentSlide += step;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlide();
+        }
+    </script>
+</body>
+</html>

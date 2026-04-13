@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miniatur KA Generatif dengan Eksplorasi Markov Chain</title>
+
+    <style>
+        /* =========================================================
+           VARIABEL & RESET DASAR
+           ========================================================= */
+        :root { 
+            --p: #2c3e50; 
+            --a: #ff9f43; 
+            --s: #1dd1a1; 
+            --d: #1e272e; 
+            --bg: #f5f6fa; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        /* =========================================================
+           CSS HEADER KEMENDIKBUD (Utility Classes Manual)
+           ========================================================= */
+        .header-bg { 
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1); 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            margin-bottom: 30px; 
+        } 
+
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .h-14 { height: 3.5rem; }
+        .h-12 { height: 3rem; }
+        .text-sm { font-size: 0.875rem; }
+        .leading-tight { line-height: 1.25; }
+        .font-semibold { font-weight: 600; }
+        .hidden { display: none; }
+        @media (min-width: 640px) { .sm\:block { display: block; } }
+        @media (min-width: 768px) { .md\:block { display: block; } }
+
+        /* SPEECH BUBBLE */ 
+        .speech { 
+            position: absolute; 
+            top: -90px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: white; 
+            border-radius: 14px; 
+            padding: 12px 16px; 
+            font-weight: bold; 
+            border: 2px solid #cbd5e1; 
+            box-shadow: 0 6px 10px rgba(0,0,0,0.1); 
+            opacity: 0; 
+            transition: opacity .5s; 
+            color: #1e293b; 
+            width: 250px; 
+            text-align: center; 
+            z-index: 50;
+        } 
+        .speech::after { 
+            content: ""; 
+            position: absolute; 
+            bottom: -12px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            border-width: 10px; 
+            border-style: solid; 
+            border-color: white transparent transparent transparent; 
+        }
+
+        /* =========================================================
+           CSS APLIKASI UTAMA (MARKOV CHAIN)
+           ========================================================= */
+        .app-title { text-align: center; margin-bottom: 20px; padding: 0 20px; color: var(--p); }
+        .app-title h2 { margin: 0 0 10px 0; }
+        .app-title p { margin: 0; color: #7f8c8d; }
+
+        .factory-container { max-width: 1400px; margin: auto; display: grid; grid-template-columns: 500px 1fr; gap: 30px; padding: 0 20px 40px 20px; }
+
+        /* Rak Kartu */
+        .gudang-section { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .view-dataset-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+        .btn-view { background: #f1f2f6; border: 1px solid #dcdde1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+
+        .cards-shelf { display: flex; gap: 15px; justify-content: center; height: 160px; align-items: center; border-bottom: 2px solid #f1f2f6; margin-bottom: 20px; }
+        .flash-card { 
+            width: 110px; height: 140px; background: white; border: 3px solid #ddd; border-radius: 15px; 
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
+        }
+        .flash-card i { font-size: 35px; margin-bottom: 8px; font-style: normal; }
+        .flash-card.in-wadah { transform: translateY(220px) scale(1.1); border-color: var(--a); box-shadow: 0 10px 20px rgba(255,159,67,0.3); z-index: 10; }
+
+        /* Wadah Kosong */
+        .wadah-latihan { 
+            background: #dfe6e9; border: 4px dashed #bdc3c7; border-radius: 25px; 
+            height: 200px; display: flex; align-items: center; justify-content: center;
+            margin-top: 40px; position: relative;
+        }
+        .wadah-label { position: absolute; top: -15px; background: #2f3640; color: white; padding: 4px 15px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+
+        /* Kontrol */
+        .step-area { margin-top: 30px; display: none; }
+        .step-area.visible { display: block; animation: fadeInUp 0.5s; }
+        .btn-process { width: 100%; padding: 14px; background: var(--p); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+        .btn-process:hover { opacity: 0.9; }
+
+        /* Slider Kreativitas */
+        .slider-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; }
+        .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: #7f8c8d; margin-top: 5px; font-weight: bold; }
+
+        /* Monitor */
+        .monitor { background: var(--d); color: white; border-radius: 25px; padding: 25px; height: 85vh; overflow-y: auto; box-shadow: inset 0 0 30px #000; position: relative; scroll-behavior: smooth; }
+        .token-pill { background: rgba(255,159,67,0.15); border: 1px solid var(--a); color: var(--a); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-family: monospace; display: inline-block; margin: 3px; animation: pop 0.2s; }
+        
+        /* Audit & Sentence Box */
+        .audit-box { background: rgba(255,255,255,0.05); border: 1px solid #57606f; border-radius: 12px; padding: 15px; margin-bottom: 15px; animation: slideIn 0.3s; }
+        .prob-row { display: flex; align-items: center; gap: 10px; margin: 5px 0; font-size: 13px; font-family: monospace; }
+        .prob-bar-bg { flex-grow: 1; height: 12px; background: #2f3640; border-radius: 6px; overflow: hidden; }
+        .prob-bar-fill { height: 100%; background: var(--s); transition: width 0.5s; }
+        
+        .current-sentence-box { 
+            background: #111; padding: 15px; border: 2px solid var(--a); border-radius: 12px; 
+            color: var(--a); font-size: 20px; font-weight: bold; position: sticky; bottom: 0; 
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 20; line-height: 1.5;
+        }
+        
+        @keyframes pop { from { scale: 0; } to { scale: 1; } }
+        @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Responsive adjust untuk layar kecil */
+        @media (max-width: 900px) {
+            .factory-container { grid-template-columns: 1fr; }
+            .monitor { height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-bg flex justify-between items-center px-6 py-4"> 
+    <div class="flex items-center gap-4"> 
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14" alt="Logo Tut Wuri Handayani"> 
+        <div class="text-sm leading-tight font-semibold hidden md:block"> 
+            Direktorat Sekolah Menengah Pertama<br> 
+            Direktorat Jendral Pendidikan Anak Usia Dini,<br> 
+            Pendidikan Dasar, dan Pendidikan Menengah<br> 
+            Kementerian Pendidikan Dasar dan Menengah 
+        </div> 
+    </div> 
+    <div class="flex items-center gap-6 relative"> 
+        <div class="speech" id="speechBubble">Selamat Datang di Lab AI!</div>
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block" alt="Logo Tambahan 1"> 
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12" alt="Pendidikan Bermutu"> 
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block" alt="Sekolah Ramah Anak"> 
+    </div> 
+</div>
+
+<div class="app-title">
+    <h2>🏭 Miniatur KA Generatif dengan Eksplorasi Markov Chain</h2>
+    <p>Gunakan dataset besar untuk melihat simulasi prediksi kata AI secara nyata!</p>
+</div>
+
+<div class="factory-container">
+    <div class="gudang-section">
+        <div class="view-dataset-bar">
+            <button class="btn-view" onclick="inspect('pendidikan')">🔍 Data Edukasi</button>
+            <button class="btn-view" onclick="inspect('kesehatan')">🔍 Data Kesehatan</button>
+            <button class="btn-view" onclick="inspect('otomotif')">🔍 Data Otomotif</button>
+        </div>
+
+        <div class="cards-shelf">
+            <div class="flash-card" id="card-pendidikan" onclick="selectCard('pendidikan')"><i>🎓</i><b>Edukasi</b></div>
+            <div class="flash-card" id="card-kesehatan" onclick="selectCard('kesehatan')"><i>🏥</i><b>Kesehatan</b></div>
+            <div class="flash-card" id="card-otomotif" onclick="selectCard('otomotif')"><i>🏎️</i><b>Otomotif</b></div>
+        </div>
+
+        <div class="wadah-latihan" id="wadahTarget">
+            <div class="wadah-label">WADAH BAHAN LATIHAN</div>
+            <span id="placeholderText" style="color:#7f8c8d; font-style: italic;">Pilih kategori dataset di atas...</span>
+        </div>
+
+        <div class="step-area" id="controls">
+            <button class="btn-process" onclick="doTokenize()">1. Mulai Tokenisasi (Potong Data)</button>
+            
+            <div style="margin: 15px 0;">
+                <label style="font-size:12px; font-weight:bold;">Memori Mesin (N-Gram):</label>
+                <select id="orde" style="width:100%; padding:10px; border-radius:8px; margin-top:5px; border: 1px solid #ccc;">
+                    <option value="1">Orde 1 (Memori 1 Kata - Lebih Acak)</option>
+                    <option value="2" selected>Orde 2 (Memori 2 Kata - Lebih Logis)</option>
+                </select>
+            </div>
+            
+            <button class="btn-process" onclick="doAnalyze()">2. Analisis Peta Probabilitas</button>
+            
+            <div class="slider-box">
+                <label style="font-size:12px; font-weight:bold; display:flex; justify-content:space-between;">
+                    <span>Suhu Kreativitas (Temperature):</span>
+                    <span id="tempVal" style="color:var(--a); font-size:14px;">1.0</span>
+                </label>
+                <input type="range" id="temp" min="0.1" max="2.0" step="0.1" value="1.0" style="width:100%; margin-top:10px;" oninput="document.getElementById('tempVal').innerText = this.value">
+                <div class="slider-labels">
+                    <span>Kaku (0.1)</span>
+                    <span>Normal (1.0)</span>
+                    <span>Kreatif (2.0)</span>
+                </div>
+            </div>
+
+            <button class="btn-process" style="background:var(--s); color:#1e272e; font-size: 16px;" onclick="doGenerate()">3. Cetak Kalimat Prediksi</button>
+        </div>
+    </div>
+
+    <div class="monitor" id="monitor">
+        <h3 id="monTitle" style="color:#57606f; margin-top:0;">Monitor Observasi</h3>
+        <div id="monContent"><p style="color:#57606f">Sistem Standby. Silahkan pilih bahan baku.</p></div>
+    </div>
+</div>
+
+<div id="dataModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
+    <div style="background:white; width:70%; margin:5% auto; padding:25px; border-radius:15px; max-height:80vh; overflow-y:auto; position:relative;">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-weight:bold; color:red;" onclick="document.getElementById('dataModal').style.display='none'">[TUTUP]</span>
+        <h3 id="modalTitle" style="margin-top:0;"></h3>
+        <pre id="modalBody" style="font-size:12px; line-height:1.5; background:#f4f4f4; padding:15px; border-radius:8px; white-space: pre-wrap;"></pre>
+    </div>
+</div>
+
+<script>
+// Menampilkan speech bubble sejenak saat halaman dimuat
+setTimeout(() => {
+    const bubble = document.getElementById('speechBubble');
+    if(bubble) {
+        bubble.style.opacity = '1';
+        setTimeout(() => { bubble.style.opacity = '0'; }, 5000);
+    }
+}, 1000);
+
+// Dataset Terintegrasi
+const dataSet = {
+    pendidikan: `siswa belajar matematika di kelas pagi bersama guru\nsiswa belajar sejarah di perpustakaan sekolah dengan teman\nsiswa belajar bahasa inggris di kelas pagi dengan semangat\nguru mengajar matematika dasar di sekolah setiap hari\nguru mengajar sejarah bangsa di kelas pagi ini\nperpustakaan sekolah memiliki buku pelajaran lengkap untuk siswa\nperpustakaan sekolah sangat sejuk dan nyaman untuk belajar\nujian semester sangat penting untuk kelulusan siswa kelas enam\nujian semester dilaksanakan di kelas pagi dengan tertib\nbuku pelajaran disimpan di laci meja kelas oleh siswa\nbuku pelajaran matematika sangat tebal dan sulit dibaca\nsiswa kelas enam rajin membaca di perpustakaan sekolah\nsiswa kelas enam belajar matematika di kelas pagi\nsiswa bermain di halaman sekolah saat istirahat siang\nsiswa bermain bola di halaman sekolah bersama teman\nguru menulis materi pelajaran di papan tulis kelas\nguru menulis soal ujian di papan tulis pagi ini\nkelas pagi sangat sejuk dan nyaman untuk belajar matematika\nkelas pagi dimulai saat bel sekolah berbunyi nyaring\nkepala sekolah memantau siswa belajar di kelas pagi\nguru menjelaskan materi fisika sederhana kepada siswa\nguru memberikan tugas rumah kepada siswa kelas tujuh\nsiswa mengerjakan tugas kelompok di ruang kelas\nsiswa membaca buku cerita di perpustakaan sekolah\nsiswa berdiskusi tentang pelajaran sejarah indonesia\nguru memeriksa hasil pekerjaan rumah siswa\nsiswa menulis rangkuman pelajaran di buku catatan\nsiswa mengangkat tangan untuk menjawab pertanyaan guru\nguru memberikan kuis singkat di kelas pagi\nkelas menjadi hening saat ujian berlangsung\nsiswa mempresentasikan hasil penelitian kecil di kelas\nsiswa belajar menggunakan komputer di laboratorium sekolah\nguru menjelaskan cara menggunakan aplikasi presentasi\nsiswa mengikuti kegiatan ekstrakurikuler robotik sekolah\nsiswa mengikuti lomba cerdas cermat antar kelas\nguru memberikan motivasi belajar kepada siswa\nsiswa meminjam buku pelajaran dari perpustakaan\nsiswa membaca artikel pendidikan di majalah sekolah\nkepala sekolah memberikan pengarahan kepada guru\nguru mengikuti rapat kurikulum di ruang guru\nsiswa berlatih pidato bahasa indonesia di kelas\nsiswa menulis esai tentang lingkungan sekolah\nguru menilai hasil ujian siswa dengan teliti\nsiswa belajar kelompok sebelum ujian matematika\nsiswa membuat poster pendidikan tentang kebersihan\nguru menjelaskan pentingnya disiplin belajar\nsiswa mengerjakan latihan soal matematika di kelas\nsiswa belajar menggunakan internet untuk mencari informasi\nguru membimbing siswa saat praktikum sains\nsiswa melakukan percobaan sederhana di laboratorium\nsiswa membersihkan ruang kelas bersama sama\nsiswa menyusun jadwal belajar di rumah\nguru memberikan penghargaan kepada siswa berprestasi\nsiswa membaca puisi di depan kelas\nsiswa menulis cerita pendek untuk tugas bahasa\nguru memberikan contoh soal di papan tulis\nsiswa belajar peta dunia pada pelajaran geografi\nsiswa memahami konsep energi pada pelajaran sains\nguru menjelaskan sejarah kemerdekaan indonesia\nsiswa menonton video pembelajaran di kelas\nsiswa mengikuti kegiatan pramuka di sekolah\nguru menyiapkan bahan ajar untuk kelas pagi\nsiswa mencatat hal penting dari penjelasan guru\nsiswa berdiskusi tentang solusi masalah lingkungan\nsiswa membaca buku pengetahuan umum di perpustakaan\nguru memberikan evaluasi pembelajaran kepada siswa\nsiswa belajar menggunakan alat ukur di laboratorium\nsiswa menghafal rumus matematika dasar\nsiswa membuat laporan praktikum sains\nsiswa mempresentasikan hasil diskusi kelompok\nguru menjelaskan materi baru dengan contoh sederhana\nsiswa menyimak cerita sejarah dari guru\nsiswa mengikuti ujian praktek komputer di sekolah\nguru mengawasi jalannya ujian di kelas\nsiswa belajar menghitung luas bangun datar\nsiswa belajar mengenal tata surya di kelas\nguru memberikan tugas membaca buku cerita\nsiswa mengikuti kegiatan literasi pagi di sekolah\nsiswa menulis jurnal harian tentang kegiatan belajar\nsiswa bertanya kepada guru tentang materi sulit\nguru menjelaskan kembali materi yang belum dipahami\nsiswa belajar menggunakan peta konsep pelajaran\nsiswa membuat rangkuman bab pelajaran sejarah\nsiswa berdiskusi tentang teknologi pendidikan\nguru memberikan contoh penggunaan bahasa yang baik\nsiswa mengikuti simulasi ujian nasional di sekolah\nsiswa membaca buku biografi tokoh pendidikan\nguru mengajak siswa berpikir kritis dalam diskusi\nsiswa belajar memahami grafik pada pelajaran matematika\nsiswa membuat karya tulis ilmiah sederhana\nsiswa mempelajari ekosistem pada pelajaran biologi\nguru memandu siswa melakukan pengamatan ilmiah\nsiswa mempersiapkan presentasi kelompok di kelas\nsiswa menyusun laporan hasil penelitian sederhana\nguru memberikan umpan balik pada tugas siswa\nsiswa belajar menulis surat resmi di kelas\nsiswa mengamati percobaan kimia sederhana\nguru memotivasi siswa untuk terus belajar\nsiswa belajar menghargai pendapat teman saat diskusi`,
+
+    kesehatan: `dokter spesialis periksa jantung pasien di rumah sakit besar\ndokter spesialis periksa paru paru pasien di klinik sehat\nperawat berikan obat resep kepada pasien gawat darurat\nperawat berikan suntikan vitamin kepada pasien di ruang inap\nrumah sakit melayani pasien gawat darurat setiap hari libur\nrumah sakit besar punya dokter spesialis handal dan ramah\nolahraga pagi menjaga imun tubuh agar tetap kuat selalu\nolahraga pagi sangat penting untuk kesehatan jantung pasien\nmakan sayur sehat setiap hari baik untuk jantung kita\nmakan sayur sehat sangat disarankan oleh dokter spesialis anak\ndokter spesialis bekerja di klinik besar kota jakarta\ndokter spesialis anak memeriksa kesehatan balita di klinik\npasien minum obat resep secara teratur pagi ini\npasien minum vitamin C untuk menjaga imun tubuh\nambulans membawa pasien gawat darurat ke rumah sakit besar\nambulans melaju cepat menuju rumah sakit di pusat kota\napoteker menyiapkan obat resep dari dokter spesialis jantung\napoteker menjelaskan cara minum obat kepada pasien gawat\nmenjaga pola makan sehat penting untuk mencegah penyakit jantung\nmenjaga kebersihan lingkungan rumah sakit adalah tugas perawat\ndokter memeriksa tekanan darah pasien di ruang periksa\nperawat memeriksa suhu tubuh pasien setiap pagi\npasien menjalani pemeriksaan laboratorium darah\ndokter memberikan saran pola hidup sehat kepada pasien\npasien melakukan terapi fisik untuk pemulihan otot\nrumah sakit menyediakan ruang perawatan intensif\npasien menjalani operasi kecil di ruang bedah\ndokter menjelaskan hasil pemeriksaan kesehatan kepada pasien\nperawat membantu pasien berjalan setelah operasi\npasien mengikuti program rehabilitasi kesehatan\npasien melakukan pemeriksaan mata di klinik optik\ndokter gigi memeriksa kesehatan gigi pasien\npasien membersihkan gigi dengan sikat setiap pagi\npasien mencuci tangan dengan sabun sebelum makan\ndokter menyarankan olahraga ringan setiap hari\npasien minum air putih untuk menjaga kesehatan tubuh\npasien makan buah segar untuk meningkatkan imun\nperawat mengganti perban luka pasien dengan hati hati\ndokter melakukan pemeriksaan kesehatan rutin\npasien menjalani pemeriksaan rontgen dada\ndokter memantau kondisi pasien di ruang perawatan\nperawat membantu pasien minum obat tepat waktu\npasien melakukan peregangan tubuh setiap pagi\ndokter memberi vaksin kepada anak anak di klinik\npasien menjaga pola tidur yang cukup setiap malam\ndokter memeriksa kadar gula darah pasien\npasien mengurangi makanan berlemak tinggi\npasien mengikuti program diet sehat dari dokter\npasien berolahraga ringan di taman rumah sakit\ndokter memeriksa kondisi paru paru pasien\npasien menjalani tes kesehatan sebelum bekerja\ndokter memeriksa denyut nadi pasien\npasien menghindari makanan cepat saji berlebihan\ndokter menjelaskan pentingnya menjaga kesehatan mental\npasien melakukan meditasi untuk mengurangi stres\npasien berjalan kaki setiap pagi untuk kebugaran\ndokter memeriksa kesehatan ibu hamil di klinik\npasien mengonsumsi vitamin sesuai anjuran dokter\nperawat menyiapkan alat medis di ruang operasi\ndokter melakukan pemeriksaan telinga pasien\npasien menjaga kebersihan tubuh setiap hari\ndokter memantau perkembangan kesehatan pasien\npasien menjalani konsultasi kesehatan di klinik\nperawat mencatat kondisi pasien di buku laporan\ndokter memberikan resep obat kepada pasien\npasien melakukan pemeriksaan kesehatan tahunan\npasien menjaga berat badan ideal\ndokter memberikan edukasi kesehatan kepada masyarakat\npasien mengikuti penyuluhan kesehatan di puskesmas\nperawat membantu dokter saat tindakan medis\npasien beristirahat cukup untuk memulihkan tubuh\ndokter memeriksa hasil tes laboratorium pasien\npasien menghindari rokok untuk menjaga paru paru\ndokter memeriksa kondisi kulit pasien\npasien minum susu untuk kesehatan tulang\npasien melakukan latihan pernapasan secara rutin\ndokter memantau kondisi pasien pasca operasi\nperawat memastikan pasien merasa nyaman di ruang rawat\ndokter memeriksa kesehatan anak balita\npasien mengonsumsi makanan bergizi seimbang\npasien melakukan senam pagi di taman kota\ndokter memberikan penyuluhan tentang gizi seimbang\npasien mengikuti pemeriksaan kesehatan gratis\nperawat membantu pasien lanjut usia berjalan\ndokter memeriksa kondisi jantung pasien secara rutin\npasien memeriksa kesehatan mata setiap tahun\npasien mengurangi konsumsi gula berlebih\ndokter menyarankan olahraga teratur untuk pasien\npasien menjaga kesehatan dengan pola hidup sehat`,
+
+    otomotif: `bengkel motor resmi melayani ganti oli mesin setiap hari\nbengkel motor kecil memperbaiki ban motor bocor di pinggir jalan\nmobil listrik sangat ramah lingkungan dan hemat energi baterai\nmobil listrik melaju sangat cepat di jalan tol baru\nmekanik ahli bengkel perbaiki mesin mobil balap rusak parah\nmekanik ahli bengkel resmi bekerja sangat teliti dan cepat\nbalap mobil di sirkuit sangat cepat dan berbahaya sekali\nbalap motor di sirkuit resmi ditonton banyak penggemar otomotif\nban motor bocor karena terkena paku di jalan raya\nban mobil balap harus diganti sebelum masuk ke sirkuit\nlampu sein berguna untuk belok kendaraan aman di jalan\nlampu depan mobil listrik sangat terang di malam hari\nmobil balap melaju sangat cepat di sirkuit internasional sentul\nmobil balap keluaran terbaru memiliki mesin sangat kuat\npengendara motor wajib memakai helm standar untuk keselamatan jalan\npengendara mobil sport memacu kendaraan sangat cepat di tol\noli mesin harus diganti secara rutin di bengkel resmi\noli mesin yang bagus membuat suara motor sangat halus\nsirkuit balap mobil ditutup sementara untuk perbaikan jalan aspal\nsirkuit balap motor dipenuhi penonton yang sangat antusias\nmekanik memeriksa kondisi rem mobil di bengkel\nmekanik mengganti kampas rem mobil yang sudah tipis\npengendara motor memeriksa tekanan ban sebelum perjalanan\nmobil keluarga melaju stabil di jalan tol\nmesin mobil menghasilkan tenaga besar untuk akselerasi\nmekanik memperbaiki sistem pendingin mesin mobil\nmobil baru memiliki teknologi keamanan canggih\npengendara mobil mematuhi rambu lalu lintas di jalan\nmekanik membersihkan filter udara mesin mobil\nmotor sport melaju cepat di jalan raya\npengendara motor berhenti saat lampu merah menyala\nmekanik memeriksa aki mobil di bengkel resmi\npengendara mobil menyalakan lampu sein sebelum belok\nmobil listrik mengisi daya di stasiun pengisian\nmekanik mengganti oli mesin motor secara rutin\npengendara motor menggunakan jaket pelindung saat berkendara\nmobil sedan melaju halus di jalan kota\nmekanik memperbaiki mesin motor yang rusak\npengendara mobil memarkir kendaraan di area parkir\nmobil balap diuji coba di sirkuit sebelum lomba\nmekanik memeriksa sistem suspensi mobil\nmotor matic populer digunakan di kota besar\npengendara motor berhati hati di jalan licin\nmobil pickup membawa barang ke pasar kota\nmekanik mengganti busi mesin motor lama\nmobil baru memiliki fitur pengereman otomatis\npengendara motor memeriksa lampu depan kendaraan\nmobil listrik tidak menghasilkan asap knalpot\nmekanik memeriksa sistem transmisi mobil\nmotor touring digunakan untuk perjalanan jauh\npengendara mobil menjaga jarak aman di jalan\nmobil sport memiliki desain aerodinamis modern\nmekanik membersihkan karburator motor lama\npengendara motor memakai sarung tangan pelindung\nmobil van digunakan untuk transportasi keluarga\nmekanik mengganti rantai motor yang aus\nmobil offroad melintasi jalan berbatu\npengendara mobil menyalakan lampu utama saat malam\nmekanik memeriksa sistem kemudi mobil\nmotor bebek irit bahan bakar untuk perjalanan harian\nmobil hatchback populer di kalangan anak muda\nmekanik memperbaiki sistem rem hidrolik mobil\npengendara motor berhenti di zebra cross\nmobil polisi melaju cepat menuju lokasi kejadian\nmekanik mengganti filter oli mesin mobil\npengendara mobil mematuhi batas kecepatan jalan\nmobil listrik menggunakan baterai berkapasitas besar\nmekanik memeriksa radiator mobil agar tidak panas\nmotor trail digunakan di medan pegunungan\npengendara mobil menjaga kondisi mesin kendaraan\nmobil SUV cocok untuk perjalanan keluarga jauh\nmekanik memperbaiki sistem knalpot mobil rusak\npengendara motor memeriksa kaca spion sebelum berkendara\nmobil balap diuji di lintasan sirkuit internasional\nmekanik memeriksa tekanan oli mesin kendaraan\npengendara mobil menyalakan wiper saat hujan\nmotor klasik dirawat oleh penggemar otomotif\nmobil hybrid menggabungkan mesin listrik dan bensin\nmekanik mengganti ban mobil yang aus\npengendara motor mematuhi aturan lalu lintas\nmobil baru dilengkapi sistem navigasi modern\nmekanik memeriksa sistem pengereman kendaraan\nmobil listrik bergerak sangat senyap di jalan\npengendara mobil berhenti saat lampu merah\nmotor sport memiliki mesin berkapasitas besar`
+};
+
+let activeCat = "";
+let brainMap = {};
+
+function inspect(cat) {
+    document.getElementById('modalTitle').innerText = "Dataset: " + cat.toUpperCase();
+    document.getElementById('modalBody').innerText = dataSet[cat];
+    document.getElementById('dataModal').style.display = 'block';
+}
+
+function selectCard(cat) {
+    document.querySelectorAll('.flash-card').forEach(c => c.classList.remove('in-wadah'));
+    setTimeout(() => {
+        document.getElementById('card-' + cat).classList.add('in-wadah');
+        activeCat = cat;
+        document.getElementById('placeholderText').style.display = 'none';
+        document.getElementById('controls').classList.add('visible');
+        document.getElementById('monTitle').innerText = "Bahan Baku: " + cat.toUpperCase();
+        document.getElementById('monContent').innerHTML = "<p style='color:var(--s)'>[READY] Data berhasil dimuat ke memori sementara.</p>";
+    }, 100);
+}
+
+async function doTokenize() {
+    const mon = document.getElementById('monContent');
+    mon.innerHTML = "<h4>Proses Tokenisasi Data...</h4><div id='pillBox'></div>";
+    const box = document.getElementById('pillBox');
+    
+    let rawData = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
+    for(let line of rawData) {
+        let words = line.split(" ");
+        for(let w of words) {
+            let p = document.createElement('span');
+            p.className = 'token-pill';
+            p.innerText = w;
+            box.appendChild(p);
+            if(Math.random() > 0.9) await new Promise(r => setTimeout(r, 1)); // Visual speed
+        }
+    }
+    mon.innerHTML += "<p style='color:var(--s)'>[DONE] Tokenisasi selesai.</p>";
+    mon.parentElement.scrollTop = mon.parentElement.scrollHeight;
+}
+
+async function doAnalyze() {
+    const mon = document.getElementById('monContent');
+    const orde = parseInt(document.getElementById('orde').value);
+    mon.innerHTML = `<h4>Membangun N-Gram Orde ${orde}...</h4>`;
+    brainMap = {};
+
+    let lines = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
+    lines.forEach(line => {
+        let words = line.split(" ").concat(".");
+        for(let j=0; j <= words.length - (orde + 1); j++) {
+            let key = words.slice(j, j+orde).join(" ");
+            let next = words[j+orde];
+            if(!brainMap[key]) brainMap[key] = {};
+            brainMap[key][next] = (brainMap[key][next] || 0) + 1;
+        }
+    });
+    
+    mon.innerHTML += "<p style='color:var(--s)'>[DONE] Peta probabilitas terbentuk!</p>";
+}
+
+async function doGenerate() {
+    const mon = document.getElementById('monContent');
+    const temp = parseFloat(document.getElementById('temp').value);
+    const orde = parseInt(document.getElementById('orde').value);
+    
+    if (Object.keys(brainMap).length === 0) { alert("Analisis data dulu!"); return; }
+
+    mon.innerHTML = `<h4 style="color:#feca57">Audit Probabilitas (Suhu: ${temp}):</h4><div id='logsArea' style='padding-bottom:100px;'></div><div class='current-sentence-box'>Output: <br><span id='dynSentence' style="color:white; font-weight:normal;"></span></div>`;    
+    
+    let keys = Object.keys(brainMap);
+    let current = keys[Math.floor(Math.random() * keys.length)];
+    let sentence = current;
+    document.getElementById('dynSentence').innerText = sentence;
+
+    for(let i=0; i<25; i++) {
+        if(!brainMap[current]) break;
+        
+        let candidates = brainMap[current];
+        let words = Object.keys(candidates);
+        
+        // --- Logika Temperature Sampling ---
+        let adjustedWeights = words.map(w => Math.pow(candidates[w], 1/temp));
+        let totalAdjusted = adjustedWeights.reduce((a,b) => a+b, 0);
+        
+        let r = Math.random() * totalAdjusted;
+        let nextWord = words[0], runSum = 0;
+        for(let j=0; j<words.length; j++) {
+            runSum += adjustedWeights[j];
+            if(r <= runSum) { nextWord = words[j]; break; }
+        }
+        
+        // Render Audit Log
+        let audit = document.createElement('div');
+        audit.className = 'audit-box';
+        let html = `<div style="color:#aaa; font-size:11px;">Konteks: [${current}] &rarr; <b>${nextWord}</b></div>`;
+        words.forEach((w, idx) => {
+            let p = ((adjustedWeights[idx]/totalAdjusted)*100).toFixed(1);
+            html += `<div class="prob-row"><div style="width:70px;">${w}</div><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${p}%; background:${w===nextWord?'var(--a)':'var(--s)'}"></div></div><div>${p}%</div></div>`;
+        });
+        audit.innerHTML = html;
+        document.getElementById('logsArea').appendChild(audit);
+        
+        if(nextWord === ".") break;
+        sentence += " " + nextWord;
+        document.getElementById('dynSentence').innerText = sentence;
+        current = sentence.split(" ").slice(-orde).join(" ");
+        mon.parentElement.scrollTop = mon.parentElement.scrollHeight;
+        await new Promise(r => setTimeout(r, 600));
+    }
+}
+</script>
+
+</body>
+</html>

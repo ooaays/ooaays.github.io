@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Traffic Lab - Eksperimen Pola Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            color: #1e293b; 
+            margin: 0; padding: 20px; 
+        }
+
+        .container { 
+            max-width: 1100px; 
+            margin: auto; 
+        }
+
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #0f172a; margin-bottom: 8px; font-weight: 700; }
+        .subtitle { color: var(--secondary); font-size: 1.1rem; }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #334155;
+        }
+
+        /* Dataset Table Styling */
+        .tabel-wrapper { 
+            max-height: 350px; 
+            overflow: auto; 
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table { border-collapse: collapse; width: 100%; font-size: 12px; }
+        th { 
+            background: #f1f5f9; 
+            color: #475569; 
+            padding: 12px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 10;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        td { padding: 10px; text-align: center; border: 1px solid #f1f5f9; transition: 0.3s; }
+        
+        /* Highlight khusus saat AI bekerja */
+        .active-scan {
+            background-color: #dbeafe !important;
+            color: #1e40af !important;
+            transform: scale(1.1);
+            z-index: 5;
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+            font-weight: bold;
+        }
+
+        /* Control Panel */
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.9rem; font-weight: 600; color: #64748b; }
+
+        select, input[type="range"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        input[type="range"] { accent-color: var(--primary); }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            grid-column: 1 / -1;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover { background-color: #1d4ed8; transform: translateY(-1px); }
+
+        /* Hasil Prediksi */
+        #hasil-ai {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .logika-box {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border: 1px dashed rgba(0,0,0,0.1);
+        }
+
+        /* Loading Animation */
+        .loading-ring {
+            display: none;
+            margin: 20px auto;
+            width: 40px; height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Prediksi Kemacetan Kota berdasarkan Analisis Data Lalu Lintas</h1>
+        <p class="subtitle">Siswa berperan sebagai AI Engineer untuk menganalisis dan memanipulasi prediksi lalu lintas harian.</p>
+    </header>
+
+    <div class="card">
+        <div class="card-title">📊 Data Jumlah Kendaraan (30 Hari Terakhir)</div>
+        <div class="tabel-wrapper">
+            <table>
+                <thead id="head-tabel"></thead>
+                <tbody id="body-tabel"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">🛠️ Manipulator Variabel & Algoritma</div>
+        <div class="control-grid">
+            <div class="input-group">
+                <label>Pilih Hari:</label>
+                <select id="hari">
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                    <option value="Sabtu">Sabtu</option>
+                    <option value="Minggu">Minggu</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Pilih Jam:</label>
+                <select id="jam">
+                    <script>
+                        for(let i=0; i<=23; i++) {
+                            document.write(`<option value="${i}">${i.toString().padStart(2, '0')}:00</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Skenario Cuaca:</label>
+                <select id="cuaca">
+                    <option value="1">Cerah (Normal)</option>
+                    <option value="1.3">Hujan Lebat (+30% Volume)</option>
+                    <option value="1.5">Banjir (+50% Volume)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Ambang Batas Macet (> <span id="val-macet">180</span>):</label>
+                <input type="range" id="threshold-macet" min="150" max="300" value="180" oninput="document.getElementById('val-macet').innerText=this.value">
+            </div>
+            <button class="btn-primary" onclick="prosesAI()">Jalankan Prediksi Kemacetan Kota oleh AI</button>
+        </div>
+
+        <div id="loader" class="loading-ring"></div>
+
+        <div id="hasil-ai">
+            <div id="status-prediksi"></div>
+            <div id="saran-ai"></div>
+            <div class="logika-box" id="logika-ai"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urutanHari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    const dataset = {};
+
+    // 1. GENERATE DATASET (SAMA SEPERTI SEBELUMNYA)
+    for (let jam = 0; jam <= 23; jam++) {
+        dataset[jam] = {};
+        for (let tgl = 1; tgl <= 30; tgl++) {
+            let hari = urutanHari[(tgl - 1) % 7];
+            let kendaraan = (hari !== "Sabtu" && hari !== "Minggu") ? 
+                (jam >= 7 && jam <= 9 || jam >= 16 && jam <= 18 ? Math.floor(Math.random() * 50) + 200 : Math.floor(Math.random() * 40) + 50) :
+                (jam >= 10 && jam <= 18 ? Math.floor(Math.random() * 60) + 120 : Math.floor(Math.random() * 30) + 20);
+            dataset[jam][tgl] = { hari: hari, jumlah: kendaraan };
+        }
+    }
+
+    // 2. RENDER TABEL
+    const headTabel = document.getElementById("head-tabel");
+    let trHead = "<tr><th>Jam</th>";
+    for(let tgl=1; tgl<=30; tgl++) trHead += `<th>Tgl ${tgl}<br><small>${urutanHari[(tgl-1)%7].substr(0,3)}</small></th>`;
+    headTabel.innerHTML = trHead + "</tr>";
+
+    const bodyTabel = document.getElementById("body-tabel");
+    for (let jam = 0; jam <= 23; jam++) {
+        let tr = `<tr><td style="background:#f8fafc; font-weight:bold;">${jam.toString().padStart(2, '0')}:00</td>`;
+        for (let tgl = 1; tgl <= 30; tgl++) {
+            let val = dataset[jam][tgl].jumlah;
+            let color = val > 180 ? '#fee2e2' : (val > 100 ? '#fef3c7' : '#dcfce7');
+            let txt = val > 180 ? '#991b1b' : (val > 100 ? '#92400e' : '#166534');
+            tr += `<td style="background:${color}; color:${txt}" id="cell-${jam}-${tgl}">${val}</td>`;
+        }
+        bodyTabel.innerHTML += tr + "</tr>";
+    }
+
+    // 3. LOGIKA PREDIKSI (EXPERIMENT MODE)
+    function prosesAI() {
+        const h = document.getElementById("hari").value;
+        const j = parseInt(document.getElementById("jam").value);
+        const cuaca = parseFloat(document.getElementById("cuaca").value);
+        const limit = parseInt(document.getElementById("threshold-macet").value);
+
+        const resDiv = document.getElementById("hasil-ai");
+        const loader = document.getElementById("loader");
+
+        // Reset UI
+        resDiv.style.display = "none";
+        loader.style.display = "block";
+        document.querySelectorAll('td').forEach(td => td.classList.remove('active-scan'));
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            resDiv.style.display = "block";
+
+            let dataPoint = [];
+            for(let tgl=1; tgl<=30; tgl++) {
+                if(dataset[j][tgl].hari === h) {
+                    dataPoint.push(dataset[j][tgl].jumlah);
+                    document.getElementById(`cell-${j}-${tgl}`).classList.add('active-scan');
+                }
+            }
+
+            let rataRata = Math.round((dataPoint.reduce((a, b) => a + b) / dataPoint.length) * cuaca);
+            
+            let status, bg, txt, saran;
+            if(rataRata > limit) {
+                status = "MACET PARAH"; bg = "#fee2e2"; txt = "#ef4444";
+                saran = "🚨 <b>Rekomendasi:</b> Berdasarkan ambang batas "+limit+" yang Anda tentukan, rute ini sangat tidak disarankan. AI menyarankan cari jalur alternatif.";
+            } else if(rataRata > 100) {
+                status = "PADAT MERAYAP"; bg = "#fef3c7"; txt = "#f59e0b";
+                saran = "⚠️ <b>Rekomendasi:</b> Perjalanan mungkin melambat. Pastikan berangkat 15 menit lebih awal.";
+            } else {
+                status = "LANCAR"; bg = "#dcfce7"; txt = "#10b981";
+                saran = "✅ <b>Rekomendasi:</b> Waktu perjalanan ideal. Nikmati perjalanan Anda!";
+            }
+
+            resDiv.style.backgroundColor = bg;
+            document.getElementById("status-prediksi").innerHTML = `<span class="status-badge" style="color:${txt}">${status} (~${rataRata} Kendaraan/Jam)</span>`;
+            document.getElementById("saran-ai").innerHTML = saran;
+            document.getElementById("logika-ai").innerHTML = `
+                <b>Transparansi Algoritma:</b><br>
+                1. <b>Filter:</b> Mengambil data historis hari ${h} jam ${j}:00 (${dataPoint.join(", ")}).<br>
+                2. <b>Adjust:</b> Menambahkan faktor cuaca (x${cuaca}).<br>
+                3. <b>Klasifikasi:</b> Membandingkan hasil (${rataRata}) dengan batas manipulasi (${limit}).
+            `;
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

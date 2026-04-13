@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi Analisis Data & Visualisasi Grafik</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #2c3e50; text-align: center; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; }
+        
+        .dashboard { display: flex; flex-wrap: wrap; gap: 20px; }
+        .panel { background: #fff; border: 1px solid #e1e8ed; padding: 20px; border-radius: 8px; flex: 1; min-width: 350px; }
+        .panel-header { font-weight: bold; margin-bottom: 15px; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+        
+        select, button { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #bdc3c7; font-size: 16px; }
+        button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #2980b9; }
+        button.success { background-color: #2ecc71; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #ecf0f1; }
+        tr:hover { background-color: #f9f9f9; }
+
+        .mission-box { background-color: #e8f4f8; border-left: 5px solid #3498db; padding: 15px; margin-bottom: 20px; font-size: 15px; }
+        
+        .slider-group { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .slider-label { width: 90px; font-weight: bold; font-size: 14px; }
+        input[type="range"] { flex: 1; }
+        .slider-value { width: 45px; text-align: center; font-weight: bold; background: #ecf0f1; padding: 5px; border-radius: 4px; }
+
+        .canvas-container { height: 350px; position: relative; margin-bottom: 20px; }
+        #feedback { font-weight: bold; padding: 15px; margin-top: 15px; border-radius: 5px; display: none; line-height: 1.5; }
+        .feedback-correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .feedback-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* HEADER */
+        .header-bg {
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: -20px -20px 20px -20px; /* Ditambahkan agar memenuhi layar melewati padding body */
+        }
+
+        /* SPEECH */
+        .speech {
+            position: absolute;
+            top: -90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-weight: bold;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity .5s;
+            color: #1e293b;
+            width: 250px;
+            text-align: center;
+        }
+
+        .speech::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        /* CSS Support untuk utility classes di dalam HTML Header Anda */
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .h-14 { height: 3.5rem; }
+        .h-12 { height: 3rem; }
+        .text-sm { font-size: 0.875rem; }
+        .leading-tight { line-height: 1.25; }
+        .font-semibold { font-weight: 600; }
+        .hidden { display: none; }
+        @media (min-width: 640px) { .sm\:block { display: block; } }
+        @media (min-width: 768px) { .md\:block { display: block; } }
+    </style>
+</head>
+<body>
+
+    <div class="header-bg flex justify-between items-center px-6 py-4">
+        <div class="flex items-center gap-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+            <div class="text-sm leading-tight font-semibold hidden md:block">
+                Direktorat Sekolah Menengah Pertama<br>
+                Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+                Pendidikan Dasar, dan Pendidikan Menengah<br>
+                Kementerian Pendidikan Dasar dan Menengah
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+        </div>
+    </div>
+
+<div class="container">
+    <h1>📊 Misi Analisis Data & Visualisasi Grafik</h1>
+    <p class="subtitle">Baca tabel data dengan teliti, perhatikan misi yang diminta, lalu pilih dan rakit grafik yang paling tepat!</p>
+
+    <div class="dashboard">
+        <div class="panel">
+            <div class="panel-header">1. Pilih Dataset</div>
+            <select id="datasetSelect" onchange="loadDataset()">
+                <option value="buah">Data Penjualan Buah (Toko Makmur)</option>
+                <option value="tanaman">Data Pertumbuhan Bibit Tanaman</option>
+                <option value="uang">Data Kebiasaan Keuangan Siswa</option>
+            </select>
+
+            <div class="panel-header" style="margin-top: 20px;">2. Tabel Data Referensi</div>
+            <div id="tableContainer"></div>
+            <p style="font-size: 12px; color: #7f8c8d; text-align: center;">Tabel ini memuat banyak informasi. Baca perlahan.</p>
+        </div>
+
+        <div class="panel" style="flex: 1.5;">
+            <div class="mission-box" id="missionText"></div>
+
+            <div class="panel-header">3. Area Merakit Grafik</div>
+            <label for="chartType">Pilih Jenis Grafik:</label>
+            <select id="chartType" onchange="updateChartType()">
+                <option value="bar">Diagram Batang</option>
+                <option value="line">Diagram Garis</option>
+                <option value="pie">Diagram Lingkaran</option>
+            </select>
+            
+            <div class="canvas-container">
+                <canvas id="myChart"></canvas>
+            </div>
+
+            <div class="panel-header">Alat Pengatur Nilai (Sesuai Misi)</div>
+            <div id="builderControls"></div>
+
+            <button id="checkBtn" onclick="checkAnswer()">Cek Grafik & Pilihan Saya!</button>
+            <div id="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dataset dengan struktur tabel multi-kolom
+    const datasets = {
+        buah: {
+            title: "Penjualan Jeruk (kg)",
+            tableHeaders: ["Bulan", "Apel (kg)", "Jeruk (kg)", "Mangga (kg)"],
+            tableRows: [
+                ["Januari", 20, 15, 10],
+                ["Februari", 18, 22, 12],
+                ["Maret", 25, 30, 15],
+                ["April", 22, 28, 20]
+            ],
+            labels: ["Januari", "Februari", "Maret", "April"],
+            targetData: [15, 22, 30, 28], // Kunci jawaban: Kolom Jeruk
+            mission: "🎯 <b>Misi Kamu:</b> Bos toko ingin melihat perbandingan khusus untuk <b>penjualan Jeruk</b>. Silakan buat grafik yang membandingkan penjualan Jeruk dari bulan ke bulan.",
+            max: 35,
+            idealChart: "bar",
+            explanation: "<b>Diagram Batang</b> sangat cocok untuk membandingkan jumlah yang jelas antar kategori/bulan secara langsung."
+        },
+        tanaman: {
+            title: "Pertumbuhan Cabai (cm)",
+            tableHeaders: ["Waktu", "Tomat (cm)", "Cabai (cm)", "Terong (cm)"],
+            tableRows: [
+                ["Minggu 1", 5, 3, 4],
+                ["Minggu 2", 12, 8, 9],
+                ["Minggu 3", 18, 15, 14],
+                ["Minggu 4", 25, 22, 20]
+            ],
+            labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+            targetData: [3, 8, 15, 22], // Kunci jawaban: Kolom Cabai
+            mission: "🎯 <b>Misi Kamu:</b> Seorang peneliti ingin melihat tren seberapa cepat pertumbuhan tanaman <b>Cabai</b>. Buatkan grafik yang menunjukkan tren perkembangannya.",
+            max: 30,
+            idealChart: "line",
+            explanation: "<b>Diagram Garis</b> adalah pilihan terbaik untuk melihat tren, perkembangan, atau pergerakan naik-turun dari waktu ke waktu."
+        },
+        uang: {
+            title: "Komposisi Uang Siti (%)",
+            tableHeaders: ["Kategori", "Andi (%)", "Siti (%)", "Budi (%)"],
+            tableRows: [
+                ["Ditabung", 10, 40, 20],
+                ["Jajan", 60, 35, 50],
+                ["Transport", 30, 25, 30]
+            ],
+            labels: ["Ditabung", "Jajan", "Transport"],
+            targetData: [40, 35, 25], // Kunci jawaban: Kolom Siti
+            mission: "🎯 <b>Misi Kamu:</b> Kita ingin melihat persentase utuh ke mana saja perginya uang saku milik <b>Siti</b>. Buatkan grafik yang merepresentasikan hal tersebut.",
+            max: 100,
+            idealChart: "pie",
+            explanation: "<b>Diagram Lingkaran</b> paling tepat untuk menunjukkan proporsi atau bagian-bagian dari suatu total keseluruhan (100%)."
+        }
+    };
+
+    const chartColors = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(231, 76, 60, 0.7)'];
+    const borderColors = ['rgba(41, 128, 185, 1)', 'rgba(39, 174, 96, 1)', 'rgba(243, 156, 18, 1)', 'rgba(192, 57, 43, 1)'];
+
+    let currentDataset = 'buah';
+    let chartInstance = null;
+    let studentData = [];
+
+    function loadDataset() {
+        currentDataset = document.getElementById('datasetSelect').value;
+        const ds = datasets[currentDataset];
+        
+        studentData = new Array(ds.targetData.length).fill(0);
+        document.getElementById('missionText').innerHTML = ds.mission;
+        
+        renderTable(ds);
+        renderBuilders(ds);
+        initChart();
+        hideFeedback();
+    }
+
+    function renderTable(ds) {
+        let html = `<table><tr>`;
+        ds.tableHeaders.forEach(header => html += `<th>${header}</th>`);
+        html += `</tr>`;
+        
+        ds.tableRows.forEach(row => {
+            html += `<tr>`;
+            row.forEach(cell => html += `<td>${cell}</td>`);
+            html += `</tr>`;
+        });
+        html += `</table>`;
+        document.getElementById('tableContainer').innerHTML = html;
+    }
+
+    function renderBuilders(ds) {
+        const container = document.getElementById('builderControls');
+        container.innerHTML = '';
+        
+        ds.labels.forEach((label, index) => {
+            const div = document.createElement('div');
+            div.className = 'slider-group';
+            div.innerHTML = `
+                <div class="slider-label">${label}</div>
+                <input type="range" min="0" max="${ds.max}" value="0" 
+                       oninput="updateStudentData(${index}, this.value)">
+                <div class="slider-value" id="val-${index}">0</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function updateStudentData(index, value) {
+        studentData[index] = parseInt(value);
+        document.getElementById(`val-${index}`).innerText = value;
+        chartInstance.update();
+        hideFeedback();
+    }
+
+    function updateChartType() {
+        initChart();
+        hideFeedback();
+    }
+
+    function initChart() {
+        const ds = datasets[currentDataset];
+        const type = document.getElementById('chartType').value;
+        
+        if (chartInstance) chartInstance.destroy();
+        
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const bgColors = type === 'pie' ? chartColors : chartColors[0];
+        const bdColors = type === 'pie' ? borderColors : borderColors[0];
+
+        const scaleOptions = type === 'pie' ? {} : { y: { beginAtZero: true, max: ds.max } };
+
+        chartInstance = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: ds.labels,
+                datasets: [{
+                    label: ds.title,
+                    data: studentData,
+                    backgroundColor: bgColors,
+                    borderColor: bdColors,
+                    borderWidth: 2,
+                    tension: 0.1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: scaleOptions, animation: { duration: 300 } }
+        });
+    }
+
+    function checkAnswer() {
+        const ds = datasets[currentDataset];
+        const selectedType = document.getElementById('chartType').value;
+        
+        let isDataCorrect = true;
+        let errors = [];
+
+        for (let i = 0; i < ds.targetData.length; i++) {
+            if (studentData[i] !== ds.targetData[i]) {
+                isDataCorrect = false;
+                errors.push(ds.labels[i]);
+            }
+        }
+
+        const isChartCorrect = (selectedType === ds.idealChart);
+        const feedbackEl = document.getElementById('feedback');
+        feedbackEl.style.display = 'block';
+
+        if (isDataCorrect && isChartCorrect) {
+            feedbackEl.className = 'feedback-correct';
+            feedbackEl.innerHTML = `🎉 <b>Sempurna!</b> Kamu berhasil memfilter data yang benar dari tabel, DAN kamu memilih grafik yang tepat.<br><br>💡 <i>${ds.explanation}</i>`;
+            document.getElementById('checkBtn').classList.add('success');
+        } 
+        else if (isDataCorrect && !isChartCorrect) {
+            feedbackEl.className = 'feedback-warning';
+            feedbackEl.innerHTML = `⚠️ <b>Data Benar, Tapi...</b> Angkamu sudah sesuai tabel, namun jenis grafik ini kurang pas untuk menjawab misimu. Coba ganti jenis grafiknya!`;
+            document.getElementById('checkBtn').classList.remove('success');
+        }
+        else {
+            feedbackEl.className = 'feedback-error';
+            feedbackEl.innerHTML = `🤔 <b>Data Belum Tepat.</b> Nilai untuk <b>${errors.join(', ')}</b> belum sesuai. Coba cek lagi tabelnya. Yakin sudah melihat kolom yang diminta di misi?`;
+            document.getElementById('checkBtn').classList.remove('success');
+        }
+    }
+
+    function hideFeedback() {
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('checkBtn').classList.remove('success');
+    }
+
+    loadDataset();
+</script>
+
+</body>
+</html>

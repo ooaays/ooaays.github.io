@@ -1,0 +1,1632 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Virtual Robot Pena Ajaib</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body{
+      font-family:'Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+      min-height:100vh;
+      margin:0;
+      color:#1e293b;
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .header-bg{
+      background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+      color:white;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    .home-hero-wrap{
+      max-width:1280px;
+      margin:0 auto;
+      padding:56px 28px 80px;
+      display:grid;
+      grid-template-columns:minmax(520px,1fr) minmax(480px,560px);
+      gap:40px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      text-align:left;
+      max-width:640px;
+      margin:0 auto;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#eef2ff;
+      color:#4338ca;
+      border:1px solid #c7d2fe;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:18px;
+    }
+
+    .hero-title{
+      font-size:clamp(38px,5vw,66px);
+      line-height:1.02;
+      font-weight:900;
+      color:#312e81;
+      margin:0 0 14px;
+    }
+
+    .hero-subtitle{
+      font-size:clamp(16px,2vw,22px);
+      color:#475569;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .hero-desc{
+      color:#64748b;
+      line-height:1.85;
+      max-width:620px;
+      margin-bottom:26px;
+      font-size:17px;
+    }
+
+    .hero-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      width:100%;
+      max-width:760px;
+    }
+
+    .hero-visual{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .speech{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      background:white;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:bold;
+      border:2px solid #cbd5e1;
+      box-shadow:0 6px 10px rgba(0,0,0,0.1);
+      opacity:0;
+      transition:opacity .5s;
+      color:#1e293b;
+      text-align:center;
+      z-index:2;
+    }
+
+    .speech::after{
+      content:"";
+      position:absolute;
+      bottom:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      border-width:10px;
+      border-style:solid;
+      border-color:white transparent transparent transparent;
+    }
+
+    .hero-speech{
+      top:-62px;
+      width:280px;
+    }
+
+    .visual-card{
+      width:100%;
+      max-width:560px;
+      background:rgba(255,255,255,0.94);
+      border:1px solid #e2e8f0;
+      border-radius:28px;
+      padding:22px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.10);
+    }
+
+    .visual-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .visual-title{
+      font-size:13px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      font-weight:800;
+      color:#64748b;
+    }
+
+    .visual-dot-wrap{ display:flex; gap:6px; }
+    .visual-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:#cbd5e1;
+    }
+
+    .hero-blocks{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .hero-block{
+      border-radius:14px;
+      color:white;
+      font-weight:800;
+      padding:10px 14px;
+      font-size:14px;
+      box-shadow:0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    .hero-stage{
+      background:linear-gradient(135deg,#0f172a,#142b4d);
+      border-radius:22px;
+      padding:18px;
+      border:1px solid #1e3a5f;
+      min-height:230px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-line{
+      position:absolute;
+      left:90px;
+      top:120px;
+      width:170px;
+      height:110px;
+      border-left:4px solid #22d3ee;
+      border-top:4px solid #22d3ee;
+      border-right:4px solid #22d3ee;
+      border-bottom:4px solid #22d3ee;
+      opacity:.8;
+    }
+
+    .hero-turtle{
+      position:absolute;
+      left:86px;
+      top:116px;
+      width:16px;
+      height:16px;
+      border-radius:999px;
+      background:#22d3ee;
+      box-shadow:0 0 0 4px rgba(34,211,238,.15);
+    }
+
+    .hero-mini-note{
+      margin-top:16px;
+      background:#eef2ff;
+      border:1px dashed #a5b4fc;
+      color:#4338ca;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:700;
+      text-align:center;
+    }
+
+    .hero-float-card{
+      position:absolute;
+      right:-8px;
+      bottom:-14px;
+      background:linear-gradient(135deg,#ec4899,#8b5cf6);
+      color:white;
+      padding:12px 16px;
+      border-radius:18px;
+      box-shadow:0 14px 30px rgba(139,92,246,0.25);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .lab-shell{
+      max-width:1520px;
+      margin:0 auto;
+      padding:28px 20px 48px;
+    }
+
+    .lab-grid{
+      display:grid;
+      grid-template-columns:280px 380px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:white;
+      border-radius:24px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 12px 28px rgba(15,23,42,.08);
+      padding:18px;
+    }
+
+    .panel-title{
+      font-size:22px;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:12px;
+    }
+
+    .block-btn{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      color:white;
+      font-weight:800;
+      padding:12px 14px;
+      text-align:left;
+      cursor:pointer;
+      box-shadow:0 6px 14px rgba(0,0,0,0.12);
+      margin-bottom:10px;
+    }
+
+    .challenge-btn{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:800;
+      cursor:pointer;
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #c7d2fe;
+      margin-bottom:10px;
+    }
+
+    .script-list{
+      display:grid;
+      gap:10px;
+      max-height:620px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .script-item{
+      border-radius:16px;
+      padding:12px;
+      color:white;
+      box-shadow:0 10px 18px rgba(0,0,0,.12);
+    }
+
+    .script-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+
+    .script-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex-wrap:wrap;
+    }
+
+    .script-num{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(255,255,255,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:900;
+      flex-shrink:0;
+    }
+
+    .script-label{
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .script-actions{
+      display:flex;
+      gap:6px;
+      flex-shrink:0;
+    }
+
+    .mini-btn{
+      border:none;
+      border-radius:10px;
+      width:32px;
+      height:32px;
+      font-weight:900;
+      cursor:pointer;
+      background:rgba(255,255,255,.18);
+      color:white;
+    }
+
+    .value-input{
+      width:82px;
+      border:none;
+      border-radius:10px;
+      padding:6px 8px;
+      font-weight:800;
+      color:#0f172a;
+      background:white;
+    }
+
+    .stage-wrap{
+      background:linear-gradient(135deg,#0f172a,#142b4d);
+      border-radius:26px;
+      padding:16px;
+      border:1px solid #1e3a5f;
+      min-width:0;
+    }
+
+    .stage-header{
+      color:white;
+      margin-bottom:12px;
+    }
+
+    .stage-title{
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .stage-sub{
+      color:#94a3b8;
+      font-size:14px;
+    }
+
+    .stage-tools{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .stage-tool-btn{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:800;
+      cursor:pointer;
+      background:rgba(255,255,255,.1);
+      color:white;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .stage-tool-btn:hover{
+      background:rgba(255,255,255,.16);
+    }
+
+    .canvas-viewport{
+      width:100%;
+      height:560px;
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(135deg,#11213c,#0b1630);
+      scroll-behavior:smooth;
+    }
+
+    .canvas-stage{
+      position:relative;
+      width:2400px;
+      height:1600px;
+    }
+
+    .canvas-stage canvas{
+      position:absolute;
+      left:0;
+      top:0;
+      transform-origin:top left;
+      display:block;
+      border-radius:18px;
+    }
+
+    .stage-wrap.stage-fullscreen{
+      position:fixed;
+      inset:18px;
+      z-index:9999;
+      box-shadow:0 25px 60px rgba(0,0,0,.35);
+    }
+
+    .stage-wrap.stage-fullscreen .canvas-viewport{
+      height:calc(100vh - 220px);
+    }
+
+    .status-card{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+    }
+
+    .status-item{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px 10px;
+      text-align:center;
+      color:white;
+    }
+
+    .status-item small{
+      display:block;
+      color:#94a3b8;
+      font-size:12px;
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    .status-item strong{
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .biodata-card{
+      background:#f1f8e9;
+      padding:28px 26px;
+      border-radius:30px;
+      border-top:8px solid #8bc34a;
+      box-shadow:0 10px 24px rgba(0,0,0,0.08);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100%;
+    }
+
+    .biodata-avatar{
+      width:120px;
+      height:120px;
+      background:#dcedc8;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:22px;
+      border:6px solid white;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .biodata-title{
+      font-size:20px;
+      font-weight:900;
+      color:#3f6212;
+      margin-bottom:18px;
+      text-align:center;
+      width:100%;
+      padding-bottom:10px;
+      border-bottom:3px solid #c5e1a5;
+    }
+
+    .biodata-info{
+      width:100%;
+      display:grid;
+      gap:16px;
+    }
+
+    .biodata-info p{
+      display:flex;
+      flex-direction:column;
+      margin:0;
+    }
+
+    .biodata-info span.label{
+      font-size:14px;
+      font-weight:900;
+      color:#4d7c0f;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      margin-bottom:4px;
+    }
+
+    .biodata-info span.value{
+      font-size:18px;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    .hidden-slide{ display:none; }
+
+    @media (max-width:1250px){
+      .lab-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:1100px){
+      .home-hero-wrap{
+        grid-template-columns:1fr;
+        gap:30px;
+      }
+
+      .hero-copy{
+        text-align:center;
+      }
+
+      .hero-desc{
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .hero-buttons{
+        max-width:100%;
+      }
+
+      .hero-float-card{
+        position:static;
+        margin-top:14px;
+        text-align:center;
+      }
+
+      .status-card{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media (max-width:700px){
+      .hero-buttons{
+        grid-template-columns:1fr;
+      }
+
+      .status-card{
+        grid-template-columns:1fr;
+      }
+
+      .stage-tools{
+        justify-content:flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bg">
+    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
+      <div class="flex items-center gap-4 min-w-0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+          Direktorat Sekolah Menengah Pertama<br>
+          Direktorat Jenderal Pendidikan Anak Usia Dini,<br>
+          Pendidikan Dasar, dan Pendidikan Menengah<br>
+          Kementerian Pendidikan Dasar dan Menengah
+        </div>
+      </div>
+
+      <div class="flex items-center gap-5 shrink-0">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+      </div>
+    </div>
+  </div>
+
+  <!-- HOMEPAGE -->
+  <section id="homePage" class="page active">
+    <div class="home-hero-wrap">
+      <div class="hero-copy">
+        <div class="hero-badge">🧠 Berpikir Komputasional</div>
+        <h1 class="hero-title">Lab Virtual<br>Robot Pena Ajaib</h1>
+        <div class="hero-subtitle">
+          Susun instruksi, jalankan robot, lalu gambar akan muncul.
+        </div>
+        <p class="hero-desc">
+          Pada kegiatan ini, siswa belajar bahwa gambar tidak muncul begitu saja.
+          Robot harus diberi instruksi yang jelas, berurutan, dan diuji. Dari sini
+          anak belajar logika, urutan perintah, belok, maju, dan jejak gambar.
+        </p>
+
+        <div class="hero-buttons">
+          <button onclick="showPage('labPage')" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
+            </div>
+          </button>
+
+          <button onclick="openTujuanModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Pembelajaran</span>
+            </div>
+          </button>
+
+          <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            </div>
+          </button>
+
+          <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div id="heroSpeech" class="speech hero-speech">Beri instruksi yang urut, baru gambarnya benar.</div>
+
+        <div class="visual-card">
+          <div class="visual-header">
+            <div class="visual-title">Pratinjau Robot Pena</div>
+            <div class="visual-dot-wrap">
+              <div class="visual-dot"></div>
+              <div class="visual-dot"></div>
+              <div class="visual-dot"></div>
+            </div>
+          </div>
+
+          <div class="hero-blocks">
+            <div class="hero-block" style="background:#2563eb;">▶ PENA_TURUN</div>
+            <div class="hero-block" style="background:#16a34a;">▶ MAJU(120)</div>
+            <div class="hero-block" style="background:#9333ea;">▶ PUTAR_KANAN(90)</div>
+            <div class="hero-block" style="background:#f97316;">▶ MAJU(120)</div>
+          </div>
+
+          <div class="hero-stage">
+            <div class="hero-line"></div>
+            <div class="hero-turtle"></div>
+          </div>
+
+          <div class="hero-mini-note">
+            Instruksi yang benar dan berurutan akan membuat bentuk yang sesuai.
+          </div>
+        </div>
+
+        <div class="hero-float-card">
+          MAJU • PUTAR • PENA
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAB PAGE -->
+  <section id="labPage" class="page">
+    <div class="lab-shell">
+      <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black text-indigo-700">Robot Pena Ajaib</h2>
+          <p class="text-slate-500">Susun blok instruksi, jalankan, dan lihat jejak gambar di panggung</p>
+        </div>
+
+        <div class="flex gap-3 flex-wrap">
+          <button onclick="runScript()" id="runBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-3 rounded-xl">
+            Jalankan
+          </button>
+          <button onclick="resetAll()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl">
+            Reset
+          </button>
+          <button onclick="openRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl">
+            Refleksi
+          </button>
+          <button onclick="showPage('homePage')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold px-5 py-3 rounded-xl">
+            Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+
+      <div class="lab-grid">
+        <div class="panel">
+          <div class="panel-title">Blok Instruksi</div>
+          <button class="block-btn" style="background:#16a34a;" onclick="addBlock('FORWARD')">➜ MAJU(80)</button>
+          <button class="block-btn" style="background:#2563eb;" onclick="addBlock('RIGHT')">↻ PUTAR_KANAN(90)</button>
+          <button class="block-btn" style="background:#9333ea;" onclick="addBlock('LEFT')">↺ PUTAR_KIRI(90)</button>
+          <button class="block-btn" style="background:#0ea5e9;" onclick="addBlock('PEN_DOWN')">✎ PENA_TURUN</button>
+          <button class="block-btn" style="background:#f97316;" onclick="addBlock('PEN_UP')">✋ PENA_NAIK</button>
+
+          <div class="mt-6 pt-4 border-t border-slate-200">
+            <div class="font-black text-slate-800 mb-3">Tantangan Cepat</div>
+            <button class="challenge-btn" onclick="loadChallenge('line')">Muat Tantangan Garis</button>
+            <button class="challenge-btn" onclick="loadChallenge('corner')">Muat Tantangan Sudut</button>
+            <button class="challenge-btn" onclick="loadChallenge('square')">Muat Tantangan Persegi</button>
+            <button class="challenge-btn" onclick="loadChallenge('triangle')">Muat Tantangan Segitiga</button>
+            <button class="challenge-btn" onclick="loadChallenge('rectangle')">Muat Tantangan Persegi Panjang</button>
+            <button class="challenge-btn" onclick="loadChallenge('stairs')">Muat Tantangan Tangga</button>
+            <button class="challenge-btn" onclick="loadChallenge('house')">Muat Tantangan Rumah</button>
+            <button class="challenge-btn" onclick="loadChallenge('star')">Muat Tantangan Bintang</button>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-200 text-sm text-slate-600 leading-relaxed">
+            <div class="font-black text-slate-800 mb-2">Petunjuk Singkat</div>
+            <p>Susun blok dari atas ke bawah. Robot akan menjalankan instruksi sesuai urutan. Salah urutan sedikit saja, hasil gambar bisa berbeda.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="flex justify-between items-center mb-4">
+            <div class="panel-title mb-0">Area Skrip</div>
+            <button onclick="clearBlocks()" class="text-sm font-bold text-rose-600">Hapus Semua</button>
+          </div>
+
+          <div id="scriptList" class="script-list"></div>
+
+          <div id="emptyState" class="text-slate-500 text-sm leading-relaxed bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-4">
+            Belum ada instruksi. Tambahkan blok dari panel kiri. Mulai dari <b>PENA_TURUN</b>, lalu <b>MAJU</b>, lalu <b>PUTAR</b>.
+          </div>
+        </div>
+
+        <div id="stageWrap" class="stage-wrap">
+          <div class="stage-header flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <div class="stage-title">Area Eksperimen</div>
+              <div class="stage-sub">Robot akan menjalankan instruksi satu per satu dan meninggalkan jejak gambar.</div>
+            </div>
+
+            <div class="stage-tools">
+              <button class="stage-tool-btn" onclick="zoomOut()">− Zoom</button>
+              <button class="stage-tool-btn" onclick="zoomIn()">+ Zoom</button>
+              <button class="stage-tool-btn" onclick="resetZoom()">100%</button>
+              <button class="stage-tool-btn" onclick="centerStageView()">Pusatkan</button>
+              <button id="fullscreenBtn" class="stage-tool-btn" onclick="toggleStageFullscreen()">Panel Penuh</button>
+            </div>
+          </div>
+
+          <div id="canvasViewport" class="canvas-viewport">
+            <div id="canvasStage" class="canvas-stage">
+              <canvas id="stageCanvas" width="2400" height="1600"></canvas>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <div class="status-item">
+              <small>X</small>
+              <strong id="xStat">1100</strong>
+            </div>
+            <div class="status-item">
+              <small>Y</small>
+              <strong id="yStat">900</strong>
+            </div>
+            <div class="status-item">
+              <small>Arah</small>
+              <strong id="angleStat">0°</strong>
+            </div>
+            <div class="status-item">
+              <small>Pena</small>
+              <strong id="penStat">Turun</strong>
+            </div>
+            <div class="status-item">
+              <small>Jumlah Blok</small>
+              <strong id="countStat">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL TUJUAN -->
+  <div id="tujuanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-6">
+        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Pembelajaran</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-4 text-left pb-4">
+        <div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
+          <p class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
+            Memahami proses pengembangan dan pengujian instruksi dengan cara menyusun, mengubah, dan menjalankan perintah secara bertahap. Siswa belajar bahwa setiap instruksi harus ditulis dengan jelas, berurutan, dan diuji untuk memastikan hasil gerakan objek sesuai dengan yang direncanakan.
+          </p>
+        </div>
+      </div>
+
+      <div class="shrink-0 pt-6 flex justify-center border-t-2 border-indigo-50">
+        <button onclick="closeTujuanModal()" class="bg-[#4f46e5] hover:bg-[#4338ca] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#3730a3] active:shadow-[0_0px_0_#3730a3] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">
+          OK, Mengerti!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CARA -->
+  <div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-4">
+        <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+        <div class="flex justify-center gap-2 flex-wrap">
+          <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
+          <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-4" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+        </div>
+      </div>
+
+      <div class="text-left flex-1 overflow-y-auto pr-4 my-2" id="caraSlidesContainer">
+        <div class="cara-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">1. Mengenal Tampilan Lab Maya</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">1️⃣ Blok Instruksi</p>
+                <p class="text-sm text-slate-700">Berisi tombol MAJU, PUTAR KANAN, PUTAR KIRI, PENA TURUN, dan PENA NAIK.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">2️⃣ Area Skrip</p>
+                <p class="text-sm text-slate-700">Tempat menyusun urutan instruksi yang akan dijalankan robot pena.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">3️⃣ Area Eksperimen</p>
+                <p class="text-sm text-slate-700">Panggung tempat robot berjalan dan menggambar jejak sesuai instruksi.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">2. Menambahkan Blok</h3>
+            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-4 font-medium">
+              <li>Klik salah satu blok di panel kiri.</li>
+              <li>Blok akan masuk ke area skrip.</li>
+              <li>Blok dengan angka bisa diubah nilainya, misalnya MAJU 80 menjadi MAJU 120.</li>
+              <li>Urutan blok dapat digeser ke atas atau ke bawah.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">3. Menjalankan Program</h3>
+            <p class="text-lg text-slate-700 mb-4">Gunakan tombol di bagian atas halaman:</p>
+            <div class="grid gap-4">
+              <div class="bg-white p-4 rounded-xl border border-orange-200">
+                <p class="font-bold text-slate-800">▶ Jalankan</p>
+                <p class="text-slate-600">Menjalankan semua instruksi dari atas ke bawah.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl border border-orange-200">
+                <p class="font-bold text-slate-800">⟳ Reset</p>
+                <p class="text-slate-600">Menghapus jejak gambar dan mengembalikan robot ke posisi awal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">4. Tantangan Cepat</h3>
+            <p class="text-lg text-slate-700">Gunakan tombol tantangan untuk memuat contoh instruksi otomatis, seperti:</p>
+            <ul class="list-disc ml-6 text-lg text-slate-800 space-y-2 mt-4">
+              <li>Garis lurus</li>
+              <li>Sudut</li>
+              <li>Persegi</li>
+              <li>Segitiga</li>
+              <li>Persegi Panjang</li>
+              <li>Tangga</li>
+              <li>Rumah</li>
+              <li>Bintang</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cara-slide hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-3xl font-black text-orange-900 mb-6 text-center">5. Tips Praktikum</h3>
+            <ul class="list-none ml-0 text-xl text-slate-700 space-y-4 mb-10 max-w-3xl mx-auto w-full">
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Mulailah dengan PENA TURUN agar robot meninggalkan jejak.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Susun blok dari atas ke bawah dengan urutan yang benar.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Kalau gambar salah, cek urutan atau angka jarak dan sudutnya.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-lime-100 p-3 rounded-lg shadow-sm border border-lime-300">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1 font-bold">Kesalahan kecil pada urutan instruksi bisa membuat hasil gambar berbeda.</span>
+              </li>
+            </ul>
+            <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl shadow-md">
+              Selamat Mencoba & Semangat Belajar! 🚀
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
+        <button id="prevBtn" onclick="changeSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">
+          &larr; <span class="hidden md:inline">Sebelumnya</span>
+        </button>
+
+        <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">
+          Tutup
+        </button>
+
+        <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all">
+          <span class="hidden md:inline">Selanjutnya</span> &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BIODATA -->
+  <div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-6xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-6">
+        <h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-4 grid grid-cols-1 md:grid-cols-2 gap-8 text-left pb-4">
+        <div class="biodata-card">
+          <div class="biodata-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-lime-700">
+              <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="biodata-title">Pengembang Materi</div>
+          <div class="biodata-info">
+            <p><span class="label">Nama</span><span class="value">DUMMY</span></p>
+            <p><span class="label">Kategori</span><span class="value">DUMMY</span></p>
+            <p><span class="label">Status</span><span class="value">DUMMY</span></p>
+          </div>
+        </div>
+
+        <div class="biodata-card">
+          <div class="biodata-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-lime-700">
+              <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="biodata-title">Pengembang Media</div>
+          <div class="biodata-info">
+            <p><span class="label">Nama</span><span class="value">DUMMY</span></p>
+            <p><span class="label">Kategori</span><span class="value">DUMMY</span></p>
+            <p><span class="label">Status</span><span class="value">DUMMY</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrink-0 pt-6 flex justify-center border-t-2 border-lime-50">
+        <button onclick="closeBioModal()" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">
+          OK, Mengerti!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL REFLEKSI -->
+  <div id="refleksiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-3xl w-full shadow-2xl border-4 border-sky-100">
+      <h2 class="text-3xl md:text-4xl font-black text-sky-700 text-center mb-6">Refleksi</h2>
+      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
+        <p>1. Mengapa urutan instruksi memengaruhi hasil gambar?</p>
+        <p>2. Apa yang terjadi jika sudut belok atau jarak maju diubah?</p>
+        <p>3. Mengapa robot harus diberi instruksi yang jelas dan berurutan?</p>
+      </div>
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeRefleksiModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xl font-bold py-3 px-10 rounded-2xl">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (id === 'labPage') {
+        renderStage();
+        updateStatus();
+        applyZoom(true);
+      }
+    }
+
+    const tujuanModal = document.getElementById('tujuanModal');
+    function openTujuanModal(){ tujuanModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeTujuanModal(){ tujuanModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const bioModal = document.getElementById('bioModal');
+    function openBioModal(){ bioModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeBioModal(){ bioModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const refleksiModal = document.getElementById('refleksiModal');
+    function openRefleksiModal(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeRefleksiModal(){ refleksiModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const caraModal = document.getElementById('caraModal');
+    let currentSlide = 0;
+
+    function getCaraSlides() {
+      return document.querySelectorAll('.cara-slide');
+    }
+
+    function openCaraModal() {
+      caraModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      currentSlide = 0;
+      updateSlideView();
+    }
+
+    function closeCaraModal() {
+      caraModal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function changeSlide(direction) {
+      const slides = getCaraSlides();
+      currentSlide += direction;
+
+      if (currentSlide < 0) currentSlide = 0;
+      if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+
+      const contentArea = document.getElementById('caraSlidesContainer');
+      if (contentArea) contentArea.scrollTop = 0;
+
+      updateSlideView();
+    }
+
+    function updateSlideView() {
+      const slides = getCaraSlides();
+      const totalSlides = slides.length;
+
+      slides.forEach((slide, index) => {
+        slide.classList.add('hidden-slide');
+        const dot = document.getElementById('dot-' + index);
+        if (dot) {
+          dot.classList.remove('bg-orange-500', 'w-8');
+          dot.classList.add('bg-slate-300', 'w-3');
+        }
+      });
+
+      if (slides[currentSlide]) {
+        slides[currentSlide].classList.remove('hidden-slide');
+      }
+
+      const activeDot = document.getElementById('dot-' + currentSlide);
+      if (activeDot) {
+        activeDot.classList.remove('bg-slate-300', 'w-3');
+        activeDot.classList.add('bg-orange-500', 'w-8');
+      }
+
+      document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+      document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+    }
+
+    function animateHeroSpeech() {
+      const bubble = document.getElementById("heroSpeech");
+      if (!bubble) return;
+      setTimeout(() => { bubble.style.opacity = 1; }, 600);
+      setTimeout(() => { bubble.style.opacity = 0; }, 4200);
+      setTimeout(() => {
+        bubble.style.opacity = 1;
+        bubble.textContent = "Mulai dari garis, lalu belok, lalu bentuk persegi.";
+      }, 5200);
+    }
+
+    const canvas = document.getElementById('stageCanvas');
+    const ctx = canvas.getContext('2d');
+    const viewport = document.getElementById('canvasViewport');
+
+    const STAGE_WIDTH = 2400;
+    const STAGE_HEIGHT = 1600;
+    const START_X = 1100;
+    const START_Y = 900;
+
+    canvas.width = STAGE_WIDTH;
+    canvas.height = STAGE_HEIGHT;
+
+    let stageZoom = 1;
+    const MIN_ZOOM = 0.5;
+    const MAX_ZOOM = 2.8;
+
+    function centerViewportOn(x, y) {
+      const targetLeft = Math.max(0, (x * stageZoom) - (viewport.clientWidth / 2));
+      const targetTop = Math.max(0, (y * stageZoom) - (viewport.clientHeight / 2));
+      viewport.scrollLeft = targetLeft;
+      viewport.scrollTop = targetTop;
+    }
+
+    function centerStageView() {
+      centerViewportOn(turtle.x, turtle.y);
+    }
+
+    function applyZoom(keepCentered = true) {
+      const canvasStage = document.getElementById('canvasStage');
+      const canvasEl = document.getElementById('stageCanvas');
+
+      canvasStage.style.width = `${canvas.width * stageZoom}px`;
+      canvasStage.style.height = `${canvas.height * stageZoom}px`;
+      canvasEl.style.transform = `scale(${stageZoom})`;
+
+      if (keepCentered) {
+        requestAnimationFrame(() => centerViewportOn(turtle.x, turtle.y));
+      }
+    }
+
+    function zoomIn() {
+      stageZoom = Math.min(MAX_ZOOM, +(stageZoom + 0.2).toFixed(2));
+      applyZoom(true);
+    }
+
+    function zoomOut() {
+      stageZoom = Math.max(MIN_ZOOM, +(stageZoom - 0.2).toFixed(2));
+      applyZoom(true);
+    }
+
+    function resetZoom() {
+      stageZoom = 1;
+      applyZoom(true);
+    }
+
+    function toggleStageFullscreen() {
+      const wrap = document.getElementById('stageWrap');
+      const btn = document.getElementById('fullscreenBtn');
+
+      wrap.classList.toggle('stage-fullscreen');
+      const active = wrap.classList.contains('stage-fullscreen');
+      document.body.style.overflow = active ? 'hidden' : 'auto';
+      btn.textContent = active ? 'Tutup Panel Penuh' : 'Panel Penuh';
+
+      setTimeout(() => {
+        applyZoom(true);
+      }, 100);
+    }
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') {
+        const wrap = document.getElementById('stageWrap');
+        const btn = document.getElementById('fullscreenBtn');
+        if (wrap.classList.contains('stage-fullscreen')) {
+          wrap.classList.remove('stage-fullscreen');
+          document.body.style.overflow = 'auto';
+          btn.textContent = 'Panel Penuh';
+          setTimeout(() => applyZoom(true), 100);
+        }
+      }
+    });
+
+    let turtle = {};
+    let segments = [];
+    let scriptBlocks = [];
+    let isRunning = false;
+
+    function defaultTurtle() {
+      return {
+        x: START_X,
+        y: START_Y,
+        angle: 0,
+        pen: true
+      };
+    }
+
+    function resetStageState() {
+      turtle = defaultTurtle();
+      segments = [];
+    }
+
+    function colorForType(type) {
+      if (type === 'FORWARD') return '#16a34a';
+      if (type === 'RIGHT') return '#2563eb';
+      if (type === 'LEFT') return '#9333ea';
+      if (type === 'PEN_DOWN') return '#0ea5e9';
+      if (type === 'PEN_UP') return '#f97316';
+      return '#64748b';
+    }
+
+    function labelForType(type) {
+      if (type === 'FORWARD') return 'MAJU';
+      if (type === 'RIGHT') return 'PUTAR_KANAN';
+      if (type === 'LEFT') return 'PUTAR_KIRI';
+      if (type === 'PEN_DOWN') return 'PENA_TURUN';
+      if (type === 'PEN_UP') return 'PENA_NAIK';
+      return type;
+    }
+
+    function addBlock(type) {
+      if (isRunning) return;
+      if (type === 'FORWARD') scriptBlocks.push({ type, value: 80 });
+      else if (type === 'RIGHT' || type === 'LEFT') scriptBlocks.push({ type, value: 90 });
+      else scriptBlocks.push({ type });
+      renderScriptList();
+      updateStatus();
+    }
+
+    function updateBlockValue(index, val) {
+      const num = Number(val);
+      scriptBlocks[index].value = isNaN(num) ? 0 : num;
+      updateStatus();
+    }
+
+    function moveBlock(index, delta) {
+      if (isRunning) return;
+      const newIndex = index + delta;
+      if (newIndex < 0 || newIndex >= scriptBlocks.length) return;
+      const temp = scriptBlocks[index];
+      scriptBlocks[index] = scriptBlocks[newIndex];
+      scriptBlocks[newIndex] = temp;
+      renderScriptList();
+    }
+
+    function deleteBlock(index) {
+      if (isRunning) return;
+      scriptBlocks.splice(index, 1);
+      renderScriptList();
+      updateStatus();
+    }
+
+    function clearBlocks() {
+      if (isRunning) return;
+      scriptBlocks = [];
+      renderScriptList();
+      updateStatus();
+    }
+
+    function loadChallenge(type) {
+      if (isRunning) return;
+
+      if (type === 'line') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 220 }
+        ];
+      }
+
+      if (type === 'corner') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 180 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 }
+        ];
+      }
+
+      if (type === 'square') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 }
+        ];
+      }
+
+      if (type === 'triangle') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 180 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 180 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 180 }
+        ];
+      }
+
+      if (type === 'rectangle') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 220 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 120 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 220 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 120 }
+        ];
+      }
+
+      if (type === 'stairs') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 70 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 70 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 70 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 70 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 70 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 70 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 70 }
+        ];
+      }
+
+      if (type === 'house') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 120 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 120 },
+          { type: 'PEN_UP' },
+          { type: 'FORWARD', value: 120 },
+          { type: 'PEN_DOWN' },
+          { type: 'RIGHT', value: 45 },
+          { type: 'FORWARD', value: 113 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 113 }
+        ];
+      }
+
+      if (type === 'star') {
+        scriptBlocks = [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 170 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 170 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 170 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 170 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 170 }
+        ];
+      }
+
+      renderScriptList();
+      resetAll();
+    }
+
+    function renderScriptList() {
+      const list = document.getElementById('scriptList');
+      const empty = document.getElementById('emptyState');
+      list.innerHTML = '';
+
+      if (scriptBlocks.length === 0) {
+        empty.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+      }
+
+      scriptBlocks.forEach((block, index) => {
+        const item = document.createElement('div');
+        item.className = 'script-item';
+        item.style.background = colorForType(block.type);
+
+        const hasValue = block.type === 'FORWARD' || block.type === 'RIGHT' || block.type === 'LEFT';
+
+        item.innerHTML = `
+          <div class="script-row">
+            <div class="script-left">
+              <div class="script-num">${index + 1}</div>
+              <div class="script-label">${labelForType(block.type)}</div>
+              ${hasValue ? `<input class="value-input" type="number" value="${block.value}" onchange="updateBlockValue(${index}, this.value)" />` : ``}
+            </div>
+            <div class="script-actions">
+              <button class="mini-btn" onclick="moveBlock(${index}, -1)">↑</button>
+              <button class="mini-btn" onclick="moveBlock(${index}, 1)">↓</button>
+              <button class="mini-btn" onclick="deleteBlock(${index})">✕</button>
+            </div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function degToRad(deg) {
+      return deg * Math.PI / 180;
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function drawGrid() {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 1;
+
+      for (let x = 0; x <= canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      for (let y = 0; y <= canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawSegments() {
+      ctx.save();
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      segments.forEach(seg => {
+        ctx.beginPath();
+        ctx.moveTo(seg.x1, seg.y1);
+        ctx.lineTo(seg.x2, seg.y2);
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+
+    function drawStartPoint() {
+      ctx.save();
+      ctx.fillStyle = '#60a5fa';
+      ctx.beginPath();
+      ctx.arc(START_X, START_Y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawTurtle() {
+      ctx.save();
+      ctx.translate(turtle.x, turtle.y);
+      ctx.rotate(degToRad(turtle.angle));
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(16, 0);
+      ctx.lineTo(-10, -8);
+      ctx.lineTo(-10, 8);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#fff7ed';
+      ctx.beginPath();
+      ctx.arc(2, 0, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function renderStage() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGrid();
+      drawStartPoint();
+      drawSegments();
+      drawTurtle();
+    }
+
+    function updateStatus() {
+      document.getElementById('xStat').textContent = Math.round(turtle.x);
+      document.getElementById('yStat').textContent = Math.round(turtle.y);
+      document.getElementById('angleStat').textContent = `${((turtle.angle % 360) + 360) % 360}°`;
+      document.getElementById('penStat').textContent = turtle.pen ? 'Turun' : 'Naik';
+      document.getElementById('countStat').textContent = scriptBlocks.length;
+    }
+
+    async function animateForward(distance) {
+      const steps = Math.max(10, Math.min(70, Math.ceil(Math.abs(distance) / 5)));
+      const stepDist = distance / steps;
+
+      for (let i = 0; i < steps; i++) {
+        const startX = turtle.x;
+        const startY = turtle.y;
+        turtle.x += Math.cos(degToRad(turtle.angle)) * stepDist;
+        turtle.y += Math.sin(degToRad(turtle.angle)) * stepDist;
+
+        if (turtle.pen) {
+          segments.push({
+            x1: startX,
+            y1: startY,
+            x2: turtle.x,
+            y2: turtle.y
+          });
+        }
+
+        renderStage();
+        updateStatus();
+        if (i % 3 === 0) centerViewportOn(turtle.x, turtle.y);
+        await sleep(20);
+      }
+    }
+
+    async function executeBlock(block) {
+      if (block.type === 'FORWARD') {
+        await animateForward(Number(block.value) || 0);
+      }
+
+      if (block.type === 'RIGHT') {
+        turtle.angle += Number(block.value) || 0;
+        renderStage();
+        updateStatus();
+        centerViewportOn(turtle.x, turtle.y);
+        await sleep(220);
+      }
+
+      if (block.type === 'LEFT') {
+        turtle.angle -= Number(block.value) || 0;
+        renderStage();
+        updateStatus();
+        centerViewportOn(turtle.x, turtle.y);
+        await sleep(220);
+      }
+
+      if (block.type === 'PEN_DOWN') {
+        turtle.pen = true;
+        renderStage();
+        updateStatus();
+        await sleep(180);
+      }
+
+      if (block.type === 'PEN_UP') {
+        turtle.pen = false;
+        renderStage();
+        updateStatus();
+        await sleep(180);
+      }
+    }
+
+    async function runScript() {
+      if (isRunning || scriptBlocks.length === 0) return;
+
+      isRunning = true;
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('runBtn').classList.add('opacity-60');
+
+      resetStageState();
+      renderStage();
+      updateStatus();
+      applyZoom(true);
+
+      for (const block of scriptBlocks) {
+        await executeBlock(block);
+      }
+
+      isRunning = false;
+      document.getElementById('runBtn').disabled = false;
+      document.getElementById('runBtn').classList.remove('opacity-60');
+    }
+
+    function resetAll() {
+      if (isRunning) return;
+      resetStageState();
+      renderStage();
+      updateStatus();
+      applyZoom(true);
+    }
+
+    resetStageState();
+    renderScriptList();
+    renderStage();
+    updateStatus();
+    applyZoom(true);
+    animateHeroSpeech();
+  </script>
+</body>
+</html>

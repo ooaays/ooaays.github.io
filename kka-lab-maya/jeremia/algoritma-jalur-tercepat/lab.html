@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Virtual: Analisis Algoritma Jalur Tercepat</title>
+    
+    <!-- Tambahan CDN Tailwind khusus Header (preflight di-false agar tidak merubah layout utama) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #2980b9;
+            --bg: #f4f7fb;
+            --normal: #ffffff;
+            --slow: #f1c40f;
+            --wall: #34495e;
+            --path: #2ecc71;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; }
+        
+        /* Layout per Level */
+        .level-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            border-bottom: 4px dashed #bdc3c7;
+            position: relative;
+        }
+        .level-section:last-child {
+            border-bottom: none;
+        }
+
+        /* Typography */
+        .level-badge { background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9em; margin-bottom: 10px; display: inline-block;}
+        h1 { color: var(--primary); text-align: center; margin: 0 0 10px 0; font-size: 2.2em; }
+        .subtitle { color: #555; text-align: center; margin-bottom: 30px; font-style: italic; max-width: 600px;}
+        
+        .container { display: flex; gap: 30px; max-width: 900px; width: 100%; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+        
+        /* Panel Kontrol Kiri */
+        .panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e8ed; flex: 1; min-width: 300px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .panel h3 { margin-top: 0; border-bottom: 2px solid var(--primary); padding-bottom: 10px; font-size: 1.2em; color: var(--primary); }
+        
+        .control-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.9em; color: #34495e;}
+        
+        /* Radio Button Custom untuk Kuas */
+        .brush-option { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; padding: 8px; border-radius: 6px; transition: background 0.2s;}
+        .brush-option:hover { background: #f8f9fa; }
+        .brush-option input { margin-right: 12px; transform: scale(1.2); }
+        .color-box { width: 24px; height: 24px; display: inline-block; margin-right: 12px; border: 2px solid #bdc3c7; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);}
+        
+        input[type="number"] { width: 100%; padding: 10px; border: 2px solid #ecf0f1; border-radius: 6px; box-sizing: border-box; font-size: 1em; font-weight: bold;}
+        input[type="number"]:focus { outline: none; border-color: var(--accent); }
+        
+        button { width: 100%; padding: 14px; margin-top: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1.05em; }
+        .btn-analyze { background: var(--accent); color: white; box-shadow: 0 4px 0 #1f6691; }
+        .btn-analyze:hover { background: #3498db; transform: translateY(2px); box-shadow: 0 2px 0 #1f6691;}
+        .btn-analyze:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-reset { background: #e74c3c; color: white; margin-top: 15px; box-shadow: 0 4px 0 #c0392b; }
+        .btn-reset:hover { background: #c0392b; transform: translateY(2px); box-shadow: 0 2px 0 #962d22;}
+
+        .btn-next { background: #2ecc71; color: white; padding: 15px 40px; border-radius: 30px; font-size: 1.2em; margin-top: 40px; box-shadow: 0 6px 0 #27ae60; width: auto; display: inline-flex; align-items: center; gap: 10px;}
+        .btn-next:hover { background: #27ae60; transform: translateY(2px); box-shadow: 0 4px 0 #219150;}
+        
+        /* Area Peta Kanan */
+        .workspace { flex: 1.5; display: flex; flex-direction: column; align-items: center; min-width: 300px; }
+        .grid-wrapper { display: grid; grid-template-columns: repeat(8, 45px); gap: 4px; background: #bdc3c7; padding: 10px; border-radius: 10px; box-shadow: inset 0 4px 8px rgba(0,0,0,0.1); }
+        
+        @media (max-width: 500px) {
+            .grid-wrapper { grid-template-columns: repeat(8, 35px); }
+            .cell { width: 35px !important; height: 35px !important; }
+        }
+
+        .cell { width: 45px; height: 45px; border: 1px solid rgba(0,0,0,0.1); cursor: cell; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; background: var(--normal); transition: background 0.1s; border-radius: 4px;}
+        
+        .type-normal { background: var(--normal); }
+        .type-slow { background: var(--slow); }
+        .type-wall { background: var(--wall); }
+        
+        .start, .end { background: var(--path) !important; color: white; pointer-events: none; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4); z-index: 10;}
+        .end { background: #e74c3c !important; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);}
+        
+        .path-highlight { position: relative; }
+        .path-highlight::after { content: ""; width: 15px; height: 15px; background: var(--accent); border-radius: 50%; position: absolute; box-shadow: 0 0 10px var(--accent); animation: popIn 0.3s forwards;}
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Hasil Analisis */
+        .result-log { margin-top: 20px; width: 100%; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: monospace; box-sizing: border-box; min-height: 120px; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+
+        /* HEADER KEMDIKBUD */
+        .header-bg {
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* SPEECH */
+        .speech {
+            position: absolute;
+            top: -90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-weight: bold;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity .5s;
+            color: #1e293b;
+            width: 250px;
+            text-align: center;
+        }
+
+        .speech::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER KEMDIKBUD -->
+<div class="header-bg flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+            Direktorat Sekolah Menengah Pertama<br>
+            Direktorat Jendral Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan Pendidikan Menengah<br>
+            Kementerian Pendidikan Dasar dan Menengah
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+    </div>
+</div>
+
+<!-- LEVEL 1 -->
+<div id="level1" class="level-section">
+    <span class="level-badge">Tahap 1 dari 3</span>
+    <h1>Eksplorasi Waktu Tempuh</h1>
+    <p class="subtitle">Di level ini, cobalah menggambar <strong>Jalan Lambat (Kuning)</strong>. Lihat bagaimana AI mencari jalan memutar demi menghindari kemacetan dan menghemat waktu.</p>
+
+    <div class="container">
+        <div class="panel">
+            <h3>1. Manipulasi Lingkungan</h3>
+            <div class="control-group">
+                <label class="brush-option">
+                    <input type="radio" name="brush1" value="0" checked>
+                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                </label>
+                <label class="brush-option">
+                    <input type="radio" name="brush1" value="1">
+                    <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
+                </label>
+                <!-- Rintangan disembunyikan di Level 1 -->
+            </div>
+
+            <h3>2. Manipulasi Parameter</h3>
+            <div class="control-group">
+                <label>Bobot Waktu Jalan Lambat (Menit)</label>
+                <input type="number" id="weight1" value="3" min="2" max="10">
+            </div>
+
+            <button class="btn-analyze" onclick="level1.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+            <button class="btn-reset" onclick="level1.resetEnvironment()">Reset Peta</button>
+        </div>
+
+        <div class="workspace">
+            <div id="grid1" class="grid-wrapper"></div>
+            <div id="log1" class="result-log">
+                > Sistem Level 1 siap.<br>> Silakan manipulasi peta lalu klik "Eksekusi Algoritma Sistem".
+            </div>
+        </div>
+    </div>
+    
+    <button class="btn-next" onclick="scrollToElement('level2')">Selanjutnya ke Level 2 ↓</button>
+</div>
+
+<!-- LEVEL 2 -->
+<div id="level2" class="level-section" style="background-color: #eaf2f8;">
+    <span class="level-badge" style="background-color: #8e44ad;">Tahap 2 dari 3</span>
+    <h1 style="color: #8e44ad;">Eksplorasi Rintangan</h1>
+    <p class="subtitle">Di level ini, cobalah membangun tembok <strong>Rintangan (Hitam)</strong>. Jalan ini sama sekali tidak bisa dilewati. Bisakah AI mencari jalan keluarnya?</p>
+
+    <div class="container">
+        <div class="panel">
+            <h3 style="border-color: #8e44ad; color: #8e44ad;">1. Manipulasi Lingkungan</h3>
+            <div class="control-group">
+                <label class="brush-option">
+                    <input type="radio" name="brush2" value="0" checked>
+                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                </label>
+                <label class="brush-option">
+                    <input type="radio" name="brush2" value="-1">
+                    <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
+                </label>
+                <!-- Jalan Lambat disembunyikan di Level 2 -->
+            </div>
+
+            <button class="btn-analyze" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="level2.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+            <button class="btn-reset" onclick="level2.resetEnvironment()">Reset Peta</button>
+        </div>
+
+        <div class="workspace">
+            <div id="grid2" class="grid-wrapper"></div>
+            <div id="log2" class="result-log" style="border-left-color: #8e44ad;">
+                > Sistem Level 2 siap.<br>> Buatlah rintangan tembok yang rumit!
+            </div>
+        </div>
+    </div>
+    
+    <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="scrollToElement('level3')">Selanjutnya ke Level 3 ↓</button>
+</div>
+
+<!-- LEVEL 3 -->
+<div id="level3" class="level-section">
+    <span class="level-badge" style="background-color: #d35400;">Tahap 3 dari 3</span>
+    <h1 style="color: #d35400;">Ujian Navigasi Kompleks</h1>
+    <p class="subtitle">Gabungkan semuanya! Gunakan <strong>Jalan Lambat</strong> dan <strong>Rintangan</strong>. Atur juga bobot waktunya untuk melihat kehebatan pengambilan keputusan AI.</p>
+
+    <div class="container">
+        <div class="panel">
+            <h3 style="border-color: #d35400; color: #d35400;">1. Manipulasi Lingkungan</h3>
+            <div class="control-group">
+                <label class="brush-option">
+                    <input type="radio" name="brush3" value="0" checked>
+                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                </label>
+                <label class="brush-option">
+                    <input type="radio" name="brush3" value="1">
+                    <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
+                </label>
+                <label class="brush-option">
+                    <input type="radio" name="brush3" value="-1">
+                    <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
+                </label>
+            </div>
+
+            <h3 style="border-color: #d35400; color: #d35400;">2. Manipulasi Parameter</h3>
+            <div class="control-group">
+                <label>Bobot Waktu Jalan Lambat (Menit)</label>
+                <input type="number" id="weight3" value="4" min="2" max="10">
+            </div>
+
+            <button class="btn-analyze" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="level3.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+            <button class="btn-reset" onclick="level3.resetEnvironment()">Reset Peta</button>
+        </div>
+
+        <div class="workspace">
+            <div id="grid3" class="grid-wrapper"></div>
+            <div id="log3" class="result-log" style="border-left-color: #d35400;">
+                > Sistem Level 3 siap.<br>> Semua fitur telah terbuka. Semoga berhasil!
+            </div>
+        </div>
+    </div>
+    
+    <button class="btn-next" style="background-color: #2c3e50; box-shadow: 0 6px 0 #1a252f;" onmouseover="this.style.backgroundColor='#34495e'" onmouseout="this.style.backgroundColor='#2c3e50'" onclick="scrollToElement('level1')">↑ Kembali ke Awal</button>
+</div>
+
+<script>
+// Fungsi untuk menggulir halaman secara halus
+function scrollToElement(elementId) {
+    document.getElementById(elementId).scrollIntoView({ behavior: 'smooth' });
+}
+
+// Class untuk mengisolasi logika setiap Level
+class PathFinderLevel {
+    constructor(gridId, logId, brushName, weightId) {
+        this.rows = 8;
+        this.cols = 8;
+        this.gridEl = document.getElementById(gridId);
+        this.logEl = document.getElementById(logId);
+        this.brushName = brushName;
+        this.weightId = weightId; // Bisa null jika level tidak punya input bobot
+        
+        this.startPos = {r: 0, c: 0};
+        this.endPos = {r: 7, c: 7};
+        
+        this.gridData = [];
+        this.cells = [];
+        
+        this.initGrid();
+    }
+
+    initGrid() {
+        this.gridEl.innerHTML = "";
+        this.gridData = Array(this.rows).fill().map(() => Array(this.cols).fill(0));
+        this.cells = Array(this.rows).fill().map(() => Array(this.cols).fill(null));
+
+        for(let r=0; r<this.rows; r++) {
+            for(let c=0; c<this.cols; c++) {
+                const cell = document.createElement("div");
+                cell.className = "cell type-normal";
+                
+                if(r === this.startPos.r && c === this.startPos.c) {
+                    cell.classList.add("start"); cell.innerText = "S";
+                } else if(r === this.endPos.r && c === this.endPos.c) {
+                    cell.classList.add("end"); cell.innerText = "T";
+                } else {
+                    // Event listener digabung dengan arrow function agar 'this' merujuk ke class
+                    cell.addEventListener("mousedown", () => this.applyBrush(r, c));
+                    cell.addEventListener("mouseenter", (e) => {
+                        if(e.buttons === 1) this.applyBrush(r, c); 
+                    });
+                }
+
+                this.gridEl.appendChild(cell);
+                this.cells[r][c] = cell;
+            }
+        }
+    }
+
+    applyBrush(r, c) {
+        this.clearPathHighlight();
+        
+        // Ambil value dari radio button yang aktif pada group brush spesifik level ini
+        const activeRadio = document.querySelector(`input[name="${this.brushName}"]:checked`);
+        if(!activeRadio) return;
+        
+        const brushValue = parseInt(activeRadio.value);
+        this.gridData[r][c] = brushValue;
+        
+        let cell = this.cells[r][c];
+        cell.className = "cell"; 
+        if(brushValue === 0) cell.classList.add("type-normal");
+        if(brushValue === 1) cell.classList.add("type-slow");
+        if(brushValue === -1) cell.classList.add("type-wall");
+    }
+
+    clearPathHighlight() {
+        for(let r=0; r<this.rows; r++) {
+            for(let c=0; c<this.cols; c++) {
+                this.cells[r][c].classList.remove("path-highlight");
+            }
+        }
+    }
+
+    runAlgorithm() {
+        this.clearPathHighlight();
+        // Ambil nilai bobot jika ada inputnya, jika tidak default 1 (atau abaikan)
+        let slowWeight = 2;
+        if(this.weightId) {
+            slowWeight = parseInt(document.getElementById(this.weightId).value) || 2;
+        }
+        
+        let dist = Array(this.rows).fill().map(() => Array(this.cols).fill(Infinity));
+        let prev = Array(this.rows).fill().map(() => Array(this.cols).fill(null));
+        let visited = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
+        
+        dist[this.startPos.r][this.startPos.c] = 0;
+        
+        for (let i = 0; i < this.rows * this.cols; i++) {
+            let minDist = Infinity;
+            let u = null;
+            for (let r = 0; r < this.rows; r++) {
+                for (let c = 0; c < this.cols; c++) {
+                    if (!visited[r][c] && dist[r][c] < minDist) {
+                        minDist = dist[r][c];
+                        u = {r, c};
+                    }
+                }
+            }
+            
+            if (!u || minDist === Infinity) break; 
+            if (u.r === this.endPos.r && u.c === this.endPos.c) break; 
+            
+            visited[u.r][u.c] = true;
+            
+            let directions = [[0,1], [1,0], [0,-1], [-1,0]];
+            for (let dir of directions) {
+                let nr = u.r + dir[0], nc = u.c + dir[1];
+                
+                if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols && this.gridData[nr][nc] !== -1 && !visited[nr][nc]) {
+                    let weight = (this.gridData[nr][nc] === 1) ? slowWeight : 1;
+                    let altDist = dist[u.r][u.c] + weight;
+                    
+                    if (altDist < dist[nr][nc]) {
+                        dist[nr][nc] = altDist;
+                        prev[nr][nc] = u;
+                    }
+                }
+            }
+        }
+        
+        this.outputResult(dist[this.endPos.r][this.endPos.c], prev);
+    }
+
+    outputResult(finalTime, prev) {
+        if (finalTime === Infinity) {
+            this.logEl.innerHTML = `<span style="color:#e74c3c;">> <strong>ERROR:</strong> Titik tujuan (T) tidak dapat diakses! Rute tertutup oleh rintangan.</span>`;
+            return;
+        }
+
+        let path = [];
+        let curr = this.endPos;
+        while(curr !== null) {
+            path.push(curr);
+            curr = prev[curr.r][curr.c];
+        }
+        path.reverse(); 
+        
+        let normalCount = 0;
+        let slowCount = 0;
+
+        for (let i = 1; i < path.length - 1; i++) {
+            let p = path[i];
+            
+            // Tambahkan delay kecil untuk efek animasi menggambar titik
+            setTimeout(() => {
+                this.cells[p.r][p.c].classList.add("path-highlight");
+            }, i * 50);
+
+            if(this.gridData[p.r][p.c] === 1) slowCount++;
+            else normalCount++;
+        }
+
+        this.logEl.innerHTML = `
+            <span style="color:#2ecc71;">> ANALISIS BERHASIL</span><br>
+            > <strong>Waktu Tempuh Minimum: ${finalTime} Menit</strong><br>
+            > Total Jarak: ${path.length - 1} Langkah<br>
+            > Detail Rute: ${normalCount} jalan normal, ${slowCount} jalan lambat.<br>
+            <span style="color:#bdc3c7; font-size:0.85em; margin-top:10px; display:block;">
+            *Catatan: Sistem (algoritma Dijkstra) telah mengevaluasi rute paling efisien berdasarkan bobot waktu.
+            </span>
+        `;
+    }
+
+    resetEnvironment() {
+        this.initGrid();
+        this.logEl.innerHTML = "> Lingkungan di-reset. Menunggu desain baru...";
+    }
+}
+
+// Inisialisasi ketiga level secara independen
+const level1 = new PathFinderLevel('grid1', 'log1', 'brush1', 'weight1');
+const level2 = new PathFinderLevel('grid2', 'log2', 'brush2', null);
+const level3 = new PathFinderLevel('grid3', 'log3', 'brush3', 'weight3');
+
+// Berikan sedikit rintangan bawaan di Level 2 sebagai contoh
+level2.applyBrush(3, 2); level2.applyBrush(3, 3); level2.applyBrush(3, 4); 
+level2.gridData[3][2] = -1; level2.gridData[3][3] = -1; level2.gridData[3][4] = -1;
+level2.initGrid(); // Refresh tampilan bawaan
+
+</script>
+
+</body>
+</html>

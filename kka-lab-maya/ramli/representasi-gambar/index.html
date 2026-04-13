@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Virtual Representasi Gambar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body{
+      font-family:'Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+      min-height:100vh;
+      margin:0;
+      color:#1e293b;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .header-bg{
+      background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+      color:white;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    /* HERO */
+    .home-hero-wrap{
+      max-width:1280px;
+      margin:0 auto;
+      padding:56px 28px 80px;
+      display:grid;
+      grid-template-columns:minmax(520px, 1fr) minmax(480px, 560px);
+      gap:40px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      text-align:left;
+      max-width:620px;
+      margin:0 auto;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#eef2ff;
+      color:#4338ca;
+      border:1px solid #c7d2fe;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:18px;
+    }
+
+    .hero-title{
+      font-size:clamp(38px, 5vw, 68px);
+      line-height:1.02;
+      font-weight:900;
+      color:#312e81;
+      margin:0 0 14px;
+    }
+
+    .hero-subtitle{
+      font-size:clamp(16px, 2vw, 22px);
+      color:#475569;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .hero-desc{
+      color:#64748b;
+      line-height:1.85;
+      max-width:620px;
+      margin-bottom:26px;
+      font-size:17px;
+    }
+
+    .hero-buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      width:100%;
+      max-width:760px;
+    }
+
+    .hero-visual{
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .visual-card{
+      width:100%;
+      max-width:560px;
+      background:rgba(255,255,255,0.92);
+      backdrop-filter:blur(6px);
+      border:1px solid #e2e8f0;
+      border-radius:28px;
+      padding:22px;
+      box-shadow:0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    .visual-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .visual-title{
+      font-size:13px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      font-weight:800;
+      color:#64748b;
+    }
+
+    .visual-dot-wrap{
+      display:flex;
+      gap:6px;
+    }
+
+    .visual-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:#cbd5e1;
+    }
+
+    .visual-main{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .matrix-card,
+    .binary-card{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:20px;
+      padding:16px;
+    }
+
+    .matrix-label,
+    .binary-label{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:0.12em;
+      color:#64748b;
+      text-transform:uppercase;
+      margin-bottom:12px;
+      text-align:center;
+    }
+
+    .hero-matrix{
+      display:grid;
+      grid-template-columns:repeat(10, 20px);
+      gap:2px;
+      justify-content:center;
+      background:#dbe4ee;
+      padding:2px;
+      border-radius:10px;
+    }
+
+    .hero-pixel{
+      width:20px;
+      height:20px;
+      background:#ffffff;
+      border:1px solid #e5e7eb;
+      transition:transform .25s ease, background .25s ease;
+    }
+
+    .hero-pixel.active{
+      background:#374151;
+      animation:pixelPop .5s ease;
+    }
+
+    @keyframes pixelPop{
+      0%{ transform:scale(0.7); opacity:0.6; }
+      100%{ transform:scale(1); opacity:1; }
+    }
+
+    .hero-binary{
+      min-height:224px;
+      background:#f1f5f9;
+      border-radius:12px;
+      padding:14px 12px;
+      font-family:"Courier New", monospace;
+      font-size:13px;
+      line-height:1.55;
+      color:#475569;
+      white-space:pre;
+      overflow:hidden;
+    }
+
+    .binary-line{ display:block; }
+    .binary-zero{ color:#64748b; }
+    .binary-one{ color:#111827; font-weight:700; }
+
+    .hero-float-card{
+      position:absolute;
+      right:-8px;
+      bottom:-14px;
+      background:linear-gradient(135deg,#ec4899,#8b5cf6);
+      color:white;
+      padding:12px 16px;
+      border-radius:18px;
+      box-shadow:0 14px 30px rgba(139,92,246,0.25);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .hero-mini-note{
+      margin-top:16px;
+      background:#eef2ff;
+      border:1px dashed #a5b4fc;
+      color:#4338ca;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:700;
+      text-align:center;
+    }
+
+    .speech{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      background:white;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:bold;
+      border:2px solid #cbd5e1;
+      box-shadow:0 6px 10px rgba(0,0,0,0.1);
+      opacity:0;
+      transition:opacity .5s;
+      color:#1e293b;
+      text-align:center;
+    }
+
+    .speech::after{
+      content:"";
+      position:absolute;
+      bottom:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      border-width:10px;
+      border-style:solid;
+      border-color:white transparent transparent transparent;
+    }
+
+    .hero-speech{
+      top:-62px;
+      width:250px;
+    }
+
+    /* LAB */
+    .lab-shell{
+      max-width:1280px;
+      margin:0 auto;
+      padding:32px 20px 48px;
+    }
+
+    .lab-layout{
+      display:grid;
+      grid-template-columns:320px 1fr 320px;
+      gap:24px;
+      align-items:start;
+    }
+
+    .pixel-grid{
+      display:grid;
+      grid-template-columns:repeat(10, 34px);
+      gap:2px;
+      background:#cbd5e1;
+      padding:2px;
+      border-radius:10px;
+      width:max-content;
+      margin:auto;
+    }
+
+    .cell{
+      width:34px;
+      height:34px;
+      background:#f8fafc;
+      border:1px solid #e5e7eb;
+      cursor:pointer;
+    }
+
+    .cell.active{ background:#374151; }
+    .cell.cursor{
+      outline:3px solid #ec4899;
+      outline-offset:-3px;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(10, 18px);
+      gap:2px;
+      justify-content:center;
+      margin-bottom:14px;
+    }
+
+    .mini-cell{
+      width:18px;
+      height:18px;
+      border:1px solid #d1d5db;
+      background:white;
+    }
+
+    .mini-cell.active{ background:#374151; }
+
+    .binary-box{
+      background:#0f172a;
+      color:#e2e8f0;
+      border-radius:16px;
+      padding:16px;
+      font-family:"Courier New", monospace;
+      font-size:15px;
+      line-height:1.7;
+      white-space:pre;
+      overflow:auto;
+      min-height:280px;
+    }
+
+    .control-btn{ min-width:58px; }
+    .hidden-slide{ display:none; }
+
+    @media (max-width: 1024px){
+      .home-hero-wrap{
+        grid-template-columns:1fr;
+        gap:28px;
+        padding-top:34px;
+      }
+
+      .hero-copy{
+        text-align:center;
+      }
+
+      .hero-desc{
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .hero-buttons{
+        max-width:100%;
+      }
+
+      .visual-main{
+        grid-template-columns:1fr;
+      }
+
+      .hero-float-card{
+        position:static;
+        margin-top:14px;
+        text-align:center;
+      }
+
+      .lab-layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      .hero-buttons{
+        grid-template-columns:1fr;
+      }
+
+      .hero-matrix{
+        grid-template-columns:repeat(10, 16px);
+      }
+
+      .hero-pixel{
+        width:16px;
+        height:16px;
+      }
+
+      .hero-binary{
+        font-size:12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-bg">
+    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
+      <div class="flex items-center gap-4 min-w-0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+          Direktorat Sekolah Menengah Pertama<br>
+          Direktorat Jenderal Pendidikan Anak Usia Dini,<br>
+          Pendidikan Dasar, dan Pendidikan Menengah<br>
+          Kementerian Pendidikan Dasar dan Menengah
+        </div>
+      </div>
+
+      <div class="flex items-center gap-5 shrink-0">
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+      </div>
+    </div>
+  </div>
+
+  <!-- HOMEPAGE -->
+  <section id="homePage" class="page active">
+    <div class="home-hero-wrap">
+
+      <div class="hero-copy">
+        <div class="hero-badge">🧠 Berpikir Komputasional</div>
+
+        <h1 class="hero-title">Lab Virtual<br>Representasi Gambar</h1>
+
+        <div class="hero-subtitle">
+          Dari angka 0 dan 1, gambar bisa terbentuk.
+        </div>
+
+        <p class="hero-desc">
+          Pada kegiatan ini, siswa belajar bahwa data dapat dikelola, disederhanakan,
+          dan direpresentasikan menggunakan sistem biner sehingga bisa disimpan,
+          diproses, lalu ditampilkan menjadi pola atau gambar.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button onclick="showPage('labPage')" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
+            </div>
+          </button>
+
+          <button onclick="openCPModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Capaian Pembelajaran</span>
+            </div>
+          </button>
+
+          <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            </div>
+          </button>
+
+          <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div id="heroSpeech" class="speech hero-speech">Dari 0 dan 1, gambar bisa terbentuk!</div>
+
+        <div class="visual-card">
+          <div class="visual-header">
+            <div class="visual-title">Visual Representasi Gambar</div>
+            <div class="visual-dot-wrap">
+              <div class="visual-dot"></div>
+              <div class="visual-dot"></div>
+              <div class="visual-dot"></div>
+            </div>
+          </div>
+
+          <div class="visual-main">
+            <div class="matrix-card">
+              <div class="matrix-label">Image Matrix</div>
+              <div id="heroMatrix" class="hero-matrix"></div>
+            </div>
+
+            <div class="binary-card">
+              <div class="binary-label">Binary Data Stream</div>
+              <div id="heroBinary" class="hero-binary"></div>
+            </div>
+          </div>
+
+          <div class="hero-mini-note">
+            Susunan pixel aktif dan kosong dapat membentuk pola visual.
+          </div>
+        </div>
+
+        <div class="hero-float-card">
+          10 × 10 Pixel Grid
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAB PAGE -->
+  <section id="labPage" class="page">
+    <div class="lab-shell">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl md:text-3xl font-black text-indigo-700">Representasi Gambar</h2>
+        <button onclick="showPage('homePage')" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl">
+          Kembali ke Beranda
+        </button>
+      </div>
+
+      <div class="lab-layout">
+        <!-- kiri -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
+          <h3 class="text-xl font-black text-slate-800 mb-4">Informasi Materi</h3>
+
+          <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+            <div>
+              <p class="font-bold text-slate-900">Tujuan Praktikum</p>
+              <p>Untuk memahami bagaimana data dalam situasi kehidupan sehari-hari dapat dikelola, disederhanakan, dan direpresentasikan menggunakan sistem biner (0 dan 1) sehingga mudah disimpan, diproses, dan ditampilkan.</p>
+            </div>
+
+            <div>
+              <p class="font-bold text-slate-900">Manipulator Variabel</p>
+              <ul class="list-disc ml-5">
+                <li>0 = tidak ada / tidak aktif / kosong</li>
+                <li>1 = ada / aktif / terisi</li>
+                <li>Tombol arah = memindahkan kursor</li>
+                <li>Hapus = mengosongkan pixel</li>
+              </ul>
+            </div>
+
+            <div>
+              <p class="font-bold text-slate-900">Hasil</p>
+              <p>Data biner pada grid 10 x 10 dapat menampilkan pola atau gambar.</p>
+            </div>
+          </div>
+
+          <div class="mt-6 p-4 bg-indigo-50 rounded-2xl border border-indigo-200">
+            <p id="targetTitle" class="font-bold text-indigo-900 mb-3">Target Gambar</p>
+            <div id="targetGrid" class="mini-grid"></div>
+            <div id="targetNote" class="hidden text-sm text-indigo-700 bg-white border border-indigo-200 rounded-xl p-3 mb-4 text-center">
+              Mode bebas aktif. Sekarang tidak ada target, jadi silakan membuat gambar versimu sendiri.
+            </div>
+
+            <div class="grid grid-cols-1 gap-2">
+              <button onclick="loadTarget('heart')" class="bg-indigo-700 text-white px-3 py-2 rounded-xl font-bold">Target Hati</button>
+              <button onclick="loadTarget('letterL')" class="bg-violet-700 text-white px-3 py-2 rounded-xl font-bold">Target Huruf L</button>
+              <button onclick="loadTarget('smile')" class="bg-pink-700 text-white px-3 py-2 rounded-xl font-bold">Target Senyum</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- tengah -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
+          <div class="text-center mb-5">
+            <h3 class="text-2xl font-black text-slate-800">Image Matrix 10 x 10</h3>
+            <p class="text-slate-500">Klik kotak atau gunakan tombol arah lalu tekan 0 / 1</p>
+          </div>
+
+          <div id="pixelGrid" class="pixel-grid mb-6"></div>
+
+          <div class="grid gap-5">
+            <div class="flex justify-center gap-3">
+              <button class="control-btn bg-slate-200 hover:bg-slate-300 font-bold py-3 rounded-xl" onclick="moveCursor(-1,0)">↑</button>
+            </div>
+
+            <div class="flex justify-center gap-3">
+              <button class="control-btn bg-slate-200 hover:bg-slate-300 font-bold py-3 rounded-xl" onclick="moveCursor(0,-1)">←</button>
+              <button class="control-btn bg-slate-200 hover:bg-slate-300 font-bold py-3 rounded-xl" onclick="moveCursor(1,0)">↓</button>
+              <button class="control-btn bg-slate-200 hover:bg-slate-300 font-bold py-3 rounded-xl" onclick="moveCursor(0,1)">→</button>
+            </div>
+
+            <div class="flex justify-center gap-3 flex-wrap">
+              <button class="bg-slate-800 text-white font-bold px-6 py-3 rounded-xl" onclick="setCell(0)">0</button>
+              <button class="bg-slate-800 text-white font-bold px-6 py-3 rounded-xl" onclick="setCell(1)">1</button>
+              <button class="bg-amber-500 text-white font-bold px-6 py-3 rounded-xl" onclick="deleteCell()">Hapus</button>
+              <button class="bg-red-600 text-white font-bold px-6 py-3 rounded-xl" onclick="resetGrid()">Reset</button>
+            </div>
+
+            <div class="flex justify-center gap-3 flex-wrap">
+              <button class="bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl" onclick="freeMode()">Bebas Berkarya</button>
+              <button class="bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl" onclick="openRefleksiModal()">Refleksi</button>
+            </div>
+
+            <div id="statusBox" class="bg-sky-50 border border-sky-200 rounded-2xl p-4 text-sm leading-7"></div>
+          </div>
+        </div>
+
+        <!-- kanan -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
+          <h3 class="text-xl font-black text-slate-800 mb-4">Binary Data Stream</h3>
+          <div id="binaryBox" class="binary-box"></div>
+
+          <div class="mt-6 bg-orange-50 border border-orange-200 rounded-2xl p-4">
+            <p class="font-bold text-orange-900 mb-2">Petunjuk Singkat</p>
+            <ul class="list-disc ml-5 text-sm text-slate-700 space-y-2">
+              <li>Pilih posisi pixel pada grid</li>
+              <li>Tekan 1 untuk mengisi pixel</li>
+              <li>Tekan 0 untuk mengosongkan pixel</li>
+              <li>Perhatikan perubahan data biner</li>
+              <li>Susun hingga menjadi gambar</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL CAPAIAN -->
+  <div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-6">
+        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Capaian Pembelajaran</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-4 space-y-6 text-left pb-4">
+        <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
+          <h3 class="text-2xl md:text-3xl font-bold text-indigo-900 mb-2">Elemen</h3>
+          <p class="text-xl md:text-2xl text-slate-800 font-medium">Berpikir Komputasional</p>
+        </div>
+
+        <div class="bg-purple-50 p-6 md:p-8 rounded-2xl border-l-8 border-purple-500">
+          <h3 class="text-2xl md:text-3xl font-bold text-purple-900 mb-2">Capaian Pembelajaran</h3>
+          <p class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
+            Menerapkan pengelolaan data, pemecahan masalah sederhana dalam kehidupan masyarakat secara sistematis, dan menuliskan instruksi.
+
+          </p>
+        </div>
+
+        <div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
+          <h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Pembelajaran</h3>
+          <p class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
+            Untuk memahami bagaimana data dalam situasi kehidupan sehari-hari dapat dikelola, disederhanakan, dan direpresentasikan menggunakan sistem biner (0 dan 1) sehingga mudah disimpan, diproses, dan ditampilkan.
+          </p>
+        </div>
+      </div>
+
+      <div class="shrink-0 pt-6 flex justify-center border-t-2 border-indigo-50">
+        <button onclick="closeCPModal()" class="bg-[#4f46e5] hover:bg-[#4338ca] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#3730a3] active:shadow-[0_0px_0_#3730a3] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">
+          OK, Mengerti!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CARA PENGGUNAAN -->
+  <div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-4">
+        <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+        <div class="flex justify-center gap-2 flex-wrap">
+          <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
+          <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+          <div id="dot-4" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+        </div>
+      </div>
+
+      <div class="text-left flex-1 overflow-y-auto pr-4 my-2">
+        <div id="slide-0">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">1. Mengenal Tampilan Lab Maya</h3>
+            <p class="text-lg text-slate-700 mb-4">Lab maya terdiri dari tiga bagian utama:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">1️⃣ Panel Informasi</p>
+                <p class="text-sm text-slate-700">Berisi judul materi, tujuan praktikum, manipulator variabel, dan hasil yang diharapkan.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">2️⃣ Image Matrix</p>
+                <p class="text-sm text-slate-700">Grid 10 x 10 untuk menyusun pixel menjadi pola atau gambar.</p>
+              </div>
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-lg font-bold text-slate-800 mb-2">3️⃣ Binary Data Stream</p>
+                <p class="text-sm text-slate-700">Menampilkan data 0 dan 1 sesuai kondisi pixel.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="slide-1" class="hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">2. Fungsi Tombol Kontrol</h3>
+            <table class="w-full text-left border-collapse mb-6 text-lg bg-white rounded-lg overflow-hidden shadow-sm">
+              <thead>
+                <tr class="bg-orange-200">
+                  <th class="p-3 border border-orange-300 w-1/3">Tombol</th>
+                  <th class="p-3 border border-orange-300">Fungsi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="p-3 border border-orange-300 bg-slate-50 font-bold">0</td><td class="p-3 border border-orange-300">Kondisi tidak ada / tidak aktif / kosong</td></tr>
+                <tr><td class="p-3 border border-orange-300 bg-slate-50 font-bold">1</td><td class="p-3 border border-orange-300">Kondisi ada / aktif / terisi</td></tr>
+                <tr><td class="p-3 border border-orange-300 bg-slate-50 font-bold">Atas, Bawah, Kiri, Kanan</td><td class="p-3 border border-orange-300">Memindahkan posisi kursor pada grid</td></tr>
+                <tr><td class="p-3 border border-orange-300 bg-slate-50 font-bold">Hapus</td><td class="p-3 border border-orange-300">Menghapus pixel yang dipilih</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="slide-2" class="hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">3. Langkah Percobaan</h3>
+            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-4 font-medium">
+              <li>Arahkan kursor ke salah satu kotak pada grid.</li>
+              <li>Tekan tombol <span class="bg-slate-800 text-white px-3 py-1 rounded-lg">1</span> untuk mengaktifkan pixel.</li>
+              <li>Tekan tombol <span class="bg-slate-800 text-white px-3 py-1 rounded-lg">0</span> untuk mengosongkan pixel.</li>
+              <li>Amati perubahan pada grid dan data biner.</li>
+              <li>Susun beberapa pixel aktif hingga membentuk gambar sederhana.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div id="slide-3" class="hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">4. Hasil yang Diharapkan</h3>
+            <p class="text-lg text-slate-700 leading-relaxed">
+              Data biner yang disusun dalam suatu sistem, misalnya grid pixel 10 x 10, dapat menampilkan informasi visual seperti pola atau gambar.
+            </p>
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mt-6 text-blue-900 font-medium">
+              💡 Susunan 0 dan 1 bisa membentuk tampilan visual. Komputer memang bekerja dari detail kecil yang terus diulang sampai manusia menyebutnya gambar.
+            </div>
+          </div>
+        </div>
+
+        <div id="slide-4" class="hidden-slide">
+          <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+            <h3 class="text-3xl font-black text-orange-900 mb-6 text-center">5. Tips Praktikum</h3>
+            <ul class="list-none ml-0 text-xl text-slate-700 space-y-4 mb-10 max-w-3xl mx-auto w-full">
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Perhatikan posisi baris dan kolom saat mengisi pixel.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Bandingkan selalu Image Matrix dengan Binary Data Stream.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-white p-3 rounded-lg shadow-sm border border-orange-100">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1">Gunakan tombol Hapus jika ada pixel yang salah.</span>
+              </li>
+              <li class="flex items-start gap-4 bg-lime-100 p-3 rounded-lg shadow-sm border border-lime-300">
+                <span class="text-green-600 font-black text-2xl">✔</span>
+                <span class="pt-1 font-bold">Susun data biner dengan teliti agar gambar yang terbentuk sesuai harapan.</span>
+              </li>
+            </ul>
+            <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl shadow-md">
+              Selamat Mencoba & Semangat Belajar! 🚀
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
+        <button id="prevBtn" onclick="changeSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">
+          &larr; <span class="hidden md:inline">Sebelumnya</span>
+        </button>
+
+        <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">
+          Tutup
+        </button>
+
+        <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all">
+          <span class="hidden md:inline">Selanjutnya</span> &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BIODATA -->
+  <div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+      <div class="shrink-0 mb-6">
+        <h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-4 grid grid-cols-1 md:grid-cols-2 gap-8 text-left pb-4">
+        <div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
+          <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-lime-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+          </div>
+          <h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Pengembang Materi</h3>
+          <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Kategori</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Status</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+          </div>
+        </div>
+
+        <div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
+          <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14 text-teal-600"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+          </div>
+          <h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
+          <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+            <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Judul</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+            <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Unit</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+            <p class="flex flex-col"><span class="text-teal-700 font-bold text-sm uppercase tracking-wider">Sub Unit</span> <span class="font-semibold text-slate-900">DUMMY</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrink-0 pt-6 flex justify-center border-t-2 border-lime-50">
+        <button onclick="closeBioModal()" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-2xl md:text-3xl font-bold py-4 px-16 rounded-[20px] shadow-[0_6px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[6px] transition-all duration-150 cursor-pointer w-full max-w-sm">
+          OK, Mengerti!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL REFLEKSI -->
+  <div id="refleksiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-3xl w-full shadow-2xl border-4 border-sky-100">
+      <h2 class="text-3xl md:text-4xl font-black text-sky-700 text-center mb-6">Refleksi</h2>
+      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
+        <p>1. Bagaimana angka 0 dan 1 dapat membentuk gambar?</p>
+        <p>2. Apa yang terjadi jika satu pixel diubah?</p>
+        <p>3. Mengapa komputer menggunakan representasi biner?</p>
+      </div>
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeRefleksiModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xl font-bold py-3 px-10 rounded-2xl">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BEBAS BERKARYA -->
+  <div id="freeModeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[28px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-emerald-100">
+      <h2 class="text-3xl md:text-4xl font-black text-emerald-700 text-center mb-4">
+        Mode Bebas Berkarya
+      </h2>
+
+      <div class="text-slate-700 text-lg leading-relaxed text-center space-y-3">
+        <p>Sekarang kamu bisa membuat gambar versimu sendiri.</p>
+        <p>Gunakan tombol arah untuk memilih posisi pixel, lalu tekan <b>1</b> untuk mengisi dan <b>0</b> untuk mengosongkan.</p>
+        <p class="text-emerald-700 font-bold">Susun pixel aktif dan kosong hingga menjadi pola atau gambar sesuai idemu.</p>
+      </div>
+
+      <div class="pt-6 flex justify-center">
+        <button onclick="closeFreeModeModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xl font-bold py-3 px-10 rounded-2xl">
+          Mulai Berkarya
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // PAGE SWITCH
+    // =========================
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================
+    // MODALS
+    // =========================
+    const cpModal = document.getElementById('cpModal');
+    function openCPModal(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const bioModal = document.getElementById('bioModal');
+    function openBioModal(){ bioModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeBioModal(){ bioModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const refleksiModal = document.getElementById('refleksiModal');
+    function openRefleksiModal(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeRefleksiModal(){ refleksiModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    const freeModeModal = document.getElementById('freeModeModal');
+    function openFreeModeModal(){ freeModeModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeFreeModeModal(){ freeModeModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+    // =========================
+    // CARA PENGGUNAAN SLIDES
+    // =========================
+    const caraModal = document.getElementById('caraModal');
+    let currentSlide = 0;
+    const totalSlides = 5;
+
+    function openCaraModal() {
+      caraModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      currentSlide = 0;
+      updateSlideView();
+    }
+
+    function closeCaraModal() {
+      caraModal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 0) currentSlide = 0;
+      if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+      const contentArea = caraModal.querySelector('.overflow-y-auto');
+      if(contentArea) contentArea.scrollTop = 0;
+
+      updateSlideView();
+    }
+
+    function updateSlideView() {
+      for (let i = 0; i < totalSlides; i++) {
+        document.getElementById('slide-' + i).classList.add('hidden-slide');
+        const dot = document.getElementById('dot-' + i);
+        dot.classList.remove('bg-orange-500', 'w-8');
+        dot.classList.add('bg-slate-300', 'w-3');
+      }
+
+      document.getElementById('slide-' + currentSlide).classList.remove('hidden-slide');
+      const activeDot = document.getElementById('dot-' + currentSlide);
+      activeDot.classList.remove('bg-slate-300', 'w-3');
+      activeDot.classList.add('bg-orange-500', 'w-8');
+
+      document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+      document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+    }
+
+    // =========================
+    // HERO VISUAL
+    // =========================
+    const heroPattern = [
+      "0000000000",
+      "0011001100",
+      "0111111110",
+      "0111111110",
+      "0011111100",
+      "0001111000",
+      "0000110000",
+      "0000000000",
+      "0000000000",
+      "0000000000"
+    ];
+
+    function renderHeroVisual() {
+      const matrix = document.getElementById("heroMatrix");
+      const binary = document.getElementById("heroBinary");
+      if (!matrix || !binary) return;
+
+      matrix.innerHTML = "";
+      binary.innerHTML = "";
+
+      heroPattern.forEach((row, rIndex) => {
+        [...row].forEach((val, cIndex) => {
+          const cell = document.createElement("div");
+          cell.className = "hero-pixel";
+          if (val === "1") {
+            cell.classList.add("active");
+            cell.style.animationDelay = `${(rIndex * 10 + cIndex) * 0.03}s`;
+          }
+          matrix.appendChild(cell);
+        });
+
+        const line = document.createElement("div");
+        line.className = "binary-line";
+
+        [...row].forEach((val, i) => {
+          const span = document.createElement("span");
+          span.className = val === "1" ? "binary-one" : "binary-zero";
+          span.textContent = val;
+          line.appendChild(span);
+          if (i < row.length - 1) line.appendChild(document.createTextNode(" "));
+        });
+
+        binary.appendChild(line);
+      });
+    }
+
+    function animateHeroSpeech() {
+      const bubble = document.getElementById("heroSpeech");
+      if (!bubble) return;
+
+      setTimeout(() => {
+        bubble.style.opacity = 1;
+      }, 600);
+
+      setTimeout(() => {
+        bubble.style.opacity = 0;
+      }, 4200);
+
+      setTimeout(() => {
+        bubble.style.opacity = 1;
+        bubble.textContent = "Susun pixel, baca biner, bentuk gambar.";
+      }, 5200);
+    }
+
+    // =========================
+    // LAB LOGIC
+    // =========================
+    const SIZE = 10;
+    const grid = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+    let cursor = { row: 0, col: 0 };
+    let currentTarget = 'heart';
+    let isFreeMode = false;
+
+    const targets = {
+      heart: [
+        "0000000000",
+        "0011001100",
+        "0111111110",
+        "0111111110",
+        "0011111100",
+        "0001111000",
+        "0000110000",
+        "0000000000",
+        "0000000000",
+        "0000000000"
+      ],
+      letterL: [
+        "1000000000",
+        "1000000000",
+        "1000000000",
+        "1000000000",
+        "1000000000",
+        "1000000000",
+        "1000000000",
+        "1111110000",
+        "0000000000",
+        "0000000000"
+      ],
+      smile: [
+        "0000000000",
+        "0010000100",
+        "0010000100",
+        "0000000000",
+        "0000000000",
+        "0100000010",
+        "0010000100",
+        "0001111000",
+        "0000000000",
+        "0000000000"
+      ]
+    };
+
+    function getTargetLabel(key){
+      if(key === 'heart') return 'Hati';
+      if(key === 'letterL') return 'Huruf L';
+      return 'Wajah Senyum';
+    }
+
+    function renderGrid(){
+      const container = document.getElementById('pixelGrid');
+      container.innerHTML = '';
+      for(let r=0; r<SIZE; r++){
+        for(let c=0; c<SIZE; c++){
+          const cell = document.createElement('button');
+          cell.className = 'cell';
+          if(grid[r][c] === 1) cell.classList.add('active');
+          if(cursor.row === r && cursor.col === c) cell.classList.add('cursor');
+          cell.onclick = function(){
+            cursor.row = r;
+            cursor.col = c;
+            renderGrid();
+            renderStatus();
+          };
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    function renderBinary(){
+      document.getElementById('binaryBox').textContent =
+        grid.map(row => row.join(' ')).join('\n');
+    }
+
+    function renderTargetPreview(){
+      const container = document.getElementById('targetGrid');
+      const title = document.getElementById('targetTitle');
+      const note = document.getElementById('targetNote');
+
+      container.innerHTML = '';
+
+      if(isFreeMode){
+        title.textContent = 'Mode Bebas';
+        note.classList.remove('hidden');
+        return;
+      }
+
+      title.textContent = 'Target Gambar';
+      note.classList.add('hidden');
+
+      const target = targets[currentTarget];
+      for(let r=0; r<SIZE; r++){
+        for(let c=0; c<SIZE; c++){
+          const cell = document.createElement('div');
+          cell.className = 'mini-cell' + (target[r][c] === '1' ? ' active' : '');
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    function renderStatus(){
+      const value = grid[cursor.row][cursor.col];
+      const totalActive = grid.flat().filter(v => v === 1).length;
+
+      let statusHtml =
+        '<strong>Posisi Kursor:</strong> Baris ' + (cursor.row + 1) + ', Kolom ' + (cursor.col + 1) + '<br>' +
+        '<strong>Status Pixel:</strong> ' + (value === 1 ? 'Aktif / Terisi' : 'Kosong / Tidak Aktif') + '<br>' +
+        '<strong>Jumlah Pixel Aktif:</strong> ' + totalActive + '<br>';
+
+      if(isFreeMode){
+        statusHtml += '<strong>Mode:</strong> Bebas Berkarya';
+      } else {
+        statusHtml += '<strong>Target Saat Ini:</strong> ' + getTargetLabel(currentTarget);
+      }
+
+      document.getElementById('statusBox').innerHTML = statusHtml;
+    }
+
+    function moveCursor(dr, dc){
+      cursor.row = Math.max(0, Math.min(SIZE - 1, cursor.row + dr));
+      cursor.col = Math.max(0, Math.min(SIZE - 1, cursor.col + dc));
+      renderGrid();
+      renderStatus();
+    }
+
+    function setCell(value){
+      grid[cursor.row][cursor.col] = value;
+      renderGrid();
+      renderBinary();
+      renderStatus();
+    }
+
+    function deleteCell(){
+      setCell(0);
+    }
+
+    function resetGrid(){
+      for(let r=0; r<SIZE; r++){
+        for(let c=0; c<SIZE; c++){
+          grid[r][c] = 0;
+        }
+      }
+      cursor = { row: 0, col: 0 };
+      renderGrid();
+      renderBinary();
+      renderStatus();
+    }
+
+    function loadTarget(name){
+      isFreeMode = false;
+      currentTarget = name;
+      renderTargetPreview();
+      resetGrid();
+    }
+
+    function freeMode(){
+      isFreeMode = true;
+      renderTargetPreview();
+      resetGrid();
+      openFreeModeModal();
+    }
+
+    function initLab(){
+      renderGrid();
+      renderBinary();
+      renderTargetPreview();
+      renderStatus();
+    }
+
+    // =========================
+    // INIT
+    // =========================
+    renderHeroVisual();
+    animateHeroSpeech();
+    initLab();
+  </script>
+</body>
+</html>

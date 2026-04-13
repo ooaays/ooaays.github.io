@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Virtual KA - Eksperimen NLP Interaktif</title>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
+            --step-bg: #f1f5f9;
+        }
+
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; font-weight: 800; }
+        .sub { text-align: center; color: #64748b; margin-bottom: 30px; }
+
+        .article-selector { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .btn-select { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-select:hover { background: var(--primary); color: white; }
+
+        /* Badge Disclaimer AI */
+        .ai-disclaimer {
+            background-color: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+            border: 1px dashed #cbd5e1;
+            display: none; /* Disembunyikan sampai artikel dipilih */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        textarea { width: 100%; height: 250px; padding: 15px; border-radius: 12px; border: 2px solid var(--border); font-size: 14px; box-sizing: border-box; resize: vertical; margin-bottom: 15px; background-color: #f1f5f9; color: #475569; line-height: 1.8; }
+
+        /* Panel Step-by-Step */
+        .step-container { border-left: 4px solid var(--border); padding-left: 20px; margin-left: 10px; margin-top: 30px; display: none; }
+        .step-box { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 20px; position: relative; display: none; animation: fadeIn 0.4s ease-in-out; }
+        .step-box::before { content: ''; position: absolute; left: -28px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); border: 4px solid white; box-shadow: 0 0 0 2px var(--border); }
+        .step-title { font-weight: 700; color: var(--primary); margin-bottom: 10px; display: block; font-size: 16px; }
+        
+        .btn-lanjut { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .btn-lanjut:hover { background: #4338ca; }
+
+        /* Interaktif Token */
+        .token-workspace { background: var(--step-bg); padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 10px; }
+        .token-chip { display: inline-block; background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 20px; margin: 4px; font-size: 14px; cursor: pointer; user-select: none; transition: 0.2s; }
+        .token-chip:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .token-chip.is-stopword { background: #fee2e2; border-color: #ef4444; color: #991b1b; text-decoration: line-through; }
+
+        .kalimat-box { background: #f8fafc; padding: 12px; margin-bottom: 8px; border-left: 4px solid var(--primary); border-radius: 6px; font-size: 13px; }
+        
+        /* Hasil Akhir & Info Box */
+        .hasil-box { background: #f0fdf4; border: 2px solid #bbf7d0; padding: 20px; border-radius: 12px; margin-top: 20px; display: none; }
+        .slider-container { background: #fffbeb; border: 1px solid #fde68a; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        input[type="range"] { width: 100%; margin-top: 10px; }
+        
+        .info-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .info-box h4 { margin: 0 0 8px 0; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
+        .info-box p { margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6; }
+
+        /* =========================================================
+           TAMBAHAN CSS HEADER
+           ========================================================= */
+        .header-bg { 
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1); 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            margin: -20px -20px 30px -20px;
+        } 
+
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .h-14 { height: 3.5rem; }
+        .h-12 { height: 3rem; }
+        .text-sm { font-size: 0.875rem; }
+        .leading-tight { line-height: 1.25; }
+        .font-semibold { font-weight: 600; }
+        .hidden { display: none; }
+        @media (min-width: 640px) { .sm\:block { display: block; } }
+        @media (min-width: 768px) { .md\:block { display: block; } }
+
+        /* =========================================================
+           TAMBAHAN CSS UNTUK MODAL POP-UP
+           ========================================================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 9999;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; }
+        
+        .modal-content {
+            background: white; width: 90%; max-width: 450px; padding: 30px;
+            border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            text-align: center; transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        
+        .modal-icon { font-size: 48px; margin-bottom: 15px; }
+        .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); color: var(--primary); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="header-bg flex justify-between items-center px-6 py-4"> 
+    <div class="flex items-center gap-4"> 
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14"> 
+        <div class="text-sm leading-tight font-semibold hidden md:block"> 
+            Direktorat Sekolah Menengah Pertama<br> 
+            Direktorat Jendral Pendidikan Anak Usia Dini,<br> 
+            Pendidikan Dasar, dan Pendidikan Menengah<br> 
+            Kementerian Pendidikan Dasar dan Menengah 
+        </div> 
+    </div> 
+    <div class="flex items-center gap-6"> 
+        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block"> 
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12"> 
+        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block"> 
+    </div> 
+</div>
+
+<div class="container">
+    <h1>🔬 Percobaan Ringkasan Teks dengan Eksperimen NLP</h1>
+    <p class="sub">Jadilah peneliti AI. Ikuti proses mesin memahami bahasa manusia tahap demi tahap.</p>
+
+    <div class="article-selector">
+        <button class="btn-select" onclick="loadArticle(1)">Artikel 1: AI di Sekolah</button>
+        <button class="btn-select" onclick="loadArticle(2)">Artikel 2: Pemanasan Global</button>
+    </div>
+
+    <!-- Badge Disclaimer AI (Baru ditambahkan) -->
+    <div id="ai-disclaimer" class="ai-disclaimer">
+        🤖 <i><strong>Disclaimer:</strong> Artikel yang ditampilkan di bawah ini dibuat secara otomatis (generated) oleh AI untuk keperluan eksperimen ini.</i>
+    </div>
+
+    <textarea id="teks-awal" readonly placeholder="Pilih artikel di atas untuk memulai eksperimen..."></textarea>
+    
+    <!-- Tombol Tahap 1: Mengonfirmasi Bacaan -->
+    <button id="btn-selesai-baca" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px; background-color: #10b981;" onclick="bukaModal()">👁️ Saya Sudah Selesai Membaca</button>
+    
+    <!-- Tombol Tahap 2: Mulai Eksperimen (Muncul setelah konfirmasi) -->
+    <button id="btn-mulai" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px;" onclick="mulaiEksperimen()">Mulai Eksperimen NLP 🚀</button>
+
+    <div id="jalur-eksperimen" class="step-container">
+        
+        <div id="step-1" class="step-box">
+            <span class="step-title">Tahap 1: Normalisasi Teks</span>
+            <p style="font-size: 14px; color: #475569;">Mesin menghapus semua tanda baca dan mengubah huruf menjadi kecil agar seragam.</p>
+            <div id="out-normalisasi" class="kalimat-box" style="font-family: monospace; color: #64748b; max-height: 150px; overflow-y: auto;"></div>
+            <button class="btn-lanjut" onclick="lanjutKe(2)">Lanjut ke Tokenisasi & Stopwords ➔</button>
+        </div>
+
+        <div id="step-2" class="step-box">
+            <span class="step-title">Tahap 2: Tokenisasi & Seleksi Stopwords (Tugas Anda!)</span>
+            <p style="font-size: 14px; color: #475569;">Teks telah dipecah menjadi kata (Token). <strong style="color:var(--primary)">Tugas Anda:</strong> Klik kata-kata yang menurut Anda tidak memiliki arti penting (kata hubung, imbuhan) untuk mencoretnya. Mesin akan mengabaikan kata yang Anda coret.</p>
+            
+            <div id="workspace-token" class="token-workspace"></div>
+            
+            <button class="btn-lanjut" onclick="lanjutKe(3)">Selesai Memilih, Lanjut Hitung Kata Kunci ➔</button>
+        </div>
+
+        <div id="step-3" class="step-box">
+            <span class="step-title">Tahap 3: Hitung Frekuensi (Kata Kunci Utama)</span>
+            <p style="font-size: 14px; color: #475569;">Berdasarkan sisa kata yang tidak Anda coret, mesin menghitung kata apa yang paling sering muncul.</p>
+            <div id="out-frekuensi" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
+            <button class="btn-lanjut" onclick="lanjutKe(4)">Lanjut ke Pembobotan Kalimat ➔</button>
+        </div>
+
+        <div id="step-4" class="step-box">
+            <span class="step-title">Tahap 4: Pembobotan Kalimat</span>
+            <p style="font-size: 14px; color: #475569;">Mesin membaca ulang teks awal dan memberikan skor pada tiap kalimat berdasarkan jumlah kata kunci di dalamnya.</p>
+            <div id="out-pembobotan" style="max-height: 250px; overflow-y: auto;"></div>
+            <button class="btn-lanjut" onclick="lanjutKe(5)">Lanjut ke Tahap Rangkuman ➔</button>
+        </div>
+
+        <div id="step-5" class="step-box">
+            <span class="step-title">Tahap Akhir: Ekstraksi Rangkuman</span>
+
+            <div class="info-box">
+                <h4>💡 Tahukah Kamu? Mengapa Stopwords (dan, di, yang) muncul lagi di sini?</h4>
+                <p>Di tahap sebelumnya (dapur mesin), AI membuang kata-kata tersebut hanya untuk memudahkan perhitungan matematika skor kalimat. Namun, setelah AI menemukan kalimat "pemenang" dengan skor tertinggi, AI akan <strong>mengekstrak (mengambil) kalimat aslinya secara utuh</strong> dari teks awal. Metode ini disebut <strong>Rangkuman Ekstraktif</strong>, agar hasil akhirnya tetap enak dibaca oleh manusia, bukan terdengar seperti bahasa robot yang kaku!</p>
+            </div>
+            
+            <div class="slider-container">
+                <label style="font-weight:bold; color:#92400e;">Mau ambil berapa kalimat terbaik untuk dirangkum?</label>
+                <div style="font-size: 24px; font-weight: 800; color: #b45309; text-align: center; margin-top: 10px;" id="val-kalimat">3 Kalimat</div>
+                <input type="range" id="input-slider" min="1" max="7" value="3" oninput="updateSlider(this.value)" onchange="tampilkanHasil()">
+            </div>
+
+            <div id="hasil-akhir" class="hasil-box"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ==========================================
+     MODAL POP-UP KONFIRMASI MEMBACA
+     ========================================== -->
+<div id="read-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon">🧠</div>
+        <h2 style="color: var(--primary); margin-top: 0;">Kerja Bagus!</h2>
+        <p style="color: #475569; font-size: 15px;">Sebagai peneliti, kita harus mengerti isi teksnya terlebih dahulu sebelum mengajarkan mesin (AI) untuk memahaminya.</p>
+        <p style="font-weight: bold; margin-bottom: 25px;">Apakah kamu sudah paham inti dari artikel ini?</p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn-lanjut btn-outline" style="margin-top: 0;" onclick="tutupModal()">Belum, mau baca lagi</button>
+            <button class="btn-lanjut" style="margin-top: 0; background-color: #4f46e5;" onclick="konfirmasiLanjut()">Sudah, Buka Kunci NLP!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const dummyArticles = {
+    1: `Kecerdasan buatan atau AI kini mulai masuk secara masif ke ruang kelas di berbagai sekolah dasar hingga perguruan tinggi. Guru menggunakan teknologi cerdas ini untuk membantu membuat materi pelajaran yang lebih interaktif dan menarik bagi murid. Platform pembelajaran berbasis AI mampu menyesuaikan tingkat kesulitan soal dengan kemampuan masing-masing siswa secara real-time. Hal ini menciptakan pengalaman belajar yang sangat personal, di mana siswa yang lambat bisa dibimbing perlahan, sementara yang cepat bisa langsung melaju ke materi berikutnya.\n\nSiswa juga merasa sangat terbantu karena aplikasi AI dapat menjawab pertanyaan mereka secara cepat dan akurat kapan saja, bahkan di luar jam sekolah. Tugas-tugas yang membosankan seperti mengoreksi ujian pilihan ganda kini bisa diambil alih oleh sistem. Efisiensi ini memberikan waktu ekstra bagi para guru untuk lebih fokus pada perencanaan strategi mengajar. Namun, kemudahan akses informasi ini juga memunculkan tantangan baru terkait plagiarisme dan penurunan daya analisis kritis siswa jika terlalu bergantung pada AI.\n\nOleh karena itu, penggunaan teknologi cerdas ini harus selalu diawasi dengan ketat agar murid tidak menjadi malas berpikir. Sekolah perlu merumuskan kebijakan yang jelas tentang batasan penggunaan AI dalam pengerjaan tugas akademik harian. Manusia tetap menjadi faktor penentu utama dalam pendidikan moral, etika, dan karakter. Sentuhan empati dari seorang pendidik sejati adalah hal krusial yang selamanya tidak akan pernah bisa digantikan oleh mesin canggih apapun.`,
+    
+    2: `Pemanasan global adalah ancaman nyata yang sedang dihadapi oleh seluruh makhluk hidup di penduduk bumi saat ini. Suhu rata-rata atmosfer dan lautan terus mengalami peningkatan secara drastis setiap tahunnya karena efek gas rumah kaca. Aktivitas industri berskala besar dan pembakaran bahan bakar fosil menjadi penyumbang utama emisi karbon yang merusak lapisan ozon. Jika tren suhu ekstrem ini tidak segera dihentikan, para ilmuwan memprediksi banyak wilayah daratan akan tenggelam dalam beberapa dekade mendatang.\n\nDampak langsung dari fenomena ini sudah sangat terlihat jelas di berbagai belahan benua. Es di kutub utara mencair dengan sangat cepat sehingga mengancam habitat alami satwa seperti beruang kutub dan anjing laut. Banjir rob mulai sering terjadi secara mengerikan di berbagai kawasan pesisir akibat naiknya permukaan air laut secara global. Selain itu, pola cuaca menjadi sangat tidak menentu, memicu badai hebat, kekeringan panjang, dan gagal panen yang mengancam ketahanan pangan dunia.\n\nUntuk mengatasi krisis iklim ini, pemerintah dan warga dunia harus segera mengambil langkah konkret untuk mengurangi jejak emisi karbon. Peralihan dari energi batu bara menuju sumber energi terbarukan seperti panel surya dan kincir angin harus dipercepat secara masif. Penanaman kembali hutan yang gundul juga sangat penting untuk menyerap kembali gas karbon dioksida dari udara bebas. Pada akhirnya, kesadaran kolektif untuk menjaga kelestarian lingkungan adalah kunci utama agar bumi tetap aman untuk ditinggali oleh generasi penerus.`
+};
+
+// Variabel Global untuk menyimpan data antar tahap
+let teksRaw = "";
+let teksNormal = "";
+let tokensUnik = [];
+let userStopwords = new Set();
+let frekuensiKata = {};
+let skorKalimatData = [];
+
+function loadArticle(id) { 
+    teksRaw = dummyArticles[id];
+    document.getElementById('teks-awal').value = teksRaw; 
+    
+    // Tampilkan label/badge disclaimer AI
+    document.getElementById('ai-disclaimer').style.display = 'block';
+    
+    // Reset logika tombol
+    document.getElementById('btn-selesai-baca').style.display = 'block';
+    document.getElementById('btn-mulai').style.display = 'none';
+    
+    // Reset View
+    document.getElementById('jalur-eksperimen').style.display = 'none';
+    for(let i=1; i<=5; i++) { document.getElementById('step-'+i).style.display = 'none'; }
+    document.getElementById('hasil-akhir').style.display = 'none';
+}
+
+/* ==========================================
+   LOGIKA MODAL POP-UP 
+   ========================================== */
+const modal = document.getElementById('read-modal');
+
+function bukaModal() {
+    modal.style.display = 'flex';
+    // Timeout sedikit untuk memicu efek transisi CSS
+    setTimeout(() => { modal.classList.add('show'); }, 10);
+}
+
+function tutupModal() {
+    modal.classList.remove('show');
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
+}
+
+function konfirmasiLanjut() {
+    tutupModal();
+    // Ganti tombol menjadi "Mulai Eksperimen"
+    document.getElementById('btn-selesai-baca').style.display = 'none';
+    document.getElementById('btn-mulai').style.display = 'block';
+}
+
+/* ==========================================
+   LOGIKA EKSPERIMEN NLP
+   ========================================== */
+function mulaiEksperimen() {
+    document.getElementById('jalur-eksperimen').style.display = 'block';
+    document.getElementById('btn-mulai').style.display = 'none';
+    document.getElementById('step-1').style.display = 'block';
+    
+    // Eksekusi Logika Tahap 1
+    teksNormal = teksRaw.toLowerCase().replace(/[.,!?'"]/g,"").replace(/\n+/g, " ");
+    document.getElementById('out-normalisasi').innerText = teksNormal;
+}
+
+function lanjutKe(step) {
+    document.getElementById('step-'+step).style.display = 'block';
+    
+    if(step === 2) siapkanTahap2();
+    if(step === 3) siapkanTahap3();
+    if(step === 4) siapkanTahap4();
+    if(step === 5) {
+        document.getElementById('hasil-akhir').style.display = 'block';
+        tampilkanHasil();
+    }
+    
+    // Scroll otomatis ke tahap baru
+    document.getElementById('step-'+step).scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function siapkanTahap2() {
+    let workspace = document.getElementById('workspace-token');
+    workspace.innerHTML = "";
+    userStopwords.clear();
+
+    // Ambil kata unik dari teks untuk dijadikan label (Maksimal 60 kata agar bervariasi)
+    let semuaTokens = teksNormal.split(/\s+/);
+    tokensUnik = [...new Set(semuaTokens)].slice(0, 60); 
+
+    tokensUnik.forEach(kata => {
+        if(!kata) return;
+        let chip = document.createElement('div');
+        chip.className = 'token-chip';
+        chip.innerText = kata;
+        
+        // Buat interaktif klik
+        chip.onclick = function() {
+            this.classList.toggle('is-stopword');
+            if(this.classList.contains('is-stopword')) {
+                userStopwords.add(kata);
+            } else {
+                userStopwords.delete(kata);
+            }
+        };
+
+        workspace.appendChild(chip);
+    });
+}
+
+function siapkanTahap3() {
+    let semuaTokens = teksNormal.split(/\s+/);
+    frekuensiKata = {};
+
+    // Hitung kata yang BUKAN stopword yang dipilih user
+    semuaTokens.forEach(kata => {
+        if(kata && !userStopwords.has(kata)) {
+            frekuensiKata[kata] = (frekuensiKata[kata] || 0) + 1;
+        }
+    });
+
+    let outFreq = document.getElementById('out-frekuensi');
+    outFreq.innerHTML = "";
+    
+    // Urutkan dari yang terbanyak
+    let sortedFreq = Object.entries(frekuensiKata).sort((a,b)=>b[1]-a[1]).slice(0, 10); // Ambil Top 10
+    
+    sortedFreq.forEach(([kata, jumlah]) => {
+        outFreq.innerHTML += `<div style="background:var(--primary-light); padding:8px 15px; border-radius:8px; border:1px solid var(--primary); font-weight:bold; color:var(--primary);">
+            ${kata} <span style="background:white; padding:2px 8px; border-radius:12px; font-size:12px; margin-left:5px;">${jumlah}x</span>
+        </div>`;
+    });
+}
+
+function siapkanTahap4() {
+    // Normalisasi enter menjadi spasi hanya untuk proses pembobotan
+    let teksSatuBaris = teksRaw.replace(/\n+/g, " ");
+    let kalimatList = teksSatuBaris.split(/[.!?](?=\s|$)/).map(k => k.trim()).filter(k => k.length > 5);
+    
+    skorKalimatData = [];
+    let outPembobotan = document.getElementById('out-pembobotan');
+    outPembobotan.innerHTML = "";
+
+    kalimatList.forEach((k, idx) => {
+        let skor = 0;
+        let words = k.toLowerCase().replace(/[.,]/g,"").split(/\s+/);
+        
+        words.forEach(w => { if(frekuensiKata[w]) skor += frekuensiKata[w]; });
+        
+        skorKalimatData.push({teks: k, skor: skor, idAsli: idx}); 
+        
+        outPembobotan.innerHTML += `<div class='kalimat-box'>
+            ${k}. <br>
+            <div style="margin-top:5px; font-size:11px; font-weight:bold; color:white; background:var(--primary); display:inline-block; padding:3px 8px; border-radius:4px;">
+                Skor Bobot: ${skor}
+            </div>
+        </div>`;
+    });
+}
+
+function updateSlider(val) { document.getElementById('val-kalimat').innerText = val + " Kalimat"; }
+
+function tampilkanHasil() {
+    let target = parseInt(document.getElementById('input-slider').value);
+    let hasilAkhirBox = document.getElementById('hasil-akhir');
+    
+    // Sortir berdasarkan skor tertinggi, lalu potong sesuai target slider
+    let topKalimat = [...skorKalimatData].sort((a,b) => b.skor - a.skor).slice(0, target);
+    
+    // Kembalikan ke urutan paragraf asli agar enak dibaca
+    topKalimat.sort((a,b) => a.idAsli - b.idAsli);
+
+    hasilAkhirBox.innerHTML = "<h3 style='margin-top:0; color:#166534;'>📑 Hasil Rangkuman:</h3>";
+    hasilAkhirBox.innerHTML += "<p style='font-size:16px; line-height:1.8; color:#064e3b; font-weight:500;'>" + topKalimat.map(h => h.teks + ".").join(" ") + "</p>";
+}
+</script>
+
+</body>
+</html>
