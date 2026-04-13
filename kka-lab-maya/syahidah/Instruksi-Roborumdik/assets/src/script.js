@@ -1,11 +1,14 @@
+
 // ==============================================
-// SCRIPT ANIMASI BALON TEKS ROBOT (TEMA AI)
+// SCIPT ANIMASI BALON TEKS ROBOT
 // ==============================================
 const texts = [
-"Hai Murid Hebat!",
-"Selamat datang di Lab Klasifikasi",
-"Kita akan melatih AI untuk mengenali hewan",
-"Yuk, mulai percobaannya!"
+"Hai Murid Hebat !",
+"Namaku Roborumdik",
+"Bantu aku berikan aku instruksi",
+"Instruksi untuk gerakan tarian yang menarik",
+"Aku bisa mengikuti instruksi yang kamu berikan !",
+"Semangat ! Kita Pasti Bisa !"
 ]
 let index=0
 const speech=document.getElementById("speech")
@@ -22,68 +25,17 @@ setTimeout(showText,1000)
 // SCRIPT MODAL CAPAIAN PEMBELAJARAN
 // ==============================================
 const cpModal = document.getElementById('cpModal');
-const startBtn = document.getElementById('startBtn');
-let hasSeenTujuan = false;
-let hasSeenCara = false;
-
-function updateStartButton() {
-    const unlocked = hasSeenTujuan && hasSeenCara;
-    if (!startBtn) return;
-
-    if (unlocked) {
-        startBtn.classList.remove('opacity-50', 'pointer-events-none', 'cursor-not-allowed');
-        startBtn.classList.add('cursor-pointer');
-        startBtn.setAttribute('href', 'lab.html');
-        startBtn.removeAttribute('aria-disabled');
-        startBtn.title = 'Klik untuk mulai percobaan';
-    } else {
-        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        startBtn.classList.remove('cursor-pointer');
-        startBtn.removeAttribute('href');
-        startBtn.setAttribute('aria-disabled', 'true');
-        startBtn.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu untuk mulai percobaan';
-    }
-}
-
-function tryStartPercobaan(event) {
-    if (!hasSeenTujuan || !hasSeenCara) {
-        event.preventDefault();
-        openStartLockedPopup();
-    }
-}
-
-const lockedPopup = document.getElementById('lockedPopup');
-function openStartLockedPopup() {
-    if (!lockedPopup) return;
-    lockedPopup.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-function closeStartLockedPopup() {
-    if (!lockedPopup) return;
-    lockedPopup.classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-function openCPModal() {
-    hasSeenTujuan = true;
-    updateStartButton();
-    cpModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
+function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
 function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
-
-updateStartButton();
 
 // ==============================================
 // SCRIPT MODAL CARA PENGGUNAAN (9 SLIDES)
 // ==============================================
 const caraModal = document.getElementById('caraModal');
 let currentSlide = 0;
-const totalSlides = 5;
+const totalSlides = 9;
 
 function openCaraModal() {
-    hasSeenCara = true;
-    updateStartButton();
     caraModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
@@ -109,38 +61,30 @@ function changeSlide(direction) {
 
 function updateSlideView() {
     for (let i = 0; i < totalSlides; i++) {
-        let slide = document.getElementById('slide-' + i);
-        if (slide) slide.classList.add('hidden');
-        
+        document.getElementById('slide-' + i).classList.add('hidden');
         let dot = document.getElementById('dot-' + i);
-        if (dot) {
-            dot.classList.remove('bg-orange-500', 'w-8');
-            dot.classList.add('bg-slate-300', 'w-3');
-        }
+        dot.classList.remove('bg-orange-500', 'w-8');
+        dot.classList.add('bg-slate-300', 'w-3');
     }
     
-    let activeSlide = document.getElementById('slide-' + currentSlide);
-    if (activeSlide) activeSlide.classList.remove('hidden');
-    
+    document.getElementById('slide-' + currentSlide).classList.remove('hidden');
     let activeDot = document.getElementById('dot-' + currentSlide);
-    if (activeDot) {
-        activeDot.classList.remove('bg-slate-300', 'w-3');
-        activeDot.classList.add('bg-orange-500', 'w-8');
-    }
+    activeDot.classList.remove('bg-slate-300', 'w-3');
+    activeDot.classList.add('bg-orange-500', 'w-8');
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
     if (currentSlide === 0) { 
-        if (prevBtn) prevBtn.style.visibility = 'hidden'; 
+        prevBtn.style.visibility = 'hidden'; 
     } else { 
-        if (prevBtn) prevBtn.style.visibility = 'visible'; 
+        prevBtn.style.visibility = 'visible'; 
     }
     
     if (currentSlide === totalSlides - 1) { 
-        if (nextBtn) nextBtn.style.visibility = 'hidden'; 
+        nextBtn.style.visibility = 'hidden'; 
     } else { 
-        if (nextBtn) nextBtn.style.visibility = 'visible'; 
+        nextBtn.style.visibility = 'visible'; 
     }
 }
 

@@ -1,6 +1,6 @@
 CD nama-folder
 npm init -y
-npm install -D tailwindcss
+npm install -D @tailwindcss/cli
 buat folder assets/src
 buat file input.css
 
