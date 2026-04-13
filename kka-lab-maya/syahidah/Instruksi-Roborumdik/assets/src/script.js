@@ -25,7 +25,50 @@ setTimeout(showText,1000)
 // SCRIPT MODAL CAPAIAN PEMBELAJARAN
 // ==============================================
 const cpModal = document.getElementById('cpModal');
-function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+const startBtn = document.getElementById('startBtn');
+let hasSeenTujuan = false;
+let hasSeenCara = false;
+const lockedPopup = document.getElementById('lockedPopup');
+
+function updateStartButton() {
+    const unlocked = hasSeenTujuan && hasSeenCara;
+    if (!startBtn) return;
+
+    if (unlocked) {
+        startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        startBtn.classList.add('cursor-pointer');
+        startBtn.setAttribute('href', 'lab.html');
+        startBtn.removeAttribute('aria-disabled');
+        startBtn.title = 'Klik untuk mulai percobaan';
+    } else {
+        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        startBtn.classList.remove('cursor-pointer');
+        startBtn.removeAttribute('href');
+        startBtn.setAttribute('aria-disabled', 'true');
+        startBtn.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu untuk mulai percobaan';
+    }
+}
+
+function tryStartPercobaan(event) {
+    if (!hasSeenTujuan || !hasSeenCara) {
+        event.preventDefault();
+        openLockedPopup();
+    }
+}
+
+function openLockedPopup() {
+    if (!lockedPopup) return;
+    lockedPopup.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLockedPopup() {
+    if (!lockedPopup) return;
+    lockedPopup.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function openCPModal() { hasSeenTujuan = true; updateStartButton(); cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
 function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
 // ==============================================
@@ -36,6 +79,8 @@ let currentSlide = 0;
 const totalSlides = 9;
 
 function openCaraModal() {
+    hasSeenCara = true;
+    updateStartButton();
     caraModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
@@ -94,3 +139,5 @@ function updateSlideView() {
 const bioModal = document.getElementById('bioModal');
 function openBioModal() { bioModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
 function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+updateStartButton();
