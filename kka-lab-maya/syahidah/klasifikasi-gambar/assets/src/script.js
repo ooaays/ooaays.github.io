@@ -37,12 +37,31 @@ function updateStartButton() {
         startBtn.removeAttribute('aria-disabled');
         startBtn.title = 'Klik untuk mulai percobaan';
     } else {
-        startBtn.classList.add('opacity-50', 'pointer-events-none', 'cursor-not-allowed');
+        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
         startBtn.classList.remove('cursor-pointer');
         startBtn.removeAttribute('href');
         startBtn.setAttribute('aria-disabled', 'true');
         startBtn.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu untuk mulai percobaan';
     }
+}
+
+function tryStartPercobaan(event) {
+    if (!hasSeenTujuan || !hasSeenCara) {
+        event.preventDefault();
+        openStartLockedPopup();
+    }
+}
+
+const lockedPopup = document.getElementById('lockedPopup');
+function openStartLockedPopup() {
+    if (!lockedPopup) return;
+    lockedPopup.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+function closeStartLockedPopup() {
+    if (!lockedPopup) return;
+    lockedPopup.classList.add('hidden');
+    document.body.style.overflow = 'auto';
 }
 
 function openCPModal() {
