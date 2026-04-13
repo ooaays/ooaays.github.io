@@ -130,17 +130,52 @@
     let currentExpIndex = 0; let currentStepIndex = 0; let unlockedExpIndex = 0;
     const tutorialPanel = document.getElementById('tutorial-panel');
     const tutorialMinimizedBar = document.getElementById('tutorial-minimized-bar');
+    const tutorialRestoreCountdown = document.getElementById('tutorial-restore-countdown');
     const btnNextTut = document.getElementById('btn-next-tut');
     let tutorialRunTriggered = false;
     let tutorialMinimized = false;
     let tutorialAutoMinimized = false;
     let tutorialRestoreTimeout = null;
+    let tutorialRestoreInterval = null;
 
     function clearTutorialRestoreTimeout() {
         if (tutorialRestoreTimeout) {
             clearTimeout(tutorialRestoreTimeout);
             tutorialRestoreTimeout = null;
         }
+        if (tutorialRestoreInterval) {
+            clearInterval(tutorialRestoreInterval);
+            tutorialRestoreInterval = null;
+        }
+        if (tutorialRestoreCountdown) {
+            tutorialRestoreCountdown.classList.add('hidden');
+            tutorialRestoreCountdown.innerText = '';
+        }
+    }
+
+    function startTutorialRestoreCountdown(seconds) {
+        clearTutorialRestoreTimeout();
+        if (!tutorialRestoreCountdown || !tutorialMinimizedBar) return;
+        let remaining = seconds;
+        tutorialRestoreCountdown.classList.remove('hidden');
+        tutorialRestoreCountdown.innerText = `Buka dalam ${remaining}s`;
+
+        tutorialRestoreInterval = setInterval(() => {
+            remaining -= 1;
+            if (remaining <= 0) {
+                clearInterval(tutorialRestoreInterval);
+                tutorialRestoreInterval = null;
+                return;
+            }
+            tutorialRestoreCountdown.innerText = `Buka dalam ${remaining}s`;
+        }, 1000);
+
+        tutorialRestoreTimeout = setTimeout(() => {
+            clearTutorialRestoreTimeout();
+            if (tutorialMinimized && !tutorialAutoMinimized) {
+                restoreTutorialPanel();
+            }
+        }, seconds * 1000);
     }
 
     function minimizeTutorialPanel() {
@@ -222,12 +257,7 @@
             const nextText = (currentStepIndex === experiments[currentExpIndex].steps.length - 1) ? "Selesai Tahap Ini ✔" : "Benar! Lanjut ➔";
             btnNextTut.innerText = nextText;
             if (tutorialMinimized && nextText.includes('Benar! Lanjut')) {
-                clearTutorialRestoreTimeout();
-                tutorialRestoreTimeout = setTimeout(() => {
-                    if (tutorialMinimized && !tutorialAutoMinimized) {
-                        restoreTutorialPanel();
-                    }
-                }, 3000);
+                startTutorialRestoreCountdown(3);
             }
         } else {
             clearTutorialRestoreTimeout();
@@ -535,8 +565,15 @@
         if (myRunId === currentRunId) {
             isRunning = false;
             document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
-            await sleep(3000);
-            autoRestoreTutorialPanel();
+            if (tutorialMinimized && tutorialAutoMinimized) {
+                startTutorialRestoreCountdown(3);
+                await sleep(3000);
+                clearTutorialRestoreTimeout();
+                autoRestoreTutorialPanel();
+            } else {
+                await sleep(3000);
+                autoRestoreTutorialPanel();
+            }
         }
     }
 
