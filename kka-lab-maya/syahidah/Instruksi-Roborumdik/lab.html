@@ -129,8 +129,9 @@
                     <div class="h-full w-[1px] bg-black absolute left-1/2"></div>
                 </div>
 
-                <div id="sprite-robot" class="sprite-container absolute left-1/2 top-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center text-5xl z-10">
-                    <i class="fa-solid fa-robot"></i><div id="bubble-robot" class="speech-bubble hidden font-bold shadow-lg"></div>
+                <div id="sprite-robot" class="sprite-container absolute left-1/2 top-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center z-10">
+                    <img src="assets/src/Roborumdik.png" alt="Roborumdik" class="w-full h-full object-contain" />
+                    <div id="bubble-robot" class="speech-bubble hidden font-bold shadow-lg"></div>
                 </div>
                 <div id="sprite-battery" class="sprite-container absolute left-1/2 top-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center text-5xl z-10" style="transform: translate(100px, -100px);">
                     <i class="fa-solid fa-battery-full"></i><div id="bubble-battery" class="speech-bubble hidden font-bold shadow-lg"></div>
@@ -162,7 +163,7 @@
             </div>
             
             <div id="success-overlay" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
-                <div class="text-7xl mb-4 flex items-center justify-center gap-4 text-teal-600"><i class="fa-solid fa-star"></i><i class="fa-solid fa-robot"></i><i class="fa-solid fa-star"></i></div>
+                <div class="text-7xl mb-4 flex items-center justify-center gap-4 text-teal-600"><i class="fa-solid fa-star"></i><img src="assets/src/Roborumdik.png" alt="Roborumdik" class="w-16 h-16 object-contain" /><i class="fa-solid fa-star"></i></div>
                 <h2 class="text-3xl font-black text-teal-600 mb-2">Luar Biasa!</h2>
                 <p class="text-slate-700 font-bold mb-6">Kamu telah berhasil menyelesaikan semua 4 percobaan dengan sempurna.</p>
                 <button onclick="document.getElementById('success-overlay').classList.add('hidden'); tutorialPanel.classList.add('hidden');" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all text-lg border-b-4 border-blue-700 active:border-b-0 active:translate-y-1">Bebas Berkreasi & Mainkan!</button>
