@@ -34,7 +34,8 @@ const consoleOut = document.getElementById("output");
 
 function printConsole(msg, isError = false) {
     const time = new Date().toLocaleTimeString('id-ID', {hour12:false});
-    consoleOut.textContent += `\n[${time}] ${isError ? "❌" : "✅"} ${msg}`;
+    const icon = isError ? '<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>' : '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>';
+    consoleOut.innerHTML += `\n[${time}] ${icon} ${msg}`;
     consoleOut.scrollTop = consoleOut.scrollHeight;
 }
 
@@ -83,7 +84,7 @@ grupPembeli.addEventListener('click', () => {
         let jr = document.getElementById('val_jr').value; 
         let js = document.getElementById('val_js').value;
         let uang = document.getElementById('val_uang').value;
-        popupText.innerHTML = `<b>DATA KERANJANG TERSIMPAN:</b><br><br>🍞 Roti: ${jr} bungkus<br>🥛 Susu: ${js} kotak<br>💵 Uang Bawaan: Rp ${uang}`;
+        popupText.innerHTML = `<b>DATA KERANJANG TERSIMPAN:</b><br><br><i class="fa-solid fa-bread-slice" aria-hidden="true"></i> Roti: ${jr} bungkus<br><i class="fa-solid fa-mug-saucer" aria-hidden="true"></i> Susu: ${js} kotak<br><i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i> Uang Bawaan: Rp ${uang}`;
         popup.style.display = 'block';
     }
 });
@@ -413,7 +414,7 @@ document.getElementById('runCodeBtn').addEventListener('click', () => {
 
     ${info}`
     )
-    popupText.innerHTML = "<b>HEBAT! 🎉</b><br><br>Kamu berhasil menyelesaikan simulasi dan mengeksekusi program Kasir Virtual menggunakan Python!";
+    popupText.innerHTML = "<b><i class=\"fa-solid fa-party-horn\" aria-hidden=\"true\"></i> HEBAT!</b><br><br>Kamu berhasil menyelesaikan simulasi dan mengeksekusi program Kasir Virtual menggunakan Python!";
     popup.style.display = 'block';
 });
 

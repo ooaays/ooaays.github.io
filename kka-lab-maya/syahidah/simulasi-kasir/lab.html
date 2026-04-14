@@ -8,6 +8,7 @@
     <script type="text/javascript" src="assets/src/brython/brython_stdlib.min.js"></script>
     <link href="assets/src/output.css" rel="stylesheet">
     <link href="assets/src/style-lab.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body onload="brython()">
@@ -32,7 +33,7 @@
         <a href="index.html" class="back-btn">
             &#8592; Kembali
         </a>
-        <h2>🛒 Kasir Virtual</h2>
+        <h2><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Kasir Virtual</h2>
     </div>
     <div class="step-indicator">
         <div class="dot-wrapper active" id="dw1"><div class="dot active"></div><span class="dot-label">1. Cek</span></div>
@@ -230,31 +231,31 @@
                 <p class="stage-desc">Sebelum merakit program, <b>sentuh gambar pembeli & keranjangnya</b> di layar untuk mengecek data barang bawaan mereka!</p>
             </div>
             <div class="stage-card" id="stage2">
-                <div class="stage-title">Langkah 2: Inisialisasi Data ✍️</div>
+                <div class="stage-title"><i class="fa-solid fa-pen" aria-hidden="true"></i> Langkah 2: Inisialisasi Data</div>
                 <p class="stage-desc">Keranjang terdeteksi kosong! Buka panel kanan. Isi kotak <b>harga</b>, <b>jumlah</b>, dan <b>uang_pembeli</b>. Sentuh "Verifikasi & Lanjut" jika sudah.</p>
             </div>
             <div class="stage-card" id="stage3">
-                <div class="stage-title">Langkah 3: Tulis Sapaanmu! 🗣️</div>
+                <div class="stage-title"><i class="fa-solid fa-comments" aria-hidden="true"></i> Langkah 3: Tulis Sapaanmu!</div>
                 <p class="stage-desc">Sentuh dan tempel di workspace <br>1. <code> def</code>,<br>2.  <code>menyapa():</code>, dan <br> 3.<code>return</code> <br> untuk merakit fungsi. Lalu <b>ketik kalimat sapaan karyamu</b> di kotak hijau.</p>
             </div>
             <div class="stage-card" id="stage4">
-                <div class="stage-title">Langkah 4: Cek Perubahan 🛒</div>
+                <div class="stage-title"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Langkah 4: Cek Perubahan</div>
                 <p class="stage-desc">Hebat! Balon percakapan kasir kini muncul. Sekarang, <b>sentuh keranjang pembeli lagi</b> untuk melihat apakah data belanja yang kamu buat tersimpan.</p>
             </div>
             <div class="stage-card" id="stage5">
-                <div class="stage-title">Langkah 5: Sintaks Total 🧩</div>
+                <div class="stage-title"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Langkah 5: Sintaks Total</div>
                 <p class="stage-desc">Susun rumus fungsi <code>total():</code>.<br>Pola rumus: <i>(jumlah_roti × harga_roti) + (jumlah_susu × harga_susu)</i>.</p>
             </div>
             <div class="stage-card" id="stage6">
-                <div class="stage-title">Langkah 6: Panggil Kasir 👨‍💼</div>
+                <div class="stage-title"><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Langkah 6: Panggil Kasir</div>
                 <p class="stage-desc">Fungsi perhitungan selesai! <b>Sentuh karakter Kasir</b> di layar agar ia memproses total belanja menggunakan rumus buatanmu!</p>
             </div>
             <div class="stage-card" id="stage7">
-                <div class="stage-title">Langkah 7: Fungsi Kembalian 💵</div>
+                <div class="stage-title"><i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i> Langkah 7: Fungsi Kembalian</div>
                 <p class="stage-desc">Rakit fungsi <code>kembalian(total_bayar)</code>. Gunakan variabel <code>uang_pembeli</code> dan kurangi dengan <code>total_bayar</code>.</p>
             </div>
             <div class="stage-card" id="stage8">
-                <div class="stage-title">Langkah 8: Eksekusi Akhir 🚀</div>
+                <div class="stage-title"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Langkah 8: Eksekusi Akhir</div>
                 <p class="stage-desc">Kode cerdasmu telah terangkai penuh! <b>Sentuh kembali karakter Kasir</b> untuk menjalankan skrip Python & mencetak struk di konsol!</p>
             </div>
         </div>
@@ -348,7 +349,7 @@
 
 <div id="bottom-panel">
     <div class="control-bar">
-        <span style="color: white; font-weight: bold; font-size: 15px;">🖥️ Python Console Output</span>
+        <span style="color: white; font-weight: bold; font-size: 15px;"><i class="fa-solid fa-terminal" aria-hidden="true"></i> Python Console Output</span>
         <div class="btn-group">
             <button id="resetCode">Reset Workspace</button>
             <button id="btnAction">Sentuh Layar di Kiri...</button>
