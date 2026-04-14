@@ -134,6 +134,7 @@ border-radius: 12px; cursor: pointer; transition: all 0.3s; box-shadow: var(--sh
 display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 400px; margin: 30px auto 0;
 }
 .btn-modern:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn-modern.disabled-style { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 .btn-modern:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; transform: none; box-shadow: none; }
 
 .btn-warning { background: var(--warning); }

@@ -24,6 +24,8 @@
     let placedItems = 0;
     let selectedItemElement = null;
     let hasSeenIntro = false;
+    let hasSeenCP = false;
+    let hasSeenCara = false;
 
     function shuffleArray(array) {
         let currentIndex = array.length, randomIndex;
@@ -38,7 +40,34 @@
     window.onload = () => {
         loadItemsToPool(shuffleArray([...activeDataset]));
         updateCounter();
+        checkStartButtonState();
     };
+
+    function tryOpenLabPage() {
+        if (!hasSeenCP || !hasSeenCara) {
+            const missing = [];
+            if (!hasSeenCP) missing.push('Tujuan');
+            if (!hasSeenCara) missing.push('Cara Penggunaan');
+            alert(`Belum bisa dibuka. Silakan lihat menu ${missing.join(' dan ')} terlebih dahulu sebelum memulai percobaan.`);
+            return;
+        }
+        showPage('labPage');
+    }
+
+    function checkStartButtonState() {
+        const btnStart = document.getElementById('btn-start');
+        if (!btnStart) return;
+
+        if (hasSeenCP && hasSeenCara) {
+            btnStart.classList.remove('disabled-style');
+            btnStart.setAttribute('aria-disabled', 'false');
+            btnStart.title = 'Mulai percobaan';
+        } else {
+            btnStart.classList.add('disabled-style');
+            btnStart.setAttribute('aria-disabled', 'true');
+            btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
+        }
+    }
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p=>{
@@ -695,6 +724,8 @@
 
 // TUJUAN PEMBELAJARAN
 function openCPModal(){
+    hasSeenCP = true;
+    checkStartButtonState();
     document.getElementById("cpModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
 }
@@ -706,6 +737,8 @@ function closeCPModal(){
 
 // CARA PENGGUNAAN
 function openCaraModal(){
+    hasSeenCara = true;
+    checkStartButtonState();
     document.getElementById("caraModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
 
@@ -780,13 +813,18 @@ const bioModal = document.getElementById('bioModal');
 let bioCurrentSlide = 0;
 const bioTotalSlides = 2;
 
-function openBioModal() {
+// BIODATA
+function openBioModal(){
     bioCurrentSlide = 0;
     updateBioSlideView();
-    bioModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    document.getElementById("bioModal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 }
-function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+function closeBioModal(){
+    document.getElementById("bioModal").classList.add("hidden");
+    document.body.style.overflow = "auto";
+}
 
 function changeBioSlide(direction) {
     bioCurrentSlide += direction;
