@@ -135,6 +135,12 @@ display: flex; align-items: center; justify-content: center; gap: 10px; width: 1
 }
 .btn-modern:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .btn-modern.disabled-style { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+.disabled-style { opacity: 0.5; cursor: not-allowed; }
+.disabled-style:hover { transform: none; }
+.preview-graphic { max-width: 420px; width: 100%; }
+.preview-step { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; color: var(--text-main); box-shadow: var(--shadow-sm); }
+.preview-step strong { display: block; margin-bottom: 10px; font-size: 1rem; }
+.preview-step span { display: block; margin-top: 10px; color: var(--text-muted); font-size: 0.95rem; }
 .btn-modern:disabled { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; transform: none; box-shadow: none; }
 
 .btn-warning { background: var(--warning); }
