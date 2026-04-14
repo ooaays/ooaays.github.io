@@ -727,16 +727,7 @@ function closeCaraModal(){
     document.body.style.overflow = "auto";
 }
 
-// BIODATA
-function openBioModal(){
-    document.getElementById("bioModal").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-}
 
-function closeBioModal(){
-    document.getElementById("bioModal").classList.add("hidden");
-    document.body.style.overflow = "auto";
-}
 
 // ================= SLIDER CARA PENGGUNAAN =================
 let currentSlide = 0;
@@ -779,4 +770,23 @@ function updateButtons(){
 
     prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
     nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
+}
+
+function updateBioSlideView() {
+    for (let i = 0; i < bioTotalSlides; i++) {
+        const slide = document.getElementById('bio-slide-' + i);
+        if (slide) {
+            slide.classList.toggle('hidden', i !== bioCurrentSlide);
+        }
+    }
+
+    const prevBtn = document.getElementById('bioPrevBtn');
+    const nextBtn = document.getElementById('bioNextBtn');
+
+    if (prevBtn) {
+        prevBtn.style.visibility = bioCurrentSlide === 0 ? 'hidden' : 'visible';
+    }
+    if (nextBtn) {
+        nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
+    }
 }
