@@ -14,7 +14,7 @@
     ];
 
     let aiModel = {}; 
-    let soundEnabled = true;
+    let soundEnabled = false;
     let itemsTested = 0;
     
     let currentPhase = 1; 
@@ -38,6 +38,7 @@
 
     window.onload = () => {
         loadItemsToPool(shuffleArray([...activeDataset]));
+        updateNodeVisibility();
         updateCounter();
         checkStartButtonState();
     };
@@ -123,6 +124,22 @@
 
             sourcePool.appendChild(el);
         });
+    }
+
+    function updateNodeVisibility() {
+        const boxIPS = document.getElementById('box-ips');
+        const boxIPA = document.getElementById('box-ipa');
+
+        if(currentPhase === 1) {
+            boxIPS.style.display = 'none';
+            boxIPA.style.display = 'none';
+        } else if(currentPhase === 2) {
+            boxIPS.style.display = 'none';
+            boxIPA.style.display = 'block';
+        } else {
+            boxIPS.style.display = 'block';
+            boxIPA.style.display = 'block';
+        }
     }
 
     function selectItem(event, element) {
@@ -256,14 +273,6 @@
         }
     }
 
-    function toggleSound() {
-        soundEnabled = !soundEnabled;
-        const icon = document.querySelector('#btn-sound i');
-        icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
-        if(soundEnabled) speakText("Sistem audio diaktifkan");
-        else window.speechSynthesis.cancel();
-    }
-
     function speakText(text) {
         if (!soundEnabled || !('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
@@ -301,12 +310,16 @@
             return;
         }
 
-        ['BahasaIndonesia','IPS','Matematika'].forEach(cat => {
+        ['BahasaIndonesia','IPS','IPA','Matematika'].forEach(cat => {
             const container = document.getElementById('node-' + cat);
             if (container) {
                 const items = container.children;
                 Array.from(items).forEach(el => {
-                    aiModel[el.dataset.name] = cat === 'BahasaIndonesia' ? 'B. Indonesia' : cat;
+                    if(cat === 'BahasaIndonesia') {
+                        aiModel[el.dataset.name] = 'B. Indonesia';
+                    } else {
+                        aiModel[el.dataset.name] = cat;
+                    }
                 });
             }
         });
@@ -389,13 +402,13 @@
         setTimeout(() => {
             cancelAnimationFrame(frameId);
             if(currentPhase === 1) {
-                currentPhase = 2; // Ke Test 1
-                setupTestingPhase();
+                currentPhase = 2;
+                setupRetraining();
+            } else if (currentPhase === 2) {
+                currentPhase = 3;
+                setupRetraining();
             } else if (currentPhase === 3) {
-                currentPhase = 4; // Ke Test 2
-                setupTestingPhase();
-            } else if (currentPhase === 5) {
-                currentPhase = 6; // Ke Test 3
+                currentPhase = 4;
                 setupTestingPhase();
             }
         }, 3500);
@@ -417,49 +430,19 @@
 
         let activeSentences = [];
 
-        if(currentPhase === 2) {
-            document.getElementById('test-title').innerText = "Fase Uji Coba 1";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span><b>Klik dan uji keempat kalimat ini berurutan!</b> Sistem akan memprediksi berdasarkan data latih Math dan Bahasa Indonesia. Perhatikan kalimat campuran dan temukan kalimat yang belum pernah dilatih.</span>`;
-            document.getElementById('test-notice').style.background = 'var(--warning-light)';
-            document.getElementById('test-notice').style.borderColor = '#fed7aa';
-            document.getElementById('test-notice').style.color = '#9a3412';
-            speakText("Uji coba tahap satu siap.");
-            
-            activeSentences = [
-                { text: "Rumus matematika membantu menghitung luas bangun datar.", anomaly: false },
-                { text: "Membuat paragraf cerita dengan penggunaan sinonim dan majas.", anomaly: false },
-                { text: "Menjelaskan hubungan antara angka dan kata dalam sebuah masalah nyata.", anomaly: false },
-                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: true }
-            ];
-            
-        } else if (currentPhase === 4) {
-            document.getElementById('test-title').innerText = "Fase Uji Coba 2";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span>Setelah menambahkan kata-kata IPA, uji kalimat semula lagi dan lihat apakah sistem sekarang mengenali eksperimen sains. Kalimat terakhir masih akan gagal karena IPS belum dilatih.</span>`;
-            document.getElementById('test-notice').style.background = 'var(--warning-light)';
-            document.getElementById('test-notice').style.borderColor = '#fed7aa';
-            document.getElementById('test-notice').style.color = '#9a3412';
-            speakText("Uji coba tahap dua siap.");
-
-            activeSentences = [
-                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: false },
-                { text: "Menjelaskan nilai grafik dan volume sebagai bagian dari percobaan IPA.", anomaly: false },
-                { text: "Menulis paragraf tentang rumus dan angka dalam kehidupan sehari-hari.", anomaly: false },
-                { text: "Menganalisis ekonomi dan geografi wilayah untuk tugas sekolah.", anomaly: true }
-            ];
-            
-        } else if (currentPhase === 6) {
-            document.getElementById('test-title').innerText = "Fase Pengujian Final";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5em;"></i><span>Semua empat mata pelajaran kini telah dilatih. Klik semua kalimat ini untuk melihat bagaimana sistem dapat mengenali ragam pola dengan lebih baik.</span>`;
+        if(currentPhase === 4) {
+            document.getElementById('test-title').innerText = "Evaluasi Akhir";
+            document.getElementById('test-notice').innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5em;"></i><span>Semua empat mata pelajaran kini telah dilatih. Uji kalimat baru yang memadukan tiga bidang pelajaran untuk melihat kemampuan sistem mengenali kombinasi kosakata.</span>`;
             document.getElementById('test-notice').style.background = 'var(--success-light)';
             document.getElementById('test-notice').style.borderColor = '#bbf7d0';
             document.getElementById('test-notice').style.color = '#166534';
-            speakText("Pengujian final siap.");
+            speakText("Evaluasi akhir siap.");
 
             activeSentences = [
-                { text: "Menganalisis ekonomi dan geografi wilayah untuk tugas sekolah.", anomaly: false },
-                { text: "Membuat laporan eksperimen IPA dengan grafik dan pengukuran suhu.", anomaly: false },
-                { text: "Menulis paragraf tentang rumus matematika dalam kehidupan sehari-hari.", anomaly: false },
-                { text: "Menghitung volume dan luas menggunakan angka dan variabel dengan tepat.", anomaly: false }
+                { text: "Menjelaskan hubungan grafik matematika dalam studi sosial dan lingkungan.", anomaly: false },
+                { text: "Menganalisis eksperimen IPA menggunakan data angka dan konsep paragraf.", anomaly: false },
+                { text: "Membuat laporan geografi dengan istilah ekonomi dan rumus statistika sederhana.", anomaly: false },
+                { text: "Menghubungkan fenomena ilmiah, angka, dan kata-kata sosial dalam satu kalimat.", anomaly: false }
             ];
         }
 
@@ -643,7 +626,7 @@
         document.getElementById('test-progress').innerText = `Kalimat teruji: ${itemsTested} / ${totalToTest}`;
 
         if(itemsTested >= totalToTest) {
-            if(currentPhase === 6) {
+            if(currentPhase === 4) {
                 document.getElementById('btn-retrain').classList.add('hidden');
                 document.getElementById('btn-reflect').classList.remove('hidden');
             } else {
@@ -654,23 +637,23 @@
 
     function setupRetraining() {
         if(currentPhase === 2) {
-            currentPhase = 3;
             document.getElementById('train-title').innerText = "Fase Latih Data Ke-2 (Tambah IPA)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem belum pernah belajar kata-kata <b>IPA</b>. Masukkan kata-kata baru ini ke kotak <b>IPA</b> agar sistem bisa memahami kalimat sains dan eksperimen.`;
+            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem sekarang belajar dari kombinasi tiga subjek. Masukkan kata-kata IPA ke kotak IPA agar sistem dapat memahami kalimat sains, angka, dan bahasa.`;
             activeDataset = dataLatih2;
-        } else if (currentPhase === 4) {
-            currentPhase = 5;
+        } else if (currentPhase === 3) {
             document.getElementById('train-title').innerText = "Fase Latih Data Ke-3 (Tambah IPS)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem masih kesulitan mengenali konteks <b>IPS</b>. Masukkan kata-kata baru ini ke kotak <b>IPS</b> agar prediksi tentang ekonomi dan geografi menjadi lebih akurat.`;
+            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem akan mempelajari gabungan tiga subjek baru. Masukkan kata-kata IPS agar prediksi terhadap kalimat sosial, matematika, dan bahasa menjadi lebih lengkap.`;
             activeDataset = dataLatih3;
         }
 
         document.getElementById('screen-test').classList.add('hidden');
         document.getElementById('btn-retrain').classList.add('hidden');
+        document.getElementById('btn-reflect').classList.add('hidden');
         document.getElementById('screen-train').classList.remove('hidden');
 
         totalItemsNeeded = activeDataset.length;
         loadItemsToPool(shuffleArray([...activeDataset]));
+        updateNodeVisibility();
         updateCounter();
 
         speakText("Mengakses mode penambahan data latih.");
