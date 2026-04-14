@@ -539,13 +539,18 @@
         }, 1500);
     }
 
+    function getTrainingSummary() {
+        const counts = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0, 'IPA': 0};
+        Object.values(aiModel).forEach(cat => {
+            if(counts[cat] !== undefined) counts[cat]++;
+        });
+        const total = counts['B. Indonesia'] + counts['IPS'] + counts['Matematika'] + counts['IPA'];
+        return { counts, total };
+    }
+
     async function calculateProbabilities(sentenceText, totalToTest) {
-        let words = sentenceText.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
+        let words = sentenceText.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
         let catMatches = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0, 'IPA': 0};
-        let matchDetailsBindo = [];
-        let matchDetailsIPS = [];
-        let matchDetailsMTK = [];
-        let matchDetailsIPA = [];
         let allMatchedWords = [];
 
         words.forEach(w => {
@@ -554,43 +559,57 @@
                 let cat = aiModel[trainedKey];
                 catMatches[cat]++;
                 allMatchedWords.push(trainedKey);
-                if(cat === 'B. Indonesia') matchDetailsBindo.push(trainedKey);
-                if(cat === 'IPS') matchDetailsIPS.push(trainedKey);
-                if(cat === 'Matematika') matchDetailsMTK.push(trainedKey);
-                if(cat === 'IPA') matchDetailsIPA.push(trainedKey);
             }
         });
 
-        let totalMatch = catMatches['B. Indonesia'] + catMatches['IPS'] + catMatches['Matematika'] + catMatches['IPA'];
-            let probBindo = 0, probIPS = 0, probMTK = 0, probIPA = 0;
-            let finalCategory = "";
-            let isHallucinating = false;
-            let isMixed = false;
-            let conclusionHTML = "";
-            let speakOutput = "";
+        const trainingSummary = getTrainingSummary();
+        const trainedCounts = trainingSummary.counts;
+        const totalTrained = trainingSummary.total;
 
-            let noiseSplit = [6, 7, 7, 5];
-        noiseSplit = shuffleArray(noiseSplit); 
+        let totalMatch = catMatches['B. Indonesia'] + catMatches['IPS'] + catMatches['Matematika'] + catMatches['IPA'];
+        let probBindo = 0, probIPS = 0, probMTK = 0, probIPA = 0;
+        let finalCategory = "";
+        let isHallucinating = false;
+        let isMixed = false;
+        let conclusionHTML = "";
+        let speakOutput = "";
+
+        function computeCategoryConfidence(catName) {
+            return totalMatch > 0 ? Math.round((catMatches[catName] / totalMatch) * 100) : 0;
+        }
 
         if (totalMatch > 0) {
-            let baseConf = 80;
-            probBindo = Math.floor((catMatches['B. Indonesia'] / totalMatch) * baseConf) + noiseSplit[0];
-            probIPS = Math.floor((catMatches['IPS'] / totalMatch) * baseConf) + noiseSplit[1];
-            probMTK = Math.floor((catMatches['Matematika'] / totalMatch) * baseConf) + noiseSplit[2];
-            probIPA = Math.floor((catMatches['IPA'] / totalMatch) * baseConf) + noiseSplit[3];
+            const coverageRate = Math.min(1, totalMatch / Math.max(words.length, 1));
+            const overallConfidence = Math.max(30, Math.round(coverageRate * 100));
 
-            let maxScore = Math.max(probBindo, probIPS, probMTK, probIPA);
-            if(maxScore === probBindo) finalCategory = "B. Indonesia";
-            else if(maxScore === probIPS) finalCategory = "IPS";
-            else if(maxScore === probIPA) finalCategory = "IPA";
+            const rawBindo = catMatches['B. Indonesia'];
+            const rawIPS = catMatches['IPS'];
+            const rawMTK = catMatches['Matematika'];
+            const rawIPA = catMatches['IPA'];
+            const rawTotal = rawBindo + rawIPS + rawMTK + rawIPA;
+
+            probBindo = rawTotal > 0 ? Math.round((rawBindo / rawTotal) * overallConfidence) : 0;
+            probIPS = rawTotal > 0 ? Math.round((rawIPS / rawTotal) * overallConfidence) : 0;
+            probMTK = rawTotal > 0 ? Math.round((rawMTK / rawTotal) * overallConfidence) : 0;
+            probIPA = rawTotal > 0 ? Math.round((rawIPA / rawTotal) * overallConfidence) : 0;
+
+            let remainder = overallConfidence - (probBindo + probIPS + probMTK + probIPA);
+            if (remainder !== 0) {
+                const maxCategory = Math.max(probBindo, probIPS, probMTK, probIPA);
+                if (maxCategory === probBindo) probBindo += remainder;
+                else if (maxCategory === probIPS) probIPS += remainder;
+                else if (maxCategory === probMTK) probMTK += remainder;
+                else probIPA += remainder;
+            }
+
+            if (probBindo > 0 && probIPS > 0 || probBindo > 0 && probMTK > 0 || probBindo > 0 && probIPA > 0 || probIPS > 0 && probMTK > 0 || probIPS > 0 && probIPA > 0 || probMTK > 0 && probIPA > 0) {
+                isMixed = true;
+            }
+
+            if (probBindo >= probIPS && probBindo >= probMTK && probBindo >= probIPA) finalCategory = "B. Indonesia";
+            else if (probIPS >= probBindo && probIPS >= probMTK && probIPS >= probIPA) finalCategory = "IPS";
+            else if (probIPA >= probBindo && probIPA >= probIPS && probIPA >= probMTK) finalCategory = "IPA";
             else finalCategory = "Matematika";
-
-            let activeCats = 0;
-            if(catMatches['B. Indonesia'] > 0) activeCats++;
-            if(catMatches['IPS'] > 0) activeCats++;
-            if(catMatches['Matematika'] > 0) activeCats++;
-            if(catMatches['IPA'] > 0) activeCats++;
-            if(activeCats > 1) isMixed = true;
 
             conclusionHTML = `
             <div class="mb-2">
@@ -604,41 +623,33 @@
             </div>
             <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-sm text-slate-800 mb-4">
                 <p class="font-bold mb-2 text-blue-900"><i class="fas fa-lightbulb"></i> Ilustrasi Tingkat Keyakinan (Confidence Level):</p>
-                <p class="mb-2">Angka persentase <b>(B. Indo: ${probBindo}%, IPS: ${probIPS}%, MTK: ${probMTK}%, IPA: ${probIPA}%)</b> adalah ilustrasi dari probabilitas keyakinan sistem.</p>
-                <p>Nilai ini dihitung dari kecocokan jumlah kata dalam kalimat dengan data latih yang ada di memori sistem, kemudian ditambahkan sedikit margin acak untuk meniru sifat ketidakpastian persentase pada model algoritma asli.</p>
+                <p class="mb-2">Persentase ini didasarkan pada jumlah kata dalam kalimat yang cocok dengan data latih yang sudah diberikan kepada sistem pada fase ini.</p>
+                <p>Jika sebuah kategori belum dilatih, sistem tidak memiliki data untuk mendukung keyakinan pada kategori tersebut.</p>
             </div>
             `;
             speakOutput = isMixed 
                 ? `Konteks campuran terdeteksi. Condong ke pelajaran ${finalCategory}.`
                 : `Konteks dikenali berdasarkan data latih. Prediksi tertinggi: ${finalCategory}.`;
-
         } else {
             isHallucinating = true;
-            probBindo = Math.floor(Math.random() * 30) + 15; 
-            probIPS = Math.floor(Math.random() * 30) + 15;
-            probMTK = Math.floor(Math.random() * 30) + 15;
-            probIPA = 100 - (probBindo + probIPS + probMTK);
-            if(probIPA < 10) probIPA = 10;
-            if(probIPA > 80) probIPA = 80;
-
-            let maxScore = Math.max(probBindo, probIPS, probMTK, probIPA);
-            if(maxScore === probBindo) finalCategory = "B. Indonesia";
-            else if(maxScore === probIPS) finalCategory = "IPS";
-            else if(maxScore === probIPA) finalCategory = "IPA";
-            else finalCategory = "Matematika";
+            const baseline = 10;
+            probBindo = trainedCounts['B. Indonesia'] > 0 ? baseline : 0;
+            probIPS = trainedCounts['IPS'] > 0 ? baseline : 0;
+            probMTK = trainedCounts['Matematika'] > 0 ? baseline : 0;
+            probIPA = trainedCounts['IPA'] > 0 ? baseline : 0;
 
             conclusionHTML = `
             <div class="mb-2"><span class="text-danger font-bold text-lg">⚠️ KATA TIDAK DIKENALI (OUT OF VOCABULARY)!</span></div>
             <div class="mb-3 leading-relaxed text-slate-700">
-                Tidak ada kata dalam kalimat ini yang cocok dengan <b>Data Latih</b> sistem.
+                Tidak ada kata dalam kalimat ini yang cocok dengan data latih yang ada saat ini.
             </div>
             <div class="bg-warning-light border border-warning p-4 rounded-xl text-sm text-slate-800 mb-4">
                 <p class="font-bold mb-2 text-warning"><i class="fas fa-lightbulb"></i> Ilustrasi Kegagalan Model:</p>
-                <p class="mb-2">Sistem terpaksa memberikan persentase acak (B. Indo: ${probBindo}%, IPS: ${probIPS}%, MTK: ${probMTK}%).</p>
-                <p>Ini adalah ilustrasi untuk menunjukkan bahwa sistem klasifikasi akan memunculkan nilai yang sembarangan dan tebakan yang salah apabila kita belum pernah memasukkan informasi (Data Latih) tersebut sebelumnya.</p>
+                <p class="mb-2">Sistem hanya bisa memberikan prediksi rendah karena tidak menemukan kata yang cocok dengan data latih.</p>
+                <p>Kategori yang belum pernah dilatih tetap tidak akan mendapatkan dukungan keyakinan.</p>
             </div>
             `;
-            speakOutput = `Peringatan. Kosakata tidak ditemukan dalam data latih. Sistem tidak dapat menentukan kecocokan secara akurat.`;
+            speakOutput = `Peringatan. Kosakata tidak ditemukan dalam data latih. Sistem hanya bisa menebak dengan keyakinan rendah.`;
         }
 
         animateBar('bar-bindo', 'val-bindo', probBindo);
