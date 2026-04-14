@@ -414,6 +414,14 @@
         }, 3500);
     }
 
+    function setAnalyticsBarsVisibility(categories) {
+        const mapping = { bindo: 'B. Indonesia', ips: 'IPS', mtk: 'Matematika', ipa: 'IPA' };
+        Object.keys(mapping).forEach(key => {
+            const row = document.getElementById('bar-' + key).closest('.stat-row');
+            row.style.display = categories.includes(mapping[key]) ? 'grid' : 'none';
+        });
+    }
+
     function setupTestingPhase() {
         document.getElementById('screen-processing').classList.add('hidden');
         document.getElementById('screen-test').classList.remove('hidden');
@@ -437,6 +445,7 @@
             document.getElementById('test-notice').style.borderColor = '#fed7aa';
             document.getElementById('test-notice').style.color = '#9a3412';
             speakText("Uji coba pertama siap.");
+            setAnalyticsBarsVisibility(['B. Indonesia', 'Matematika']);
 
             activeSentences = [
                 { text: "Rumus matematika membantu menghitung luas bangun datar.", anomaly: false },
@@ -451,6 +460,7 @@
             document.getElementById('test-notice').style.borderColor = '#fed7aa';
             document.getElementById('test-notice').style.color = '#9a3412';
             speakText("Uji coba kedua siap.");
+            setAnalyticsBarsVisibility(['B. Indonesia', 'Matematika', 'IPA']);
 
             activeSentences = [
                 { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: false },
@@ -465,6 +475,7 @@
             document.getElementById('test-notice').style.borderColor = '#bbf7d0';
             document.getElementById('test-notice').style.color = '#166534';
             speakText("Uji coba ketiga siap.");
+            setAnalyticsBarsVisibility(['B. Indonesia', 'IPS', 'Matematika', 'IPA']);
 
             activeSentences = [
                 { text: "Menjelaskan hubungan grafik matematika dalam studi sosial dan lingkungan.", anomaly: false },
