@@ -24,7 +24,7 @@ setTimeout(showText,1000)
 // SCRIPT MODAL CAPAIAN PEMBELAJARAN
 // ==============================================
 const cpModal = document.getElementById('cpModal');
-function openCPModal() { cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+function openCPModal() { hasSeenTujuan = true; updateStartButton(); cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
 function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
 // ==============================================
@@ -35,6 +35,8 @@ let currentSlide = 0;
 const totalSlides = 9;
 
 function openCaraModal() {
+    hasSeenCara = true;
+    updateStartButton();
     caraModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
