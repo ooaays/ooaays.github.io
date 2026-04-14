@@ -48,10 +48,16 @@
             const missing = [];
             if (!hasSeenCP) missing.push('Tujuan');
             if (!hasSeenCara) missing.push('Cara Penggunaan');
-            alert(`Belum bisa dibuka. Silakan lihat menu ${missing.join(' dan ')} terlebih dahulu sebelum memulai percobaan.`);
+            document.getElementById("lockedPopup").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
             return;
         }
         showPage('labPage');
+    }
+    function closeStartLockedPopup() {
+        if (!lockedPopup) return;
+        lockedPopup.classList.add('hidden');
+        document.body.style.overflow = 'auto';
     }
 
     function checkStartButtonState() {
