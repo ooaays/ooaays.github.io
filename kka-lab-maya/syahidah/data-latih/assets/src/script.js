@@ -2,16 +2,15 @@
 /* --- DATASET NLP --- */
     const dataLatih1 = [
         { id: "d1", name: "Puisi" }, { id: "d2", name: "Cerita" }, { id: "d3", name: "Paragraf" }, { id: "d4", name: "Sinonim" }, { id: "d5", name: "Kalimat" },
-        { id: "d6", name: "Candi" }, { id: "d7", name: "Cuaca" }, { id: "d8", name: "Ekonomi" }, { id: "d9", name: "Peta" }, { id: "d10", name: "Sejarah" },
-        { id: "d11", name: "Rumus" }, { id: "d12", name: "Angka" }, { id: "d13", name: "Luas" }, { id: "d14", name: "Pecahan" }, { id: "d15", name: "Variabel" }
+        { id: "d6", name: "Rumus" }, { id: "d7", name: "Angka" }, { id: "d8", name: "Luas" }, { id: "d9", name: "Pecahan" }, { id: "d10", name: "Variabel" }
     ];
 
     const dataLatih2 = [
-        { id: "a1", name: "Matriks" }, { id: "a2", name: "Segitiga" }, { id: "a3", name: "Probabilitas" }
+        { id: "a1", name: "IPA" }, { id: "a2", name: "eksperimen" }, { id: "a3", name: "pengukuran" }, { id: "a4", name: "suhu" }
     ];
 
     const dataLatih3 = [
-        { id: "b1", name: "Majas" }, { id: "b2", name: "Pantun" }, { id: "b3", name: "Personifikasi" }
+        { id: "b1", name: "IPS" }, { id: "b2", name: "ekonomi" }, { id: "b3", name: "geografi" }, { id: "b4", name: "wilayah" }
     ];
 
     let aiModel = {}; 
@@ -55,6 +54,7 @@
         showPage('labPage');
     }
     function closeStartLockedPopup() {
+        const lockedPopup = document.getElementById('lockedPopup');
         if (!lockedPopup) return;
         lockedPopup.classList.add('hidden');
         document.body.style.overflow = 'auto';
@@ -419,44 +419,47 @@
 
         if(currentPhase === 2) {
             document.getElementById('test-title').innerText = "Fase Uji Coba 1";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span><b>Klik dan uji ketiga kalimat ini berurutan!</b> Sistem akan memprediksi berdasarkan data latih pertama. Perhatikan kalimat campuran dan kalimat anomali.</span>`;
+            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span><b>Klik dan uji keempat kalimat ini berurutan!</b> Sistem akan memprediksi berdasarkan data latih Math dan Bahasa Indonesia. Perhatikan kalimat campuran dan temukan kalimat yang belum pernah dilatih.</span>`;
             document.getElementById('test-notice').style.background = 'var(--warning-light)';
             document.getElementById('test-notice').style.borderColor = '#fed7aa';
             document.getElementById('test-notice').style.color = '#9a3412';
             speakText("Uji coba tahap satu siap.");
             
-            // 3 Kalimat uji (Fase 1)
             activeSentences = [
-                { text: "Sebuah rumus digunakan untuk menghitung luas dan pecahan angka secara tepat.", anomaly: false },
-                { text: "Menghitung dampak cuaca terhadap kondisi ekonomi di sekitar candi bersejarah.", anomaly: false },
-                { text: "Mencari probabilitas kemunculan matriks pada sudut sebuah bangun segitiga.", anomaly: true } // Akan gagal
+                { text: "Rumus matematika membantu menghitung luas bangun datar.", anomaly: false },
+                { text: "Membuat paragraf cerita dengan penggunaan sinonim dan majas.", anomaly: false },
+                { text: "Menjelaskan hubungan antara angka dan kata dalam sebuah masalah nyata.", anomaly: false },
+                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: true }
             ];
             
         } else if (currentPhase === 4) {
             document.getElementById('test-title').innerText = "Fase Uji Coba 2";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span>Kamu telah menambahkan kata Matriks, Segitiga, dan Probabilitas. Uji kalimat pertama lagi, pasti berhasil! Lalu uji dua kalimat selanjutnya yang mengandung anomali baru.</span>`;
+            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span>Setelah menambahkan kata-kata IPA, uji kalimat semula lagi dan lihat apakah sistem sekarang mengenali eksperimen sains. Kalimat terakhir masih akan gagal karena IPS belum dilatih.</span>`;
+            document.getElementById('test-notice').style.background = 'var(--warning-light)';
+            document.getElementById('test-notice').style.borderColor = '#fed7aa';
+            document.getElementById('test-notice').style.color = '#9a3412';
             speakText("Uji coba tahap dua siap.");
 
-            // 3 Kalimat uji (Fase 2)
             activeSentences = [
-                { text: "Mencari probabilitas kemunculan matriks pada sudut sebuah bangun segitiga.", anomaly: false }, // Sekarang berhasil
-                { text: "Membuat paragraf cerita tentang sejarah penemuan rumus probabilitas.", anomaly: false }, // Campuran B.Indo, IPS, MTK
-                { text: "Menganalisis majas personifikasi di dalam sebuah teks pantun dan puisi.", anomaly: true } // Akan gagal
+                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: false },
+                { text: "Menjelaskan nilai grafik dan volume sebagai bagian dari percobaan IPA.", anomaly: false },
+                { text: "Menulis paragraf tentang rumus dan angka dalam kehidupan sehari-hari.", anomaly: false },
+                { text: "Menganalisis ekonomi dan geografi wilayah untuk tugas sekolah.", anomaly: true }
             ];
             
         } else if (currentPhase === 6) {
             document.getElementById('test-title').innerText = "Fase Pengujian Final";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5em;"></i><span>Data latih sudah jauh lebih lengkap. Sekarang sistem pasti bisa mengklasifikasi berbagai pola kalimat dengan akurat! Klik semua kalimatnya.</span>`;
+            document.getElementById('test-notice').innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5em;"></i><span>Semua empat mata pelajaran kini telah dilatih. Klik semua kalimat ini untuk melihat bagaimana sistem dapat mengenali ragam pola dengan lebih baik.</span>`;
             document.getElementById('test-notice').style.background = 'var(--success-light)';
             document.getElementById('test-notice').style.borderColor = '#bbf7d0';
             document.getElementById('test-notice').style.color = '#166534';
             speakText("Pengujian final siap.");
 
-            // 3 Kalimat uji (Fase 3)
             activeSentences = [
-                { text: "Menganalisis majas personifikasi di dalam sebuah teks pantun dan puisi.", anomaly: false }, // Sekarang berhasil
-                { text: "Dalam cerita tersebut, terdapat variabel angka dan matriks yang memengaruhi ekonomi.", anomaly: false }, // Campuran B.Indo, MTK, IPS
-                { text: "Membaca kalimat sinonim untuk memahami sejarah cuaca di suatu wilayah.", anomaly: false } // Campuran B.Indo, IPS
+                { text: "Menganalisis ekonomi dan geografi wilayah untuk tugas sekolah.", anomaly: false },
+                { text: "Membuat laporan eksperimen IPA dengan grafik dan pengukuran suhu.", anomaly: false },
+                { text: "Menulis paragraf tentang rumus matematika dalam kehidupan sehari-hari.", anomaly: false },
+                { text: "Menghitung volume dan luas menggunakan angka dan variabel dengan tepat.", anomaly: false }
             ];
         }
 
@@ -509,7 +512,7 @@
         const analytics = document.getElementById('analytics-panel');
         analytics.style.display = 'block';
 
-        ['bindo', 'ips', 'mtk'].forEach(id => {
+        ['bindo', 'ips', 'mtk', 'ipa'].forEach(id => {
             document.getElementById(`bar-${id}`).style.width = '0%';
             document.getElementById(`val-${id}`).innerText = '0%';
         });
@@ -527,10 +530,11 @@
 
     async function calculateProbabilities(sentenceText, totalToTest) {
         let words = sentenceText.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
-        let catMatches = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0};
+        let catMatches = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0, 'IPA': 0};
         let matchDetailsBindo = [];
         let matchDetailsIPS = [];
         let matchDetailsMTK = [];
+        let matchDetailsIPA = [];
         let allMatchedWords = [];
 
         words.forEach(w => {
@@ -542,18 +546,19 @@
                 if(cat === 'B. Indonesia') matchDetailsBindo.push(trainedKey);
                 if(cat === 'IPS') matchDetailsIPS.push(trainedKey);
                 if(cat === 'Matematika') matchDetailsMTK.push(trainedKey);
+                if(cat === 'IPA') matchDetailsIPA.push(trainedKey);
             }
         });
 
-        let totalMatch = catMatches['B. Indonesia'] + catMatches['IPS'] + catMatches['Matematika'];
-        let probBindo = 0, probIPS = 0, probMTK = 0;
-        let finalCategory = "";
-        let isHallucinating = false;
-        let isMixed = false;
-        let conclusionHTML = "";
-        let speakOutput = "";
+        let totalMatch = catMatches['B. Indonesia'] + catMatches['IPS'] + catMatches['Matematika'] + catMatches['IPA'];
+            let probBindo = 0, probIPS = 0, probMTK = 0, probIPA = 0;
+            let finalCategory = "";
+            let isHallucinating = false;
+            let isMixed = false;
+            let conclusionHTML = "";
+            let speakOutput = "";
 
-        let noiseSplit = [6, 7, 7];
+            let noiseSplit = [6, 7, 7, 5];
         noiseSplit = shuffleArray(noiseSplit); 
 
         if (totalMatch > 0) {
@@ -561,16 +566,19 @@
             probBindo = Math.floor((catMatches['B. Indonesia'] / totalMatch) * baseConf) + noiseSplit[0];
             probIPS = Math.floor((catMatches['IPS'] / totalMatch) * baseConf) + noiseSplit[1];
             probMTK = Math.floor((catMatches['Matematika'] / totalMatch) * baseConf) + noiseSplit[2];
+            probIPA = Math.floor((catMatches['IPA'] / totalMatch) * baseConf) + noiseSplit[3];
 
-            let maxScore = Math.max(probBindo, probIPS, probMTK);
+            let maxScore = Math.max(probBindo, probIPS, probMTK, probIPA);
             if(maxScore === probBindo) finalCategory = "B. Indonesia";
             else if(maxScore === probIPS) finalCategory = "IPS";
+            else if(maxScore === probIPA) finalCategory = "IPA";
             else finalCategory = "Matematika";
 
             let activeCats = 0;
             if(catMatches['B. Indonesia'] > 0) activeCats++;
             if(catMatches['IPS'] > 0) activeCats++;
             if(catMatches['Matematika'] > 0) activeCats++;
+            if(catMatches['IPA'] > 0) activeCats++;
             if(activeCats > 1) isMixed = true;
 
             conclusionHTML = `
@@ -585,7 +593,7 @@
             </div>
             <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-sm text-slate-800 mb-4">
                 <p class="font-bold mb-2 text-blue-900"><i class="fas fa-lightbulb"></i> Ilustrasi Tingkat Keyakinan (Confidence Level):</p>
-                <p class="mb-2">Angka persentase <b>(B. Indo: ${probBindo}%, IPS: ${probIPS}%, MTK: ${probMTK}%)</b> adalah ilustrasi dari probabilitas keyakinan sistem.</p>
+                <p class="mb-2">Angka persentase <b>(B. Indo: ${probBindo}%, IPS: ${probIPS}%, MTK: ${probMTK}%, IPA: ${probIPA}%)</b> adalah ilustrasi dari probabilitas keyakinan sistem.</p>
                 <p>Nilai ini dihitung dari kecocokan jumlah kata dalam kalimat dengan data latih yang ada di memori sistem, kemudian ditambahkan sedikit margin acak untuk meniru sifat ketidakpastian persentase pada model algoritma asli.</p>
             </div>
             `;
@@ -595,13 +603,17 @@
 
         } else {
             isHallucinating = true;
-            probBindo = Math.floor(Math.random() * 40) + 15; 
-            probIPS = Math.floor(Math.random() * 40) + 15;
-            probMTK = 100 - (probBindo + probIPS);
+            probBindo = Math.floor(Math.random() * 30) + 15; 
+            probIPS = Math.floor(Math.random() * 30) + 15;
+            probMTK = Math.floor(Math.random() * 30) + 15;
+            probIPA = 100 - (probBindo + probIPS + probMTK);
+            if(probIPA < 10) probIPA = 10;
+            if(probIPA > 80) probIPA = 80;
 
-            let maxScore = Math.max(probBindo, probIPS, probMTK);
+            let maxScore = Math.max(probBindo, probIPS, probMTK, probIPA);
             if(maxScore === probBindo) finalCategory = "B. Indonesia";
             else if(maxScore === probIPS) finalCategory = "IPS";
+            else if(maxScore === probIPA) finalCategory = "IPA";
             else finalCategory = "Matematika";
 
             conclusionHTML = `
@@ -621,6 +633,7 @@
         animateBar('bar-bindo', 'val-bindo', probBindo);
         animateBar('bar-ips', 'val-ips', probIPS);
         animateBar('bar-mtk', 'val-mtk', probMTK);
+        animateBar('bar-ipa', 'val-ipa', probIPA);
 
         document.getElementById('ai-conclusion').innerHTML = conclusionHTML;
         await typeWriter(`>> Analisis Selesai.\n>> Prediksi terbesar: ${finalCategory}`, 'ai-text', 30);
@@ -642,13 +655,13 @@
     function setupRetraining() {
         if(currentPhase === 2) {
             currentPhase = 3;
-            document.getElementById('train-title').innerText = "Fase Latih Data Ke-2 (Fine-Tuning 1)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem gagal mengklasifikasi kalimat yang berisi kata <b>Matriks, Segitiga, dan Probabilitas</b> karena datanya belum diajarkan! Ayo kelompokkan kata-kata baru ini ke kotak <b>Matematika</b>! (Kata-kata lama masih tersimpan di memori).`;
+            document.getElementById('train-title').innerText = "Fase Latih Data Ke-2 (Tambah IPA)";
+            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem belum pernah belajar kata-kata <b>IPA</b>. Masukkan kata-kata baru ini ke kotak <b>IPA</b> agar sistem bisa memahami kalimat sains dan eksperimen.`;
             activeDataset = dataLatih2;
         } else if (currentPhase === 4) {
             currentPhase = 5;
-            document.getElementById('train-title').innerText = "Fase Latih Data Ke-3 (Fine-Tuning 2)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem kembali gagal mengenali konteks seperti <b>Majas, Pantun, Personifikasi</b>. Masukkan data latih tersebut ke <b>B. Indonesia</b> agar akurasi sistem meningkat!`;
+            document.getElementById('train-title').innerText = "Fase Latih Data Ke-3 (Tambah IPS)";
+            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem masih kesulitan mengenali konteks <b>IPS</b>. Masukkan kata-kata baru ini ke kotak <b>IPS</b> agar prediksi tentang ekonomi dan geografi menjadi lebih akurat.`;
             activeDataset = dataLatih3;
         }
 
@@ -770,7 +783,7 @@ function closeCaraModal(){
 
 // ================= SLIDER CARA PENGGUNAAN =================
 let currentSlide = 0;
-const totalSlides = 3;
+const totalSlides = 4;
 
 function changeSlide(direction){
     // sembunyikan slide sekarang

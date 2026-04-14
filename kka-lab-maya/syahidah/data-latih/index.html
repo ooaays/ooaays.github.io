@@ -65,7 +65,7 @@
                             </svg>
                         </div>
                         <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
-                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan</span>
+                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase leading-tight">Tujuan</span>
                         </div>
                     </button>
 
@@ -76,7 +76,7 @@
                             </svg>
                         </div>
                         <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
-                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase leading-tight">Cara Penggunaan</span>
                         </div>
                     </button>
 
@@ -98,34 +98,36 @@
                             </svg>
                         </div>
                         <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
-                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+                            <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase leading-tight">Biodata Pengembang</span>
                         </div>
                     </button>
                 </div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border p-8">
-                <div class="text-xs font-bold text-slate-500 tracking-widest mb-6">PROSES DATA LATIH</div>
-                <div class="flex items-center justify-between gap-4">
-                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border">
-                        
-                        <div class="text-lg font-bold mt-3 text-slate-700">Data Latih</div>
-                        <p class="text-sm text-slate-500 mt-2">Memberi contoh kosakata</p>
+                <div class="text-xs font-bold text-slate-500 tracking-widest mb-2">PROSES DATA LATIH DI LAB</div>
+                <p class="text-sm text-slate-500 mb-6">Ini adalah alur pelatihan data yang akan kamu lakukan: kumpulkan dan siapkan data, latih sistem, evaluasi hasilnya, lalu ulangi jika perlu sebelum sistem melakukan inferensi.</p>
+                <div class="flex items-center justify-between gap-4 flex-wrap">
+                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border min-w-[220px]">
+                        <div class="text-lg font-bold mt-3 text-slate-700">Data Collection & Preparation</div>
+                        <p class="text-sm text-slate-500 mt-2">Pilih kata dan siapkan data latih yang rapi agar sistem memiliki contoh yang benar.</p>
                     </div>
                     <div class="ai-arrow">➜</div>
-                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border">
-                        
-                        <div class="text-lg font-bold mt-3 text-slate-700">Sistem Algoritma</div>
-                        <p class="text-sm text-slate-500 mt-2">Menyimpan referensi pola</p>
+                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border min-w-[220px]">
+                        <div class="text-lg font-bold mt-3 text-slate-700">Training (Sistem Algoritma)</div>
+                        <p class="text-sm text-slate-500 mt-2">Berikan data latih ke algoritma sehingga ia dapat mengenali pola dan kategori kata.</p>
                     </div>
                     <div class="ai-arrow">➜</div>
-                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border">
-                        
-                        <div class="text-lg font-bold mt-3 text-slate-700">Inference</div>
-                        <p class="text-sm text-slate-500 mt-2">Uji tingkat keyakinan</p>
+                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border min-w-[220px]">
+                        <div class="text-lg font-bold mt-3 text-slate-700">Evaluation & Validation</div>
+                        <p class="text-sm text-slate-500 mt-2">Uji prediksi sistem dengan kalimat baru untuk melihat apakah ia benar-benar belajar.</p>
+                    </div>
+                    <div class="ai-arrow">➜</div>
+                    <div class="ai-card flex-1 text-center bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border min-w-[220px]">
+                        <div class="text-lg font-bold mt-3 text-slate-700">Deployment & Inference</div>
+                        <p class="text-sm text-slate-500 mt-2">Setelah evaluasi berhasil, sistem menggunakan data latih untuk menebak kategori kalimat baru.</p>
                     </div>
                 </div>
-                
             </div>
         </div>
     </section>
@@ -162,7 +164,7 @@
                 <h2 id="train-title" class="text-xl font-bold mb-4">Fase Latih Data: Membangun Referensi Kata</h2>
                 <div class="notice-box" style="background: var(--primary-light); border-color: var(--primary); color: var(--primary-hover);">
                     <i class="fas fa-hand-pointer" style="font-size: 1.5em;"></i>
-                    <span id="train-desc"><b>Instruksi:</b> Kelompokkan kata-kata latih berikut ke dalam mata pelajaran yang tepat agar sistem memiliki data referensi (Klik kata lalu klik label mapel, atau seret langsung).</span>
+                    <span id="train-desc"><b>Instruksi:</b> Kelompokkan kata-kata latih untuk <strong>Bahasa Indonesia</strong> dan <strong>Matematika</strong> terlebih dahulu agar sistem memiliki data awal. Setelah itu, kamu akan menambahkan IPA dan IPS untuk membuat model lebih lengkap.</span>
                 </div>
 
                 <div class="data-pool" id="source-pool" onclick="dropToPool()" title="Klik area ini untuk mengembalikan kata yang dipilih"></div>
@@ -179,6 +181,10 @@
                     <div class="node-box" id="box-mtk" onclick="dropToNode('Matematika')" ondragover="allowDrop(event)" ondrop="drop(event, 'Matematika')">
                         <div class="node-title"><span class="node-icon"><i class="fas fa-calculator"></i></span> Matematika</div>
                         <div class="data-pool" id="node-Matematika" style="border:none; padding:0; background:transparent; width:100%;"></div>
+                    </div>
+                    <div class="node-box" id="box-ipa" onclick="dropToNode('IPA')" ondragover="allowDrop(event)" ondrop="drop(event, 'IPA')">
+                        <div class="node-title"><span class="node-icon"><i class="fas fa-flask"></i></span> IPA</div>
+                        <div class="data-pool" id="node-IPA" style="border:none; padding:0; background:transparent; width:100%;"></div>
                     </div>
                 </div>
 
@@ -232,6 +238,11 @@
                             <div class="stat-label">Matematika</div>
                             <div class="stat-bar-container"><div class="stat-bar" id="bar-mtk" style="background: var(--warning)"></div></div>
                             <div class="stat-value" id="val-mtk">0%</div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-label">IPA</div>
+                            <div class="stat-bar-container"><div class="stat-bar" id="bar-ipa" style="background: #0ea5e9"></div></div>
+                            <div class="stat-value" id="val-ipa">0%</div>
                         </div>
 
                         <div id="ai-conclusion" style="margin-top: 20px; padding: 15px; background: var(--bg-main); border-radius: 8px; font-family: var(--font-body); border-left: 4px solid var(--primary);"></div>
@@ -337,27 +348,35 @@
                 <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
                 <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
                 <div id="dot-2" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
+                <div id="dot-3" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
             </div>
         </div>
         <div class="text-left flex-1 overflow-y-auto pr-4 my-2">
             <div id="slide-0">
                 <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
-                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">1. Tahap Data Latih 1</h3>
-                    <p class="text-lg text-slate-700 mb-4">Kamu akan memberikan data awal berupa kata-kata referensi kepada sistem dan menempatkannya di label pelajaran yang sesuai: Bahasa Indonesia, IPS, atau Matematika.</p>
+                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">1. Data Collection & Preparation</h3>
+                    <p class="text-lg text-slate-700 mb-4">Pertama, kumpulkan dan siapkan kata-kata pelajaran sebagai data latih. Pilih kata yang tepat untuk <strong>Bahasa Indonesia</strong>, <strong>IPS</strong>, dan <strong>Matematika</strong>, lalu pastikan data tersebut rapi dan siap dipelajari oleh sistem.</p>
                 </div>
             </div>
 
             <div id="slide-1" class="hidden-slide">
                 <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
-                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">2. Mode Interaktif (Klik / Drag)</h3>
-                    <p class="text-lg text-slate-700 mb-4">Klik salah satu kata latih, lalu klik kotak mata pelajaran yang tepat. Kamu juga bisa menarik langsung (drag & drop) kata tersebut ke dalam kotaknya.</p>
+                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">2. Training (Sistem Algoritma)</h3>
+                    <p class="text-lg text-slate-700 mb-4">Masukkan kata-kata ke dalam kotak pelajaran yang benar. Sistem algoritma akan belajar dari data ini untuk menemukan pola dan mengingat hubungan antar kata.</p>
                 </div>
             </div>
 
             <div id="slide-2" class="hidden-slide">
                 <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
-                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">3. Uji Tingkat Keyakinan & Latih Ulang</h3>
-                    <p class="text-lg text-slate-700 mb-4">Klik kalimat untuk menguji prediksi sistem. Sistem akan menghitung tingkat keyakinan <i>(Confidence Level)</i> berdasarkan kesamaan kata yang ia kenali. Kamu akan diminta <b>Melatih Data lagi beberapa kali</b> setiap kali sistem menemukan kalimat dengan kosa kata asing.</p>
+                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">3. Evaluation & Validation</h3>
+                    <p class="text-lg text-slate-700 mb-4">Uji sistem dengan kalimat baru di fase percobaan. Lihat apakah sistem benar-benar mengenali pola atau sekadar menebak berdasarkan data latih saja.</p>
+                </div>
+            </div>
+
+            <div id="slide-3" class="hidden-slide">
+                <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
+                    <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">4. Iteration & Deployment</h3>
+                    <p class="text-lg text-slate-700 mb-4">Jika hasilnya kurang bagus, ulangi dengan menambah atau memperbaiki data latih. Setelah sistem bekerja dengan baik, ia siap untuk melakukan inferensi pada kalimat baru.</p>
                 </div>
             </div>
         </div>
