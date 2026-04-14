@@ -749,20 +749,32 @@ const caraModal = document.getElementById('caraModal');
 let currentSlide = 0;
 const totalSlides = 9;
 
-function openCaraModal() {
+// CARA PENGGUNAAN
+function openCaraModal(){
     hasSeenCara = true;
     updateStartButton();
     caraModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    currentSlide = 0; 
-    updateSlideView();
+    
+    document.getElementById("caraModal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+
+    // reset ke slide pertama
+    currentSlide = 0;
+
+    for(let i=0;i<totalSlides;i++){
+        document.getElementById("slide-" + i).classList.add("hidden-slide");
+    }
+
+    document.getElementById("slide-0").classList.remove("hidden-slide");
+
+    updateDots();
+    updateButtons();
 }
 
-function closeCaraModal() {
-    caraModal.classList.add('hidden');
-    document.body.style.overflow = 'auto';
+function closeCaraModal(){
+    document.getElementById("caraModal").classList.add("hidden");
+    document.body.style.overflow = "auto";
 }
-
 function changeSlide(direction) {
     currentSlide += direction;
     if (currentSlide < 0) currentSlide = 0;
