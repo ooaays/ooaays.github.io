@@ -772,6 +772,33 @@ function updateButtons(){
     nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
 }
 
+
+// ==============================================
+// SCRIPT MODAL BIODATA PENGEMBANG
+// ==============================================
+const bioModal = document.getElementById('bioModal');
+let bioCurrentSlide = 0;
+const bioTotalSlides = 2;
+
+function openBioModal() {
+    bioCurrentSlide = 0;
+    updateBioSlideView();
+    bioModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+function closeBioModal() { bioModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+function changeBioSlide(direction) {
+    bioCurrentSlide += direction;
+    if (bioCurrentSlide < 0) bioCurrentSlide = 0;
+    if (bioCurrentSlide >= bioTotalSlides) bioCurrentSlide = bioTotalSlides - 1;
+
+    const contentArea = document.querySelector('#bioModal .overflow-y-auto');
+    if (contentArea) contentArea.scrollTop = 0;
+
+    updateBioSlideView();
+}
+
 function updateBioSlideView() {
     for (let i = 0; i < bioTotalSlides; i++) {
         const slide = document.getElementById('bio-slide-' + i);
