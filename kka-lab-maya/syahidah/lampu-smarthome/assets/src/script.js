@@ -319,13 +319,23 @@ let selectedValue = null;
     		document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
     	}
 
-    function changeSlide(direction) {
-        currentSlide += direction;
-        if (currentSlide < 0) currentSlide = 0;
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-        updateSlideView();
-    }
 
+let hasSeenIntro = false;
+let hasSeenCP = false;
+let hasSeenCara = false;
+
+function tryOpenLabPage() {
+    if (!hasSeenCP || !hasSeenCara) {
+        const lockedPopup = document.getElementById("lockedPopup");
+        if (lockedPopup) lockedPopup.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        return;
+    }
+    showPage('labPage');
+}
+
+function closeStartLockedPopup() {
+    const lockedPopup = document.getElementById('lockedPopup');
     if (!lockedPopup) return;
     lockedPopup.classList.add('hidden');
     document.body.style.overflow = 'auto';
@@ -417,3 +427,9 @@ function updateBioSlideView() {
     }
 }
 
+function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+    updateSlideView();
+}
