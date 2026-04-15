@@ -282,6 +282,7 @@ const trainingLib = {
                 if (tagValue && !activeTags[category].includes(tagValue)) {
                     if (trainingLib.isToxicTag(tagValue)) {
                         input.value = "";
+                        alert("Kata yang dimasukkan tidak boleh mengandung kata tidak pantas.");
                         addChatMessage("Kata yang dimasukkan tidak boleh mengandung kata tidak pantas.", 'warning');
                         return;
                     }
