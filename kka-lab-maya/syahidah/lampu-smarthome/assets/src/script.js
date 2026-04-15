@@ -272,10 +272,6 @@ let selectedValue = null;
     	function openCPModal(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
     	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; }
 
-    	const bioModal = document.getElementById('bioModal');
-    	function openBioModal(){ bioModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    	function closeBioModal(){ bioModal.classList.add('hidden'); document.body.style.overflow='auto'; }
-
     	const refleksiModal = document.getElementById('refleksiModal');
     	function openRefleksiModal(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
     	function closeRefleksiModal(){ refleksiModal.classList.add('hidden'); document.body.style.overflow='auto'; }
@@ -330,3 +326,110 @@ let selectedValue = null;
     		document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
     		document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
     	}
+
+
+        let hasSeenIntro = false;
+let hasSeenCP = false;
+let hasSeenCara = false;
+
+function tryOpenLabPage() {
+    if (!hasSeenCP || !hasSeenCara) {
+        const lockedPopup = document.getElementById("lockedPopup");
+        if (lockedPopup) lockedPopup.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        return;
+    }
+    showPage('labPage');
+}
+
+function closeStartLockedPopup() {
+    const lockedPopup = document.getElementById('lockedPopup');
+    if (!lockedPopup) return;
+    lockedPopup.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function checkStartButtonState() {
+    const btnStart = document.getElementById('btn-start');
+    if (!btnStart) return;
+
+    if (hasSeenCP && hasSeenCara) {
+        btnStart.classList.remove('disabled-style');
+        btnStart.setAttribute('aria-disabled', 'false');
+        btnStart.title = 'Mulai percobaan';
+    } else {
+        btnStart.classList.add('disabled-style');
+        btnStart.setAttribute('aria-disabled', 'true');
+        btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
+    }
+}
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById(id);
+    if (page) page.classList.add('active');
+    window.scrollTo({ top:0, behavior:"smooth" });
+
+    if (id === 'labPage' && !hasSeenIntro) {
+        hasSeenIntro = true;
+        document.getElementById('introModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeIntroModal() {
+    document.getElementById('introModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+
+// ==============================================
+// SCRIPT MODAL BIODATA PENGEMBANG
+// ==============================================
+const bioModal = document.getElementById('bioModal');
+let bioCurrentSlide = 0;
+const bioTotalSlides = 2;
+
+// BIODATA
+function openBioModal(){
+    bioCurrentSlide = 0;
+    updateBioSlideView();
+    document.getElementById("bioModal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function closeBioModal(){
+    document.getElementById("bioModal").classList.add("hidden");
+    document.body.style.overflow = "auto";
+}
+
+function changeBioSlide(direction) {
+    bioCurrentSlide += direction;
+    if (bioCurrentSlide < 0) bioCurrentSlide = 0;
+    if (bioCurrentSlide >= bioTotalSlides) bioCurrentSlide = bioTotalSlides - 1;
+
+    const contentArea = document.querySelector('#bioModal .overflow-y-auto');
+    if (contentArea) contentArea.scrollTop = 0;
+
+    updateBioSlideView();
+}
+
+function updateBioSlideView() {
+    for (let i = 0; i < bioTotalSlides; i++) {
+        const slide = document.getElementById('bio-slide-' + i);
+        if (slide) {
+            slide.classList.toggle('hidden', i !== bioCurrentSlide);
+        }
+    }
+
+    const prevBtn = document.getElementById('bioPrevBtn');
+    const nextBtn = document.getElementById('bioNextBtn');
+
+    if (prevBtn) {
+        prevBtn.style.visibility = bioCurrentSlide === 0 ? 'hidden' : 'visible';
+    }
+    if (nextBtn) {
+        nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
+    }
+}
+
