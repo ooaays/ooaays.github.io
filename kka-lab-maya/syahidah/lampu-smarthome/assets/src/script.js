@@ -13,8 +13,7 @@ let selectedValue = null;
 
         function placeBlock(slot) {
         	if (!selectedValue) {
-        		logToTerminal("⚠️ Ups! Kamu harus mengeklik (memilih) salah satu alat di atas terlebih dahulu!", "error");
-        		return;
+			logToTerminal("<i class=\"fa-solid fa-triangle-exclamation\"></i> Ups! Kamu harus mengeklik (memilih) salah satu alat di atas terlebih dahulu!", "error");
         	}
 
             // Tampilan teks berdasarkan tipe (tambahkan kutip jika string)
@@ -77,7 +76,7 @@ let selectedValue = null;
         	document.querySelectorAll('.block').forEach(b => b.classList.remove('selected'));
 
         	const term = document.getElementById('terminal');
-        	term.innerHTML = `<span class="log-info">👋 Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!</span>`;
+        	term.innerHTML = `<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!</span>`;
 
             simSuccess = false; // Kembalikan status ke gagal
             checkProgress(); // Perbarui indikator UI
@@ -91,15 +90,15 @@ let selectedValue = null;
             
             const term = document.getElementById('terminal');
             term.innerHTML = ""; 
-            logToTerminal("🚀 Menjalankan kodemu...", "info");
+            logToTerminal("<i class=\"fa-solid fa-rocket\"></i> Menjalankan kodemu...", "info");
 
             // Validasi: Apakah ada slot "???" yang belum diisi?
             const allSlots = Array.from(document.querySelectorAll('.slot'));
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
             
             if (emptySlots.length > 0) {
-            	logToTerminal(`❌ Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
-            	return;
+			logToTerminal(`<i class=\"fa-solid fa-xmark\"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
+			return;
             }
 
             // Ambil data puzzle logika di LANGKAH 2
@@ -117,14 +116,14 @@ let selectedValue = null;
 
             // Cek kesesuaian syntax python (for, if, else)
             if (valFor !== 'for' || valIf1 !== 'if' || valIf2 !== 'if' || valElse !== 'else') {
-            	logToTerminal("❌ Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
-            	return;
+			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
+			return;
             }
 
             // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "s")
             if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 's') {
-            	logToTerminal("❌ Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
-            	return;
+			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
+			return;
             }
 
             // Jika lulus semua validasi puzzle
@@ -147,13 +146,10 @@ let selectedValue = null;
             	if (dataLampu === logicLampu && dataLampu === 'ON') {
             		adaYangNyala = true;
             		roomEl.classList.add('active');
-            		logToTerminal(`✅ Yey! Lampu <b>${id}</b> berhasil MENYALA.`, "success");
-
-            		if (dataTimer === logicTimer && dataTimer === 'ON') {
+            	logToTerminal(`<i class=\"fa-solid fa-circle-check\"></i> Yey! Lampu <b>${id}</b> berhasil MENYALA.`, "success");
             			let count = detik;
             			cdEl.innerText = count + " detik";
-            			logToTerminal(`⏳ Menyalakan timer ${id} selama ${detik} detik...`);
-
+            		logToTerminal(`<i class=\"fa-solid fa-hourglass-half\"></i> Menyalakan timer ${id} selama ${detik} detik...`);
             			let t = setInterval(() => {
             				count--;
             				if(count > 0) {
@@ -162,19 +158,19 @@ let selectedValue = null;
             					clearInterval(t);
             					roomEl.classList.remove('active');
             					cdEl.innerText = "";
-            					logToTerminal(`🌙 Waktu habis! Lampu <b>${id}</b> otomatis DIMATIKAN.`, "info");
+            					logToTerminal(`<i class=\"fa-solid fa-moon\"></i> Waktu habis! Lampu <b>${id}</b> otomatis DIMATIKAN.`, "info");
             				}
             			}, 1000);
             			activeTimers.push(t);
             		}
             	} else {
             		roomEl.classList.remove('active');
-            		logToTerminal(`➖ Lampu <b>${id}</b> tetap padam sesuai logika kode.`);
+            		logToTerminal(`<i class=\"fa-solid fa-minus\"></i> Lampu <b>${id}</b> tetap padam sesuai logika kode.`);
             	}
             });
 
             if (!adaYangNyala) {
-            	logToTerminal("💡 Tips: Coba atur status di LANGKAH 1 dan LANGKAH 2 menjadi 'ON' agar ada lampu yang menyala!", "info");
+            	logToTerminal("<i class=\"fa-solid fa-lightbulb\"></i> Tips: Coba atur status di LANGKAH 1 dan LANGKAH 2 menjadi 'ON' agar ada lampu yang menyala!", "info");
             }
         }
 
@@ -214,10 +210,10 @@ let selectedValue = null;
         	const icon = el.querySelector('.task-icon');
         	if (isDone) {
         		el.classList.add('completed');
-        		icon.innerHTML = '✅';
+        		icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
         	} else {
         		el.classList.remove('completed');
-        		icon.innerHTML = '⚪';
+        		icon.innerHTML = '<i class="fa-solid fa-circle"></i>';
         	}
         }
 
