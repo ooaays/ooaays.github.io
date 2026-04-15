@@ -290,6 +290,7 @@
 		.task-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;}
 		.task-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: #831843; transition: 0.3s; line-height: 1.4; opacity: 0.6;}
 		.task-item.active { opacity: 1; font-weight: 800;}
+		.disabled-style { opacity: 0.5; }
 		.task-item.completed { color: #059669; text-decoration: line-through; opacity: 0.5;}
 		.task-icon { font-size: 1rem; flex-shrink: 0; }
 

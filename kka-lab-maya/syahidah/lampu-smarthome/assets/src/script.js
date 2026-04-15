@@ -270,7 +270,7 @@ let selectedValue = null;
     // =========================
     	const cpModal = document.getElementById('cpModal');
     	function openCPModal(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+    	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; hasSeenCP = true; checkStartButtonState(); }
 
     	const refleksiModal = document.getElementById('refleksiModal');
     	function openRefleksiModal(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
@@ -297,16 +297,8 @@ let selectedValue = null;
     	function closeCaraModal() {
     		caraModal.classList.add('hidden');
     		document.body.style.overflow = 'auto';
-    	}
-
-    	function changeSlide(direction) {
-    		currentSlide += direction;
-    		if (currentSlide < 0) currentSlide = 0;
-    		if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-
-    		const contentArea = caraModal.querySelector('.overflow-y-auto');
-    		if(contentArea) contentArea.scrollTop = 0;
-
+        hasSeenCara = true;
+        checkStartButtonState();
     		updateSlideView();
     	}
 
@@ -363,6 +355,8 @@ function checkStartButtonState() {
         btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
     }
 }
+
+checkStartButtonState();
 
 function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
