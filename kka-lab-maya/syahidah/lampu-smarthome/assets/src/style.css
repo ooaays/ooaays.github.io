@@ -1,12 +1,4 @@
 
-body{
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#e0e7ff,#f8fafc);
-    min-height:100vh;
-    margin:0;
-    color:#1e293b;
-}
-
 .page{display:none;}
 .page.active{display:block;}
 
@@ -139,14 +131,6 @@ body{
     margin-bottom:16px;
 }
 
-.smart-home{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:18px;
-    margin-top:20px;
-}
-
-
 .hero-mini-note{
     margin-top:20px;
     background:#eef2ff;
@@ -181,7 +165,7 @@ body{
 		/* --- LAYOUT UTAMA --- */
 		body {
 			font-family: 'Nunito', sans-serif;
-			background-color: var(--bg);
+			background: linear-gradient(135deg, #e0e7ff, #f8fafc);
 			color: var(--text-main);
 			margin: 0;
 			display: flex;
