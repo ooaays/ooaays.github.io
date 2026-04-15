@@ -1,4 +1,4 @@
-# Lab Maya Informatika – Representasi Gambar (v8)
+# Lab Maya Informatika – Representasi Gambar
 
 Paket ini memakai struktur dan gaya antarmuka dari template `final-v2-python-data-lab`, lalu diadaptasi penuh menjadi materi **Representasi Gambar**.
 
