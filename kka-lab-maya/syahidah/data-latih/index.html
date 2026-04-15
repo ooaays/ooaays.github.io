@@ -171,143 +171,145 @@
                 </button>
             </div>
 
-            <div class="system-status">
-                <div class="status-indicator">
-                    <div class="dot" id="status-dot"></div>
-                    <span id="status-text" style="color: var(--text-muted)">STATUS: MENUNGGU DATA</span>
-                </div>
-                <div id="data-counter">Data Terkumpul: 0 / 15</div>
-            </div>
-
-            <div class="control-panel">
-                <button class="icon-btn" onclick="location.reload()" title="Reset Lab">
-                    <i class="fas fa-redo"></i>
-                </button>
-            </div>
-
-            <!-- SCREEN 1: TRAINING DATA -->
-            <div id="screen-train">
-                <h2 id="train-title" class="text-xl font-bold mb-4">Fase Latih Data: Membangun Referensi Kata</h2>
-                <div class="notice-box" style="background: var(--primary-light); border-color: var(--primary); color: var(--primary-hover);">
-                    <i class="fas fa-hand-pointer" style="font-size: 1.5em;"></i>
-                    <span id="train-desc"><b>Instruksi:</b> Kelompokkan kata-kata latih untuk <strong>Bahasa Indonesia</strong> dan <strong>Matematika</strong> terlebih dahulu. Setelah pelatihan setiap fase, kamu akan menguji sistem, lalu menambahkan data baru agar model lebih lengkap.</span>
-                </div>
-
-                <div class="data-pool" id="source-pool" onclick="dropToPool()" title="Klik area ini untuk mengembalikan kata yang dipilih"></div>
-
-                <div class="nodes-container">
-                    <div class="node-box" id="box-bindo" onclick="dropToNode('BahasaIndonesia')" ondragover="allowDrop(event)" ondrop="drop(event, 'BahasaIndonesia')">
-                        <div class="node-title"><span class="node-icon"><i class="fas fa-book"></i></span> B. Indonesia</div>
-                        <div class="data-pool" id="node-BahasaIndonesia" style="border:none; padding:0; background:transparent; width:100%;"></div>
+            <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        
+            <!-- LEFT PANEL: CONTROL CENTER -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Sistem Pelatihan <span class="text-blue-600">AI</span></h1>
+                        <p class="text-gray-600 mt-2">Konfigurasi label data dan latih model kecerdasan buatan secara waktu nyata.</p>
                     </div>
-                    <div class="node-box" id="box-ips" onclick="dropToNode('IPS')" ondragover="allowDrop(event)" ondrop="drop(event, 'IPS')">
-                        <div class="node-title"><span class="node-icon"><i class="fas fa-globe-asia"></i></span> IPS</div>
-                        <div class="data-pool" id="node-IPS" style="border:none; padding:0; background:transparent; width:100%;"></div>
-                    </div>
-                    <div class="node-box" id="box-mtk" onclick="dropToNode('Matematika')" ondragover="allowDrop(event)" ondrop="drop(event, 'Matematika')">
-                        <div class="node-title"><span class="node-icon"><i class="fas fa-calculator"></i></span> Matematika</div>
-                        <div class="data-pool" id="node-Matematika" style="border:none; padding:0; background:transparent; width:100%;"></div>
-                    </div>
-                    <div class="node-box" id="box-ipa" onclick="dropToNode('IPA')" ondragover="allowDrop(event)" ondrop="drop(event, 'IPA')">
-                        <div class="node-title"><span class="node-icon"><i class="fas fa-flask"></i></span> IPA</div>
-                        <div class="data-pool" id="node-IPA" style="border:none; padding:0; background:transparent; width:100%;"></div>
+                    <div class="flex gap-2">
+                        <button onclick="fillDemoData()" class="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-bold rounded-xl hover:bg-blue-200 transition-colors"><i class="fa-solid fa-flask-vial mr-1"></i> Muat Data Uji</button>
+                        <button onclick="resetAll()" class="px-4 py-2 bg-red-100 text-red-700 text-sm font-bold rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-trash mr-1"></i> Hapus Data</button>
                     </div>
                 </div>
 
-                <button class="btn-modern" id="btn-compile" onclick="startTraining()" disabled>Latih Data <i class="fas fa-cogs"></i></button>
-            </div>
-
-            <!-- SCREEN 2: NEURAL PROCESSING -->
-            <div id="screen-processing" class="hidden">
-                <h2 style="text-align: center; color: var(--primary);" class="text-xl font-bold mb-4">SISTEM SEDANG MEMPELAJARI DATA LATIH...</h2>
-                <p style="text-align: center; margin-bottom: 20px; font-weight: 500;" id="training-log">Menyimpan pola kata ke dalam memori...</p>
-                <canvas id="neuralCanvas"></canvas>
-            </div>
-
-            <!-- SCREEN 3: TESTING (INFERENCE) -->
-            <div id="screen-test" class="hidden">
-                <h2 id="test-title" class="text-xl font-bold mb-4">Fase Uji Coba Prediksi</h2>
-
-                <div class="notice-box" id="test-notice">
-                    <i class="fas fa-info-circle" style="font-size: 1.5em;"></i>
-                    <span>Sistem akan membaca dan menghitung skor kecocokan setiap kalimat di bawah ini berdasarkan <b>data latih</b> sebelumnya. Klik salah satu kalimat untuk diuji!</span>
-                </div>
-
-                <div class="ai-terminal">
-                    <div class="ai-avatar-container">
-                        <div class="ai-core" id="ai-icon"><i class="fas fa-robot"></i></div>
-                        <div class="ai-dialogue" id="ai-text">Menunggu input teks kalimat untuk dianalisis berdasarkan data latih...</div>
+                <div class="glass-card p-6 rounded-3xl shadow-xl space-y-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm"><i class="fa-solid fa-1"></i></div>
+                        <h2 class="text-xl font-bold">Masukkan Data Latih Per Kategori</h2>
                     </div>
 
-                    <!-- Testing Pool for Sentences -->
-                    <div id="test-pool" class="w-full space-y-4 bg-primary-light p-4 rounded-xl border border-primary mt-4">
-                        <!-- Sentences will be injected here as block cards -->
-                    </div>
-                    
-                    <div id="test-progress" class="text-center font-bold text-slate-500 mt-3">Kalimat teruji: 0 / 3</div>
-
-                    <!-- Analytics Output -->
-                    <div class="analytics-panel" id="analytics-panel">
-                        <h3 style="font-family: var(--font-tech); color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">Tingkat Keyakinan Berdasarkan Data Latih</h3>
-
-                        <div class="stat-row">
-                            <div class="stat-label">B. Indonesia</div>
-                            <div class="stat-bar-container"><div class="stat-bar" id="bar-bindo"></div></div>
-                            <div class="stat-value" id="val-bindo">0%</div>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-label">IPS</div>
-                            <div class="stat-bar-container"><div class="stat-bar" id="bar-ips" style="background: var(--success)"></div></div>
-                            <div class="stat-value" id="val-ips">0%</div>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-label">Matematika</div>
-                            <div class="stat-bar-container"><div class="stat-bar" id="bar-mtk" style="background: var(--warning)"></div></div>
-                            <div class="stat-value" id="val-mtk">0%</div>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-label">IPA</div>
-                            <div class="stat-bar-container"><div class="stat-bar" id="bar-ipa" style="background: #0ea5e9"></div></div>
-                            <div class="stat-value" id="val-ipa">0%</div>
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- IPA -->
+                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                            <label class="flex items-center gap-2 text-xs font-bold text-green-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-flask"></i> Ilmu Pengetahuan Alam (Sains)</label>
+                            <div class="tag-container" id="ipa-tags-container" onclick="focusInput('ipa-input')">
+                                <div id="ipa-tags" class="flex flex-wrap gap-1.5"></div>
+                                <input type="text" id="ipa-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'ipa')">
+                            </div>
                         </div>
 
-                        <div id="ai-conclusion" style="margin-top: 20px; padding: 15px; background: var(--bg-main); border-radius: 8px; font-family: var(--font-body); border-left: 4px solid var(--primary);"></div>
+                        <!-- MATEMATIKA -->
+                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                            <label class="flex items-center gap-2 text-xs font-bold text-blue-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-calculator"></i> Matematika</label>
+                            <div class="tag-container" id="mtk-tags-container" onclick="focusInput('mtk-input')">
+                                <div id="mtk-tags" class="flex flex-wrap gap-1.5"></div>
+                                <input type="text" id="mtk-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'mtk')">
+                            </div>
+                        </div>
+
+                        <!-- BAHASA -->
+                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                            <label class="flex items-center gap-2 text-xs font-bold text-orange-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-book"></i> Bahasa Indonesia</label>
+                            <div class="tag-container" id="indo-tags-container" onclick="focusInput('indo-input')">
+                                <div id="indo-tags" class="flex flex-wrap gap-1.5"></div>
+                                <input type="text" id="indo-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'indo')">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="trainModel()" class="w-full py-4 bg-gray-900 hover:bg-black text-white rounded-2xl font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span id="btn-text">Mulai Pelatihan Model</span>
+                    </button>
+
+                    <div id="train-log" class="hidden animate-pulse flex items-center gap-2 text-blue-600 font-semibold text-sm justify-center py-1">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        Memproses dan memetakan data ke dalam memori sistem...
                     </div>
                 </div>
 
-                <button class="btn-modern btn-warning hidden" id="btn-retrain" onclick="setupRetraining()">Latih Ulang Data Baru <i class="fas fa-sync-alt"></i></button>
-                <button class="btn-modern btn-success hidden" id="btn-reflect" onclick="showReflection()">Akses Log Evaluasi Pembelajaran <i class="fas fa-clipboard-check"></i></button>
+                <div class="glass-card p-5 rounded-3xl shadow-lg border-l-4 border-yellow-400">
+                    <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-yellow-500"></i>
+                        Status Sistem
+                    </h3>
+                    <p id="insight-text" class="text-xs text-gray-600 mt-2 italic leading-relaxed">
+                        "Sistem menunggu instruksi. Gunakan tombol 'Muat Data Uji' untuk mencoba data secara instan."
+                    </p>
+
+                    <!-- Menambahkan Bar Confidence -->
+                    <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
+                        <h4 class="text-xs font-bold text-gray-700 mb-2"><i class="fa-solid fa-chart-pie mr-1"></i> Tingkat Keyakinan Per Kategori</h4>
+                        
+                        <!-- IPA -->
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
+                                <span>Ilmu Pengetahuan Alam</span>
+                                <span id="conf-val-ipa">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div id="conf-bar-ipa" class="bg-green-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Matematika -->
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
+                                <span>Matematika</span>
+                                <span id="conf-val-mtk">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div id="conf-bar-mtk" class="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Bahasa Indonesia -->
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
+                                <span>Bahasa Indonesia</span>
+                                <span id="conf-val-indo">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div id="conf-bar-indo" class="bg-orange-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- SCREEN 4: REFLECTION -->
-            <div id="screen-reflection" class="hidden">
-                <h2 class="text-xl font-bold mb-4">Fase Terakhir: Evaluasi & Kesimpulan</h2>
-                <p style="color: var(--text-muted); margin-bottom: 30px;">Berdasarkan proses pelatihan data latih tadi, mari kita simpulkan cara kerja program prediksi ini.</p>
+            <!-- RIGHT PANEL: SMARTPHONE MOCKUP -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="phone-case">
+                    <div class="dynamic-island"></div>
+                    <div class="phone-screen flex flex-col">
+                        <div class="p-4 pt-10 bg-white/80 backdrop-blur-md border-b flex items-center gap-3 z-40">
+                            <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm leading-none">Asisten AI</p>
+                                <p class="text-[10px] text-green-500 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Aktif
+                                </p>
+                            </div>
+                        </div>
 
-                <div class="reflection-card">
-                    <h3 style="color: var(--primary); font-weight:600;"><i class="fas fa-lightbulb"></i> Analisis 01: Mengapa Prediksi Sistem Tidak Akurat di Pengujian Pertama?</h3>
-                    <p style="margin-top: 10px;">Pada Uji Coba Pertama, mengapa tingkat keyakinan sistem pada kalimat yang memuat kata "Matriks" dan "Probabilitas" sangat rendah dan sebarannya acak?</p>
-                    <div class="options-grid" id="q1">
-                        <button class="opt-btn" onclick="answer(1, false, this)">A. Karena sistem belum diprogram untuk membaca kalimat dengan tingkat kesulitan tinggi seperti Matematika.</button>
-                        <button class="opt-btn" onclick="answer(1, true, this)">B. Karena kata "Matriks" dan "Probabilitas" belum diajarkan dan tidak dimasukkan ke dalam kumpulan Data Latih di Fase 1.</button>
-                        <button class="opt-btn" onclick="answer(1, false, this)">C. Karena sistem sedang mengalami error jaringan saat memproses kalimat yang terlalu rumit.</button>
+                        <div id="chat-window" class="chat-container"></div>
+
+                        <div class="p-4 bg-white border-t flex items-center gap-2">
+                            <input type="text" id="user-input" class="flex-1 bg-gray-100 rounded-full py-2 px-4 text-xs outline-none focus:ring-1 focus:ring-blue-400" placeholder="Ketik pesan Anda di sini..." onkeypress="handleChatKeyPress(event)">
+                            <button onclick="sendMessage()" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white transition-transform active:scale-90">
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="feedback" id="feed-1"></div>
                 </div>
-
-                <div class="reflection-card">
-                    <h3 style="color: var(--primary); font-weight:600;"><i class="fas fa-brain"></i> Analisis 02: Dampak Kualitas Data Latih</h3>
-                    <p style="margin-top: 10px;">Apa kesimpulan paling tepat yang bisa ditarik mengenai hubungan antara Data Latih dan akurasi model klasifikasi dari simulasi ini?</p>
-                    <div class="options-grid" id="q2">
-                        <button class="opt-btn" onclick="answer(2, false, this)">A. Model akan secara mandiri mencari referensi dari Google jika menemukan kata asing di luar data latih.</button>
-                        <button class="opt-btn" onclick="answer(2, false, this)">B. Model memiliki kemampuan alami untuk memahami makna kalimat terlepas dari berapa banyak data latih yang ada.</button>
-                        <button class="opt-btn" onclick="answer(2, true, this)">C. Akurasi dan tingkat keyakinan model sepenuhnya bergantung pada kuantitas dan relevansi Data Latih yang sebelumnya dipasok oleh manusia.</button>
-                    </div>
-                    <div class="feedback" id="feed-2"></div>
-                </div>
-
-                <button class="btn-modern btn-success disabled-style" id="btn-finish" onclick="finishLab()">Selesaikan Simulasi <i class="fas fa-check-circle"></i></button>
             </div>
+        </div>
 
         </div>
     </div>

@@ -1,277 +1,58 @@
 
-/* --- DATASET NLP --- */
-    const dataLatih1 = [
-        { id: "d1", name: "Puisi" }, { id: "d2", name: "Cerita" }, { id: "d3", name: "Paragraf" }, { id: "d4", name: "Sinonim" }, { id: "d5", name: "Kalimat" },
-        { id: "d6", name: "Rumus" }, { id: "d7", name: "Angka" }, { id: "d8", name: "Luas" }, { id: "d9", name: "Pecahan" }, { id: "d10", name: "Variabel" }
-    ];
+let soundEnabled = false;
+let hasSeenIntro = false;
+let hasSeenCP = false;
+let hasSeenCara = false;
 
-    const dataLatih2 = [
-        { id: "a1", name: "IPA" }, { id: "a2", name: "eksperimen" }, { id: "a3", name: "pengukuran" }, { id: "a4", name: "suhu" }
-    ];
-
-    const dataLatih3 = [
-        { id: "b1", name: "IPS" }, { id: "b2", name: "ekonomi" }, { id: "b3", name: "geografi" }, { id: "b4", name: "wilayah" }
-    ];
-
-    let aiModel = {}; 
-    let soundEnabled = false;
-    let itemsTested = 0;
-    
-    let currentPhase = 1; 
-    let activeDataset = dataLatih1;
-    let totalItemsNeeded = activeDataset.length;
-    let placedItems = 0;
-    let selectedItemElement = null;
-    let hasSeenIntro = false;
-    let hasSeenCP = false;
-    let hasSeenCara = false;
-
-    function shuffleArray(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
+function tryOpenLabPage() {
+    if (!hasSeenCP || !hasSeenCara) {
+        const lockedPopup = document.getElementById("lockedPopup");
+        if (lockedPopup) lockedPopup.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        return;
     }
+    showPage('labPage');
+}
 
-    window.onload = () => {
-        loadItemsToPool(shuffleArray([...activeDataset]));
-        updateNodeVisibility();
-        updateCounter();
-        checkStartButtonState();
-    };
+function closeStartLockedPopup() {
+    const lockedPopup = document.getElementById('lockedPopup');
+    if (!lockedPopup) return;
+    lockedPopup.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
 
-    function tryOpenLabPage() {
-        if (!hasSeenCP || !hasSeenCara) {
-            const missing = [];
-            if (!hasSeenCP) missing.push('Tujuan');
-            if (!hasSeenCara) missing.push('Cara Penggunaan');
-            document.getElementById("lockedPopup").classList.remove("hidden");
-            document.body.style.overflow = "hidden";
-            return;
-        }
-        showPage('labPage');
+function checkStartButtonState() {
+    const btnStart = document.getElementById('btn-start');
+    if (!btnStart) return;
+
+    if (hasSeenCP && hasSeenCara) {
+        btnStart.classList.remove('disabled-style');
+        btnStart.setAttribute('aria-disabled', 'false');
+        btnStart.title = 'Mulai percobaan';
+    } else {
+        btnStart.classList.add('disabled-style');
+        btnStart.setAttribute('aria-disabled', 'true');
+        btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
     }
-    function closeStartLockedPopup() {
-        const lockedPopup = document.getElementById('lockedPopup');
-        if (!lockedPopup) return;
-        lockedPopup.classList.add('hidden');
-        document.body.style.overflow = 'auto';
+}
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById(id);
+    if (page) page.classList.add('active');
+    window.scrollTo({ top:0, behavior:"smooth" });
+
+    if (id === 'labPage' && !hasSeenIntro) {
+        hasSeenIntro = true;
+        document.getElementById('introModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
+}
 
-    function checkStartButtonState() {
-        const btnStart = document.getElementById('btn-start');
-        if (!btnStart) return;
-
-        if (hasSeenCP && hasSeenCara) {
-            btnStart.classList.remove('disabled-style');
-            btnStart.setAttribute('aria-disabled', 'false');
-            btnStart.title = 'Mulai percobaan';
-        } else {
-            btnStart.classList.add('disabled-style');
-            btnStart.setAttribute('aria-disabled', 'true');
-            btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
-        }
-    }
-
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p=>{
-            p.classList.remove('active');
-        });
-        document.getElementById(id).classList.add('active');
-        window.scrollTo({ top:0, behavior:"smooth" });
-
-        if(id === 'labPage' && !hasSeenIntro) {
-            hasSeenIntro = true;
-            document.getElementById('introModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    function closeIntroModal() {
-        document.getElementById('introModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-
-    function loadItemsToPool(dataArray) {
-        const sourcePool = document.getElementById('source-pool');
-        sourcePool.innerHTML = ''; 
-
-        dataArray.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'item';
-            el.id = item.id;
-            el.dataset.name = item.name;
-            el.draggable = true;
-
-            el.innerHTML = `<span>${item.name}</span>`;
-            
-            el.onclick = (e) => selectItem(e, el);
-
-            el.ondragstart = (e) => {
-                selectedItemElement = el;
-                el.classList.add('selected');
-                e.dataTransfer.setData('text/plain', el.id);
-                document.querySelectorAll('.node-box').forEach(box => box.classList.add('highlight'));
-            };
-            el.ondragend = () => {
-                removeNodeHighlights();
-                if(selectedItemElement) selectedItemElement.classList.remove('selected');
-                selectedItemElement = null;
-            };
-
-            sourcePool.appendChild(el);
-        });
-    }
-
-    function updateNodeVisibility() {
-        const boxIPS = document.getElementById('box-ips');
-        const boxIPA = document.getElementById('box-ipa');
-
-        if(currentPhase === 1 || currentPhase === 2) {
-            boxIPS.style.display = 'none';
-            boxIPA.style.display = 'none';
-        } else if(currentPhase === 3 || currentPhase === 4) {
-            boxIPS.style.display = 'none';
-            boxIPA.style.display = 'block';
-        } else {
-            boxIPS.style.display = 'block';
-            boxIPA.style.display = 'block';
-        }
-    }
-
-    function selectItem(event, element) {
-        event.stopPropagation(); 
-        if (selectedItemElement === element) {
-            element.classList.remove('selected');
-            selectedItemElement = null;
-            removeNodeHighlights();
-            return;
-        }
-        if (selectedItemElement) selectedItemElement.classList.remove('selected');
-
-        selectedItemElement = element;
-        element.classList.add('selected');
-
-        document.querySelectorAll('.node-box').forEach(box => {
-            box.classList.add('highlight');
-        });
-    }
-
-    function removeNodeHighlights() {
-        document.querySelectorAll('.node-box').forEach(box => {
-            box.classList.remove('highlight');
-            box.classList.remove('drag-over');
-        });
-    }
-
-    function allowDrop(event) {
-        event.preventDefault(); 
-        if(event.currentTarget.classList.contains('node-box')) {
-            event.currentTarget.classList.add('drag-over');
-        }
-    }
-
-    function drop(event, category) {
-        event.preventDefault();
-        event.currentTarget.classList.remove('drag-over');
-        if (!selectedItemElement) {
-            const dataId = event.dataTransfer.getData("text/plain");
-            selectedItemElement = document.getElementById(dataId);
-        }
-        dropToNode(category);
-    }
-
-    function dropBackPool(event) {
-        event.preventDefault();
-        if (!selectedItemElement) {
-            const dataId = event.dataTransfer.getData("text/plain");
-            selectedItemElement = document.getElementById(dataId);
-        }
-        dropToPool();
-    }
-
-    function dropToNode(category) {
-        if (!selectedItemElement) return;
-        const targetNode = document.getElementById('node-' + category);
-        if (!targetNode) return;
-        targetNode.appendChild(selectedItemElement);
-
-        if(!selectedItemElement.querySelector('.remove-btn')){
-            const removeBtn = document.createElement('div');
-            removeBtn.className = "remove-btn";
-            removeBtn.innerHTML = "✕";
-
-            removeBtn.onclick = (e)=>{
-                e.stopPropagation();
-                returnItemToPool(removeBtn.parentElement);
-            };
-
-            selectedItemElement.appendChild(removeBtn);
-        }
-
-        selectedItemElement.dataset.trainedCategory = category;
-        selectedItemElement.classList.remove('selected');
-        selectedItemElement = null;
-        removeNodeHighlights();
-        updateCounter();
-    }
-
-    function returnItemToPool(item){
-        const pool = document.getElementById('source-pool');
-        const btn = item.querySelector('.remove-btn');
-        if(btn) btn.remove();
-
-        pool.appendChild(item);
-        item.dataset.trainedCategory = "";
-
-        item.classList.add("item-return");
-        setTimeout(()=>item.classList.remove("item-return"),200);
-        updateCounter();
-    }
-
-    function dropToPool() {
-        if (!selectedItemElement) return;
-
-        const pool = document.getElementById('source-pool');
-        pool.appendChild(selectedItemElement);
-        selectedItemElement.dataset.trainedCategory = "";
-        selectedItemElement.classList.remove('selected');
-
-        selectedItemElement.classList.add("item-return");
-        setTimeout(()=>selectedItemElement.classList.remove("item-return"),200);
-        selectedItemElement = null;
-
-        removeNodeHighlights();
-        updateCounter();
-    }
-
-    function updateCounter() {
-        const remainingInPool = document.getElementById('source-pool').children.length;
-        placedItems = totalItemsNeeded - remainingInPool;
-        document.getElementById('data-counter').innerText = `Data Terkumpul: ${placedItems} / ${totalItemsNeeded}`;
-
-        const btnCompile = document.getElementById('btn-compile');
-        const statusDot = document.getElementById('status-dot');
-        const statusText = document.getElementById('status-text');
-
-        if(placedItems === totalItemsNeeded) {
-            btnCompile.classList.remove('disabled-style');
-            btnCompile.disabled = false;
-            statusDot.className = 'dot active';
-            statusText.innerText = 'STATUS: DATA SIAP DIPROSES';
-            statusText.style.color = 'var(--success)';
-            speakText("Seluruh data latih terkumpul. Siap diproses.");
-        } else {
-            btnCompile.classList.add('disabled-style');
-            btnCompile.disabled = true;
-            statusDot.className = 'dot';
-            statusText.innerText = 'STATUS: MENUNGGU DATA TEKS';
-            statusText.style.color = 'var(--text-muted)';
-        }
-    }
+function closeIntroModal() {
+    document.getElementById('introModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
 
     function speakText(text) {
         if (!soundEnabled || !('speechSynthesis' in window)) return;
@@ -281,497 +62,6 @@
         utterance.rate = 1.0;
         utterance.pitch = 1.1;
         window.speechSynthesis.speak(utterance);
-    }
-
-    function typeWriter(text, elementId, speed = 20) {
-        const el = document.getElementById(elementId);
-        el.innerHTML = '';
-        let i = 0;
-        return new Promise(resolve => {
-            function type() {
-                if (i < text.length) {
-                    el.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                } else {
-                    resolve();
-                }
-            }
-            type();
-        });
-    }
-
-    function startTraining() {
-        if (placedItems < totalItemsNeeded) {
-            const btn = document.getElementById('btn-compile');
-            btn.classList.add('shake');
-            setTimeout(() => btn.classList.remove('shake'), 400);
-            alert(`⚠️ TUNGGU DULU: Masih ada data yang belum dimasukkan!`);
-            return;
-        }
-
-        ['BahasaIndonesia','IPS','IPA','Matematika'].forEach(cat => {
-            const container = document.getElementById('node-' + cat);
-            if (container) {
-                const items = container.children;
-                Array.from(items).forEach(el => {
-                    if(cat === 'BahasaIndonesia') {
-                        aiModel[el.dataset.name] = 'B. Indonesia';
-                    } else {
-                        aiModel[el.dataset.name] = cat;
-                    }
-                });
-            }
-        });
-
-        document.getElementById('screen-train').classList.add('hidden');
-        document.getElementById('screen-processing').classList.remove('hidden');
-
-        document.getElementById('status-dot').className = 'dot active';
-        document.getElementById('status-text').innerText = 'STATUS: MELATIH DATA...';
-        document.getElementById('status-text').style.color = 'var(--primary)';
-        speakText("Memulai penyimpanan data latih ke memori.");
-
-        const logTexts = [
-            "Membaca dataset teks...",
-            "Mengekstraksi bobot tiap kosakata...",
-            "Menyimpan referensi pelajaran...",
-            "Data Latih Berhasil Disimpan!"
-        ];
-
-        let logIndex = 0;
-        const logEl = document.getElementById('training-log');
-        const logInterval = setInterval(() => {
-            logIndex++;
-            if(logIndex < logTexts.length) {
-                logEl.innerText = logTexts[logIndex];
-            } else {
-                clearInterval(logInterval);
-            }
-        }, 800);
-
-        const canvas = document.getElementById('neuralCanvas');
-        canvas.style.display = 'block';
-        const ctx = canvas.getContext('2d');
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-
-        const nodes = Array.from({length: 40}, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 2.5,
-            vy: (Math.random() - 0.5) * 2.5,
-        }));
-
-        let frameId;
-        function animateNeural() {
-            ctx.fillStyle = '#f8fafc';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            nodes.forEach(n => {
-                n.x += n.vx; n.y += n.vy;
-                if(n.x < 0 || n.x > canvas.width) n.vx *= -1;
-                if(n.y < 0 || n.y > canvas.height) n.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(n.x, n.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = '#2563eb';
-                ctx.fill();
-            });
-
-            for(let i=0; i<nodes.length; i++) {
-                for(let j=i+1; j<nodes.length; j++) {
-                    const dx = nodes[i].x - nodes[j].x;
-                    const dy = nodes[i].y - nodes[j].y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-
-                    if(dist < 80) {
-                        ctx.beginPath();
-                        ctx.moveTo(nodes[i].x, nodes[i].y);
-                        ctx.lineTo(nodes[j].x, nodes[j].y);
-                        ctx.strokeStyle = `rgba(37, 99, 235, ${1 - dist/80})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-            }
-            frameId = requestAnimationFrame(animateNeural);
-        }
-        animateNeural();
-
-        setTimeout(() => {
-            cancelAnimationFrame(frameId);
-            if(currentPhase === 1) {
-                currentPhase = 2;
-                setupTestingPhase();
-            } else if (currentPhase === 3) {
-                currentPhase = 4;
-                setupTestingPhase();
-            } else if (currentPhase === 5) {
-                currentPhase = 6;
-                setupTestingPhase();
-            }
-        }, 3500);
-    }
-
-    function setAnalyticsBarsVisibility(categories) {
-        const mapping = { bindo: 'B. Indonesia', ips: 'IPS', mtk: 'Matematika', ipa: 'IPA' };
-        Object.keys(mapping).forEach(key => {
-            const row = document.getElementById('bar-' + key).closest('.stat-row');
-            row.style.display = categories.includes(mapping[key]) ? 'grid' : 'none';
-        });
-    }
-
-    function setupTestingPhase() {
-        document.getElementById('screen-processing').classList.add('hidden');
-        document.getElementById('screen-test').classList.remove('hidden');
-
-        document.getElementById('status-dot').className = 'dot warning';
-        document.getElementById('status-text').innerText = 'STATUS: MENGUJI DATA LATIH';
-        document.getElementById('status-text').style.color = 'var(--warning)';
-
-        const pool = document.getElementById('test-pool');
-        pool.innerHTML = '';
-        itemsTested = 0;
-        document.getElementById('analytics-panel').style.display = 'none';
-        document.getElementById('ai-text').innerText = "Menunggu klik pada kalimat untuk dianalisis berdasarkan data latih...";
-
-        let activeSentences = [];
-
-        if(currentPhase === 2) {
-            document.getElementById('test-title').innerText = "Fase Uji Coba 1";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span>Uji sistem setelah pelatihan awal dengan 2 subjek. Perhatikan bagaimana sistem menebak kalimat yang sebagian belum diajarkan.</span>`;
-            document.getElementById('test-notice').style.background = 'var(--warning-light)';
-            document.getElementById('test-notice').style.borderColor = '#fed7aa';
-            document.getElementById('test-notice').style.color = '#9a3412';
-            speakText("Uji coba pertama siap.");
-            setAnalyticsBarsVisibility(['B. Indonesia', 'Matematika']);
-
-            activeSentences = [
-                { text: "Rumus matematika membantu menghitung luas bangun datar.", anomaly: false },
-                { text: "Membuat paragraf cerita dengan penggunaan sinonim dan majas.", anomaly: false },
-                { text: "Menjelaskan hubungan angka dan kata dalam sebuah masalah nyata.", anomaly: false },
-                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: true }
-            ];
-        } else if (currentPhase === 4) {
-            document.getElementById('test-title').innerText = "Fase Uji Coba 2";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-info-circle" style="font-size: 1.5em;"></i><span>Setelah menambahkan IPA, uji sistem lagi. Perhatikan apakah kalimat sains dan campuran mulai dikenal lebih baik.</span>`;
-            document.getElementById('test-notice').style.background = 'var(--warning-light)';
-            document.getElementById('test-notice').style.borderColor = '#fed7aa';
-            document.getElementById('test-notice').style.color = '#9a3412';
-            speakText("Uji coba kedua siap.");
-            setAnalyticsBarsVisibility(['B. Indonesia', 'Matematika', 'IPA']);
-
-            activeSentences = [
-                { text: "Menganalisis eksperimen IPA dan pengukuran suhu dalam laboratorium.", anomaly: false },
-                { text: "Menjelaskan nilai grafik dan volume sebagai bagian dari percobaan IPA.", anomaly: false },
-                { text: "Menulis paragraf tentang rumus dan angka dalam kehidupan sehari-hari.", anomaly: false },
-                { text: "Menganalisis ekonomi dan geografi wilayah untuk tugas sekolah.", anomaly: true }
-            ];
-        } else if (currentPhase === 6) {
-            document.getElementById('test-title').innerText = "Fase Uji Coba 3";
-            document.getElementById('test-notice').innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.5em;"></i><span>Setelah melatih semua 4 subjek, uji sistem pada kombinasi kalimat yang lebih kompleks untuk melihat kemampuan inferensi terbaik.</span>`;
-            document.getElementById('test-notice').style.background = 'var(--success-light)';
-            document.getElementById('test-notice').style.borderColor = '#bbf7d0';
-            document.getElementById('test-notice').style.color = '#166534';
-            speakText("Uji coba ketiga siap.");
-            setAnalyticsBarsVisibility(['B. Indonesia', 'IPS', 'Matematika', 'IPA']);
-
-            activeSentences = [
-                { text: "Menjelaskan hubungan grafik matematika dalam studi sosial dan lingkungan.", anomaly: false },
-                { text: "Menganalisis eksperimen IPA menggunakan data angka dan konsep paragraf.", anomaly: false },
-                { text: "Membuat laporan geografi dengan istilah ekonomi dan rumus statistika sederhana.", anomaly: false },
-                { text: "Menghubungkan fenomena ilmiah, angka, dan kata-kata sosial dalam satu kalimat.", anomaly: false }
-            ];
-        }
-
-        document.getElementById('test-progress').innerText = `Kalimat teruji: 0 / ${activeSentences.length}`;
-
-        activeSentences.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'w-full text-left p-4 md:p-5 bg-white border-2 border-slate-200 rounded-xl mb-3 cursor-pointer hover:border-blue-500 hover:shadow-md transition-all relative overflow-hidden scanner-box text-slate-800 font-medium text-lg leading-relaxed';
-
-            if(item.anomaly) {
-                el.style.borderStyle = "dashed";
-                el.style.borderColor = "var(--warning)";
-            }
-
-            el.innerHTML = `
-            <div class="scanner-line"></div>
-            <span class="relative z-10">"${item.text}"</span>
-            `;
-
-            el.onclick = () => runInference(item.text, el, activeSentences.length);
-            pool.appendChild(el);
-        });
-    }
-
-    function animateBar(barId, valId, targetPercentage) {
-        document.getElementById(barId).style.width = targetPercentage + '%';
-        let current = 0;
-        const interval = setInterval(() => {
-            if(current >= targetPercentage) {
-                document.getElementById(valId).innerText = targetPercentage + '%';
-                clearInterval(interval);
-            } else {
-                current += 2;
-                if(current > targetPercentage) current = targetPercentage;
-                document.getElementById(valId).innerText = current + '%';
-            }
-        }, 30);
-    }
-
-    async function runInference(sentenceText, element, totalToTest) {
-        if(element.classList.contains('tested')) return;
-        element.classList.add('tested');
-        element.style.opacity = '0.6';
-        element.style.cursor = 'default';
-
-        const aiIcon = document.getElementById('ai-icon');
-        aiIcon.classList.add('processing');
-        element.querySelector('.scanner-line').style.display = 'block';
-
-        const analytics = document.getElementById('analytics-panel');
-        analytics.style.display = 'block';
-
-        ['bindo', 'ips', 'mtk', 'ipa'].forEach(id => {
-            document.getElementById(`bar-${id}`).style.width = '0%';
-            document.getElementById(`val-${id}`).innerText = '0%';
-        });
-        document.getElementById('ai-conclusion').innerHTML = '';
-
-        await typeWriter(`>> Mencari irisan kata dengan Data Latih...\n>> Mengakumulasi persentase kecocokan...`, 'ai-text', 15);
-        speakText(`Menganalisis kalimat.`);
-
-        setTimeout(() => {
-            element.querySelector('.scanner-line').style.display = 'none';
-            aiIcon.classList.remove('processing');
-            calculateProbabilities(sentenceText, totalToTest);
-        }, 1500);
-    }
-
-    function getTrainingSummary() {
-        const counts = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0, 'IPA': 0};
-        Object.values(aiModel).forEach(cat => {
-            if(counts[cat] !== undefined) counts[cat]++;
-        });
-        const total = counts['B. Indonesia'] + counts['IPS'] + counts['Matematika'] + counts['IPA'];
-        return { counts, total };
-    }
-
-    async function calculateProbabilities(sentenceText, totalToTest) {
-        let words = sentenceText.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
-        let catMatches = {'B. Indonesia': 0, 'IPS': 0, 'Matematika': 0, 'IPA': 0};
-        let allMatchedWords = [];
-
-        words.forEach(w => {
-            let trainedKey = Object.keys(aiModel).find(k => k.toLowerCase() === w);
-            if(trainedKey) {
-                let cat = aiModel[trainedKey];
-                catMatches[cat]++;
-                allMatchedWords.push(trainedKey);
-            }
-        });
-
-        const trainingSummary = getTrainingSummary();
-        const trainedCounts = trainingSummary.counts;
-        const totalTrained = trainingSummary.total;
-
-        let totalMatch = catMatches['B. Indonesia'] + catMatches['IPS'] + catMatches['Matematika'] + catMatches['IPA'];
-        let probBindo = 0, probIPS = 0, probMTK = 0, probIPA = 0;
-        let finalCategory = "";
-        let isHallucinating = false;
-        let isMixed = false;
-        let conclusionHTML = "";
-        let speakOutput = "";
-
-        function computeCategoryConfidence(catName) {
-            return totalMatch > 0 ? Math.round((catMatches[catName] / totalMatch) * 100) : 0;
-        }
-
-        if (totalMatch > 0) {
-            const coverageRate = Math.min(1, totalMatch / Math.max(words.length, 1));
-            const overallConfidence = Math.max(30, Math.round(coverageRate * 100));
-
-            const rawBindo = catMatches['B. Indonesia'];
-            const rawIPS = catMatches['IPS'];
-            const rawMTK = catMatches['Matematika'];
-            const rawIPA = catMatches['IPA'];
-            const rawTotal = rawBindo + rawIPS + rawMTK + rawIPA;
-
-            probBindo = rawTotal > 0 ? Math.round((rawBindo / rawTotal) * overallConfidence) : 0;
-            probIPS = rawTotal > 0 ? Math.round((rawIPS / rawTotal) * overallConfidence) : 0;
-            probMTK = rawTotal > 0 ? Math.round((rawMTK / rawTotal) * overallConfidence) : 0;
-            probIPA = rawTotal > 0 ? Math.round((rawIPA / rawTotal) * overallConfidence) : 0;
-
-            let remainder = overallConfidence - (probBindo + probIPS + probMTK + probIPA);
-            if (remainder !== 0) {
-                const maxCategory = Math.max(probBindo, probIPS, probMTK, probIPA);
-                if (maxCategory === probBindo) probBindo += remainder;
-                else if (maxCategory === probIPS) probIPS += remainder;
-                else if (maxCategory === probMTK) probMTK += remainder;
-                else probIPA += remainder;
-            }
-
-            if (probBindo > 0 && probIPS > 0 || probBindo > 0 && probMTK > 0 || probBindo > 0 && probIPA > 0 || probIPS > 0 && probMTK > 0 || probIPS > 0 && probIPA > 0 || probMTK > 0 && probIPA > 0) {
-                isMixed = true;
-            }
-
-            if (probBindo >= probIPS && probBindo >= probMTK && probBindo >= probIPA) finalCategory = "B. Indonesia";
-            else if (probIPS >= probBindo && probIPS >= probMTK && probIPS >= probIPA) finalCategory = "IPS";
-            else if (probIPA >= probBindo && probIPA >= probIPS && probIPA >= probMTK) finalCategory = "IPA";
-            else finalCategory = "Matematika";
-
-            conclusionHTML = `
-            <div class="mb-2">
-                <span class="text-success font-bold text-lg">
-                    ${isMixed ? "⚠️ Konteks Campuran Terdeteksi!" : "✅ Konteks Berhasil Dikenali!"}
-                </span>
-            </div>
-            <div class="mb-3 leading-relaxed text-slate-700">
-                Prediksi Model: Condong ke <b>Pelajaran ${finalCategory}</b>.<br>
-                Kata yang dikenali dari data latih: <b class="text-indigo-600">${allMatchedWords.join(', ')}</b>
-            </div>
-            <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-sm text-slate-800 mb-4">
-                <p class="font-bold mb-2 text-blue-900"><i class="fas fa-lightbulb"></i> Ilustrasi Tingkat Keyakinan (Confidence Level):</p>
-                <p class="mb-2">Persentase ini didasarkan pada jumlah kata dalam kalimat yang cocok dengan data latih yang sudah diberikan kepada sistem pada fase ini.</p>
-                <p>Jika sebuah kategori belum dilatih, sistem tidak memiliki data untuk mendukung keyakinan pada kategori tersebut.</p>
-            </div>
-            `;
-            speakOutput = isMixed 
-                ? `Konteks campuran terdeteksi. Condong ke pelajaran ${finalCategory}.`
-                : `Konteks dikenali berdasarkan data latih. Prediksi tertinggi: ${finalCategory}.`;
-        } else {
-            isHallucinating = true;
-            const baseline = 10;
-            probBindo = trainedCounts['B. Indonesia'] > 0 ? baseline : 0;
-            probIPS = trainedCounts['IPS'] > 0 ? baseline : 0;
-            probMTK = trainedCounts['Matematika'] > 0 ? baseline : 0;
-            probIPA = trainedCounts['IPA'] > 0 ? baseline : 0;
-
-            conclusionHTML = `
-            <div class="mb-2"><span class="text-danger font-bold text-lg">⚠️ KATA TIDAK DIKENALI (OUT OF VOCABULARY)!</span></div>
-            <div class="mb-3 leading-relaxed text-slate-700">
-                Tidak ada kata dalam kalimat ini yang cocok dengan data latih yang ada saat ini.
-            </div>
-            <div class="bg-warning-light border border-warning p-4 rounded-xl text-sm text-slate-800 mb-4">
-                <p class="font-bold mb-2 text-warning"><i class="fas fa-lightbulb"></i> Ilustrasi Kegagalan Model:</p>
-                <p class="mb-2">Sistem hanya bisa memberikan prediksi rendah karena tidak menemukan kata yang cocok dengan data latih.</p>
-                <p>Kategori yang belum pernah dilatih tetap tidak akan mendapatkan dukungan keyakinan.</p>
-            </div>
-            `;
-            speakOutput = `Peringatan. Kosakata tidak ditemukan dalam data latih. Sistem hanya bisa menebak dengan keyakinan rendah.`;
-        }
-
-        animateBar('bar-bindo', 'val-bindo', probBindo);
-        animateBar('bar-ips', 'val-ips', probIPS);
-        animateBar('bar-mtk', 'val-mtk', probMTK);
-        animateBar('bar-ipa', 'val-ipa', probIPA);
-
-        document.getElementById('ai-conclusion').innerHTML = conclusionHTML;
-        await typeWriter(`>> Analisis Selesai.\n>> Prediksi terbesar: ${finalCategory}`, 'ai-text', 30);
-        speakText(speakOutput);
-
-        itemsTested++;
-        document.getElementById('test-progress').innerText = `Kalimat teruji: ${itemsTested} / ${totalToTest}`;
-
-        if(itemsTested >= totalToTest) {
-            if(currentPhase === 6) {
-                document.getElementById('btn-retrain').classList.add('hidden');
-                document.getElementById('btn-reflect').classList.remove('hidden');
-            } else {
-                document.getElementById('btn-retrain').classList.remove('hidden');
-            }
-        }
-    }
-
-    function setupRetraining() {
-        if(currentPhase === 2) {
-            currentPhase = 3;
-            document.getElementById('train-title').innerText = "Fase Latih Data Ke-2 (Tambah IPA)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem sekarang belajar dari kombinasi tiga subjek. Masukkan kata-kata IPA ke kotak IPA agar sistem dapat memahami kalimat sains, angka, dan bahasa.`;
-            activeDataset = dataLatih2;
-        } else if (currentPhase === 4) {
-            currentPhase = 5;
-            document.getElementById('train-title').innerText = "Fase Latih Data Ke-3 (Tambah IPS)";
-            document.getElementById('train-desc').innerHTML = `<b>Tambah Data Latih:</b> Sistem akan mempelajari gabungan tiga subjek baru. Masukkan kata-kata IPS agar prediksi terhadap kalimat sosial, matematika, dan bahasa menjadi lebih lengkap.`;
-            activeDataset = dataLatih3;
-        }
-
-        document.getElementById('screen-test').classList.add('hidden');
-        document.getElementById('btn-retrain').classList.add('hidden');
-        document.getElementById('btn-reflect').classList.add('hidden');
-        document.getElementById('screen-train').classList.remove('hidden');
-
-        totalItemsNeeded = activeDataset.length;
-        loadItemsToPool(shuffleArray([...activeDataset]));
-        updateNodeVisibility();
-        updateCounter();
-
-        speakText("Mengakses mode penambahan data latih.");
-    }
-
-    function showReflection() {
-        document.getElementById('screen-test').classList.add('hidden');
-        document.getElementById('screen-reflection').classList.remove('hidden');
-
-        document.getElementById('status-dot').className = 'dot active';
-        document.getElementById('status-text').innerText = 'STATUS: EVALUASI SISTEM';
-        document.getElementById('status-text').style.color = 'var(--primary)';
-        speakText("Memasuki panel evaluasi simulasi.");
-    }
-
-    function answer(qNumber, isCorrect, btnEl) {
-        const container = document.getElementById('q' + qNumber);
-        const btns = container.querySelectorAll('button');
-
-        btns.forEach(b => {
-            b.disabled = true;
-            b.style.cursor = 'default';
-        });
-
-        if(isCorrect) {
-            btnEl.classList.add('correct');
-        } else {
-            btnEl.classList.add('wrong');
-            btns.forEach(b => {
-                if(b.getAttribute('onclick').includes('true')) b.classList.add('correct');
-            });
-        }
-
-        const feedEl = document.getElementById('feed-' + qNumber);
-        feedEl.style.display = 'block';
-
-        if(qNumber === 1) {
-            feedEl.innerHTML = isCorrect ? 
-            "<span style='color:var(--success)'><i class='fas fa-check-circle'></i> Tepat Sekali!</span> Algoritma pada sistem hanya akan memproses kosa kata yang pernah dimasukkan ke memori sebelumnya. Kata baru yang tidak ada di <b>Data Latih</b> awal akan membuat model menghasilkan skor yang acak atau gagal diklasifikasi dengan baik." : 
-            "<span style='color:var(--danger)'><i class='fas fa-times-circle'></i> Kurang Tepat.</span> Sistem klasifikasi ini tidak diprogram untuk menolak panjang kalimat ataupun mendiskriminasi mata pelajaran. Masalahnya murni ada pada ketiadaan kata referensi di dalam basis datanya.";
-        } else {
-            feedEl.innerHTML = isCorrect ? 
-            "<span style='color:var(--success)'><i class='fas fa-check-circle'></i> Super!</span> Inilah prinsip fundamental pengembangan sistem klasifikasi. Kualitas, akurasi, dan kemampuan prediksi algoritma apapun sangat bergantung pada <b>Kuantitas dan Kualitas Data Latih</b> yang disiapkan oleh pengembang." : 
-            "<span style='color:var(--danger)'><i class='fas fa-times-circle'></i> Kurang Tepat.</span> Sistem tidak terkoneksi ke internet selama simulasi, dan tidak punya kemampuan memahami makna kalimat secara mandiri. Peningkatan akurasi murni terjadi karena <i>Fine-Tuning</i> (penambahan kosa kata baru ke Data Latih) yang baru saja kamu lakukan.";
-        }
-
-        if(document.querySelectorAll('.options-grid button:disabled').length >= 6) {
-            const btnFinish = document.getElementById('btn-finish');
-            btnFinish.classList.remove('disabled-style');
-            btnFinish.disabled = false;
-        }
-    }
-
-    function finishLab() {
-        const btnFinish = document.getElementById('btn-finish');
-        if(btnFinish.classList.contains('disabled-style')) return;
-
-        speakText("Praktikum Data Latih selesai. Terima kasih.");
-        confetti({
-            particleCount: 200,
-            spread: 160,
-            origin: { y: 0.6 },
-            colors: ['#2563eb', '#16a34a', '#ea580c']
-        });
-        document.getElementById('btn-finish').innerHTML = "Mulai Ulang Lab <i class='fas fa-redo'></i>";
-        document.getElementById('btn-finish').setAttribute('onclick', 'location.reload()');
     }
 
     // ================= MODAL CONTROL =================
@@ -909,3 +199,221 @@ function updateBioSlideView() {
         nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
     }
 }
+
+
+const toxicWords = ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "asu", "jelek"];
+        
+        // State Dataset
+        let activeTags = {
+            ipa: [],
+            mtk: [],
+            indo: []
+        };
+
+        const botResponses = {
+            ipa: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan Ilmu Pengetahuan Alam.",
+                "Sistem mendeteksi pola yang merujuk pada fenomena alam dan sains.",
+                "Konteks kalimat ini terklasifikasi ke dalam bidang studi Ilmu Pengetahuan Alam.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan materi sains.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori Ilmu Pengetahuan Alam."
+            ],
+            mtk: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan Matematika.",
+                "Sistem mendeteksi pola logika numerik dan perhitungan.",
+                "Konteks kalimat ini terklasifikasi ke dalam bidang studi Matematika.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan ilmu pasti atau aritmetika.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori Matematika."
+            ],
+            indo: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan Bahasa Indonesia.",
+                "Sistem mendeteksi pola linguistik atau tata bahasa.",
+                "Konteks kalimat ini terklasifikasi ke dalam studi sastra atau Bahasa Indonesia.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan struktur kalimat dan kebahasaan.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori Bahasa Indonesia."
+            ],
+            unknown: [
+                "Mohon maaf, sistem belum dapat mengidentifikasi pola kalimat tersebut.",
+                "Data latih tidak mencukupi untuk melakukan klasifikasi pada kalimat ini.",
+                "Sistem gagal menemukan kecocokan dengan basis data yang ada.",
+                "Kata kunci pada kalimat tidak terdaftar dalam memori sistem.",
+                "Silakan berikan tambahan data latih agar sistem dapat mengenali konteks ini."
+            ]
+        };
+
+        let isTrained = false;
+
+        window.onload = () => {
+            checkStartButtonState();
+            addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
+        };
+
+        function focusInput(id) { document.getElementById(id).focus(); }
+
+        // MANAJEMEN TAG
+        function handleTagInput(e, category) {
+            const input = e.target;
+            const value = input.value.trim();
+
+            if (e.key === ',' || e.key === 'Enter') {
+                const tagValue = value.replace(',', '').toLowerCase();
+                if (tagValue && !activeTags[category].includes(tagValue)) {
+                    if (toxicWords.includes(tagValue)) {
+                        input.value = "";
+                        return;
+                    }
+                    activeTags[category].push(tagValue);
+                    renderTags(category);
+                }
+                input.value = "";
+            }
+        }
+
+        function renderTags(category) {
+            const container = document.getElementById(`${category}-tags`);
+            container.innerHTML = "";
+            activeTags[category].forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag';
+                tagEl.innerHTML = `${tag} <span class="tag-remove" onclick="removeTag('${category}', ${index})">&times;</span>`;
+                container.appendChild(tagEl);
+            });
+        }
+
+        function removeTag(category, index) {
+            activeTags[category].splice(index, 1);
+            renderTags(category);
+        }
+
+        // AUTO-FILL DATA DEMO
+        function fillDemoData() {
+            resetAll();
+            
+            const demo = {
+                ipa: "energi, gaya, massa, zat, atom, molekul, sel, jaringan, organ, ekosistem, fotosintesis, gravitasi, listrik, magnet, suhu, kalor, reaksi, senyawa, unsur, gelombang",
+                mtk: "penjumlahan, pengurangan, perkalian, pembagian, pecahan, desimal, persentase, aljabar, persamaan, fungsi, geometri, sudut, luas, volume, bilangan, akar, pangkat, statistika, peluang, grafik",
+                indo: "kata, kalimat, paragraf, wacana, sinonim, antonim, imbuhan, awalan, akhiran, ejaan, tanda baca, narasi, deskripsi, eksposisi, persuasi, dialog, teks, makna, diksi, struktur"
+            };
+
+            for (let cat in demo) {
+                activeTags[cat === 'mtk' ? 'mtk' : (cat === 'indo' ? 'indo' : 'ipa')] = 
+                    demo[cat].split(',').map(s => s.trim().toLowerCase());
+                renderTags(cat);
+            }
+            
+            document.getElementById('insight-text').textContent = "Data uji coba berhasil dimuat. Harap tekan tombol 'Mulai Pelatihan Model'.";
+        }
+
+        function resetAll() {
+            activeTags = { ipa: [], mtk: [], indo: [] };
+            renderTags('ipa');
+            renderTags('mtk');
+            renderTags('indo');
+            document.getElementById('chat-window').innerHTML = "";
+            addChatMessage("Seluruh data latih telah dihapus. Sistem siap menerima instruksi baru.", 'bot');
+            isTrained = false;
+            document.getElementById('insight-text').textContent = "Sistem telah diatur ulang ke kondisi awal.";
+            
+            // Atur ulang Bar Confidence
+            ['ipa', 'mtk', 'indo'].forEach(cat => {
+                document.getElementById(`conf-val-${cat}`).textContent = "0%";
+                document.getElementById(`conf-bar-${cat}`).style.width = "0%";
+            });
+        }
+
+        function trainModel() {
+            const log = document.getElementById('train-log');
+            log.classList.remove('hidden');
+            
+            setTimeout(() => {
+                log.classList.add('hidden');
+                isTrained = true;
+                const total = activeTags.ipa.length + activeTags.mtk.length + activeTags.indo.length;
+                document.getElementById('insight-text').textContent = `Pelatihan model berhasil diselesaikan menggunakan ${total} kata kunci.`;
+                addChatMessage("Proses pelatihan selesai. Sistem kini siap melakukan klasifikasi teks.", 'bot');
+            }, 1000);
+        }
+
+        // CHAT LOGIC
+        function handleChatKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (toxicWords.some(word => text.toLowerCase().includes(word))) {
+                addChatMessage(text, 'user');
+                input.value = "";
+                setTimeout(() => addChatMessage("Peringatan Sistem: Dilarang menggunakan bahasa yang tidak pantas.", 'warning'), 400);
+                return;
+            }
+
+            addChatMessage(text, 'user');
+            input.value = "";
+
+            if (!isTrained) {
+                setTimeout(() => addChatMessage("Sistem belum dilatih. Harap jalankan proses pelatihan terlebih dahulu.", 'bot'), 600);
+                return;
+            }
+
+            setTimeout(() => {
+                const res = predict(text);
+                const categoryList = botResponses[res.cat];
+                const msg = categoryList[Math.floor(Math.random() * categoryList.length)];
+                
+                addChatMessage(msg, 'bot');
+                if (res.cat !== 'unknown') {
+                    document.getElementById('insight-text').textContent = `Kalimat cocok dengan kategori ${res.cat.toUpperCase()} (Kata Kunci Ditemukan: ${res.matches.join(', ')})`;
+                } else {
+                    document.getElementById('insight-text').textContent = "Sistem gagal mengidentifikasi kategori. Tidak ada kata kunci yang cocok.";
+                }
+
+                // Perbarui antarmuka Tingkat Keyakinan (Confidence) per Label
+                ['ipa', 'mtk', 'indo'].forEach(cat => {
+                    const conf = res.confidences[cat];
+                    document.getElementById(`conf-val-${cat}`).textContent = `${conf}%`;
+                    document.getElementById(`conf-bar-${cat}`).style.width = `${conf}%`;
+                });
+            }, 800);
+        }
+
+        function addChatMessage(text, sender) {
+            const win = document.getElementById('chat-window');
+            const div = document.createElement('div');
+            div.className = `message ${sender === 'user' ? 'user-msg' : (sender === 'warning' ? 'warning-msg' : 'bot-msg')}`;
+            div.textContent = text;
+            win.appendChild(div);
+            win.scrollTo({ top: win.scrollHeight, behavior: 'smooth' });
+        }
+
+        function predict(input) {
+            const low = input.toLowerCase();
+            let scores = { ipa: 0, mtk: 0, indo: 0 };
+            let matches = { ipa: [], mtk: [], indo: [] };
+            let totalMatchCount = 0;
+
+            for (let cat in activeTags) {
+                activeTags[cat].forEach(word => {
+                    if (word && low.includes(word)) {
+                        scores[cat]++;
+                        matches[cat].push(word);
+                        totalMatchCount++;
+                    }
+                });
+            }
+
+            let winner = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+            
+            // Hitung persentase keyakinan per kategori
+            let confidences = { ipa: 0, mtk: 0, indo: 0 };
+            if (totalMatchCount > 0) {
+                for (let cat in scores) {
+                    confidences[cat] = Math.round((scores[cat] / totalMatchCount) * 100);
+                }
+            }
+
+            return (scores[winner] === 0) ? 
+                { cat: 'unknown', matches: [], confidences: confidences } : 
+                { cat: winner, matches: matches[winner], confidences: confidences };
+        }
