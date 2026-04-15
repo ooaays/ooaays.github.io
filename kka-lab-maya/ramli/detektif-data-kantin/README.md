@@ -1,9 +1,6 @@
 # Python Data Lab v2 — Detektif Data Kantin
 
-Media pembelajaran interaktif berbasis web, sepenuhnya offline.
 Topik: Teknologi untuk Mengolah Data — Berpikir Komputasional dengan Python.
-
-Direktorat Sekolah Menengah Pertama, Ditjen PAUD Dasar dan Nonformal, Kemendikdasmen.
 
 ## Cara Menjalankan
 
@@ -17,7 +14,7 @@ Tahap 3: Saring Data — if, kondisi
 Tahap 4: Tampilkan Semua — for, perulangan
 Tahap 5: Gabungkan — zip() (BARU)
 
-## Fitur v2
+## Fitur 
 
 - Tahap 5: Fungsi zip()
 - Progress Bar visual
