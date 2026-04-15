@@ -82,7 +82,7 @@ header.lab-header { text-align: center; margin-bottom: 30px; padding-bottom: 20p
 display:none;
 }
 
-..page.active{
+.page.active{
 display:block;
 }
 
