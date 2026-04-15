@@ -201,7 +201,29 @@ function updateBioSlideView() {
 }
 
 
-const toxicWords = ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "asu", "jelek"];
+const trainingLib = {
+    toxicWords: ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "asu", "jelek"],
+    normalizeText(value) {
+        return value
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9\u00C0-\u017F\s]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    },
+    isToxicTag(tag) {
+        const normalized = this.normalizeText(tag);
+        return normalized
+            .split(' ')
+            .some(word => this.toxicWords.includes(word));
+    },
+    containsToxicWord(text) {
+        const normalized = this.normalizeText(text);
+        return normalized
+            .split(' ')
+            .some(word => this.toxicWords.includes(word));
+    }
+};
         
         // State Dataset
         let activeTags = {
@@ -256,13 +278,14 @@ const toxicWords = ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "as
             const value = input.value.trim();
 
             if (e.key === ',' || e.key === 'Enter') {
-                const tagValue = value.replace(',', '').toLowerCase();
+                const tagValue = value.replace(',', '');
                 if (tagValue && !activeTags[category].includes(tagValue)) {
-                    if (toxicWords.includes(tagValue)) {
+                    if (trainingLib.isToxicTag(tagValue)) {
                         input.value = "";
+                        addChatMessage("Kata yang dimasukkan tidak boleh mengandung kata tidak pantas.", 'warning');
                         return;
                     }
-                    activeTags[category].push(tagValue);
+                    activeTags[category].push(trainingLib.normalizeText(tagValue));
                     renderTags(category);
                 }
                 input.value = "";
@@ -342,7 +365,7 @@ const toxicWords = ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "as
             const text = input.value.trim();
             if (!text) return;
 
-            if (toxicWords.some(word => text.toLowerCase().includes(word))) {
+            if (trainingLib.containsToxicWord(text)) {
                 addChatMessage(text, 'user');
                 input.value = "";
                 setTimeout(() => addChatMessage("Peringatan Sistem: Dilarang menggunakan bahasa yang tidak pantas.", 'warning'), 400);

@@ -1,0 +1,95 @@
+{
+  "metadata": {
+    "language": "Indonesian",
+    "description": "A comprehensive list of common Indonesian swear words, slurs, and profanities categorized by type.",
+    "total_entries": 60
+  },
+  "categories": [
+    {
+      "category": "Animals",
+      "description": "Commonly used to dehumanize or insult intelligence.",
+      "words": [
+        { "word": "Anjing", "literal_meaning": "Dog", "severity": "High", "variations": ["Anjir", "Anjay", "Anjrit", "Anjeng"] },
+        { "word": "Babi", "literal_meaning": "Pig", "severity": "High", "note": "Particularly offensive due to religious context." },
+        { "word": "Monyet", "literal_meaning": "Monkey", "severity": "Medium" },
+        { "word": "Kunyuk", "literal_meaning": "Ape/Monkey", "severity": "Medium" },
+        { "word": "Bangsat", "literal_meaning": "Bedbug", "severity": "High", "connotation": "Bastard/Rascal" },
+        { "word": "Kecoak", "literal_meaning": "Cockroach", "severity": "Low", "connotation": "Pest/Worthless" },
+        { "word": "Kampret", "literal_meaning": "Small bat", "severity": "Medium", "connotation": "Damn it" },
+        { "word": "Codot", "literal_meaning": "Fruit bat", "severity": "Low", "connotation": "Stupid (regional)" }
+      ]
+    },
+    {
+      "category": "Bodily Functions & Anatomy",
+      "description": "Vulgar references to private parts or waste.",
+      "words": [
+        { "word": "Kontol", "literal_meaning": "Penis", "severity": "Very High", "variations": ["Kntl", "Koli"] },
+        { "word": "Memek", "literal_meaning": "Vagina", "severity": "Very High", "variations": ["Mmek", "Tempik"] },
+        { "word": "Peju", "literal_meaning": "Semen", "severity": "High" },
+        { "word": "Taik", "literal_meaning": "Shit", "severity": "Medium", "variations": ["Tai", "Telek"] },
+        { "word": "Jancok", "literal_meaning": "To have sex (Javanese origin)", "severity": "Very High", "note": "Extremely common in East Java, sometimes used fraternally.", "variations": ["Cuk", "Dancok", "Cukimai"] },
+        { "word": "Ngentot", "literal_meaning": "To fuck", "severity": "Very High", "variations": ["Entot", "Ngeue"] },
+        { "word": "Tetek", "literal_meaning": "Breast (vulgar)", "severity": "Medium" },
+        { "word": "Jembut", "literal_meaning": "Pubic hair", "severity": "High" },
+        { "word": "Silit", "literal_meaning": "Anus (Javanese)", "severity": "High" },
+        { "word": "Peler", "literal_meaning": "Testicles", "severity": "Very High" }
+      ]
+    },
+    {
+      "category": "Social & Moral Insults",
+      "description": "Attacking one's character, family, or status.",
+      "words": [
+        { "word": "Bajingan", "literal_meaning": "Cart driver (historically)", "connotation": "Bastard / Scoundrel", "severity": "High" },
+        { "word": "Lonte", "literal_meaning": "Prostitute", "severity": "Very High" },
+        { "word": "Jablay", "literal_meaning": "Rarely touched (neglected)", "connotation": "Slut", "severity": "High" },
+        { "word": "Perek", "literal_meaning": "Experimental girl", "connotation": "Whore", "severity": "High" },
+        { "word": "Anak Haram", "literal_meaning": "Forbidden child", "connotation": "Bastard", "severity": "High" },
+        { "word": "Germo", "literal_meaning": "Pimp", "severity": "High" },
+        { "word": "Bencong", "literal_meaning": "Transvestite (derogatory)", "severity": "High", "variations": ["Banci"] },
+        { "word": "Kere", "literal_meaning": "Poor", "connotation": "Beggarly/Cheapskate", "severity": "Medium" }
+      ]
+    },
+    {
+      "category": "Intelligence & Mental State",
+      "description": "Insulting the target's mental capacity.",
+      "words": [
+        { "word": "Goblok", "literal_meaning": "Very stupid", "severity": "High" },
+        { "word": "Tolol", "literal_meaning": "Stupid/Idiot", "severity": "High" },
+        { "word": "Bego", "literal_meaning": "Stupid", "severity": "Medium" },
+        { "word": "Idiot", "literal_meaning": "Idiot", "severity": "Medium" },
+        { "word": "Sinting", "literal_meaning": "Crazy", "severity": "Medium" },
+        { "word": "Sedeng", "literal_meaning": "Mad", "severity": "Medium" },
+        { "word": "Oon", "literal_meaning": "Slow-witted", "severity": "Low" },
+        { "word": "Dunghu", "literal_meaning": "Extremely dense", "severity": "High" }
+      ]
+    },
+    {
+      "category": "General Expletives & Religion",
+      "description": "Exclamations used in anger or religious-based slurs.",
+      "words": [
+        { "word": "Sialan", "literal_meaning": "Unlucky", "connotation": "Damn it", "severity": "Low/Medium" },
+        { "word": "Keparat", "literal_meaning": "Infidel/Cursed", "connotation": "Damn/Bastard", "severity": "High" },
+        { "word": "Brengsek", "literal_meaning": "Annoying/Troublesome", "connotation": "Asshole/Jerks", "severity": "High" },
+        { "word": "Gembel", "literal_meaning": "Homeless person", "connotation": "Trashy person", "severity": "Medium" },
+        { "word": "Kafir", "literal_meaning": "Infidel", "severity": "High", "note": "Used as a severe religious insult." },
+        { "word": "Setan", "literal_meaning": "Satan/Devil", "severity": "Medium", "connotation": "Damn it / You devil" },
+        { "word": "Iblis", "literal_meaning": "Demon", "severity": "Medium" }
+      ]
+    },
+    {
+      "category": "Regional Slang (Dialects)",
+      "description": "Swear words specific to certain regions/ethnicities.",
+      "words": [
+        { "word": "Asu", "origin": "Javanese", "literal_meaning": "Dog", "severity": "High" },
+        { "word": "Modar", "origin": "Javanese", "literal_meaning": "To die (vulgar)", "severity": "High" },
+        { "word": "Matamu", "origin": "Javanese", "literal_meaning": "Your eyes", "connotation": "Watch it (rude)", "severity": "Medium", "variations": ["Ndasmu"] },
+        { "word": "Pukimak", "origin": "Malay/Sumatran", "literal_meaning": "Your mother's vagina", "severity": "Very High" },
+        { "word": "Bagudung", "origin": "Batak", "literal_meaning": "Rat", "severity": "Medium" },
+        { "word": "Sundala", "origin": "Makassar", "literal_meaning": "Prostitute", "severity": "Very High" },
+        { "word": "Telaso", "origin": "Bugis", "literal_meaning": "Smegma/Penis dirt", "severity": "Very High" },
+        { "word": "Gateli", "origin": "Javanese", "literal_meaning": "Itchy (vulgar)", "severity": "High" },
+        { "word": "Pantek", "origin": "Minang", "literal_meaning": "Vagina", "severity": "Very High" }
+      ]
+    }
+  ]
+}
