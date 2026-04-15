@@ -76,7 +76,7 @@ let selectedValue = null;
         	document.querySelectorAll('.block').forEach(b => b.classList.remove('selected'));
 
         	const term = document.getElementById('terminal');
-        	term.innerHTML = `<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!</span>`;
+        	term.innerHTML = `<span class="log-info"> Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!</span>`;
 
             simSuccess = false; // Kembalikan status ke gagal
             checkProgress(); // Perbarui indikator UI
@@ -146,10 +146,13 @@ let selectedValue = null;
             	if (dataLampu === logicLampu && dataLampu === 'ON') {
             		adaYangNyala = true;
             		roomEl.classList.add('active');
-            	logToTerminal(`<i class=\"fa-solid fa-circle-check\"></i> Yey! Lampu <b>${id}</b> berhasil MENYALA.`, "success");
+            		logToTerminal(` Yey! Lampu <b>${id}</b> berhasil MENYALA.`, "success");
+
+            		if (dataTimer === logicTimer && dataTimer === 'ON') {
             			let count = detik;
             			cdEl.innerText = count + " detik";
-            		logToTerminal(`<i class=\"fa-solid fa-hourglass-half\"></i> Menyalakan timer ${id} selama ${detik} detik...`);
+            			logToTerminal(` Menyalakan timer ${id} selama ${detik} detik...`);
+
             			let t = setInterval(() => {
             				count--;
             				if(count > 0) {
