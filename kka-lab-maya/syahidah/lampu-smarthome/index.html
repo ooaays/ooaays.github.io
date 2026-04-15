@@ -125,109 +125,197 @@
 		<!-- LAB PAGE -->
 
 		<section id="labPage" class="page">
-    <div class="visual-card">
-        <div class="visual-header"></div>
-        <div class="device-frame">
-            <div class="smart-home">
-                <div class="room" id="room-kamar" onclick="toggleLight(this)">
-                    <div class="light-glow"></div>
-                    <div class="lamp"></div>
-                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <pattern id="wood-floor-1" width="12" height="100" patternUnits="userSpaceOnUse">
-                            <line x1="12" y1="0" x2="12" y2="100" class="floor-wood" />
-                        </pattern>
-                        <rect width="100" height="100" fill="url(#wood-floor-1)" />
-                        <g class="furniture-group">
-                            <rect x="15" y="55" width="45" height="35" rx="4" class="f-fabric" />
-                            <rect x="5" y="15" width="38" height="48" rx="4" class="f-wood" />
-                            <rect x="8" y="18" width="32" height="42" rx="3" class="f-base" />
-                            <rect x="8" y="38" width="32" height="22" rx="2" class="f-fabric" />
-                            <path d="M 8 38 L 40 38 L 40 42 L 8 42 Z" class="f-highlight" opacity="0.3" />
-                            <rect x="11" y="22" width="11" height="7" rx="2" class="f-highlight" />
-                            <rect x="26" y="22" width="11" height="7" rx="2" class="f-highlight" />
-                            <rect x="5" y="68" width="12" height="12" rx="2" class="f-wood" />
-                            <circle cx="11" cy="74" r="3" class="f-metal" />
-                            <circle cx="85" cy="85" r="8" class="f-plant" />
-                            <circle cx="85" cy="85" r="3" class="f-wood" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="room" id="room-mandi" onclick="toggleLight(this)">
-                    <div class="light-glow"></div>
-                    <div class="lamp"></div>
-                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <pattern id="tile-floor-mandi" width="15" height="15" patternUnits="userSpaceOnUse">
-                            <rect width="15" height="15" class="floor-tile" />
-                        </pattern>
-                        <rect width="100" height="100" fill="url(#tile-floor-mandi)" />
-                        <g class="furniture-group">
-                            <rect x="65" y="8" width="28" height="45" rx="8" class="f-base" />
-                            <rect x="68" y="11" width="22" height="39" rx="6" class="f-ceramic" />
-                            <circle cx="79" cy="15" r="1.5" class="f-metal" />
-                            <rect x="5" y="8" width="18" height="35" rx="2" class="f-wood" />
-                            <ellipse cx="14" cy="25" rx="6" ry="8" class="f-ceramic" />
-                            <rect x="13" y="15" width="2" height="4" class="f-metal" />
-                            <rect x="5" y="70" width="12" height="18" rx="2" class="f-ceramic" />
-                            <ellipse cx="16" cy="79" rx="7" ry="6" class="f-ceramic" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="room" id="room-tamu" onclick="toggleLight(this)">
-                    <div class="light-glow"></div>
-                    <div class="lamp"></div>
-                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <pattern id="wood-floor-1-tamu" width="12" height="100" patternUnits="userSpaceOnUse">
-                            <line x1="12" y1="0" x2="12" y2="100" class="floor-wood" />
-                        </pattern>
-                        <rect width="100" height="100" fill="url(#wood-floor-1-tamu)" />
-                        <g class="furniture-group">
-                            <rect x="25" y="5" width="50" height="8" rx="2" class="f-wood" />
-                            <rect x="32" y="7" width="36" height="3" rx="1.5" class="f-metal" />
-                            <rect x="20" y="30" width="60" height="60" rx="8" class="f-fabric" />
-                            <rect x="40" y="50" width="20" height="20" rx="10" class="f-wood" />
-                            <rect x="45" y="55" width="10" height="10" rx="5" class="f-base" />
-                            <rect x="15" y="70" width="70" height="15" rx="4" class="f-base" />
-                            <rect x="70" y="35" width="15" height="45" rx="4" class="f-base" />
-                            <rect x="18" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
-                            <rect x="35" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
-                            <rect x="52" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
-                            <circle cx="88" cy="15" r="7" class="f-plant" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="room" id="room-dapur" onclick="toggleLight(this)">
-                    <div class="light-glow"></div>
-                    <div class="lamp"></div>
-                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <pattern id="tile-floor-dapur" width="15" height="15" patternUnits="userSpaceOnUse">
-                            <rect width="15" height="15" class="floor-tile" />
-                        </pattern>
-                        <rect width="100" height="100" fill="url(#tile-floor-dapur)" />
-                        <g class="furniture-group">
-                            <rect x="5" y="5" width="40" height="15" rx="2" class="f-wood" />
-                            <rect x="5" y="15" width="15" height="80" rx="2" class="f-wood" />
-                            <rect x="22" y="7" width="18" height="11" rx="1" class="f-metal" />
-                            <circle cx="26" cy="10" r="2" class="f-highlight" />
-                            <circle cx="34" cy="10" r="2" class="f-highlight" />
-                            <circle cx="26" cy="15" r="2" class="f-highlight" />
-                            <circle cx="34" cy="15" r="2" class="f-highlight" />
-                            <rect x="7" y="45" width="11" height="18" rx="2" class="f-metal" />
-                            <rect x="9" y="47" width="7" height="14" rx="1" class="f-ceramic" />
-                            <rect x="14" y="52" width="4" height="2" class="f-base" />
-                            <circle cx="65" cy="41" r="6" class="f-fabric" />
-                            <circle cx="65" cy="89" r="6" class="f-fabric" />
-                            <circle cx="41" cy="65" r="6" class="f-fabric" />
-                            <circle cx="89" cy="65" r="6" class="f-fabric" />
-                            <circle cx="65" cy="65" r="18" class="f-wood" />
-                            <circle cx="65" cy="65" r="8" class="f-base" opacity="0.3" />
-                        </g>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <button id="download-btn" class="download-btn">📸 Download Image (PNG)</button>
-    </div>
+			<div style="
+			max-width:1500px;
+			margin:20px auto 0;
+			padding:0 20px;
+			display:flex;
+			justify-content:space-between;
+			align-items:center;
+			">
+
+			<h2 style="
+			font-size:26px;
+			font-weight:900;
+			color:#4f46e5;
+			">
+			Smart Home Logic Lab
+		</h2>
+
+		<button onclick="showPage('homePage')" 
+		style="
+		background:#334155;
+		color:white;
+		font-weight:700;
+		padding:10px 18px;
+		border-radius:12px;
+		border:none;
+		cursor:pointer;
+		">
+
+		Kembali ke Beranda
+
+	</button>
+
+</div>
+
+<div class="app-wrapper">
+	<div class="main-container">
+
+		<!-- Panel Kiri: Blueprint -->
+		<div class="house-container">
+			<h3 class="house-header">📍 Denah Rumah Pintarmu</h3>
+			<div class="house-blueprint">
+				<div class="floor-plan">
+					<div id="room-tidur" class="room room-tidur">
+						<div class="room-overlay"></div>
+						<div class="furniture bed"><div class="pillow"></div></div>
+						<div class="furniture rug-tidur"></div>
+						<span class="room-label">Kamar Tidur</span>
+						<span class="countdown" id="cd-tidur"></span>
+					</div>
+					<div id="room-mandi" class="room room-mandi">
+						<div class="room-overlay"></div>
+						<div class="furniture tub"></div>
+						<div class="furniture toilet"></div>
+						<div class="furniture sink"></div>
+						<span class="room-label">Kamar Mandi</span>
+						<span class="countdown" id="cd-mandi"></span>
+					</div>
+					<div id="room-tamu" class="room room-tamu">
+						<div class="room-overlay"></div>
+						<div class="furniture sofa-main"></div>
+						<div class="furniture sofa-side"></div>
+						<div class="furniture tv-tamu"></div>
+						<div class="furniture coffee-table"></div>
+						<div class="furniture plant"></div>
+						<span class="room-label">Ruang Tamu</span>
+						<span class="countdown" id="cd-tamu"></span>
+					</div>
+					<div id="room-dapur" class="room room-dapur">
+						<div class="room-overlay"></div>
+						<div class="furniture counter"></div>
+						<div class="furniture stove"></div>
+						<div class="dining-table furniture"></div>
+						<div class="chair1"></div>
+						<div class="chair2"></div>
+						<span class="room-label">Dapur</span>
+						<span class="countdown" id="cd-dapur"></span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Instruksi Bertahap -->
+			<div class="task-container">
+				<div class="task-header">
+					<span>Langkah Praktikum</span>
+					<span id="progressText">0/3 Selesai</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-fill" id="progressFill"></div>
+				</div>
+				<ul class="task-list">
+					<li id="task1" class="task-item active">
+						<span class="task-icon"><i class="fa-solid fa-circle"></i></span> 
+						<div><strong>Tahap 1:</strong> Lengkapi semua status lampu & timer pada konfigurasi di LANGKAH 1.</div>
+					</li>
+					<li id="task2" class="task-item">
+						<span class="task-icon"><i class="fa-solid fa-circle"></i></span> 
+						<div><strong>Tahap 2:</strong> Susun blok logika (For, If, Else) dan kunci Dictionary di LANGKAH 2.</div>
+					</li>
+					<li id="task3" class="task-item">
+						<span class="task-icon"><i class="fa-solid fa-circle"></i></span> 
+						<div><strong>Tahap 3:</strong> Klik JALANKAN tanpa ada pesan error di terminal!</div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+		<!-- Panel Kanan: Workspace Editor -->
+		<div class="editor-container">
+
+			<div class="toolbar">
+				<div class="tools-wrapper">
+					<span style="font-size: 0.9rem; font-weight: 800; color: #64748b;">🎒 ALAT:</span>
+
+					<div class="tool-group">
+						<span class="tool-label">Logika:</span>
+						<div class="block block-keyword" onclick="selectBlock('for', 'keyword', this)">for</div>
+						<div class="block block-keyword" onclick="selectBlock('if', 'keyword', this)">if</div>
+						<div class="block block-keyword" onclick="selectBlock('else', 'keyword', this)">else</div>
+					</div>
+
+					<div class="tool-group">
+						<span class="tool-label">Kunci:</span>
+						<div class="block block-string" onclick="selectBlock('lampu', 'string', this)">"lampu"</div>
+						<div class="block block-string" onclick="selectBlock('timer', 'string', this)">"timer"</div>
+						<div class="block block-string" onclick="selectBlock('s', 'string', this)">"s"</div>
+					</div>
+
+					<div class="tool-group">
+						<span class="tool-label">Status:</span>
+						<div class="block block-on" onclick="selectBlock('ON', 'status', this)">ON</div>
+						<div class="block block-off" onclick="selectBlock('OFF', 'status', this)">OFF</div>
+					</div>
+				</div>
+
+				<div class="action-group">
+					<button class="reset-btn" onclick="resetSimulation()">🔄 Reset</button>
+					<button class="run-btn" onclick="runSimulation()">
+						<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+						JALANKAN!
+					</button>
+				</div>
+			</div>
+
+			<div class="workspace">
+				<svg class="workspace-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+					<path d="M10,50 L50,15 L90,50 L90,85 L10,85 Z" fill="none" stroke="#334155" stroke-width="2" stroke-linejoin="round"/>
+					<path d="M40,85 L40,60 L60,60 L60,85" fill="none" stroke="#334155" stroke-width="2"/>
+					<rect x="20" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2"/>
+					<rect x="68" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2"/>
+				</svg>
+
+				<div class="code-content">
+					<div class="comment"># LANGKAH 1: Atur Data Ruangan (Dictionary)</div>
+					<span style="color: var(--keyword); font-weight: 600;">config</span> = {<br>
+					<div style="margin-left:30px" data-room="tamu">"Tamu": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="3" id="input-tamu">},</div>
+					<div style="margin-left:30px" data-room="tidur">"Tidur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="5" id="input-tidur">},</div>
+					<div style="margin-left:30px" data-room="dapur">"Dapur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="2" id="input-dapur">},</div>
+					<div style="margin-left:30px" data-room="mandi">"Mandi": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="4" id="input-mandi">}</div>
+				}
+
+				<br>
+				<div class="comment"># LANGKAH 2: Susun Logika Utamanya</div>
+				<span class="slot" onclick="placeBlock(this)" id="slot-for">???</span> ruang, spek <span style="color: var(--keyword); font-weight: 600;">in</span> config.items():<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if1">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-lampu">???</span>:<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">nyalakan_lampu</span>(ruang)<br><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Cek apakah fitur timer aktif</span><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if2">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-timer">???</span>:<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">sleep</span>(spek[<span class="slot" onclick="placeBlock(this)" id="slot-key3">???</span>])<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-else">???</span>:<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- Terminal Log -->
+<div class="bottom-panel" id="terminal">
+	<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Halo! Pilih alat dari toolbar (atas), lalu tempelkan ke dalam tanda "???" untuk menyusun logika smart home kamu!</span>
+</div>
+</div>
+
+
+
+
+
+
 </section>
+
 
 <!-- MODAL CAPAIAN -->
 <div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -487,70 +575,71 @@
 </div>
 
 <!-- MODAL BIODATA -->
-<div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-auto max-h-[80vh]">
-        <div class="shrink-0 mb-6">
-            <h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
-        </div>
+<div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+	<div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+		<div class="shrink-0 mb-6">
+			<h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
+		</div>
+			<div class="flex-1 overflow-y-auto pr-4 text-left pb-4">
+				<div id="bio-slide-0" class="bio-slide">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
+							<div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+								<img src="assets/img/pengembang-materi.jpg" alt="Foto Syahidah Humairoh" class="w-24 h-24 rounded-full object-cover">
+							</div>
+							<h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Pengembang Materi</h3>
+							<div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Syahidah Humairoh, S.Pd.</span></p>
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">SMP Negeri 126 Jakarta</span></p>
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">syahidahhumairoh40@guru.smp.belajar.id</span></p>
+							</div>
+						</div>
+						<div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
+							<div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+								<img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
+							</div>
+							<h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
+							<div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+								<p class="flex flex-col"><span class="font-semibold text-slate-900">Direktorat Jenderal Pendidikan Anak Usia Dini, Pendidikan Dasar, dan Pendidikan Nonformal dan Informal</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="bio-slide-1" class="bio-slide hidden">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
+							<div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+								<img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
+							</div>
+							<h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Penanggung Jawab</h3>
+							<div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Direktur SMP</span> <span class="font-semibold text-slate-900">Maulani Mega Hapsari, S.IP, M.A.</span></p>
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Kasubag Tata Usaha Direktorat SMP</span> <span class="font-semibold text-slate-900">Roelly Herdyanto, S.E., M.Si.</span></p>
+								<p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Pejabat Pembuat Komitmen</span> <span class="font-semibold text-slate-900">Cepy Lukman Rusdiana, S.Kom., M.Si.</span></p>
+							</div>
+						</div>
+						<div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
+							<div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
+								<img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
+							</div>
+							<h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Penyunting</h3>
+							<div class="w-full space-y-4 text-md md:text-lg text-slate-700">
+								<span class="font-semibold text-slate-900">Sri Sumarni Styati., S.Pd., M.A,</span></p>
+								<span class="font-semibold text-slate-900">Iswadi</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <div class="flex-1 overflow-y-auto pr-4 text-left pb-4">
-            <div id="bio-slide-0" class="bio-slide">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
-                        <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                            <img src="assets/img/pengembang-materi.jpg" alt="Foto Syahidah Humairoh" class="w-24 h-24 rounded-full object-cover">
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Pengembang Materi</h3>
-                        <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span> <span class="font-semibold text-slate-900">Syahidah Humairoh, S.Pd.</span></p>
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span> <span class="font-semibold text-slate-900">SMP Negeri 126 Jakarta</span></p>
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span> <span class="font-semibold text-slate-900">syahidahhumairoh40@guru.smp.belajar.id</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
-                        <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                            <img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
-                        <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
-                            <p class="flex flex-col"><span class="font-semibold text-slate-900">Direktorat Jenderal Pendidikan Anak Usia Dini, Pendidikan Dasar, dan Pendidikan Nonformal dan Informal</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="bio-slide-1" class="bio-slide hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-lime-50 p-6 md:p-8 rounded-3xl border-t-8 border-[#8bc34a] flex flex-col items-center shadow-md">
-                        <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                            <img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Penanggung Jawab</h3>
-                        <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Direktur SMP</span> <span class="font-semibold text-slate-900">Maulani Mega Hapsari, S.IP, M.A.</span></p>
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Kasubag Tata Usaha Direktorat SMP</span> <span class="font-semibold text-slate-900">Roelly Herdyanto, S.E., M.Si.</span></p>
-                            <p class="flex flex-col"><span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Pejabat Pembuat Komitmen</span> <span class="font-semibold text-slate-900">Cepy Lukman Rusdiana, S.Kom., M.Si.</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-teal-50 p-6 md:p-8 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
-                        <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                            <img src="assets/img/kemendikdasmen.webp" alt="Logo Ditsmp" class="w-16 h-16 object-contain">
-                        </div>
-                        <h3 class="text-xl md:text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Penyunting</h3>
-                        <div class="w-full space-y-4 text-md md:text-lg text-slate-700">
-                            <span class="font-semibold text-slate-900">Sri Sumarni Styati., S.Pd., M.A,</span></p>
-                            <span class="font-semibold text-slate-900">Iswadi</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-50 gap-4">
-            <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
-            <button onclick="closeBioModal()" class="flex-1 max-w-[200px] bg-[#8bc34a] hover:bg-[#7cb342] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
-            <button id="bioNextBtn" onclick="changeBioSlide(1)" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
-        </div>
-    </div>
+			<div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-50 gap-4">
+				<button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+				<button onclick="closeBioModal()" class="flex-1 max-w-[200px] bg-[#8bc34a] hover:bg-[#7cb342] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
+				<button id="bioNextBtn" onclick="changeBioSlide(1)" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 <!-- MODAL REFLEKSI -->
@@ -670,7 +759,6 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="assets/src/script.js"></script>
 
 </body>

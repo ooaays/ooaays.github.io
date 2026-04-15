@@ -380,48 +380,6 @@ function closeIntroModal() {
     document.body.style.overflow = 'auto';
 }
 
-function toggleLight(element) {
-    element.classList.toggle('is-on');
-}
-
-function initLabPageButtons() {
-    const downloadBtn = document.getElementById('download-btn');
-    if (!downloadBtn) return;
-
-    downloadBtn.addEventListener('click', function() {
-        const captureArea = document.querySelector('.visual-card');
-        const originalText = this.innerHTML;
-        this.innerHTML = 'Memproses...';
-        this.disabled = true;
-
-        if (typeof html2canvas === 'undefined') {
-            console.error('html2canvas belum dimuat');
-            this.innerHTML = originalText;
-            this.disabled = false;
-            return;
-        }
-
-        html2canvas(captureArea, { scale: 2, backgroundColor: '#ffffff' })
-            .then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'smart-home-simulasi.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                this.innerHTML = originalText;
-                this.disabled = false;
-            })
-            .catch(err => {
-                console.error('Error capturing image:', err);
-                this.innerHTML = 'Error!';
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 2000);
-            });
-    });
-}
-
-initLabPageButtons();
 
 // ==============================================
 // SCRIPT MODAL BIODATA PENGEMBANG
