@@ -1,148 +1,494 @@
-<div class="app-wrapper">
-    <div class="main-container">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Smart Home</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap');
 
-        <!-- Panel Kiri: Blueprint -->
-        <div class="house-container">
-            <h3 class="house-header">📍 Denah Rumah Pintarmu</h3>
-            <div class="house-blueprint">
-                <div class="floor-plan">
-                    <div id="room-tidur" class="room room-tidur">
-                        <div class="room-overlay"></div>
-                        <div class="furniture bed"><div class="pillow"></div></div>
-                        <div class="furniture rug-tidur"></div>
-                        <span class="room-label">Kamar Tidur</span>
-                        <span class="countdown" id="cd-tidur"></span>
-                    </div>
-                    <div id="room-mandi" class="room room-mandi">
-                        <div class="room-overlay"></div>
-                        <div class="furniture tub"></div>
-                        <div class="furniture toilet"></div>
-                        <div class="furniture sink"></div>
-                        <span class="room-label">Kamar Mandi</span>
-                        <span class="countdown" id="cd-mandi"></span>
-                    </div>
-                    <div id="room-tamu" class="room room-tamu">
-                        <div class="room-overlay"></div>
-                        <div class="furniture sofa-main"></div>
-                        <div class="furniture sofa-side"></div>
-                        <div class="furniture tv-tamu"></div>
-                        <div class="furniture coffee-table"></div>
-                        <div class="furniture plant"></div>
-                        <span class="room-label">Ruang Tamu</span>
-                        <span class="countdown" id="cd-tamu"></span>
-                    </div>
-                    <div id="room-dapur" class="room room-dapur">
-                        <div class="room-overlay"></div>
-                        <div class="furniture counter"></div>
-                        <div class="furniture stove"></div>
-                        <div class="dining-table furniture"></div>
-                        <div class="chair1"></div>
-                        <div class="chair2"></div>
-                        <span class="room-label">Dapur</span>
-                        <span class="countdown" id="cd-dapur"></span>
-                    </div>
-                </div>
-            </div>
+        :root {
+            --bg-page: #e2e8f0;
+            --frame-border: #A6E3B9; /* Light green tablet frame */
+            --frame-bg: #4A5568; /* Gap color / tablet background */
+            --room-dark: #2D3748;
+            --room-light: #4A5568;
+            --text-dark: #1A202C;
+            --lamp-off: #FFFFFF;
+            --lamp-on: #FFD43B;
+        }
 
-            <!-- Instruksi Bertahap -->
-            <div class="task-container">
-                <div class="task-header">
-                    <span>Langkah Praktikum</span>
-                    <span id="progressText">0/3 Selesai</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <ul class="task-list">
-                    <li id="task1" class="task-item active">
-                        <span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-                        <div><strong>Tahap 1:</strong> Lengkapi semua status lampu & timer pada konfigurasi di LANGKAH 1.</div>
-                    </li>
-                    <li id="task2" class="task-item">
-                        <span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-                        <div><strong>Tahap 2:</strong> Susun blok logika (For, If, Else) dan kunci Dictionary di LANGKAH 2.</div>
-                    </li>
-                    <li id="task3" class="task-item">
-                        <span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-                        <div><strong>Tahap 3:</strong> Klik JALANKAN tanpa ada pesan error di terminal!</div>
-                    </li>
-                </ul>
-            </div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-page);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .visual-card {
+            background: white;
+            padding: 30px;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            max-width: 650px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .visual-header {
+            text-align: center;
+            width: 100%;
+        }
+
+        .visual-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* The Tablet/Device Frame */
+        .device-frame {
+            background-color: var(--frame-border);
+            padding: 14px;
+            border-radius: 28px;
+            width: 100%;
+            position: relative;
+            box-shadow: inset 0 4px 10px rgba(255,255,255,0.6), 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Inner container with grid */
+        .smart-home {
+            background-color: var(--frame-bg);
+            border-radius: 18px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* The Room */
+        .room {
+            background-color: var(--room-dark);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Light Glow Effect inside the room */
+        .light-glow {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(255, 212, 59, 0.25) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Light ON State */
+        .room.is-on {
+            background-color: var(--room-light);
+        }
+        
+        .room.is-on .light-glow {
+            opacity: 1;
+        }
+
+        /* Glassmorphism Room Label */
+        .room span {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--text-dark);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, background 0.3s ease;
+            pointer-events: none;
+        }
+
+        .room:hover span {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Lamp Indicator (Top Right Pill) */
+        .lamp {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 24px;
+            height: 10px;
+            background-color: var(--lamp-off);
+            border-radius: 10px;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .room.is-on .lamp {
+            background-color: var(--lamp-on);
+            box-shadow: 0 0 15px var(--lamp-on), 0 0 30px var(--lamp-on);
+            opacity: 1;
+        }
+
+        /* SVG Backgrounds */
+        .room-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- UI Material System for SVGs --- */
+        
+        /* Drop shadow for 3D depth on furniture */
+        .furniture-group {
+            filter: drop-shadow(0px 6px 8px rgba(0,0,0,0.3));
+            transition: filter 0.5s ease;
+        }
+        .room.is-on .furniture-group {
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
+        }
+
+        /* Material Colors (Off State) */
+        .f-base { fill: #1E2433; transition: fill 0.5s ease; }
+        .f-fabric { fill: #242B3D; transition: fill 0.5s ease; }
+        .f-wood { fill: #1A1F2B; transition: fill 0.5s ease; }
+        .f-ceramic { fill: #2A3142; transition: fill 0.5s ease; }
+        .f-metal { fill: #161A24; transition: fill 0.5s ease; }
+        .f-plant { fill: #1A2E24; transition: fill 0.5s ease; }
+        .f-highlight { fill: #333D52; transition: fill 0.5s ease; }
+
+        /* Material Colors (On State) */
+        .room.is-on .f-base { fill: #3A4A63; }
+        .room.is-on .f-fabric { fill: #4B5E7C; }
+        .room.is-on .f-wood { fill: #6B5243; } /* Warm wood */
+        .room.is-on .f-ceramic { fill: #E2E8F0; } /* White ceramic */
+        .room.is-on .f-metal { fill: #A0AEC0; } /* Silver metal */
+        .room.is-on .f-plant { fill: #38A169; } /* Bright green */
+        .room.is-on .f-highlight { fill: #FFFFFF; } /* Crisp white */
+
+        /* Floor Patterns */
+        .floor-wood { stroke: rgba(0,0,0,0.2); stroke-width: 0.5; fill: transparent; transition: stroke 0.5s; }
+        .room.is-on .floor-wood { stroke: rgba(107, 82, 67, 0.2); }
+        
+        .floor-tile { stroke: rgba(255,255,255,0.03); stroke-width: 0.5; fill: transparent; transition: stroke 0.5s; }
+        .room.is-on .floor-tile { stroke: rgba(255,255,255,0.15); }
+
+        /* Bottom Home Button on Tablet */
+        .home-button {
+            width: 70px;
+            height: 6px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 4px;
+            margin: 12px auto 0 auto;
+        }
+
+        .hero-mini-note {
+            font-size: 0.9rem;
+            color: #4A5568;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F7FAFC;
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: 1px solid #E2E8F0;
+            font-weight: 600;
+        }
+        
+        /* Status Dot */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #48BB78;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(72, 187, 120, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
+        }
+
+        @media (max-width: 480px) {
+            .room span { font-size: 0.8rem; padding: 6px 12px; }
+            .lamp { width: 18px; height: 8px; top: 12px; right: 12px; }
+            .visual-card { padding: 20px; border-radius: 20px; }
+            .visual-title { font-size: 1.2rem; }
+        }
+
+        .download-btn {
+            background-color: #4A5568;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .download-btn:hover {
+            background-color: #2D3748;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="visual-card">
+        <div class="visual-header">
         </div>
 
-        <!-- Panel Kanan: Workspace Editor -->
-        <div class="editor-container">
-
-            <div class="toolbar">
-                <div class="tools-wrapper">
-                    <span style="font-size: 0.9rem; font-weight: 800; color: #64748b;">🎒 ALAT:</span>
-
-                    <div class="tool-group">
-                        <span class="tool-label">Logika:</span>
-                        <div class="block block-keyword" onclick="selectBlock('for', 'keyword', this)">for</div>
-                        <div class="block block-keyword" onclick="selectBlock('if', 'keyword', this)">if</div>
-                        <div class="block block-keyword" onclick="selectBlock('else', 'keyword', this)">else</div>
-                    </div>
-
-                    <div class="tool-group">
-                        <span class="tool-label">Kunci:</span>
-                        <div class="block block-string" onclick="selectBlock('lampu', 'string', this)">"lampu"</div>
-                        <div class="block block-string" onclick="selectBlock('timer', 'string', this)">"timer"</div>
-                        <div class="block block-string" onclick="selectBlock('s', 'string', this)">"s"</div>
-                    </div>
-
-                    <div class="tool-group">
-                        <span class="tool-label">Status:</span>
-                        <div class="block block-on" onclick="selectBlock('ON', 'status', this)">ON</div>
-                        <div class="block block-off" onclick="selectBlock('OFF', 'status', this)">OFF</div>
-                    </div>
+        <div class="device-frame">
+            <div class="smart-home">
+                
+                <!-- Room 1: Kamar Tidur (Top Left) -->
+                <div class="room" id="room-kamar" onclick="toggleLight(this)">
+                    <div class="light-glow"></div>
+                    <div class="lamp"></div>
+                    <!-- Using viewBox 0 0 100 100 makes styling consistent regardless of screen size -->
+                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <!-- Wood Floor Texture -->
+                        <pattern id="wood-floor-1" width="12" height="100" patternUnits="userSpaceOnUse">
+                            <line x1="12" y1="0" x2="12" y2="100" class="floor-wood"/>
+                        </pattern>
+                        <rect width="100" height="100" fill="url(#wood-floor-1)" />
+                        
+                        <g class="furniture-group">
+                            <!-- Rug -->
+                            <rect x="15" y="55" width="45" height="35" rx="4" class="f-fabric" />
+                            <!-- Bed Frame -->
+                            <rect x="5" y="15" width="38" height="48" rx="4" class="f-wood" />
+                            <!-- Mattress -->
+                            <rect x="8" y="18" width="32" height="42" rx="3" class="f-base" />
+                            <!-- Blanket -->
+                            <rect x="8" y="38" width="32" height="22" rx="2" class="f-fabric" />
+                            <path d="M 8 38 L 40 38 L 40 42 L 8 42 Z" class="f-highlight" opacity="0.3" />
+                            <!-- Pillows -->
+                            <rect x="11" y="22" width="11" height="7" rx="2" class="f-highlight" />
+                            <rect x="26" y="22" width="11" height="7" rx="2" class="f-highlight" />
+                            <!-- Nightstand -->
+                            <rect x="5" y="68" width="12" height="12" rx="2" class="f-wood" />
+                            <circle cx="11" cy="74" r="3" class="f-metal" /> <!-- Small lamp -->
+                            <!-- Potted Plant -->
+                            <circle cx="85" cy="85" r="8" class="f-plant" />
+                            <circle cx="85" cy="85" r="3" class="f-wood" /> <!-- Pot center -->
+                        </g>
+                    </svg>
                 </div>
 
-                <div class="action-group">
-                    <button class="reset-btn" onclick="resetSimulation()"><i class="fa-solid fa-repeat"></i> Reset</button>
-                    <button class="run-btn" onclick="runSimulation()">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                        JALANKAN!
-                    </button>
+                <!-- Room 2: Kamar Mandi (Top Right) -->
+                <div class="room" id="room-mandi" onclick="toggleLight(this)">
+                    <div class="light-glow"></div>
+                    <div class="lamp"></div>
+                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <!-- Tile Floor Texture -->
+                        <pattern id="tile-floor" width="15" height="15" patternUnits="userSpaceOnUse">
+                            <rect width="15" height="15" class="floor-tile" />
+                        </pattern>
+                        <rect width="100" height="100" fill="url(#tile-floor)" />
+                        
+                        <g class="furniture-group">
+                            <!-- Bathtub -->
+                            <rect x="65" y="8" width="28" height="45" rx="8" class="f-base" />
+                            <rect x="68" y="11" width="22" height="39" rx="6" class="f-ceramic" />
+                            <circle cx="79" cy="15" r="1.5" class="f-metal" /> <!-- Drain -->
+                            <!-- Sink Counter -->
+                            <rect x="5" y="8" width="18" height="35" rx="2" class="f-wood" />
+                            <ellipse cx="14" cy="25" rx="6" ry="8" class="f-ceramic" /> <!-- Basin -->
+                            <rect x="13" y="15" width="2" height="4" class="f-metal" /> <!-- Faucet -->
+                            <!-- Toilet -->
+                            <rect x="5" y="70" width="12" height="18" rx="2" class="f-ceramic" /> <!-- Tank -->
+                            <ellipse cx="16" cy="79" rx="7" ry="6" class="f-ceramic" /> <!-- Bowl -->
+                        </g>
+                    </svg>
                 </div>
-            </div>
 
-            <div class="workspace">
-                <svg class="workspace-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10,50 L50,15 L90,50 L90,85 L10,85 Z" fill="none" stroke="#334155" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M40,85 L40,60 L60,60 L60,85" fill="none" stroke="#334155" stroke-width="2"/>
-                    <rect x="20" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2"/>
-                    <rect x="68" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2"/>
-                </svg>
+                <!-- Room 3: Ruang Tamu (Bottom Left) -->
+                <div class="room" id="room-tamu" onclick="toggleLight(this)">
+                    <div class="light-glow"></div>
+                    <div class="lamp"></div>
+                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <rect width="100" height="100" fill="url(#wood-floor-1)" />
+                        
+                        <g class="furniture-group">
+                            <!-- TV Unit -->
+                            <rect x="25" y="5" width="50" height="8" rx="2" class="f-wood" />
+                            <!-- TV Screen -->
+                            <rect x="32" y="7" width="36" height="3" rx="1.5" class="f-metal" />
+                            
+                            <!-- Large Area Rug -->
+                            <rect x="20" y="30" width="60" height="60" rx="8" class="f-fabric" />
+                            
+                            <!-- Coffee Table -->
+                            <rect x="40" y="50" width="20" height="20" rx="10" class="f-wood" />
+                            <rect x="45" y="55" width="10" height="10" rx="5" class="f-base" /> <!-- Glass center -->
+                            
+                            <!-- L-Shape Sofa (Composed of rectangles) -->
+                            <rect x="15" y="70" width="70" height="15" rx="4" class="f-base" /> <!-- Bottom horizontal part -->
+                            <rect x="70" y="35" width="15" height="45" rx="4" class="f-base" /> <!-- Right vertical part -->
+                            
+                            <!-- Sofa Cushions (Details) -->
+                            <rect x="18" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+                            <rect x="35" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+                            <rect x="52" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+                            
+                            <!-- Corner Plant -->
+                            <circle cx="88" cy="15" r="7" class="f-plant" />
+                        </g>
+                    </svg>
+                </div>
 
-                <div class="code-content">
-                    <div class="comment"># LANGKAH 1: Atur Data Ruangan (Dictionary)</div>
-                    <span style="color: var(--keyword); font-weight: 600;">config</span> = {<br>
-                    <div style="margin-left:30px" data-room="tamu">"Tamu": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="3" id="input-tamu">},</div>
-                    <div style="margin-left:30px" data-room="tidur">"Tidur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="5" id="input-tidur">},</div>
-                    <div style="margin-left:30px" data-room="dapur">"Dapur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="2" id="input-dapur">},</div>
-                    <div style="margin-left:30px" data-room="mandi">"Mandi": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="4" id="input-mandi">}</div>
-                }
+                <!-- Room 4: Dapur (Bottom Right) -->
+                <div class="room" id="room-dapur" onclick="toggleLight(this)">
+                    <div class="light-glow"></div>
+                    <div class="lamp"></div>
+                    <svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <rect width="100" height="100" fill="url(#tile-floor)" />
+                        
+                        <g class="furniture-group">
+                            <!-- Kitchen Counter L-Shape -->
+                            <rect x="5" y="5" width="40" height="15" rx="2" class="f-wood" />
+                            <rect x="5" y="15" width="15" height="80" rx="2" class="f-wood" />
+                            
+                            <!-- Stove -->
+                            <rect x="22" y="7" width="18" height="11" rx="1" class="f-metal" />
+                            <circle cx="26" cy="10" r="2" class="f-highlight" /> <!-- Burner -->
+                            <circle cx="34" cy="10" r="2" class="f-highlight" /> <!-- Burner -->
+                            <circle cx="26" cy="15" r="2" class="f-highlight" /> <!-- Burner -->
+                            <circle cx="34" cy="15" r="2" class="f-highlight" /> <!-- Burner -->
+                            
+                            <!-- Kitchen Sink -->
+                            <rect x="7" y="45" width="11" height="18" rx="2" class="f-metal" />
+                            <rect x="9" y="47" width="7" height="14" rx="1" class="f-ceramic" />
+                            <rect x="14" y="52" width="4" height="2" class="f-base" /> <!-- Faucet -->
 
-                <br>
-                <div class="comment"># LANGKAH 2: Susun Logika Utamanya</div>
-                <span class="slot" onclick="placeBlock(this)" id="slot-for">???</span> ruang, spek <span style="color: var(--keyword); font-weight: 600;">in</span> config.items():<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if1">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-lampu">???</span>:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">nyalakan_lampu</span>(ruang)<br><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Cek apakah fitur timer aktif</span><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if2">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-timer">???</span>:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">sleep</span>(spek[<span class="slot" onclick="placeBlock(this)" id="slot-key3">???</span>])<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-else">???</span>:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)
+                            <!-- Dining Chairs -->
+                            <circle cx="65" cy="41" r="6" class="f-fabric" />
+                            <circle cx="65" cy="89" r="6" class="f-fabric" />
+                            <circle cx="41" cy="65" r="6" class="f-fabric" />
+                            <circle cx="89" cy="65" r="6" class="f-fabric" />
+                            
+                            <!-- Dining Table -->
+                            <circle cx="65" cy="65" r="18" class="f-wood" />
+                            <circle cx="65" cy="65" r="8" class="f-base" opacity="0.3" /> <!-- Centerpiece shadow -->
+                        </g>
+                    </svg>
+                </div>
+
             </div>
         </div>
+
+        
+
     </div>
 
-</div>
+    <button id="download-btn" class="download-btn">📸 Download Image (PNG)</button>
 
-<!-- Terminal Log -->
-<div class="bottom-panel" id="terminal">
-    <span class="log-info"><i class="fa-solid fa-hand-wave"></i> Halo! Pilih alat dari toolbar (atas), lalu tempelkan ke dalam tanda "???" untuk menyusun logika smart home kamu!</span>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Manual toggle functionality
+        function toggleLight(element) {
+            element.classList.toggle('is-on');
+        }
+
+        // Automatic IoT Simulation Function
+        function simulateIoT() {
+            const rooms = document.querySelectorAll('.room');
+            
+            setInterval(() => {
+                const randomRoomIndex = Math.floor(Math.random() * rooms.length);
+                const room = rooms[randomRoomIndex];
+                
+                // 30% chance to toggle a light state automatically
+                if (Math.random() > 0.7) {
+                    room.classList.toggle('is-on');
+                }
+            }, 2000); 
+        }
+
+        // Start auto-simulation when page loads
+        window.onload = () => {
+            const rooms = document.querySelectorAll('.room');
+            // Set ALL lights to ON by default
+            rooms.forEach(room => {
+                room.classList.add('is-on');
+            });
+
+            // Disabled automatic flickering so it remains static for the image download
+            // simulateIoT();
+        };
+
+        // PNG Download Logic
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const captureArea = document.querySelector('.visual-card');
+            const originalBtnText = this.innerHTML;
+            this.innerHTML = 'Memproses...';
+            this.disabled = true;
+
+            html2canvas(captureArea, {
+                scale: 2, // Generates a high-resolution image
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'smart-home-simulasi.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                this.innerHTML = originalBtnText;
+                this.disabled = false;
+            }).catch(err => {
+                console.error('Error capturing image:', err);
+                this.innerHTML = 'Error!';
+                setTimeout(() => {
+                    this.innerHTML = originalBtnText;
+                    this.disabled = false;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
