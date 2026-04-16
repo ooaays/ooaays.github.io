@@ -47,7 +47,7 @@ body { font-family: 'Nunito', sans-serif; }
 .dot-completed { background-color: #34d399; border: 2px solid #059669; color: white; cursor: pointer; }
 .dot-active { background-color: #FFD500; border: 3px solid white; color: #854d0e; font-weight: 900; transform: scale(1.2); box-shadow: 0 4px 6px rgba(0,0,0,0.2); z-index: 10; cursor: pointer;}
 .header-bg {
-    background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
+    background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
     color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }

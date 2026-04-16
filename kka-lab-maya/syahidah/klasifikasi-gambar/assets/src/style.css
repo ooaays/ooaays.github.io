@@ -24,7 +24,7 @@ overflow-x:auto;
 
 /* HEADER */
 .header-bg{
-background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
+background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
 color:white;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
