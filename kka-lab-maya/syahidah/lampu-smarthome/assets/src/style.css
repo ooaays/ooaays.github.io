@@ -43,12 +43,6 @@
     max-width:760px;
 }
 
-.hero-buttons button {
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
-}
-
 .menu-card{
     display:flex;
     width:100%;
@@ -466,17 +460,7 @@
 		}
 
 		.workspace-bg { position: absolute; bottom: 20px; right: 20px; width: 300px; opacity: 0.04; pointer-events: none; z-index: 0; transform: rotate(-5deg); }
-		.code-content { position: relative; z-index: 2; counter-reset: linenumber; }
-		.code-line { display: flex; align-items: flex-start; gap: 10px; white-space: pre; padding: 2px 0 2px 4rem; position: relative; }
-		.code-line::before { content: counter(linenumber); counter-increment: linenumber; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 2.4rem; text-align: right; color: #94a3b8; font-size: 0.88rem; font-weight: 700; padding-right: 10px; user-select: none; pointer-events: none; }
-		.slot { position: relative; z-index: 1; }
-		.code-line.indent-1 { padding-left: calc(4rem + 28px); }
-		.code-line.indent-2 { padding-left: calc(4rem + 50px); }
-		.code-line.indent-3 { padding-left: calc(4rem + 72px); }
-		.code-line.line-comment { color: #64748b; }
-		.code-line.blank { height: 1rem; }
-		.code-line.error-line { background: #fee2e2; border-radius: 8px; }
-		.slot.error-slot { background: #fee2e2 !important; border-color: #dc2626 !important; color: #991b1c !important; box-shadow: none !important; }
+		.code-content { position: relative; z-index: 2; }
 		.workspace::-webkit-scrollbar { width: 10px; }
 		.workspace::-webkit-scrollbar-track { background: transparent; }
 		.workspace::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 3px solid var(--editor-bg); }
