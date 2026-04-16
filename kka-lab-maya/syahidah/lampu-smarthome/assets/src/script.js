@@ -65,6 +65,24 @@ let selectedValue = null;
         	if (line) {
         		line.classList.add('error-line');
         	}
+        	return getLineNumber(element);
+        }
+
+        function getLineNumber(element) {
+        	const line = element.closest('.code-line');
+        	if (!line) return null;
+        	const lines = Array.from(document.querySelectorAll('.code-line'));
+        	return lines.indexOf(line) + 1;
+        }
+
+        function formatLineList(elements) {
+        	const lineNumbers = elements
+        		.map(getLineNumber)
+        		.filter(n => n !== null);
+        	return [...new Set(lineNumbers)]
+        		.sort((a, b) => a - b)
+        		.map(n => `baris ${n}`)
+        		.join(', ');
         }
 
         function resetSimulation() {
@@ -112,8 +130,11 @@ let selectedValue = null;
             const allSlots = Array.from(document.querySelectorAll('.slot'));
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
             
-            if (emptySlots.length > 0) {			emptySlots.forEach(highlightEditorError);			logToTerminal(`<i class=\"fa-solid fa-xmark\"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
-			return;
+            if (emptySlots.length > 0) {
+                emptySlots.forEach(highlightEditorError);
+                const emptyLines = formatLineList(emptySlots);
+                logToTerminal(`<i class="fa-solid fa-xmark"></i> Gagal: Masih ada ${emptySlots.length} kotak '???'${emptyLines ? ' di ' + emptyLines : ''} yang belum kamu isi! Lengkapi dulu ya.`, "error");
+                return;
             }
 
             // Ambil data puzzle logika di LANGKAH 2
@@ -131,21 +152,29 @@ let selectedValue = null;
 
             // Cek kesesuaian syntax python (for, if, else)
             if (valFor !== 'for' || valIf1 !== 'if' || valIf2 !== 'if' || valElse !== 'else') {
-				highlightEditorError(document.getElementById('slot-for'));
-				highlightEditorError(document.getElementById('slot-if1'));
-				highlightEditorError(document.getElementById('slot-if2'));
-				highlightEditorError(document.getElementById('slot-else'));
-				logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
-				return;
+                const syntaxSlots = [
+                    document.getElementById('slot-for'),
+                    document.getElementById('slot-if1'),
+                    document.getElementById('slot-if2'),
+                    document.getElementById('slot-else')
+                ];
+                syntaxSlots.forEach(highlightEditorError);
+                const syntaxLines = formatLineList(syntaxSlots);
+                logToTerminal(`<i class="fa-solid fa-xmark"></i> Syntax Error${syntaxLines ? ' di ' + syntaxLines : ''}: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!`, "error");
+                return;
             }
 
             // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "s")
             if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 's') {
-				highlightEditorError(document.getElementById('slot-key1'));
-				highlightEditorError(document.getElementById('slot-key2'));
-				highlightEditorError(document.getElementById('slot-key3'));
-				logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
-				return;
+                const keySlots = [
+                    document.getElementById('slot-key1'),
+                    document.getElementById('slot-key2'),
+                    document.getElementById('slot-key3')
+                ];
+                keySlots.forEach(highlightEditorError);
+                const keyLines = formatLineList(keySlots);
+                logToTerminal(`<i class="fa-solid fa-xmark"></i> Key Error${keyLines ? ' di ' + keyLines : ''}: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.`, "error");
+                return;
             }
 
             // Jika lulus semua validasi puzzle
