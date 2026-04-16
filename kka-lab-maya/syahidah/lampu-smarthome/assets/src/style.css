@@ -235,198 +235,177 @@
 		.house-header { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; font-weight: 800; }
 
 		.house-blueprint {
-			background: radial-gradient(circle at top left, rgba(99,102,241,0.18), transparent 35%), radial-gradient(circle at bottom right, rgba(56,189,248,0.14), transparent 30%), linear-gradient(180deg, #14203c 0%, #0f172a 100%);
-			padding: 22px;
-			border-radius: 32px;
-			border: 1px solid rgba(255,255,255,0.14);
-			flex: 1; display: flex; align-items: center; position: relative;
-			box-shadow: 0 30px 80px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
-			min-height: 440px;
-		}
+            background-color: var(--frame-border);
+            padding: 14px;
+            border-radius: 28px;
+            width: 100%;
+            position: relative;
+            box-shadow: inset 0 4px 10px rgba(255,255,255,0.6), 0 10px 25px rgba(0,0,0,0.15);
+        }
 
-		.house-blueprint::before {
-			content: '';
-			position: absolute;
-			top: 16px;
-			left: 16px;
-			right: 16px;
-			bottom: 16px;
-			border-radius: 28px;
-			background: rgba(255,255,255,0.03);
-			pointer-events: none;
-		}
+        /* Replaced .smart-home with your .floor-plan */
+        .floor-plan {
+            background-color: var(--frame-bg);
+            border-radius: 18px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.2);
+        }
 
-		.floor-plan {
-			background: #0f172a;
-			background-image: linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px);
-			background-size: 36px 36px;
-			padding: 18px;
-			display: grid;
-			grid-template-columns: 1.2fr 1fr;
-			grid-template-rows: 1fr 1.2fr;
-			gap: 14px;
-			width: 100%;
-			height: 100%;
-			border-radius: 28px;
-			box-shadow: inset 0 0 40px rgba(15,23,42,0.45);
-		}
+        .room {
+            background-color: var(--room-dark);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-		.house-blueprint .room {
-			background: rgba(15,23,42,0.92);
-			border-radius: 28px;
-			border: 1px solid rgba(148,163,184,0.14);
-			position: relative;
-			overflow: hidden;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			min-height: 180px;
-			box-shadow: inset 0 2px 6px rgba(255,255,255,0.05);
-		}
+        /* Floor Textures done in CSS now */
+        .room-tidur, .room-tamu {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,0,0,0.1) 15px, rgba(0,0,0,0.1) 16px);
+        }
+        .room-mandi, .room-dapur {
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 21px),
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 21px);
+        }
+        .room.is-on.room-tidur, .room.is-on.room-tamu {
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(107, 82, 67, 0.2) 15px, rgba(107, 82, 67, 0.2) 16px);
+        }
+        .room.is-on.room-mandi, .room.is-on.room-dapur {
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.15) 20px, rgba(255,255,255,0.15) 21px),
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.15) 20px, rgba(255,255,255,0.15) 21px);
+        }
 
-		.house-blueprint .room::before {
-			content: '';
-			position: absolute;
-			top: 12px;
-			left: 12px;
-			right: 12px;
-			bottom: 12px;
-			border-radius: 22px;
-			background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06), transparent 38%);
-			pointer-events: none;
-		}
+        .room.is-on { background-color: var(--room-light); }
 
-		.house-blueprint .room-overlay {
-			position: absolute;
-			inset: 0;
-			background: rgba(4,11,27,0.55);
-			z-index: 8;
-			transition: opacity 0.4s ease;
-		}
+        .room-overlay {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(255, 212, 59, 0.25) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .room.is-on .room-overlay { opacity: 1; }
 
-		.house-blueprint .room .light-glow {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			background: radial-gradient(circle at 90% 15%, rgba(253,224,71,0.22) 0%, transparent 55%);
-			opacity: 0;
-			pointer-events: none;
-			z-index: 2;
-			transition: opacity 0.5s ease;
-		}
+        .room-label {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--text-dark);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, background 0.3s ease;
+            pointer-events: none;
+            position: absolute;
+        }
 
-		.house-blueprint .room .lamp {
-			position: absolute;
-			top: 16px;
-			right: 16px;
-			width: 28px;
-			height: 12px;
-			background-color: var(--lamp-off);
-			border-radius: 999px;
-			z-index: 20;
-			box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-			transition: all 0.4s ease;
-			opacity: 0.96;
-		}
+        .room:hover .room-label {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.95);
+        }
 
-		.house-blueprint .room.is-on .light-glow {
-			opacity: 1;
-		}
+        .countdown {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+            z-index: 10;
+        }
 
-		.house-blueprint .room.is-on .lamp {
-			background-color: var(--lamp-on);
-			box-shadow: 0 0 18px var(--lamp-on), 0 0 36px rgba(255,212,59,0.28);
-			opacity: 1;
-		}
+        /* --- UI Material System for DIV Furniture --- */
+        .furniture, .chair1, .chair2 {
+            position: absolute;
+            filter: drop-shadow(0px 6px 8px rgba(0,0,0,0.3));
+            transition: background-color 0.5s ease, filter 0.5s ease;
+            z-index: 2;
+        }
+        .room.is-on .furniture, .room.is-on .chair1, .room.is-on .chair2 {
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
+        }
 
-		.house-blueprint .room-svg {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			z-index: 1;
-			pointer-events: none;
-		}
+        /* Kamar Tidur Layout */
+        .bed { width: 38%; height: 48%; top: 15%; left: 5%; background: #1A1F2B; border-radius: 6px; }
+        .room.is-on .bed { background: #6B5243; } /* Wood */
+        .bed::before { content: ''; position: absolute; width: 85%; height: 85%; top: 7.5%; left: 7.5%; background: #1E2433; border-radius: 4px; transition: background 0.5s ease; } /* Mattress */
+        .room.is-on .bed::before { background: #3A4A63; }
+        .bed::after { content: ''; position: absolute; width: 85%; height: 45%; bottom: 7.5%; left: 7.5%; background: #242B3D; border-radius: 2px; transition: background 0.5s ease;} /* Blanket */
+        .room.is-on .bed::after { background: #4B5E7C; }
+        
+        .pillow { position: absolute; width: 30%; height: 15%; top: 15%; left: 15%; background: #333D52; border-radius: 4px; z-index: 3; transition: background 0.5s ease;}
+        .room.is-on .pillow { background: #FFFFFF; }
+        .pillow::after { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 140%; background: #333D52; border-radius: 4px; transition: background 0.5s ease;}
+        .room.is-on .pillow::after { background: #FFFFFF; }
 
-		.house-blueprint .room-label {
-			position: relative;
-			z-index: 20;
-			background: rgba(15,23,42,0.92);
-			border: 1px solid rgba(255,255,255,0.08);
-			color: #f8fafc;
-			padding: 8px 16px;
-			border-radius: 999px;
-			font-weight: 800;
-			font-size: 0.9rem;
-			box-shadow: 0 10px 20px rgba(0,0,0,0.18);
-			pointer-events: none;
-			margin: 0;
-		}
+        .rug-tidur { width: 45%; height: 35%; bottom: 10%; left: 15%; background: #242B3D; border-radius: 8px; z-index: 1;}
+        .room.is-on .rug-tidur { background: #4B5E7C; }
 
-		.house-blueprint .room-countdown {
-			position: absolute;
-			top: 12px;
-			right: 12px;
-			background: rgba(15,23,42,0.95);
-			padding: 6px 12px;
-			border-radius: 999px;
-			font-size: 0.8rem;
-			font-weight: 800;
-			color: #fde047;
-			box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-			z-index: 30;
-		}
+        /* Kamar Mandi Layout */
+        .tub { width: 28%; height: 45%; top: 8%; right: 8%; background: #1E2433; border-radius: 12px; }
+        .room.is-on .tub { background: #E2E8F0; }
+        .tub::after { content:''; position: absolute; width: 80%; height: 85%; top: 7.5%; left: 10%; background: #161A24; border-radius: 8px; opacity: 0.2; }
 
-		.floor-plan {
-			background: #0f172a;
-			background-image: linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px);
-			background-size: 36px 36px;
-			padding: 20px;
-			display: grid;
-			grid-template-columns: 1.2fr 1fr;
-			grid-template-rows: 1fr 1.2fr;
-			gap: 14px;
-			width: 100%;
-			height: 100%;
-			border-radius: 28px;
-			box-shadow: inset 0 0 40px rgba(15,23,42,0.5);
-		}
+        .sink { width: 18%; height: 35%; top: 8%; left: 5%; background: #1A1F2B; border-radius: 4px; }
+        .room.is-on .sink { background: #6B5243; } /* Wood counter */
+        .sink::after { content:''; position: absolute; width: 60%; height: 40%; top: 30%; left: 20%; background: #2A3142; border-radius: 50%; transition: background 0.5s ease;} /* Basin */
+        .room.is-on .sink::after { background: #E2E8F0; }
 
-		/* Styling Ruangan & Furniture */
-		.room { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-		.room-tidur { background: linear-gradient(180deg, #243560 0%, #111827 100%); }
-		.room-mandi { background: linear-gradient(180deg, #16253d 0%, #0f172a 100%); }
-		.room-tamu { background: linear-gradient(180deg, #1c2b44 0%, #0b1220 100%); }
-		.room-dapur { background: linear-gradient(180deg, #1a263c 0%, #0c131f 100%); }
+        .toilet { width: 12%; height: 18%; bottom: 10%; left: 5%; background: #2A3142; border-radius: 6px; }
+        .room.is-on .toilet { background: #E2E8F0; }
+        .toilet::after { content:''; position: absolute; width: 100%; height: 60%; top: 80%; left: 0; background: inherit; border-radius: 50%; }
 
-		.room-tidur::before { content: ''; position: absolute; bottom: -8px; right: 20px; width: 35px; height: 8px; background: rgba(253,224,71,0.45); z-index: 5; border-radius: 999px; }
-		.room-mandi::before { content: ''; position: absolute; bottom: 20px; left: -8px; width: 8px; height: 35px; background: rgba(253,224,71,0.45); z-index: 5; border-radius: 999px; }
+        /* Ruang Tamu Layout */
+        .tv-tamu { width: 50%; height: 8%; top: 5%; left: 25%; background: #1A1F2B; border-radius: 4px; }
+        .room.is-on .tv-tamu { background: #6B5243; }
+        .tv-tamu::after { content:''; position: absolute; width: 80%; height: 40%; top: 30%; left: 10%; background: #161A24; border-radius: 2px; }
 
-		.room-overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85); z-index: 8; transition: opacity 0.4s ease; pointer-events: none; }
-		.room.active .room-overlay { opacity: 0; }
-		.room::after { content: ''; position: absolute; inset: -20px; background: radial-gradient(circle at center, rgba(250, 204, 21, 0.9) 0%, rgba(250, 204, 21, 0.3) 50%, transparent 80%); opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 10; mix-blend-mode: hard-light; }
-		.room.active::after { opacity: 1; }
+        .sofa-main { width: 70%; height: 15%; bottom: 15%; left: 15%; background: #1E2433; border-radius: 6px; z-index: 2;}
+        .sofa-side { width: 15%; height: 45%; bottom: 15%; right: 15%; background: #1E2433; border-radius: 6px; z-index: 2;}
+        .room.is-on .sofa-main, .room.is-on .sofa-side { background: #3A4A63; }
 
-		.furniture { position: absolute; border: 2px solid rgba(0,0,0,0.15); z-index: 1; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
-		.bed { width: 65px; height: 80px; bottom: 15px; left: 15px; border-radius: 6px; background: #a5b4fc; }
-		.pillow { width: 45px; height: 20px; top: 8px; left: 8px; background: #ffffff; border-radius: 4px; position: absolute; border: 1px solid rgba(0,0,0,0.1); }
-		.rug-tidur { width: 60px; height: 60px; border-radius: 50%; background: #fbcfe8; right: 15px; bottom: 15px; border: none; opacity: 0.8;}
-		.tub { width: 45px; height: 85px; top: 15px; right: 15px; border-radius: 8px; background: #ffffff; border: 2px solid #7dd3fc; }
-		.toilet { width: 25px; height: 35px; bottom: 15px; left: 15px; border-radius: 12px 12px 18px 18px; background: #ffffff; border: 2px solid #7dd3fc; }
-		.sink { width: 25px; height: 45px; top: 15px; left: 15px; border-radius: 0 12px 12px 0; background: #ffffff; border: 2px solid #7dd3fc; }
-		.sofa-main { width: 100px; height: 35px; bottom: 20px; right: 20px; background: #fca5a5; border-radius: 6px; }
-		.sofa-side { width: 35px; height: 70px; bottom: 20px; right: 85px; background: #fca5a5; border-radius: 6px; }
-		.tv-tamu { width: 70px; height: 6px; top: 15px; left: 50%; transform: translateX(-50%); background: #1e293b; border: none;}
-		.coffee-table { width: 50px; height: 35px; bottom: 65px; right: 35px; background: #d6d3d1; border-radius: 6px; }
-		.plant { width: 25px; height: 25px; border-radius: 50%; background: #4ade80; top: 15px; right: 15px; border: 2px solid #166534; }
-		.counter { width: 40px; height: 100%; top: 0; left: 0; background: #94a3b8; border: none; border-right: 2px solid #64748b;}
-		.stove { width: 25px; height: 35px; top: 25px; left: 5px; background: #334155; position: absolute; border-radius: 4px; }
-		.dining-table { width: 55px; height: 55px; bottom: 25px; right: 25px; background: #fde047; border-radius: 50%; border: 2px solid #ca8a04;}
-		.chair1 { width: 20px; height: 20px; border-radius: 50%; background: #fb923c; position: absolute; bottom: 80px; right: 42px; border: 2px solid #ea580c; z-index: 2;}
-		.chair2 { width: 20px; height: 20px; border-radius: 50%; background: #fb923c; position: absolute; bottom: 5px; right: 42px; border: 2px solid #ea580c; z-index: 2;}
+        .coffee-table { width: 20%; height: 20%; top: 50%; left: 40%; background: #1A1F2B; border-radius: 50%; }
+        .room.is-on .coffee-table { background: #6B5243; }
+
+        .plant { width: 14%; aspect-ratio: 1; top: 10%; right: 5%; background: #1A2E24; border-radius: 50%; }
+        .room.is-on .plant { background: #38A169; }
+
+        /* Dapur Layout */
+        .counter { width: 15%; height: 80%; top: 15%; left: 5%; background: #1A1F2B; border-radius: 4px; }
+        .counter::before { content: ''; position: absolute; width: 260%; height: 18%; top: -18%; left: 0; background: inherit; border-radius: 4px; }
+        .room.is-on .counter { background: #6B5243; }
+        
+        .stove { width: 18%; height: 11%; top: 7%; left: 22%; background: #161A24; border-radius: 2px; }
+        .room.is-on .stove { background: #A0AEC0; }
+        
+        .dining-table { width: 36%; aspect-ratio: 1; bottom: 15%; right: 15%; background: #1A1F2B; border-radius: 50%; }
+        .room.is-on .dining-table { background: #6B5243; }
+
+        .chair1, .chair2 { width: 12%; aspect-ratio: 1; background: #242B3D; border-radius: 50%; z-index: 1;}
+        .room.is-on .chair1, .room.is-on .chair2 { background: #4B5E7C; }
+        .chair1 { bottom: 42%; right: 27%; }
+        .chair2 { bottom: 8%; right: 27%; }
+        .chair2::before { content: ''; position: absolute; width: 100%; height: 100%; bottom: 34%; right: 190%; background: inherit; border-radius: 50%; }
+        .chair2::after { content: ''; position: absolute; width: 100%; height: 100%; bottom: 34%; left: 190%; background: inherit; border-radius: 50%; }
 
 
 		/* --- TASKS / PROGRESS UI --- */
