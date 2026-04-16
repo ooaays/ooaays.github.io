@@ -1,7 +1,7 @@
 
 body{
 font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#e0e7ff,#f8fafc);
+background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
 min-height:100vh;
 min-width:1200px;
 overflow-x:auto;
@@ -24,7 +24,7 @@ overflow-x:auto;
 
 /* HEADER */
 .header-bg{
-background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
+background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
 color:white;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
