@@ -14,18 +14,16 @@ let selectedValue = null;
         function placeBlock(slot) {
         	if (!selectedValue) {
 			logToTerminal("<i class=\"fa-solid fa-triangle-exclamation\"></i> Ups! Kamu harus mengeklik (memilih) salah satu alat di atas terlebih dahulu!", "error");
-		return;
+			return;
         	}
 
             clearEditorErrors();
+        	let displayVal = selectedValue;
         	if (selectedType === 'string') {
-        		displayVal = `"${selectedValue}"`;
+			displayVal = `"${selectedValue}"`;
         	}
 
-        	slot.innerText = displayVal;
-
-            // Hapus kelas warna sebelumnya
-        	slot.className = "slot";
+        	slot.textContent = displayVal;
 
             // Tambahkan kelas warna baru sesuai tipe
         	if (selectedType === 'status') {
