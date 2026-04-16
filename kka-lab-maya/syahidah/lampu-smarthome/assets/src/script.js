@@ -114,8 +114,7 @@ let selectedValue = null;
             const allSlots = Array.from(document.querySelectorAll('.slot'));
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
             
-            if (emptySlots.length > 0) {
-			logToTerminal(`<i class=\"fa-solid fa-xmark\"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
+            if (emptySlots.length > 0) {			emptySlots.forEach(highlightEditorError);			logToTerminal(`<i class=\"fa-solid fa-xmark\"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
 			return;
             }
 
