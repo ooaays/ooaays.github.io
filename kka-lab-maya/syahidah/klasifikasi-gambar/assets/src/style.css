@@ -1,7 +1,7 @@
 
 body{
 font-family:'Segoe UI',sans-serif;
-background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
+background-color: #f8fafc;
 min-height:100vh;
 min-width:1200px;
 overflow-x:auto;
