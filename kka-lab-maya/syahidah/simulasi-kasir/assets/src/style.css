@@ -21,7 +21,7 @@ min-height:100vh;
 
 /* HEADER */
 .header-bg{
-background:linear-gradient(90deg, #69cef9, #7ac5ff, #9cccff);
+background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
 color:white;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
