@@ -133,7 +133,7 @@ button:hover { filter: brightness(1.15); }
 
 #output { flex: 1; padding: 10px 20px; color: #0f0; font-family: monospace; font-size: 13px; overflow-y: auto; white-space: pre-wrap; margin: 0; line-height: 1.5;}
 .header-bg {
-    background:linear-gradient(90deg, #4338ca, #8c85ff, #ffffff);
+    background:linear-gradient(90deg, #69cef9, #7ac5ff, #9cccff);
     color: white;
     box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
