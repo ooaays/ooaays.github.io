@@ -14,10 +14,10 @@ let selectedValue = null;
         function placeBlock(slot) {
         	if (!selectedValue) {
 			logToTerminal("<i class=\"fa-solid fa-triangle-exclamation\"></i> Ups! Kamu harus mengeklik (memilih) salah satu alat di atas terlebih dahulu!", "error");
+		return;
         	}
 
-            // Tampilan teks berdasarkan tipe (tambahkan kutip jika string)
-        	let displayVal = selectedValue;
+            clearEditorErrors();
         	if (selectedType === 'string') {
         		displayVal = `"${selectedValue}"`;
         	}
@@ -51,6 +51,22 @@ let selectedValue = null;
 
         	term.appendChild(newLog);
         	term.scrollTop = term.scrollHeight;
+        }
+
+        function clearEditorErrors() {
+        	document.querySelectorAll('.slot.error-slot').forEach(slot => slot.classList.remove('error-slot'));
+        	document.querySelectorAll('.code-line.error-line').forEach(line => line.classList.remove('error-line'));
+        }
+
+        function highlightEditorError(element) {
+        	if (!element) return;
+        	if (element.classList.contains('slot')) {
+        		element.classList.add('error-slot');
+        	}
+        	const line = element.closest('.code-line');
+        	if (line) {
+        		line.classList.add('error-line');
+        	}
         }
 
         function resetSimulation() {
@@ -92,6 +108,8 @@ let selectedValue = null;
             term.innerHTML = ""; 
             logToTerminal("<i class=\"fa-solid fa-rocket\"></i> Menjalankan kodemu...", "info");
 
+            clearEditorErrors();
+
             // Validasi: Apakah ada slot "???" yang belum diisi?
             const allSlots = Array.from(document.querySelectorAll('.slot'));
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
@@ -116,14 +134,21 @@ let selectedValue = null;
 
             // Cek kesesuaian syntax python (for, if, else)
             if (valFor !== 'for' || valIf1 !== 'if' || valIf2 !== 'if' || valElse !== 'else') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
-			return;
+				highlightEditorError(document.getElementById('slot-for'));
+				highlightEditorError(document.getElementById('slot-if1'));
+				highlightEditorError(document.getElementById('slot-if2'));
+				highlightEditorError(document.getElementById('slot-else'));
+				logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
+				return;
             }
 
             // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "s")
             if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 's') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
-			return;
+				highlightEditorError(document.getElementById('slot-key1'));
+				highlightEditorError(document.getElementById('slot-key2'));
+				highlightEditorError(document.getElementById('slot-key3'));
+				logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
+				return;
             }
 
             // Jika lulus semua validasi puzzle

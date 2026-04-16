@@ -278,34 +278,25 @@
 				</svg>
 
 				<div class="code-content">
-					<div class="comment"># LANGKAH 1: Atur Data Ruangan (Dictionary)</div>
-					<span style="color: var(--keyword); font-weight: 600;">config</span> = {<br>
-					<div style="margin-left:30px" data-room="tamu">"Tamu": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="3" id="input-tamu">},</div>
-					<div style="margin-left:30px" data-room="tidur">"Tidur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="5" id="input-tidur">},</div>
-					<div style="margin-left:30px" data-room="dapur">"Dapur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="2" id="input-dapur">},</div>
-					<div style="margin-left:30px" data-room="mandi">"Mandi": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="4" id="input-mandi">}</div>
-				}
-
-				<br>
-				<div class="comment"># LANGKAH 2: Susun Logika Utamanya</div>
-				<span class="slot" onclick="placeBlock(this)" id="slot-for">???</span> ruang, spek <span style="color: var(--keyword); font-weight: 600;">in</span> config.items():<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if1">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-lampu">???</span>:<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">nyalakan_lampu</span>(ruang)<br><br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Cek apakah fitur timer aktif</span><br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-if2">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-timer">???</span>:<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">sleep</span>(spek[<span class="slot" onclick="placeBlock(this)" id="slot-key3">???</span>])<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;<span class="slot" onclick="placeBlock(this)" id="slot-else">???</span>:<br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">matikan_lampu</span>(ruang)
-			</div>
-		</div>
-	</div>
-
-</div>
-
-<!-- Terminal Log -->
-<div class="bottom-panel" id="terminal">
-	<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Halo! Pilih alat dari toolbar (atas), lalu tempelkan ke dalam tanda "???" untuk menyusun logika smart home kamu!</span>
+					<div class="code-line line-comment"># LANGKAH 1: Atur Data Ruangan (Dictionary)</div>
+					<div class="code-line"><span style="color: var(--keyword); font-weight: 600;">config</span> = {</div>
+					<div class="code-line indent-1" data-room="tamu">"Tamu": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="3" id="input-tamu">},</div>
+					<div class="code-line indent-1" data-room="tidur">"Tidur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="5" id="input-tidur">},</div>
+					<div class="code-line indent-1" data-room="dapur">"Dapur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="2" id="input-dapur">},</div>
+					<div class="code-line indent-1" data-room="mandi">"Mandi": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "s": <input type="number" value="4" id="input-mandi">}</div>
+					<div class="code-line">}</div>
+					<div class="code-line blank"></div>
+					<div class="code-line line-comment"># LANGKAH 2: Susun Logika Utamanya</div>
+					<div class="code-line"><span class="slot" onclick="placeBlock(this)" id="slot-for">???</span> ruang, spek <span style="color: var(--keyword); font-weight: 600;">in</span> config.items():</div>
+					<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)" id="slot-if1">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-lampu">???</span>:</div>
+					<div class="code-line indent-2"><span class="func">nyalakan_lampu</span>(ruang)</div>
+					<div class="code-line blank"></div>
+					<div class="code-line indent-2 line-comment"># Cek apakah fitur timer aktif</div>
+					<div class="code-line indent-2"><span class="slot" onclick="placeBlock(this)" id="slot-if2">???</span> spek[<span class="slot" onclick="placeBlock(this)" id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-timer">???</span>:</div>
+					<div class="code-line indent-3"><span class="func">sleep</span>(spek[<span class="slot" onclick="placeBlock(this)" id="slot-key3">???</span>])</div>
+					<div class="code-line indent-3"><span class="func">matikan_lampu</span>(ruang)</div>
+					<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)" id="slot-else">???</span>:</div>
+					<div class="code-line indent-2"><span class="func">matikan_lampu</span>(ruang)</div>
 </div>
 </div>
 
