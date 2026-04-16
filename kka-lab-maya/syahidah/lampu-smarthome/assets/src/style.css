@@ -43,6 +43,12 @@
     max-width:760px;
 }
 
+.hero-buttons button {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
 .menu-card{
     display:flex;
     width:100%;
