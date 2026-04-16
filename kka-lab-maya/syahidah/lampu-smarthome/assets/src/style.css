@@ -331,11 +331,11 @@
 			opacity: 0.96;
 		}
 
-		.house-blueprint .room.active .light-glow {
+		.house-blueprint .room.is-on .light-glow {
 			opacity: 1;
 		}
 
-		.house-blueprint .room.active .lamp {
+		.house-blueprint .room.is-on .lamp {
 			background-color: var(--lamp-on);
 			box-shadow: 0 0 18px var(--lamp-on), 0 0 36px rgba(255,212,59,0.28);
 			opacity: 1;
@@ -615,11 +615,11 @@
 			transition: opacity 0.5s ease;
 		}
 
-		.room.active {
+		.room.is-on {
 			background-color: var(--room-light);
 		}
 
-		.room.active .light-glow {
+		.room.is-on .light-glow {
 			opacity: 1;
 		}
 
@@ -637,7 +637,7 @@
 			box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 		}
 
-		.room.active .lamp {
+		.room.is-on .lamp {
 			background-color: var(--lamp-on);
 			box-shadow: 0 0 15px var(--lamp-on), 0 0 30px var(--lamp-on);
 			opacity: 1;
@@ -658,7 +658,7 @@
 			transition: filter 0.5s ease;
 		}
 
-		.room.active .furniture-group {
+		.room.is-on .furniture-group {
 			filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
 		}
 
@@ -670,13 +670,13 @@
 		.f-plant { fill: #1A2E24; transition: fill 0.5s ease; }
 		.f-highlight { fill: #333D52; transition: fill 0.5s ease; }
 
-		.room.active .f-base { fill: #3A4A63; }
-		.room.active .f-fabric { fill: #4B5E7C; }
-		.room.active .f-wood { fill: #6B5243; }
-		.room.active .f-ceramic { fill: #E2E8F0; }
-		.room.active .f-metal { fill: #A0AEC0; }
-		.room.active .f-plant { fill: #38A169; }
-		.room.active .f-highlight { fill: #FFFFFF; }
+		.room.is-on .f-base { fill: #3A4A63; }
+		.room.is-on .f-fabric { fill: #4B5E7C; }
+		.room.is-on .f-wood { fill: #6B5243; }
+		.room.is-on .f-ceramic { fill: #E2E8F0; }
+		.room.is-on .f-metal { fill: #A0AEC0; }
+		.room.is-on .f-plant { fill: #38A169; }
+		.room.is-on .f-highlight { fill: #FFFFFF; }
 
 		.download-btn {
 			background-color: #4A5568;

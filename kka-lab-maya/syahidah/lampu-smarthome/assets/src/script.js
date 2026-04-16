@@ -68,7 +68,7 @@ let selectedValue = null;
         	document.getElementById('input-dapur').value = 2;
         	document.getElementById('input-mandi').value = 4;
 
-        	document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
+document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is-on'));
         	document.querySelectorAll('.countdown').forEach(c => c.innerText = "");
 
         	selectedValue = null;
@@ -145,9 +145,7 @@ let selectedValue = null;
 
             	if (dataLampu === logicLampu && dataLampu === 'ON') {
             		adaYangNyala = true;
-            		roomEl.classList.add('active');
-            		logToTerminal(` Yey! Lampu <b>${id}</b> berhasil MENYALA.`, "success");
-
+				roomEl.classList.add('active', 'is-on');
             		if (dataTimer === logicTimer && dataTimer === 'ON') {
             			let count = detik;
             			cdEl.innerText = count + " detik";
@@ -159,7 +157,7 @@ let selectedValue = null;
             					cdEl.innerText = count + " detik";
             				} else {
             					clearInterval(t);
-            					roomEl.classList.remove('active');
+            					roomEl.classList.remove('active', 'is-on');
             					cdEl.innerText = "";
             					logToTerminal(`<i class=\"fa-solid fa-moon\"></i> Waktu habis! Lampu <b>${id}</b> otomatis DIMATIKAN.`, "info");
             				}
@@ -167,7 +165,7 @@ let selectedValue = null;
             			activeTimers.push(t);
             		}
             	} else {
-            		roomEl.classList.remove('active');
+            		roomEl.classList.remove('active', 'is-on');
             		logToTerminal(`<i class=\"fa-solid fa-minus\"></i> Lampu <b>${id}</b> tetap padam sesuai logika kode.`);
             	}
             });
