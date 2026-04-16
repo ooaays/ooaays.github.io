@@ -97,7 +97,7 @@ let selectedValue = null;
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
             
             if (emptySlots.length > 0) {
-			logToTerminal(`<i class=\"fa-solid fa-xmark\"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi! Lengkapi dulu ya.`, "error");
+			logToTerminal(`<i class="fa-solid fa-xmark"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi. Lengkapi dulu di baris 3-6 dan 9-16 sebelum menjalankan lagi.`, "error");
 			return;
             }
 
@@ -116,13 +116,13 @@ let selectedValue = null;
 
             // Cek kesesuaian syntax python (for, if, else)
             if (valFor !== 'for' || valIf1 !== 'if' || valIf2 !== 'if' || valElse !== 'else') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error: Penempatan Logika (for / if / else) ada yang keliru posisinya. Coba perhatikan lagi strukturnya!", "error");
+			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error di baris 9-16: Penempatan for / if / else salah. Perbaiki susunan logika sesuai struktur kode di sebelah kiri.", "error");
 			return;
             }
 
             // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "s")
             if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 's') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error: Kunci pencarian di spek[...] kurang tepat. Harusnya memanggil 'lampu', 'timer', lalu 's'.", "error");
+			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error di baris 10-14: Kunci dictionary harus 'lampu', 'timer', dan 's'. Perbaiki penamaan kunci di baris tersebut.", "error");
 			return;
             }
 

@@ -460,7 +460,32 @@
 		}
 
 		.workspace-bg { position: absolute; bottom: 20px; right: 20px; width: 300px; opacity: 0.04; pointer-events: none; z-index: 0; transform: rotate(-5deg); }
-		.code-content { position: relative; z-index: 2; }
+		.code-content {
+			position: relative;
+			z-index: 2;
+			counter-reset: line;
+		}
+		.code-line {
+			position: relative;
+			counter-increment: line;
+			padding-left: 3.2rem;
+			white-space: pre-wrap;
+		}
+		.code-line::before {
+			content: counter(line);
+			position: absolute;
+			left: 0;
+			width: 2.5rem;
+			text-align: right;
+			color: #94a3b8;
+			font-family: 'Fira Code', monospace;
+			font-size: 0.92rem;
+			line-height: 2;
+			user-select: none;
+		}
+		.indent-1 { padding-left: 5rem; }
+		.indent-2 { padding-left: 7rem; }
+		.indent-3 { padding-left: 9rem; }
 		.workspace::-webkit-scrollbar { width: 10px; }
 		.workspace::-webkit-scrollbar-track { background: transparent; }
 		.workspace::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 3px solid var(--editor-bg); }
