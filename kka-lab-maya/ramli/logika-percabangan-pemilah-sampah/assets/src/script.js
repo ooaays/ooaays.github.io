@@ -193,8 +193,15 @@ function tryOpenLabPage() {
 
 function openTujuanModal() { openModal('tujuanModal'); }
 
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
+
 function markTujuanRead() {
   appState.hasReadTujuan = true;
+  try { sessionStorage.setItem('logika_tujuanRead', 'true'); } catch(e){}
+  setCheckVisible('check-tujuan', true);
   updateStartUnlock();
   closeModal('tujuanModal');
 }
@@ -229,6 +236,8 @@ function updateCaraSlideView() {
 
 function finishCaraRead() {
   appState.hasReadCara = true;
+  try { sessionStorage.setItem('logika_caraRead', 'true'); } catch(e){}
+  setCheckVisible('check-cara', true);
   updateStartUnlock();
   closeModal('caraModal');
 }
@@ -664,7 +673,373 @@ async function runSimulation() {
   appState.running = false;
 }
 
+/* ══════════════════════════════════════════════════════════
+   FITUR 1 – REFLEKSI INTERAKTIF
+   ══════════════════════════════════════════════════════════ */
+const REFLEKSI_LOGIKA_QS = [
+  { q: 'Mengapa aturan "berbahaya" harus diperiksa lebih dulu dari aturan lain?', ph: 'Contoh: baterai bekas adalah sampah anorganik DAN berbahaya. Jika aturan "anorganik" lebih dulu, baterai masuk Tong Kuning — padahal seharusnya Tong Merah. Apa dampaknya di kehidupan nyata?' },
+  { q: 'Apa yang terjadi jika tisu kotor diletakkan di aturan "kertas" sebelum aturan "residu"?', ph: 'Contoh: tisu kotor cocok dengan kondisi "kertas" (bahan dasarnya) DAN "residu" (sudah tidak bisa didaur ulang). Jika "kertas" lebih dulu → tisu masuk Tong Biru, padahal harusnya Tong Hitam. Mengapa ini bermasalah?' },
+  { q: 'Kapan kamu membutuhkan aturan SELAIN ITU (else) dalam kehidupan nyata?', ph: 'Contoh: "Jika hujan → bawa payung. Jika berawan → bawa jaket tipis. SELAIN ITU → pergi seperti biasa." Aturan SELAIN ITU memastikan sistem selalu punya jawaban. Coba buat contohmu sendiri!' },
+  { q: 'Apa perbedaan antara aturan khusus dan aturan umum? Berikan contohnya!', ph: 'Khusus = hanya berlaku untuk kasus tertentu (misal: "baterai berbahaya → Tong Merah"). Umum = berlaku untuk banyak kasus (misal: "anorganik → Tong Kuning"). Mengapa aturan khusus harus lebih dulu?' },
+];
+
+function openRefleksiInteraktifLogika() {
+  const list = document.getElementById('refleksiLogikaList');
+  list.innerHTML = REFLEKSI_LOGIKA_QS.map((item, i) => `
+    <div>
+      <label style="display:block; font-weight:700; color:#1e293b; margin-bottom:8px;">${i+1}. ${item.q}</label>
+      <textarea class="refleksi-textarea" id="rlq_${i}" placeholder="${item.ph}"></textarea>
+    </div>`).join('');
+  const btn = document.getElementById('simpanRefleksiLogikaBtn');
+  btn.textContent = 'Simpan Refleksi ✓';
+  btn.style.background = '';
+  openModal('refleksiModal');
+}
+
+function simpanRefleksiLogika() {
+  const btn = document.getElementById('simpanRefleksiLogikaBtn');
+  btn.textContent = '✅ Tersimpan!';
+  btn.style.background = '#16a34a';
+  setTimeout(() => { btn.textContent = 'Simpan Refleksi ✓'; btn.style.background = ''; }, 2000);
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 2 – POHON KEPUTUSAN
+   ══════════════════════════════════════════════════════════ */
+const POHON_ITEMS = [
+  { label: '🔋 Baterai', tags: ['berbahaya'], tong: 'Tong Merah — B3' },
+  { label: '🍌 Kulit Pisang', tags: ['organik'], tong: 'Tong Hijau — Organik' },
+  { label: '📰 Koran Bekas', tags: ['kertas', 'recycle'], tong: 'Tong Biru — Kertas' },
+  { label: '🧻 Tisu Kotor', tags: ['kertas', 'residu'], tong: 'Tong Hitam — Residu' },
+  { label: '🍶 Botol Plastik', tags: ['anorganik', 'recycle'], tong: 'Tong Kuning — Anorganik' },
+];
+
+const POHON_RULES = [
+  { kondisi: 'berbahaya', label: 'Mengandung bahan berbahaya', tong: 'Tong Merah — B3' },
+  { kondisi: 'residu',    label: 'Termasuk sampah residu',     tong: 'Tong Hitam — Residu' },
+  { kondisi: 'organik',   label: 'Termasuk sampah organik',    tong: 'Tong Hijau — Organik' },
+  { kondisi: 'kertas',    label: 'Berbahan kertas',            tong: 'Tong Biru — Kertas' },
+  { kondisi: 'recycle',   label: 'Dapat didaur ulang',         tong: 'Tong Kuning — Anorganik' },
+];
+
+let pohonTimerId = null;
+
+function openPohonKeputusan() {
+  const wrap = document.getElementById('pohonItemBtns');
+  wrap.innerHTML = POHON_ITEMS.map((it, i) =>
+    `<button onclick="animatePohon(${i})" style="background:#e0e7ff;border:2px solid #818cf8;border-radius:10px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;">${it.label}</button>`
+  ).join('');
+  document.getElementById('pohonTree').textContent = 'Pilih item di atas untuk memulai animasi.';
+  document.getElementById('pohonResult').textContent = '';
+  openModal('pohonModal');
+}
+
+function animatePohon(itemIdx) {
+  if (pohonTimerId) clearTimeout(pohonTimerId);
+  const item = POHON_ITEMS[itemIdx];
+  const treeEl = document.getElementById('pohonTree');
+  const resultEl = document.getElementById('pohonResult');
+  resultEl.textContent = '';
+
+  const lines = POHON_RULES.map((r, i) => {
+    const kw = i === 0 ? 'JIKA' : 'ATAU JIKA';
+    return `${kw} item.${r.kondisi} → masuk ke ${r.tong}`;
+  });
+  lines.push('SELAIN ITU → Tong Hitam — Residu');
+  treeEl.innerHTML = lines.map((l, i) =>
+    `<span class="pohon-line" id="pl_${i}">${l}</span>`
+  ).join('\n');
+
+  let step = 0;
+  function tick() {
+    if (step > 0) {
+      const prev = document.getElementById(`pl_${step-1}`);
+      if (prev) prev.classList.remove('active-branch');
+    }
+    if (step >= POHON_RULES.length) {
+      const fallback = document.getElementById(`pl_${POHON_RULES.length}`);
+      if (fallback) { fallback.classList.add('match-branch'); }
+      resultEl.textContent = `✅ ${item.label} → ${item.tong}`;
+      return;
+    }
+    const r = POHON_RULES[step];
+    const lineEl = document.getElementById(`pl_${step}`);
+    const matches = item.tags.includes(r.kondisi);
+    if (matches) {
+      if (lineEl) lineEl.classList.add('match-branch');
+      resultEl.textContent = `✅ ${item.label} → ${r.tong}`;
+      for (let j = step+1; j <= POHON_RULES.length; j++) {
+        const el = document.getElementById(`pl_${j}`);
+        if (el) el.classList.add('skip-branch');
+      }
+      return;
+    }
+    if (lineEl) { lineEl.classList.add('active-branch'); lineEl.classList.add('skip-branch'); }
+    step++;
+    pohonTimerId = setTimeout(tick, 600);
+  }
+  tick();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 3 – KASUS TEPI
+   ══════════════════════════════════════════════════════════ */
+const KASUS_TEPI_DATA = [
+  {
+    name: '🧻 Tisu Kotor Bekas Makanan',
+    tags: [{ label: 'Kertas', color: '#dbeafe', tc: '#1e3a8a' }, { label: 'Residu', color: '#f3e8ff', tc: '#581c87' }],
+    desc: 'Tisu ini terbuat dari kertas tapi sudah kotor dan tidak bisa didaur ulang.',
+    opts: ['Tong Biru — Kertas', 'Tong Hitam — Residu', 'Tong Kuning — Anorganik'],
+    correct: 1,
+    explain: 'Meskipun berbahan kertas, tisu kotor masuk ke Residu karena tidak bisa didaur ulang lagi. Aturan "residu" harus lebih dulu dari "kertas"!',
+  },
+  {
+    name: '♻️ Botol Plastik Bekas',
+    tags: [{ label: 'Anorganik', color: '#fef9c3', tc: '#713f12' }, { label: 'Dapat didaur ulang', color: '#dcfce7', tc: '#166534' }],
+    desc: 'Botol ini plastik (anorganik) dan bisa didaur ulang.',
+    opts: ['Tong Hijau — Organik', 'Tong Kuning — Anorganik', 'Tong Merah — B3'],
+    correct: 1,
+    explain: 'Botol plastik masuk ke Tong Kuning (Anorganik). Meski bisa didaur ulang, kondisi "anorganik" adalah aturan yang lebih spesifik untuk plastik.',
+  },
+  {
+    name: '🔦 Baterai Alkaline Bekas',
+    tags: [{ label: 'Berbahaya', color: '#fee2e2', tc: '#991b1b' }, { label: 'Anorganik', color: '#fef9c3', tc: '#713f12' }],
+    desc: 'Baterai alkaline adalah sampah anorganik yang juga mengandung bahan berbahaya.',
+    opts: ['Tong Merah — B3', 'Tong Kuning — Anorganik', 'Tong Hitam — Residu'],
+    correct: 0,
+    explain: 'Baterai yang berbahaya harus masuk ke Tong Merah (B3). Aturan "berbahaya" WAJIB diperiksa lebih dulu dari "anorganik"!',
+  },
+];
+
+let ktIdx = 0;
+let ktAnswered = false;
+
+function openKasusTepi() {
+  ktIdx = 0; ktAnswered = false;
+  renderKasusTepi();
+  openModal('kasusTepiModal');
+}
+
+function renderKasusTepi() {
+  ktAnswered = false;
+  document.getElementById('nextKasusTepiBtn').classList.add('hidden');
+  const d = KASUS_TEPI_DATA[ktIdx];
+  document.getElementById('kasusTepiProg').textContent = `Kasus ${ktIdx+1} / ${KASUS_TEPI_DATA.length}`;
+  document.getElementById('kasusTepiBody').innerHTML = `
+    <div class="kasus-item-card">
+      <div class="kasus-item-name">${d.name}</div>
+      <div class="kasus-item-tags">${d.tags.map(t => `<span class="kasus-tag" style="background:${t.color};color:${t.tc};">${t.label}</span>`).join('')}</div>
+      <p style="font-size:14px;color:#475569;margin-bottom:12px;">${d.desc}</p>
+      <div>${d.opts.map((o, i) => `<button class="kasus-option" onclick="checkKasusTepi(${i})" id="kt_${i}">${o}</button>`).join('')}</div>
+      <div id="kasus-fb" style="margin-top:10px; font-size:14px; font-weight:700; display:none;"></div>
+    </div>`;
+}
+
+function checkKasusTepi(i) {
+  if (ktAnswered) return;
+  ktAnswered = true;
+  const d = KASUS_TEPI_DATA[ktIdx];
+  document.getElementById(`kt_${d.correct}`).classList.add('benar');
+  const fb = document.getElementById('kasus-fb');
+  fb.style.display = 'block';
+  if (i === d.correct) {
+    fb.style.color = '#15803d';
+    fb.textContent = '✅ Benar! ' + d.explain;
+  } else {
+    document.getElementById(`kt_${i}`).classList.add('salah');
+    fb.style.color = '#dc2626';
+    fb.textContent = '❌ ' + d.explain;
+  }
+  if (ktIdx < KASUS_TEPI_DATA.length - 1) document.getElementById('nextKasusTepiBtn').classList.remove('hidden');
+}
+
+function nextKasusTepi() {
+  ktIdx++;
+  if (ktIdx < KASUS_TEPI_DATA.length) renderKasusTepi();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 4 – DETEKTIF BUG LOGIKA
+   ══════════════════════════════════════════════════════════ */
+const DETEKTIF_LOGIKA_DATA = [
+  {
+    q: 'Aturan mana yang menyebabkan Baterai masuk ke tong yang salah?',
+    rules: [
+      'JIKA anorganik → Tong Kuning',
+      'JIKA berbahaya → Tong Merah',
+      'JIKA organik → Tong Hijau',
+    ],
+    bugIdx: 0,
+    explain: 'Aturan "anorganik" ada di baris pertama. Karena Baterai Bekas juga anorganik, ia tertangkap SEBELUM sampai ke aturan "berbahaya". Aturan berbahaya harus lebih dulu!',
+  },
+  {
+    q: 'Aturan mana yang menyebabkan Tisu Kotor masuk ke Tong Biru (padahal harusnya Hitam)?',
+    rules: [
+      'JIKA berbahaya → Tong Merah',
+      'JIKA kertas → Tong Biru',
+      'JIKA residu → Tong Hitam',
+    ],
+    bugIdx: 1,
+    explain: 'Aturan "kertas" ada sebelum "residu". Tisu kotor cocok dengan "kertas" sehingga langsung masuk Tong Biru. Aturan "residu" harus lebih dulu dari "kertas"!',
+  },
+];
+
+let dlIdx = 0;
+let dlAnswered = false;
+
+function openDetektifLogika() {
+  dlIdx = 0; dlAnswered = false;
+  renderDetektifLogika();
+  openModal('detektifLogikaModal');
+}
+
+function renderDetektifLogika() {
+  dlAnswered = false;
+  document.getElementById('nextDetektifLogikaBtn').classList.add('hidden');
+  const d = DETEKTIF_LOGIKA_DATA[dlIdx];
+  document.getElementById('detektifLogikaProg').textContent = `Tantangan ${dlIdx+1} / ${DETEKTIF_LOGIKA_DATA.length}`;
+  document.getElementById('detektifLogikaBody').innerHTML = `
+    <p style="font-weight:700; font-size:16px; color:#0f172a; margin-bottom:14px;">${d.q}</p>
+    ${d.rules.map((r, i) => `
+      <button class="kasus-option" onclick="checkDetektifLogika(${i})" id="dl_${i}" style="font-family:monospace; display:block; width:100%; text-align:left; margin-bottom:8px;">
+        Baris ${i+1}: ${r}
+      </button>`).join('')}
+    <div id="dl-fb" style="margin-top:10px; font-size:14px; font-weight:700; display:none;"></div>`;
+}
+
+function checkDetektifLogika(i) {
+  if (dlAnswered) return;
+  dlAnswered = true;
+  const d = DETEKTIF_LOGIKA_DATA[dlIdx];
+  document.getElementById(`dl_${d.bugIdx}`).classList.add('benar');
+  const fb = document.getElementById('dl-fb');
+  fb.style.display = 'block';
+  if (i === d.bugIdx) {
+    fb.style.color = '#15803d';
+    fb.textContent = '✅ Tepat! ' + d.explain;
+  } else {
+    document.getElementById(`dl_${i}`).classList.add('salah');
+    fb.style.color = '#dc2626';
+    fb.textContent = '❌ Bukan itu. ' + d.explain;
+  }
+  if (dlIdx < DETEKTIF_LOGIKA_DATA.length - 1) document.getElementById('nextDetektifLogikaBtn').classList.remove('hidden');
+}
+
+function nextDetektifLogika() {
+  dlIdx++;
+  if (dlIdx < DETEKTIF_LOGIKA_DATA.length) renderDetektifLogika();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 5 – KUIS URUTAN
+   ══════════════════════════════════════════════════════════ */
+const KUIS_URUTAN_DATA = [
+  {
+    desc: 'Urutkan aturan dari yang paling KHUSUS ke paling UMUM agar tidak terjadi bug!',
+    items: [
+      { text: 'JIKA organik → Tong Hijau', correctPos: 2 },
+      { text: 'JIKA berbahaya → Tong Merah', correctPos: 0 },
+      { text: 'JIKA residu → Tong Hitam', correctPos: 1 },
+      { text: 'JIKA kertas → Tong Biru', correctPos: 3 },
+    ],
+    explain: 'Urutan benar: Berbahaya (1) → Residu (2) → Organik (3) → Kertas (4). Aturan paling khusus duluan!',
+  },
+  {
+    desc: 'Tisu kotor bisa cocok "kertas" DAN "residu". Susun aturan agar tisu kotor masuk ke tong yang BENAR!',
+    items: [
+      { text: 'JIKA kertas → Tong Biru', correctPos: 1 },
+      { text: 'JIKA berbahaya → Tong Merah', correctPos: 0 },
+      { text: 'JIKA residu → Tong Hitam', correctPos: 2 },
+    ],
+    explain: 'Urutan benar: Berbahaya (1) → Kertas (2) → Residu (3). TAPI tunggu! Tisu kotor cocok "kertas" dulu → masuk Tong Biru (salah). Seharusnya "residu" lebih dulu dari "kertas"! Ingat: aturan lebih khusus = yang paling sempit cakupannya.',
+  },
+  {
+    desc: 'Susun aturan agar baterai bekas PASTI masuk Tong Merah, bukan Tong Kuning!',
+    items: [
+      { text: 'JIKA recycle → Tong Kuning', correctPos: 2 },
+      { text: 'JIKA berbahaya → Tong Merah', correctPos: 0 },
+      { text: 'JIKA anorganik → Tong Kuning', correctPos: 1 },
+    ],
+    explain: 'Urutan benar: Berbahaya (1) → Anorganik (2) → Recycle (3). Baterai cocok dengan "berbahaya" dan "anorganik" — harus diperiksa "berbahaya" lebih dulu agar masuk Tong Merah yang tepat.',
+  },
+];
+
+let kuIdx = 0;
+let kuItems = [];
+let kuDragSrc = null;
+
+function openKuisUrutan() {
+  kuIdx = 0;
+  renderKuisUrutan();
+  openModal('kuisUrutanModal');
+}
+
+function renderKuisUrutan() {
+  document.getElementById('nextKuisUrutanBtn').classList.add('hidden');
+  document.getElementById('kuisUrutanFeedback').style.display = 'none';
+  const d = KUIS_URUTAN_DATA[kuIdx];
+  document.getElementById('kuisUrutanDesc').innerHTML = d.desc;
+  document.getElementById('kuisUrutanProg').textContent = `Soal ${kuIdx+1} / ${KUIS_URUTAN_DATA.length}`;
+  kuItems = d.items.map((it, i) => ({ ...it, currentPos: i }));
+  shuffleKuItems();
+  renderKuList();
+}
+
+function shuffleKuItems() {
+  for (let i = kuItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [kuItems[i], kuItems[j]] = [kuItems[j], kuItems[i]];
+  }
+}
+
+function renderKuList() {
+  const list = document.getElementById('kuisUrutanList');
+  list.innerHTML = kuItems.map((it, i) => `
+    <div class="urutan-item" draggable="true" data-i="${i}"
+         ondragstart="kuDragStart(event,${i})" ondragover="kuDragOver(event,${i})" ondrop="kuDrop(event,${i})" ondragleave="kuDragLeave(event,${i})">
+      <div class="urutan-num">${i+1}</div>
+      <div class="urutan-text">${it.text}</div>
+    </div>`).join('');
+}
+
+function kuDragStart(e, i) { kuDragSrc = i; e.dataTransfer.effectAllowed = 'move'; }
+function kuDragOver(e, i) { e.preventDefault(); if (i !== kuDragSrc) document.querySelectorAll('.urutan-item')[i]?.classList.add('drag-over'); }
+function kuDragLeave(e, i) { document.querySelectorAll('.urutan-item')[i]?.classList.remove('drag-over'); }
+function kuDrop(e, i) {
+  e.preventDefault();
+  document.querySelectorAll('.urutan-item').forEach(el => el.classList.remove('drag-over'));
+  if (i === kuDragSrc) return;
+  const moved = kuItems.splice(kuDragSrc, 1)[0];
+  kuItems.splice(i, 0, moved);
+  renderKuList();
+}
+
+function cekUrutan() {
+  const d = KUIS_URUTAN_DATA[kuIdx];
+  const fb = document.getElementById('kuisUrutanFeedback');
+  const correct = kuItems.every((it, i) => it.correctPos === i);
+  fb.style.display = 'block';
+  if (correct) {
+    fb.style.color = '#15803d';
+    fb.textContent = '✅ Urutan sudah benar! ' + d.explain;
+    document.querySelectorAll('.urutan-item').forEach(el => el.classList.add('correct-final'));
+  } else {
+    fb.style.color = '#dc2626';
+    fb.textContent = '❌ Belum tepat. ' + d.explain;
+  }
+  if (kuIdx < KUIS_URUTAN_DATA.length - 1) document.getElementById('nextKuisUrutanBtn').classList.remove('hidden');
+}
+
+function nextKuisUrutan() {
+  kuIdx++;
+  if (kuIdx < KUIS_URUTAN_DATA.length) renderKuisUrutan();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (sessionStorage.getItem('logika_tujuanRead') === 'true') { appState.hasReadTujuan = true; setCheckVisible('check-tujuan', true); }
+    if (sessionStorage.getItem('logika_caraRead') === 'true') { appState.hasReadCara = true; setCheckVisible('check-cara', true); }
+  } catch(e) {}
   resetSimulation(true);
   renderRules();
   updateCaraSlideView();

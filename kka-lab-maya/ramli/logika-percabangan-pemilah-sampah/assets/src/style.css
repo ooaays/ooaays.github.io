@@ -131,7 +131,6 @@ img { max-width: 100%; display: block; }
   min-height: 90px;
   border: none;
   border-radius: 20px;
-  overflow: hidden;
   padding: 0;
   box-shadow: 0 8px 0 rgba(0,0,0,.2);
   transition: transform .15s ease, box-shadow .15s ease;
@@ -145,6 +144,7 @@ img { max-width: 100%; display: block; }
   background: #3f3f46;
   color: #fff;
   flex-shrink: 0;
+  border-radius: 20px 0 0 20px;
 }
 .menu-btn-icon svg { width: 44px; height: 44px; }
 .menu-btn-label {
@@ -159,6 +159,8 @@ img { max-width: 100%; display: block; }
   line-height: 1.2;
   text-transform: uppercase;
   font-weight: 900;
+  border-radius: 0 20px 20px 0;
+  position: relative;
 }
 .menu-btn-label.purple { background: #a855f7; }
 .menu-btn-label.orange { background: #f97316; }
@@ -896,3 +898,52 @@ img { max-width: 100%; display: block; }
   .conveyor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bin-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Read-check badge */
+.read-check {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%) scale(0.5);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; background: #22c55e; color: white;
+  border-radius: 50%; font-size: 12px; font-weight: bold;
+  opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+}
+.read-check.visible { opacity: 1; transform: translateY(-50%) scale(1); }
+
+/* ── Fitur Baru: Pohon Keputusan, Kasus Tepi, Detektif, Kuis Urutan, Refleksi Interaktif ── */
+.refleksi-textarea {
+  width: 100%; min-height: 75px;
+  border: 2px solid #c7d2fe; border-radius: 12px;
+  padding: 10px 14px; font-size: 15px;
+  font-family: inherit; resize: vertical;
+  background: #f5f3ff; color: #1e1b4b;
+  transition: border-color 0.2s;
+}
+.refleksi-textarea:focus { outline: none; border-color: #6366f1; }
+
+/* Pohon Keputusan */
+.pohon-wrap { font-family: monospace; font-size: 14px; line-height: 1.9; background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 18px 20px; overflow-x: auto; }
+.pohon-line { display: block; padding: 2px 4px; border-radius: 4px; transition: background 0.25s, color 0.25s; }
+.pohon-line.active-branch { background: #4f46e5; color: #fff; }
+.pohon-line.match-branch  { background: #16a34a; color: #fff; }
+.pohon-line.skip-branch   { opacity: 0.35; }
+
+/* Kasus Tepi */
+.kasus-item-card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+.kasus-item-name { font-size: 18px; font-weight: 900; color: #0f172a; margin-bottom: 6px; }
+.kasus-item-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.kasus-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.kasus-option { display: inline-block; background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 700; cursor: pointer; margin: 4px; transition: all .15s; }
+.kasus-option:hover { background: #e0e7ff; border-color: #818cf8; }
+.kasus-option.benar { background: #f0fdf4 !important; border-color: #22c55e !important; color: #14532d; }
+.kasus-option.salah { background: #fef2f2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+/* Kuis Urutan */
+.urutan-item { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: grab; user-select: none; }
+.urutan-item.dragging { opacity: 0.5; }
+.urutan-item.drag-over { border-color: #6366f1; background: #eef2ff; }
+.urutan-num { width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; color: #4338ca; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.urutan-text { font-size: 14px; font-weight: 600; color: #1e293b; flex: 1; }
+
+@keyframes pulse-correct { 0%,100% { background: #f0fdf4; } 50% { background: #bbf7d0; } }
+.urutan-item.correct-final { animation: pulse-correct 0.6s; border-color: #22c55e !important; }
