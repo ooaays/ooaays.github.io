@@ -418,7 +418,6 @@
       border-radius:18px;
       border:1px solid rgba(255,255,255,.06);
       background:linear-gradient(135deg,#11213c,#0b1630);
-      scroll-behavior:smooth;
     }
 
     .canvas-stage{
@@ -590,6 +589,134 @@
         justify-content:flex-start;
       }
     }
+
+    /* ===== LOG EKSEKUSI ===== */
+    .log-panel{
+      background:#0f172a;
+      border-radius:14px;
+      padding:10px 12px;
+      max-height:150px;
+      overflow-y:auto;
+      font-family:'Courier New',monospace;
+      font-size:12px;
+      display:none;
+      margin-top:8px;
+    }
+    .log-panel.visible{ display:block; }
+    .log-entry{
+      padding:3px 0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      color:#94a3b8;
+    }
+    .log-entry.log-active{ color:#fbbf24; }
+    .log-entry.log-done{ color:#86efac; }
+    .log-num{ color:#475569; min-width:28px; font-size:11px; }
+    .log-toggle-bar{
+      display:none;
+      margin-top:8px;
+      align-items:center;
+      justify-content:space-between;
+      cursor:pointer;
+      padding:4px 8px;
+      background:rgba(255,255,255,0.04);
+      border-radius:8px;
+    }
+    .log-toggle-bar.visible{ display:flex; }
+
+    /* ===== EFISIENSI TOAST ===== */
+    .efisiensi-toast{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+      border:2px solid #22d3ee;
+      border-radius:20px;
+      padding:14px 20px;
+      color:white;
+      font-weight:700;
+      font-size:13px;
+      z-index:9999;
+      transform:translateY(140px);
+      transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      max-width:300px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.4);
+      line-height:1.5;
+    }
+    .efisiensi-toast.visible{ transform:translateY(0); }
+
+    /* ===== REFLEKSI TEXTAREA ===== */
+    .refleksi-textarea{
+      width:100%;
+      background:#f8fafc;
+      border:2px solid #e2e8f0;
+      border-radius:12px;
+      padding:10px 14px;
+      font-size:14px;
+      color:#1e293b;
+      resize:vertical;
+      min-height:68px;
+      font-family:'Segoe UI',sans-serif;
+      transition:border-color 0.2s;
+      box-sizing:border-box;
+    }
+    .refleksi-textarea:focus{
+      outline:none;
+      border-color:#6366f1;
+    }
+
+    /* ===== KUIS ===== */
+    .kuis-option{
+      width:100%;
+      text-align:left;
+      padding:11px 16px;
+      border-radius:14px;
+      border:2px solid #e2e8f0;
+      background:#f8fafc;
+      color:#1e293b;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all 0.15s;
+      margin-bottom:8px;
+      display:block;
+    }
+    .kuis-option:hover:not(:disabled){ border-color:#6366f1; background:#eef2ff; }
+    .kuis-option.correct{ border-color:#16a34a!important; background:#f0fdf4!important; color:#14532d!important; }
+    .kuis-option.wrong{ border-color:#dc2626!important; background:#fef2f2!important; color:#7f1d1d!important; }
+    .kuis-option:disabled{ cursor:default; }
+
+    /* ===== DETEKTIF BUG ===== */
+    .detektif-btn{
+      width:100%;
+      padding:10px 14px;
+      border-radius:14px;
+      background:linear-gradient(135deg,#7c3aed,#a855f7);
+      color:white;
+      font-weight:700;
+      font-size:13px;
+      border:none;
+      cursor:pointer;
+      margin-bottom:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-align:left;
+      transition:opacity 0.2s;
+      line-height:1.3;
+    }
+    .detektif-btn:hover{ opacity:0.85; }
+    .read-check {
+      position:absolute; right:12px; top:50%;
+      transform:translateY(-50%) scale(0.5);
+      display:inline-flex; align-items:center; justify-content:center;
+      width:22px; height:22px; background:#22c55e; color:white;
+      border-radius:50%; font-size:12px; font-weight:bold;
+      opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none;
+    }
+    .read-check.visible { opacity:1; transform:translateY(-50%) scale(1); }
   </style>
 </head>
 <body>
@@ -634,58 +761,52 @@
 
         <div class="hero-buttons">
           <!-- 1. Tujuan Pembelajaran -->
-          <button onclick="openTujuanModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+          <button onclick="openTujuanModal()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2 flex-col gap-1">
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-3 rounded-r-[20px] relative">
               <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Pembelajaran</span>
-              <span id="tujuanCheck" class="hidden text-xs text-white/90 font-bold flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-green-300"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
-                Sudah dibaca
-              </span>
+              <span id="check-tujuan" class="read-check">✓</span>
             </div>
           </button>
 
           <!-- 2. Cara Penggunaan -->
-          <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+          <button onclick="openCaraModal()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2 flex-col gap-1">
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-3 rounded-r-[20px] relative">
               <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
-              <span id="caraCheck" class="hidden text-xs text-white/90 font-bold flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-green-300"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
-                Sudah dibaca
-              </span>
+              <span id="check-cara" class="read-check">✓</span>
             </div>
           </button>
 
           <!-- 3. Mulai Percobaan (terkunci sampai baca Tujuan + Cara) -->
-          <button id="mulaiBtn" onclick="tryOpenLabPage()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left opacity-50">
-            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+          <button id="mulaiBtn" onclick="tryOpenLabPage()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left opacity-50">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-2 flex-col gap-1">
+            <div class="flex-1 bg-[#2bc4eb] flex items-center justify-center px-3 rounded-r-[20px] flex-col gap-1">
               <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
               <span id="mulaiHint" class="text-xs text-white/80 font-normal">Baca Tujuan &amp; Cara terlebih dahulu</span>
             </div>
           </button>
 
           <!-- 4. Biodata Pengembang -->
-          <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
+          <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-2">
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-3 rounded-r-[20px]">
               <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
             </div>
           </button>
@@ -761,6 +882,10 @@
           <button onclick="openRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl">
             Refleksi
           </button>
+          <button onclick="openKuisModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
+            Kuis Singkat
+          </button>
           <button onclick="showPage('homePage')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold px-5 py-3 rounded-xl">
             Kembali
           </button>
@@ -791,7 +916,15 @@
             <button class="challenge-btn" onclick="loadChallenge('star')">Muat Tantangan Bintang</button>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-200 text-sm text-slate-600 leading-relaxed">
+          <div class="mt-6 pt-4 border-t border-slate-200">
+            <div class="font-black text-slate-800 mb-1">Mode Detektif Bug 🐛</div>
+            <p class="text-xs text-slate-500 mb-3">Program berikut punya kesalahan. Temukan dan perbaiki!</p>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_square')">🐛 Persegi yang Miring</button>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_triangle')">🐛 Segitiga Belum Selesai</button>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_noink')">🐛 Robot Tak Meninggalkan Jejak</button>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-600 leading-relaxed">
             <div class="font-black text-slate-800 mb-2">Petunjuk Singkat</div>
             <p>Susun blok dari atas ke bawah. Robot akan menjalankan instruksi sesuai urutan. Salah urutan sedikit saja, hasil gambar bisa berbeda.</p>
           </div>
@@ -830,6 +963,14 @@
             <div id="canvasStage" class="canvas-stage">
               <canvas id="stageCanvas" width="2400" height="1600"></canvas>
             </div>
+          </div>
+
+          <div id="logToggleBar" class="log-toggle-bar" onclick="toggleLogPanel()">
+            <span class="text-slate-400 text-xs font-bold">📋 Log Eksekusi</span>
+            <span id="logToggleIcon" class="text-slate-400 text-xs font-bold">tampilkan ▼</span>
+          </div>
+          <div id="logPanel" class="log-panel">
+            <div id="logContent"></div>
           </div>
 
           <div id="stepInfoBar" class="hidden mt-3 bg-amber-500/20 border border-amber-400/40 rounded-2xl px-4 py-2 text-amber-200 text-sm font-bold flex items-center gap-2">
@@ -1294,21 +1435,53 @@
     </div>
   </div>
 
-  <!-- MODAL REFLEKSI -->
+  <!-- MODAL REFLEKSI (interaktif) -->
   <div id="refleksiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-3xl w-full shadow-2xl border-4 border-sky-100">
-      <h2 class="text-3xl md:text-4xl font-black text-sky-700 text-center mb-6">Refleksi</h2>
-      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
-        <p>1. Mengapa urutan instruksi memengaruhi hasil gambar?</p>
-        <p>2. Apa yang terjadi jika sudut belok atau jarak maju diubah?</p>
-        <p>3. Mengapa robot harus diberi instruksi yang jelas dan berurutan?</p>
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-sky-100 flex flex-col" style="max-height:90vh;">
+      <div class="shrink-0 mb-4 text-center">
+        <h2 class="text-2xl md:text-3xl font-black text-sky-700">Refleksi Mandiri</h2>
+        <p class="text-slate-500 text-sm mt-1">Tulis jawabanmu dengan kata-katamu sendiri</p>
       </div>
-      <div class="pt-6 flex justify-center">
-        <button onclick="closeRefleksiModal()" class="bg-sky-600 hover:bg-sky-700 text-white text-xl font-bold py-3 px-10 rounded-2xl">
+      <div class="flex-1 overflow-y-auto pr-1 pb-2 space-y-4">
+        <div>
+          <label class="block text-slate-700 font-bold mb-2 text-sm">1. Mengapa urutan instruksi memengaruhi hasil gambar? Berikan contohnya!</label>
+          <textarea id="refleksi1" class="refleksi-textarea" placeholder="Petunjuk: coba bayangkan robot disuruh BELOK_KIRI dulu sebelum MAJU — hasil gambarnya pasti berbeda. Berikan contoh dari percobaan yang sudah kamu lakukan!"></textarea>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-bold mb-2 text-sm">2. Apa yang kamu ubah dari percobaan pertamamu? Kenapa kamu mengubahnya?</label>
+          <textarea id="refleksi2" class="refleksi-textarea" placeholder="Petunjuk: apakah kamu mengubah urutan blok? Menambah MAJU? Mengubah sudut belokan? Ceritakan apa yang berhasil dan apa yang tidak berhasil!"></textarea>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-bold mb-2 text-sm">3. Mengapa robot harus diberi instruksi yang jelas dan berurutan?</label>
+          <textarea id="refleksi3" class="refleksi-textarea" placeholder="Petunjuk: robot tidak bisa menebak maksudmu — ia hanya bisa mengikuti instruksi kata per kata. Bagaimana ini mirip dengan cara komputer bekerja di kehidupan nyata?"></textarea>
+        </div>
+      </div>
+      <div class="shrink-0 pt-4 flex gap-3 border-t-2 border-sky-50 mt-2">
+        <button onclick="closeRefleksiModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-base font-bold py-3 px-4 rounded-xl">
           Tutup
+        </button>
+        <button id="simpanRefleksiBtn" onclick="simpanRefleksi()" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white text-base font-bold py-3 px-4 rounded-xl">
+          Simpan Refleksi
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- MODAL KUIS SINGKAT -->
+  <div id="kuisModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-emerald-100 flex flex-col" style="max-height:90vh;">
+      <div class="shrink-0 mb-4 text-center">
+        <h2 class="text-2xl md:text-3xl font-black text-emerald-700">Mini Kuis</h2>
+        <p id="kuisProgress" class="text-slate-500 text-sm mt-1">Pertanyaan 1 dari 3</p>
+      </div>
+      <div id="kuisContent" class="flex-1 overflow-y-auto pr-1 pb-2"></div>
+      <div id="kuisNavigation" class="shrink-0 pt-4 border-t-2 border-emerald-50 mt-2"></div>
+    </div>
+  </div>
+
+  <!-- EFISIENSI TOAST -->
+  <div id="efisiensiToast" class="efisiensi-toast">
+    <div id="efisiensiContent"></div>
   </div>
 
   <script>
@@ -1343,17 +1516,44 @@
       if (id === 'labPage') {
         renderStage();
         updateStatus();
-        applyZoom(true);
+        applyZoom(false);
+        centerWhenReady();
       }
     }
 
+    let _centerRO = null;
+    function centerWhenReady() {
+      if (_centerRO) { _centerRO.disconnect(); _centerRO = null; }
+      if (viewport.clientWidth > 0 && viewport.clientHeight > 0) {
+        centerViewportOn(turtle.x, turtle.y);
+        return;
+      }
+      let fallback = setTimeout(() => {
+        if (_centerRO) { _centerRO.disconnect(); _centerRO = null; }
+        centerViewportOn(turtle.x, turtle.y);
+      }, 800);
+      _centerRO = new ResizeObserver(() => {
+        if (viewport.clientWidth > 0 && viewport.clientHeight > 0) {
+          clearTimeout(fallback);
+          _centerRO.disconnect(); _centerRO = null;
+          centerViewportOn(turtle.x, turtle.y);
+        }
+      });
+      _centerRO.observe(viewport);
+    }
+
     const tujuanModal = document.getElementById('tujuanModal');
+    function setCheckVisible(id, visible){
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('visible', visible);
+    }
     function openTujuanModal(){ tujuanModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
     function closeTujuanModal(){
       tujuanModal.classList.add('hidden');
       document.body.style.overflow='auto';
       tujuanRead = true;
-      document.getElementById('tujuanCheck').classList.remove('hidden');
+      try { sessionStorage.setItem('robot_tujuanRead', 'true'); } catch(e){}
+      setCheckVisible('check-tujuan', true);
       checkUnlock();
     }
 
@@ -1421,7 +1621,8 @@
       caraModal.classList.add('hidden');
       document.body.style.overflow = 'auto';
       caraRead = true;
-      document.getElementById('caraCheck').classList.remove('hidden');
+      try { sessionStorage.setItem('robot_caraRead', 'true'); } catch(e){}
+      setCheckVisible('check-cara', true);
       checkUnlock();
     }
 
@@ -1493,10 +1694,11 @@
     const MAX_ZOOM = 2.8;
 
     function centerViewportOn(x, y) {
-      const targetLeft = Math.max(0, (x * stageZoom) - (viewport.clientWidth / 2));
-      const targetTop = Math.max(0, (y * stageZoom) - (viewport.clientHeight / 2));
-      viewport.scrollLeft = targetLeft;
-      viewport.scrollTop = targetTop;
+      const vw = viewport.clientWidth  || viewport.getBoundingClientRect().width  || 800;
+      const vh = viewport.clientHeight || viewport.getBoundingClientRect().height || 560;
+      const targetLeft = Math.max(0, (x * stageZoom) - (vw / 2));
+      const targetTop  = Math.max(0, (y * stageZoom) - (vh / 2));
+      viewport.scrollTo({ left: targetLeft, top: targetTop, behavior: 'instant' });
     }
 
     function centerStageView() {
@@ -1512,7 +1714,8 @@
       canvasEl.style.transform = `scale(${stageZoom})`;
 
       if (keepCentered) {
-        requestAnimationFrame(() => centerViewportOn(turtle.x, turtle.y));
+        // Double rAF memastikan layout sudah dihitung browser sebelum scroll
+        requestAnimationFrame(() => requestAnimationFrame(() => centerViewportOn(turtle.x, turtle.y)));
       }
     }
 
@@ -1636,6 +1839,8 @@
 
     function loadChallenge(type) {
       if (isRunning) return;
+      activeChallengeKey = type;
+      activeBugKey = null;
 
       if (type === 'line') {
         scriptBlocks = [
@@ -1977,14 +2182,26 @@
       renderStage();
       updateStatus();
       applyZoom(true);
+      clearLog();
 
       for (let i = 0; i < scriptBlocks.length; i++) {
         highlightBlock(i);
-        await executeBlock(scriptBlocks[i]);
+        const b = scriptBlocks[i];
+        addLogEntry(i + 1, scriptBlocks.length, labelForType(b.type), b.value, 'log-active');
+        await executeBlock(b);
+        markLogDone(i + 1);
       }
 
       clearHighlight();
       setRunningUI(false);
+
+      if (activeChallengeKey && challengeOptimal[activeChallengeKey]) {
+        showEfisiensiToast(scriptBlocks.length, challengeOptimal[activeChallengeKey]);
+      }
+      if (!refleksiAutoTriggered) {
+        refleksiAutoTriggered = true;
+        setTimeout(() => openRefleksiModal(), 1200);
+      }
     }
 
     let stepIndex = 0;
@@ -2048,6 +2265,7 @@
       if (stepBtn) stepBtn.innerHTML = stepBtnBaseHTML();
       clearHighlight();
       hideStepBar();
+      clearLog();
       resetStageState();
       renderStage();
       updateStatus();
@@ -2060,6 +2278,259 @@
     updateStatus();
     applyZoom(true);
     animateHeroSpeech();
+    // Restore read flags from sessionStorage
+    try {
+      if (sessionStorage.getItem('robot_tujuanRead') === 'true') { tujuanRead = true; setCheckVisible('check-tujuan', true); }
+      if (sessionStorage.getItem('robot_caraRead') === 'true') { caraRead = true; setCheckVisible('check-cara', true); }
+      checkUnlock();
+    } catch(e) {}
+
+    // ============ LOG EKSEKUSI ============
+    function toggleLogPanel() {
+      const panel = document.getElementById('logPanel');
+      const icon = document.getElementById('logToggleIcon');
+      if (!panel) return;
+      const visible = panel.classList.toggle('visible');
+      icon.textContent = visible ? 'sembunyikan ▲' : 'tampilkan ▼';
+    }
+    function clearLog() {
+      const content = document.getElementById('logContent');
+      if (content) content.innerHTML = '';
+      const bar = document.getElementById('logToggleBar');
+      if (bar) bar.classList.remove('visible');
+      const panel = document.getElementById('logPanel');
+      if (panel) panel.classList.remove('visible');
+      const icon = document.getElementById('logToggleIcon');
+      if (icon) icon.textContent = 'tampilkan ▼';
+    }
+    function addLogEntry(stepNum, total, label, val, state) {
+      const bar = document.getElementById('logToggleBar');
+      if (bar) bar.classList.add('visible');
+      const content = document.getElementById('logContent');
+      if (!content) return;
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${state}`;
+      entry.id = `log-entry-${stepNum}`;
+      const valStr = val !== undefined ? `(${val})` : '';
+      entry.innerHTML = `<span class="log-num">${stepNum}/${total}</span><span>${state === 'log-active' ? '→' : '✓'} ${label}${valStr}</span>`;
+      content.appendChild(entry);
+      const panel = document.getElementById('logPanel');
+      if (panel && panel.classList.contains('visible')) {
+        entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+    function markLogDone(stepNum) {
+      const entry = document.getElementById(`log-entry-${stepNum}`);
+      if (!entry) return;
+      entry.classList.remove('log-active');
+      entry.classList.add('log-done');
+      const span = entry.querySelectorAll('span')[1];
+      if (span) span.textContent = span.textContent.replace('→', '✓');
+    }
+
+    // ============ EFISIENSI ============
+    const challengeOptimal = {
+      line: 2, corner: 4, square: 8, triangle: 6,
+      rectangle: 8, stairs: 13, house: 14, star: 9
+    };
+    let activeChallengeKey = null;
+    let activeBugKey = null;
+
+    function showEfisiensiToast(used, optimal) {
+      const toast = document.getElementById('efisiensiToast');
+      const content = document.getElementById('efisiensiContent');
+      if (!toast || !content) return;
+      if (used <= optimal) {
+        content.innerHTML = `🏆 <span style="color:#22d3ee">Efisiensi Sempurna!</span> Kamu menggunakan <b>${used} blok</b> — sama dengan solusi optimal!`;
+      } else {
+        const diff = used - optimal;
+        content.innerHTML = `📊 Kamu menggunakan <b>${used} blok</b>. Solusi optimal butuh <b>${optimal} blok</b>.<br><span style="color:#fbbf24">Bisakah kamu kurangi ${diff} blok lagi?</span>`;
+      }
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 5500);
+    }
+
+    // ============ DETEKTIF BUG ============
+    const bugChallenges = {
+      bug_square: {
+        hint: '🐛 Persegi harus memiliki 4 sudut 90° sama persis. Perhatikan baik-baik nilai sudut di setiap blok PUTAR!',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 91 },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 140 }
+        ]
+      },
+      bug_triangle: {
+        hint: '🐛 Segitiga sama sisi butuh 3 sisi dan 3 sudut. Apakah semua instruksi MAJU sudah ada?',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 180 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 180 },
+          { type: 'RIGHT', value: 120 }
+        ]
+      },
+      bug_noink: {
+        hint: '🐛 Robot bergerak tapi tidak meninggalkan jejak. Instruksi apa yang membuat pena menempel di kertas?',
+        blocks: [
+          { type: 'PEN_UP' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      }
+    };
+
+    function loadBugChallenge(key) {
+      if (isRunning) return;
+      const challenge = bugChallenges[key];
+      if (!challenge) return;
+      activeBugKey = key;
+      activeChallengeKey = null;
+      scriptBlocks = challenge.blocks.map(b => ({ ...b }));
+      renderScriptList();
+      resetAll();
+      setTimeout(() => {
+        const toast = document.getElementById('efisiensiToast');
+        const content = document.getElementById('efisiensiContent');
+        if (toast && content) {
+          content.innerHTML = challenge.hint;
+          toast.classList.add('visible');
+          setTimeout(() => toast.classList.remove('visible'), 7000);
+        }
+      }, 300);
+    }
+
+    // ============ KUIS SINGKAT ============
+    const kuisData = [
+      {
+        q: 'Instruksi mana yang WAJIB ada agar robot meninggalkan jejak gambar?',
+        options: ['MAJU(80)', 'PENA_TURUN', 'PUTAR_KANAN(90)', 'PENA_NAIK'],
+        correct: 1,
+        explain: 'PENA_TURUN membuat pena menempel ke kanvas sehingga robot meninggalkan jejak. Tanpanya, robot bergerak tapi tidak menggambar.'
+      },
+      {
+        q: 'Jika instruksi PUTAR_KANAN(90) pada langkah ke-2 program persegi dihapus, apa yang terjadi?',
+        options: ['Robot tetap membuat persegi', 'Robot membuat garis lurus saja', 'Robot berputar ke kiri', 'Robot berhenti bergerak'],
+        correct: 1,
+        explain: 'Tanpa perintah belok, robot meneruskan arah yang sama sehingga hanya menghasilkan garis lurus, bukan persegi.'
+      },
+      {
+        q: 'Apa nama konsep di mana instruksi dijalankan satu per satu dari atas ke bawah?',
+        options: ['Debugging', 'Pengulangan', 'Sekuensial', 'Paralel'],
+        correct: 2,
+        explain: 'Sekuensial adalah pola eksekusi instruksi secara berurutan, satu per satu, dari instruksi pertama hingga terakhir.'
+      }
+    ];
+    let kuisIndex = 0;
+    let kuisScore = 0;
+    let kuisAnswered = [];
+
+    function openKuisModal() {
+      kuisIndex = 0;
+      kuisScore = 0;
+      kuisAnswered = [];
+      renderKuisQuestion();
+      document.getElementById('kuisModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeKuisModal() {
+      document.getElementById('kuisModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+    function renderKuisQuestion() {
+      const progress = document.getElementById('kuisProgress');
+      const content = document.getElementById('kuisContent');
+      const nav = document.getElementById('kuisNavigation');
+      if (kuisIndex >= kuisData.length) {
+        progress.textContent = 'Hasil Kuis';
+        const pct = Math.round((kuisScore / kuisData.length) * 100);
+        const emoji = pct === 100 ? '🏆' : pct >= 67 ? '👍' : '💪';
+        const msg = pct === 100 ? 'Sempurna! Kamu memahami semua konsep!' : pct >= 67 ? 'Bagus! Terus berlatih!' : 'Yuk coba lagi setelah bereksperimen lebih banyak!';
+        content.innerHTML = `
+          <div class="text-center py-4">
+            <div class="text-6xl mb-3">${emoji}</div>
+            <div class="text-4xl font-black text-emerald-700 mb-2">${kuisScore}/${kuisData.length}</div>
+            <div class="text-slate-600 text-base mb-5">${msg}</div>
+            <div class="space-y-3 text-left">
+              ${kuisData.map((q, i) => {
+                const ok = kuisAnswered[i] === q.correct;
+                return `<div class="flex items-start gap-2 p-3 rounded-xl border ${ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}">
+                  <span class="text-lg shrink-0">${ok ? '✅' : '❌'}</span>
+                  <div class="text-sm text-slate-700"><b>S${i+1}.</b> ${q.explain}</div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        nav.innerHTML = `<button onclick="closeKuisModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">Selesai</button>`;
+        return;
+      }
+      const q = kuisData[kuisIndex];
+      progress.textContent = `Pertanyaan ${kuisIndex + 1} dari ${kuisData.length}`;
+      content.innerHTML = `
+        <div>
+          <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl mb-4">
+            <p class="text-slate-800 font-bold text-base leading-relaxed">${q.q}</p>
+          </div>
+          <div id="kuisOptions">
+            ${q.options.map((opt, i) => `<button class="kuis-option" onclick="answerKuis(${i})">${String.fromCharCode(65 + i)}. ${opt}</button>`).join('')}
+          </div>
+          <div id="kuisExplain" class="hidden mt-3 bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-700 leading-relaxed"></div>
+        </div>`;
+      nav.innerHTML = `<div id="kuisNextBtn" class="hidden w-full"><button onclick="nextKuis()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">${kuisIndex < kuisData.length - 1 ? 'Pertanyaan Berikutnya →' : 'Lihat Hasil'}</button></div>`;
+    }
+    function answerKuis(selected) {
+      const q = kuisData[kuisIndex];
+      kuisAnswered[kuisIndex] = selected;
+      if (selected === q.correct) kuisScore++;
+      document.querySelectorAll('.kuis-option').forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) btn.classList.add('correct');
+        else if (i === selected && selected !== q.correct) btn.classList.add('wrong');
+      });
+      const explain = document.getElementById('kuisExplain');
+      if (explain) {
+        explain.classList.remove('hidden');
+        explain.innerHTML = `<b>${selected === q.correct ? '✅ Benar!' : '❌ Belum tepat.'}</b> ${q.explain}`;
+      }
+      const nextBtn = document.getElementById('kuisNextBtn');
+      if (nextBtn) nextBtn.classList.remove('hidden');
+    }
+    function nextKuis() {
+      kuisIndex++;
+      renderKuisQuestion();
+    }
+
+    // ============ REFLEKSI INTERAKTIF ============
+    let refleksiAutoTriggered = false;
+
+    function simpanRefleksi() {
+      const r1 = (document.getElementById('refleksi1') || {}).value || '';
+      const r2 = (document.getElementById('refleksi2') || {}).value || '';
+      const r3 = (document.getElementById('refleksi3') || {}).value || '';
+      if (!r1.trim() && !r2.trim() && !r3.trim()) {
+        alert('Tuliskan setidaknya satu jawabanmu sebelum menyimpan.');
+        return;
+      }
+      const btn = document.getElementById('simpanRefleksiBtn');
+      if (btn) {
+        btn.textContent = '✅ Tersimpan!';
+        btn.style.background = '#16a34a';
+        setTimeout(() => {
+          btn.textContent = 'Simpan Refleksi';
+          btn.style.background = '';
+        }, 2500);
+      }
+    }
   </script>
 </body>
 </html>
