@@ -49,7 +49,7 @@
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Pembelajaran</div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Pembelajaran<span id="check-tujuan" class="read-check">✓</span></div>
           </button>
 
           <button onclick="openCaraModal()" class="menu-btn">
@@ -58,7 +58,7 @@
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan</div>
+            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></div>
           </button>
 
           <button id="btn-start" onclick="tryOpenLabPage()" aria-disabled="true" title="Buka Tujuan dan Cara Penggunaan terlebih dahulu" class="menu-btn disabled-style">
@@ -192,6 +192,10 @@
               <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('istilahModal')">Istilah Penting</button>
               <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('refleksiModal')">Refleksi</button>
               <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('introModal')">Konsep Dasar</button>
+              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#6366f1;" onclick="openTebakModal()">Tebak Matrix</button>
+              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#dc2626;" onclick="openDetektifModal()">🐛 Detektif Bug</button>
+              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#d97706;" onclick="openJumlahSamaModal()">Jumlah Sama</button>
+              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#0284c7;" onclick="openAnimasiModal()">Animasi Baca</button>
               <button class="px-5 py-3 rounded-2xl font-black bg-slate-500 text-white" onclick="showPage('homePage')">Kembali ke Beranda</button>
             </div>
           </div>
@@ -396,16 +400,30 @@
   </div>
 
   <div id="refleksiModal" class="modal-backdrop">
-    <div class="modal-card">
-      <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Refleksi</h2>
-      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
-        <p>1. Mengapa gambar digital dapat direpresentasikan dengan angka 0 dan 1?</p>
-        <p>2. Mengapa posisi piksel aktif memengaruhi bentuk gambar?</p>
-        <p>3. Apakah dua gambar dengan jumlah angka 1 yang sama selalu tampak sama? Jelaskan.</p>
-        <p>4. Apa manfaat melihat output matrix setelah kamu mengubah pola pada grid?</p>
+    <div class="modal-card" style="display:flex;flex-direction:column;max-height:90vh;">
+      <h2 class="text-3xl font-black text-indigo-700 text-center mb-1">Refleksi Mandiri</h2>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:16px;">Tulis jawabanmu dengan kata-katamu sendiri</p>
+      <div style="flex:1;overflow-y:auto;padding-right:4px;padding-bottom:8px;" class="grid gap-4">
+        <div>
+          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">1. Mengapa gambar digital dapat direpresentasikan dengan angka 0 dan 1?</label>
+          <textarea id="refleksi1" class="refleksi-textarea" placeholder="Petunjuk: komputer hanya mengerti angka. Piksel yang menyala = 1, piksel yang gelap = 0. Coba jelaskan: jika ada gambar 5×5 piksel, berapa banyak angka yang dibutuhkan komputer untuk menyimpannya?"></textarea>
+        </div>
+        <div>
+          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">2. Mengapa posisi piksel aktif memengaruhi bentuk gambar?</label>
+          <textarea id="refleksi2" class="refleksi-textarea" placeholder="Petunjuk: coba bayangkan 5 piksel menyala di baris yang sama vs. tersebar ke berbagai baris. Hasilnya pasti berbeda walau jumlah angka 1-nya sama. Gambar apa yang akan terbentuk?"></textarea>
+        </div>
+        <div>
+          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">3. Apakah dua gambar dengan jumlah angka 1 yang sama selalu tampak sama? Jelaskan.</label>
+          <textarea id="refleksi3" class="refleksi-textarea" placeholder="Petunjuk: coba buat dua pola berbeda di grid yang sama-sama memiliki 5 piksel aktif (lima angka 1). Apakah gambarnya identik? Apa kesimpulanmu tentang hubungan jumlah vs. posisi piksel?"></textarea>
+        </div>
+        <div>
+          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">4. Apa manfaat melihat output matrix setelah kamu mengubah pola pada grid?</label>
+          <textarea id="refleksi4" class="refleksi-textarea" placeholder="Petunjuk: matrix adalah cara komputer 'melihat' gambarmu — bukan sebagai bentuk visual tapi sebagai deretan angka. Mengapa ini penting untuk memahami bagaimana komputer menyimpan dan memproses gambar?"></textarea>
+        </div>
       </div>
-      <div class="pt-6 flex justify-center">
-        <button onclick="closeModal('refleksiModal')" class="bg-indigo-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">Tutup</button>
+      <div class="pt-4 flex gap-3 justify-center" style="border-top:2px solid #eef2ff;margin-top:8px;flex-shrink:0;">
+        <button onclick="closeModal('refleksiModal')" style="background:#e2e8f0;color:#334155;font-size:17px;font-weight:bold;padding:11px 28px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
+        <button id="simpanRefleksiBtn" onclick="simpanRefleksi()" style="background:#6366f1;color:white;font-size:17px;font-weight:bold;padding:11px 28px;border-radius:14px;border:none;cursor:pointer;">Simpan Refleksi</button>
       </div>
     </div>
   </div>
@@ -525,6 +543,103 @@
       </div>
       <div class="pt-6 flex justify-center">
         <button onclick="closeModal('quizModal')" class="bg-indigo-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TEBAK GAMBAR DARI MATRIX -->
+  <div id="tebakModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-3xl font-black text-indigo-700 text-center mb-1">Tebak Gambar dari Matrix</h2>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:14px;">Baca matrix di kiri, lalu aktifkan piksel yang sesuai di kanan.</p>
+      <p id="tebakLabel" style="text-align:center;font-weight:bold;font-size:14px;color:#4f46e5;margin-bottom:12px;"></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:8px;">Matrix (0 = kosong, 1 = aktif):</div>
+          <pre id="tebakMatrix" style="background:#0f172a;color:#86efac;border-radius:12px;padding:14px;font-family:monospace;font-size:13px;line-height:1.9;margin:0;"></pre>
+        </div>
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:8px;">Klik piksel yang sesuai:</div>
+          <div id="tebakGrid" class="tebak-grid"></div>
+        </div>
+      </div>
+      <div id="tebakResult" style="margin-top:12px;font-size:14px;min-height:24px;padding:8px 0;"></div>
+      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #eef2ff;margin-top:4px;">
+        <button onclick="closeModal('tebakModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
+        <button id="tebakCheckBtn" onclick="checkTebak()" style="background:#6366f1;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Cek Jawaban</button>
+        <button onclick="nextTebakPuzzle()" style="background:#0ea5e9;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Puzzle Berikutnya →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETEKTIF MATRIX -->
+  <div id="detektifModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-3xl font-black text-center mb-1" style="color:#dc2626;">🐛 Detektif Matrix</h2>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:6px;">Bandingkan gambar target dengan matrix yang ada. Klik sel yang <b>salah</b> pada matrix kanan!</p>
+      <p id="detektifLabel" style="text-align:center;font-weight:bold;font-size:13px;color:#dc2626;margin-bottom:14px;"></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:8px;">Gambar yang SEHARUSNYA:</div>
+          <div id="detektifTargetGrid" class="detektif-grid"></div>
+        </div>
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:8px;">Matrix ASLI (klik sel yang salah):</div>
+          <div id="detektifBugGrid" class="detektif-grid"></div>
+        </div>
+      </div>
+      <div id="detektifResult" style="margin-top:12px;font-size:14px;min-height:24px;padding:8px 0;"></div>
+      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #fee2e2;margin-top:4px;">
+        <button onclick="closeModal('detektifModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
+        <button onclick="checkDetektif()" style="background:#dc2626;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Periksa Pilihanku</button>
+        <button onclick="nextDetektif()" style="background:#0ea5e9;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tantangan Berikutnya →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL JUMLAH SAMA BENTUK BEDA -->
+  <div id="jumlahSamaModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="text-3xl font-black text-center mb-1" style="color:#d97706;">Jumlah Sama, Bentuk Beda</h2>
+      <p id="jumlahSamaTitle" style="text-align:center;color:#475569;font-size:14px;margin-bottom:14px;"></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+        <div id="jumlahGridA"></div>
+        <div id="jumlahGridB"></div>
+      </div>
+      <div id="jumlahSamaConfirm" style="margin-top:14px;background:#fef3c7;border:1px solid #fbbf24;border-radius:12px;padding:12px;font-weight:bold;font-size:13px;color:#92400e;text-align:center;"></div>
+      <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;font-size:13px;color:#1e40af;line-height:1.6;">
+        💡 <b>Kesimpulan:</b> Jumlah piksel aktif <i>tidak cukup</i> menentukan bentuk gambar. Yang menentukan adalah <b>posisi</b> piksel-piksel tersebut dalam grid.
+      </div>
+      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #fef3c7;margin-top:10px;">
+        <button onclick="closeModal('jumlahSamaModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
+        <button onclick="nextJumlahSama()" style="background:#d97706;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Contoh Berikutnya →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ANIMASI KOMPUTER MEMBACA -->
+  <div id="animasiModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:580px;">
+      <h2 class="text-3xl font-black text-sky-700 text-center mb-1">Cara Komputer Membaca Matrix</h2>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:16px;">Komputer membaca setiap sel satu per satu, dari kiri ke kanan, atas ke bawah.</p>
+      <div style="display:flex;gap:24px;align-items:flex-start;justify-content:center;flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:6px;text-align:center;">Matrix Data</div>
+          <pre style="background:#0f172a;color:#86efac;border-radius:12px;padding:12px 14px;font-family:monospace;font-size:12px;line-height:2;margin:0;">[[0,1,1,1,0]
+ [1,0,0,0,1]
+ [1,0,0,0,1]
+ [1,0,0,0,1]
+ [0,1,1,1,0]]</pre>
+        </div>
+        <div>
+          <div style="font-weight:bold;font-size:13px;color:#475569;margin-bottom:6px;text-align:center;">Hasil Visual</div>
+          <div id="animGrid" class="anim-grid"></div>
+        </div>
+      </div>
+      <div id="animLog" style="margin-top:14px;background:#f1f5f9;border-radius:12px;padding:12px;font-size:14px;color:#334155;min-height:50px;line-height:1.7;"></div>
+      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #e0f2fe;margin-top:10px;">
+        <button onclick="closeAnimasiModal()" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
+        <button id="animStartBtn" onclick="startAnimasi()" style="background:#0284c7;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">▶ Mulai Animasi</button>
       </div>
     </div>
   </div>
