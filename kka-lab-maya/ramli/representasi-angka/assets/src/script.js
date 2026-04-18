@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.body.style.overflow='auto';
     tujuanRead = true;
     tryEnableStart();
-    try { localStorage.setItem('repang_tujuanRead', 'true'); } catch(e){}
+    try { sessionStorage.setItem('repang_tujuanRead', 'true'); } catch(e){}
     setCheckVisible('check-tujuan', true);
   }
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.body.style.overflow = 'auto';
     caraRead = true;
     tryEnableStart();
-    try { localStorage.setItem('repang_caraRead', 'true'); } catch(e){}
+    try { sessionStorage.setItem('repang_caraRead', 'true'); } catch(e){}
     setCheckVisible('check-cara', true);
   }
 
@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function(){
   // load persisted read flags (if any)
   function loadReadFlags(){
     try{
-      const t = localStorage.getItem('repang_tujuanRead');
-      const c = localStorage.getItem('repang_caraRead');
+      const t = sessionStorage.getItem('repang_tujuanRead');
+      const c = sessionStorage.getItem('repang_caraRead');
       tujuanRead = t === 'true' || tujuanRead === true;
       caraRead = c === 'true' || caraRead === true;
       setCheckVisible('check-tujuan', tujuanRead);
@@ -541,6 +541,212 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   window.nextDecodeChallenge = function(){ generateDecodeChallenge(); }
+
+  /* ══════════════════════════════════════════════════════════
+     FITUR 1 – REFLEKSI INTERAKTIF
+     ══════════════════════════════════════════════════════════ */
+  const REFLEKSI_REPANG_QS = [
+    { q: 'Mengapa komputer menggunakan sistem biner (0 dan 1) bukan desimal (0–9)?', ph: 'Petunjuk: transistor di dalam komputer hanya punya 2 kondisi — dialiri listrik (1) atau tidak (0). Lebih mudah membuat mesin yang membedakan 2 keadaan daripada 10 keadaan. Coba jelaskan dengan caramu sendiri!' },
+    { q: 'Berikan contoh situasi nyata di mana 8 bit (1 byte) terasa sangat kecil untuk menyimpan data!', ph: 'Petunjuk: 1 byte hanya bisa menyimpan 1 karakter teks. Satu foto kamera HP berukuran ~3 MB = sekitar 3 juta byte = 3 juta karakter. Bayangkan jika kamu harus menyimpan video 1 jam!' },
+    { q: 'Apa hubungan antara angka biner dan karakter yang kamu lihat di layar HP atau komputer?', ph: 'Petunjuk: saat kamu ketik huruf "A", keyboard mengirim kode 65 ke komputer. Komputer melihat tabel ASCII, menemukan 65 = "A", lalu menampilkan bentuk huruf itu di layar. Bagaimana menurutmu?' },
+  ];
+
+  window.openRefleksiModal = function() {
+    const list = document.getElementById('repangRefleksiList');
+    list.innerHTML = REFLEKSI_REPANG_QS.map((item, i) => `
+      <div>
+        <label style="display:block;font-weight:700;color:#0f172a;margin-bottom:8px;">${i+1}. ${item.q}</label>
+        <textarea class="refleksi-textarea" id="rrq_${i}" placeholder="${item.ph}"></textarea>
+      </div>`).join('');
+    const btn = document.getElementById('repangSimpanBtn');
+    btn.textContent = 'Simpan ✓'; btn.style.background = '';
+    refleksiModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeRefleksiModal = function() {
+    refleksiModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  };
+
+  window.simpanRefleksiRepang = function() {
+    const btn = document.getElementById('repangSimpanBtn');
+    btn.textContent = '✅ Tersimpan!';
+    btn.style.background = '#16a34a';
+    setTimeout(() => { btn.textContent = 'Simpan ✓'; btn.style.background = ''; }, 2000);
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     FITUR 2 – TULIS INISIALMU
+     ══════════════════════════════════════════════════════════ */
+  const inisialModal = document.getElementById('inisialModal');
+  const KAL_WEIGHTS = [128, 64, 32, 16, 8, 4, 2, 1];
+
+  window.openInisialModal = function() {
+    document.getElementById('inisialInput').value = '';
+    document.getElementById('inisialResult').innerHTML = '';
+    inisialModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeInisialModal = function() {
+    inisialModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  };
+  window.renderInisial = function() {
+    const raw = document.getElementById('inisialInput').value.toUpperCase().replace(/[^A-Z0-9 ]/g,'').slice(0,4);
+    if (!raw) { document.getElementById('inisialResult').innerHTML = '<p style="color:#dc2626; font-weight:700;">Masukkan huruf terlebih dahulu!</p>'; return; }
+    document.getElementById('inisialResult').innerHTML = raw.split('').map(ch => {
+      const code = ch.charCodeAt(0);
+      const bits = KAL_WEIGHTS.map(w => (code & w) ? 1 : 0);
+      const bitsStr = bits.join(' ');
+      return `<div style="margin-bottom:14px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:14px; padding:14px;">
+        <div style="font-size:28px; font-weight:900; color:#4f46e5; margin-bottom:6px;">"${ch}"</div>
+        <div style="font-family:monospace; font-size:18px; font-weight:700; color:#0f172a; letter-spacing:4px; margin-bottom:6px;">${bitsStr}</div>
+        <div style="font-size:13px; color:#64748b;">Desimal: <strong>${code}</strong> | ASCII ke-${code}</div>
+        <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+          ${KAL_WEIGHTS.map((w, i) => `<div style="background:${bits[i] ? '#4f46e5' : '#e2e8f0'};color:${bits[i] ? 'white' : '#94a3b8'};border-radius:8px;width:36px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:14px;">
+            <span style="font-size:8px;font-weight:700;opacity:.7;">${w}</span>${bits[i]}
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     FITUR 3 – KALKULATOR NILAI BIT
+     ══════════════════════════════════════════════════════════ */
+  const kalkulatorBitModal = document.getElementById('kalkulatorBitModal');
+  let kalBits = [0,0,0,0,0,0,0,0];
+
+  window.openKalkulatorBitModal = function() {
+    kalBits = [0,0,0,0,0,0,0,0];
+    renderKalBitGrid();
+    kalkulatorBitModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeKalkulatorBitModal = function() {
+    kalkulatorBitModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  };
+  function renderKalBitGrid() {
+    const grid = document.getElementById('kalBitGrid');
+    grid.innerHTML = KAL_WEIGHTS.map((w, i) => `
+      <div class="kal-bit-cell ${kalBits[i] ? 'on' : ''}" onclick="toggleKalBit(${i})">
+        <span class="kal-bit-pos">bit ${7-i}</span>
+        <span class="kal-bit-val">${kalBits[i]}</span>
+        <span class="kal-bit-pw">×${w}</span>
+      </div>`).join('');
+    const active = KAL_WEIGHTS.filter((w,i) => kalBits[i]);
+    const total = active.reduce((s,w) => s+w, 0);
+    document.getElementById('kalBitTotal').textContent = total;
+    document.getElementById('kalBitEquation').textContent =
+      active.length ? active.join(' + ') + ' = ' + total : '(semua bit 0)';
+  }
+  window.toggleKalBit = function(i) {
+    kalBits[i] = kalBits[i] ? 0 : 1;
+    renderKalBitGrid();
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     FITUR 4 – DETEKTIF 1-BIT ERROR
+     ══════════════════════════════════════════════════════════ */
+  const detektif1BitModal = document.getElementById('detektif1BitModal');
+  const D1B_CHALLENGES = [
+    { correctChar: 'A', correctCode: 65 },
+    { correctChar: 'Z', correctCode: 90 },
+    { correctChar: 'M', correctCode: 77 },
+  ];
+  let d1bIdx = 0;
+  let d1bBits = [];
+  let d1bFlippedBit = -1;
+  let d1bAnswered = false;
+
+  window.openDetektif1BitModal = function() {
+    d1bIdx = 0; d1bAnswered = false;
+    renderD1B();
+    detektif1BitModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeDetektif1BitModal = function() {
+    detektif1BitModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  };
+  function renderD1B() {
+    d1bAnswered = false;
+    document.getElementById('nextD1BBtn').classList.add('hidden');
+    document.getElementById('d1bFeedback').style.display = 'none';
+    const ch = D1B_CHALLENGES[d1bIdx];
+    document.getElementById('d1bProg').textContent = `Tantangan ${d1bIdx+1} / ${D1B_CHALLENGES.length}`;
+    document.getElementById('d1bChar').textContent = ch.correctChar;
+    d1bFlippedBit = Math.floor(Math.random() * 8);
+    d1bBits = KAL_WEIGHTS.map((w, i) => {
+      let b = (ch.correctCode & w) ? 1 : 0;
+      if (i === d1bFlippedBit) b = 1 - b;
+      return b;
+    });
+    const currentVal = d1bBits.reduce((s,b,i) => s + b * KAL_WEIGHTS[i], 0);
+    document.getElementById('d1bCurrentChar').textContent =
+      currentVal >= 32 && currentVal <= 126 ? String.fromCharCode(currentVal) : '(' + currentVal + ')';
+    document.getElementById('d1bGrid').innerHTML = d1bBits.map((b, i) =>
+      `<div class="d1b-cell ${b ? 'bit1' : 'bit0'}" id="d1bc_${i}" onclick="checkD1Bit(${i})">
+        <span>${b}</span>
+        <span class="d1b-pos">${KAL_WEIGHTS[i]}</span>
+      </div>`).join('');
+  }
+  window.checkD1Bit = function(i) {
+    if (d1bAnswered) return;
+    d1bAnswered = true;
+    const ch = D1B_CHALLENGES[d1bIdx];
+    const fb = document.getElementById('d1bFeedback');
+    fb.style.display = 'block';
+    if (i === d1bFlippedBit) {
+      document.getElementById(`d1bc_${i}`).classList.add('correct-flip');
+      fb.style.background = '#f0fdf4'; fb.style.color = '#15803d'; fb.style.border = '2px solid #22c55e';
+      fb.textContent = `✅ Tepat! Bit ke-${i} (nilai ${KAL_WEIGHTS[i]}) yang terbalik. Kode benar: ${ch.correctCode} = "${ch.correctChar}".`;
+    } else {
+      document.getElementById(`d1bc_${i}`).classList.add('wrong-flip');
+      document.getElementById(`d1bc_${d1bFlippedBit}`).classList.add('correct-flip');
+      fb.style.background = '#fef2f2'; fb.style.color = '#dc2626'; fb.style.border = '2px solid #ef4444';
+      fb.textContent = `❌ Bukan itu. Yang terbalik adalah bit ke-${d1bFlippedBit} (nilai ${KAL_WEIGHTS[d1bFlippedBit]}).`;
+    }
+    if (d1bIdx < D1B_CHALLENGES.length - 1) document.getElementById('nextD1BBtn').classList.remove('hidden');
+  };
+  window.nextDetektif1Bit = function() {
+    d1bIdx++;
+    if (d1bIdx < D1B_CHALLENGES.length) renderD1B();
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     FITUR 5 – PERBANDINGAN 3 REPRESENTASI
+     ══════════════════════════════════════════════════════════ */
+  const perbandinganModal = document.getElementById('perbandinganModal');
+
+  window.openPerbandinganModal = function() {
+    document.getElementById('perbInput').value = '65';
+    renderPerbandingan();
+    perbandinganModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closePerbandinganModal = function() {
+    perbandinganModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  };
+  window.renderPerbandingan = function() {
+    let n = parseInt(document.getElementById('perbInput').value, 10);
+    if (isNaN(n) || n < 0) n = 0;
+    if (n > 255) n = 255;
+    document.getElementById('perbInput').value = n;
+    const bin = n.toString(2).padStart(8, '0');
+    const oct = n.toString(8).padStart(3, '0');
+    const hex = n.toString(16).toUpperCase().padStart(2, '0');
+    const ascii = n >= 32 && n <= 126 ? `"${String.fromCharCode(n)}"` : n < 32 ? '(karakter kontrol)' : '(tidak tercetak)';
+    document.getElementById('perbResult').innerHTML = `
+      <div class="perb-card"><span class="perb-label" style="color:#4f46e5;">Biner</span><div><div class="perb-value" style="color:#4f46e5;">${bin.split('').join(' ')}</div><div class="perb-note">Basis 2 — hanya 0 dan 1</div></div></div>
+      <div class="perb-card"><span class="perb-label" style="color:#0369a1;">Desimal</span><div><div class="perb-value" style="color:#0369a1;">${n}</div><div class="perb-note">Basis 10 — yang kita gunakan sehari-hari</div></div></div>
+      <div class="perb-card"><span class="perb-label" style="color:#d97706;">Oktal</span><div><div class="perb-value" style="color:#d97706;">${oct}</div><div class="perb-note">Basis 8 — digunakan di sistem Unix/Linux</div></div></div>
+      <div class="perb-card"><span class="perb-label" style="color:#dc2626;">Heksadesimal</span><div><div class="perb-value" style="color:#dc2626;">${hex}</div><div class="perb-note">Basis 16 — kode warna CSS, alamat memori</div></div></div>
+      <div class="perb-card"><span class="perb-label" style="color:#059669;">ASCII</span><div><div class="perb-value" style="color:#059669;">${ascii}</div><div class="perb-note">Karakter yang mewakili nilai ${n}</div></div></div>`;
+  };
 
   // INIT
   loadReadFlags();
