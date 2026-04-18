@@ -335,18 +335,20 @@ body {
 .hero-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 780px; }
 .menu-btn {
   display: flex; width: 100%; height: 92px; border-radius: 20px;
-  overflow: hidden; border: none; padding: 0; cursor: pointer; text-align: left;
+  border: none; padding: 0; cursor: pointer; text-align: left;
   box-shadow: 0 8px 0 rgba(0,0,0,0.25); transition: all .15s ease;
 }
 .menu-btn:active { transform: translateY(8px); box-shadow: 0 0 0 rgba(0,0,0,0.25); }
 .menu-btn-icon {
   width: 96px; display: flex; align-items: center; justify-content: center;
   background: #3f3f46; color: white; flex-shrink: 0;
+  border-radius: 20px 0 0 20px;
 }
 .menu-btn-label {
   flex: 1; display: flex; align-items: center; justify-content: center;
   color: white; font-weight: 900; font-size: 22px; text-transform: uppercase;
-  text-align: center; padding: 0 10px; line-height: 1.15;
+  text-align: center; padding: 0 12px; line-height: 1.15;
+  border-radius: 0 20px 20px 0; position: relative;
 }
 
 /* ── Hero Card ───────────────────────────────────────────── */
@@ -984,4 +986,83 @@ body {
   #sertifikatModal { position: static !important; background: none !important; display: block !important; padding: 0 !important; }
   #sertifikatModal .modal-card { box-shadow: none !important; border: 2px solid #2563eb !important; max-height: none !important; }
   .cert-no-print { display: none !important; }
+}
+
+/* Read-check badge */
+.read-check {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%) scale(0.5);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; background: #22c55e; color: white;
+  border-radius: 50%; font-size: 12px; font-weight: bold;
+  opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+}
+.read-check.visible { opacity: 1; transform: translateY(-50%) scale(1); }
+
+/* ── Fitur Baru: Detektif Kode, Prediksi, Kuis Variabel, Visualisasi, Refleksi Interaktif ── */
+.refleksi-textarea {
+  width: 100%; min-height: 80px;
+  border: 2px solid #c7d2fe; border-radius: 12px;
+  padding: 10px 14px; font-size: 15px;
+  font-family: inherit; resize: vertical;
+  background: #f5f3ff; color: #1e1b4b;
+  transition: border-color 0.2s;
+}
+.refleksi-textarea:focus { outline: none; border-color: #6366f1; }
+
+.detektif-kode-block {
+  background: #1e293b; color: #e2e8f0;
+  border-radius: 12px; padding: 16px; font-family: monospace;
+  font-size: 14px; line-height: 1.8; margin-bottom: 12px;
+}
+.detektif-kode-line {
+  display: block; padding: 2px 8px; border-radius: 6px;
+  cursor: pointer; transition: background 0.15s;
+  border: 2px solid transparent;
+}
+.detektif-kode-line:hover { background: #334155; }
+.detektif-kode-line.selected-bug { border-color: #f59e0b; background: #451a03; }
+.detektif-kode-line.correct-bug { border-color: #22c55e; background: #052e16 !important; }
+.detektif-kode-line.wrong-bug  { border-color: #ef4444; background: #450a0a; animation: shake 0.3s; }
+
+.prediksi-input {
+  width: 100%; min-height: 70px;
+  border: 2px solid #86efac; border-radius: 12px;
+  padding: 10px 14px; font-size: 14px; font-family: monospace;
+  background: #052e16; color: #bbf7d0; resize: vertical;
+  transition: border-color 0.2s;
+}
+.prediksi-input:focus { outline: none; border-color: #4ade80; }
+.prediksi-result { border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 15px; line-height: 1.7; }
+.prediksi-result.benar { background: #f0fdf4; border: 2px solid #22c55e; color: #14532d; }
+.prediksi-result.salah { background: #fef2f2; border: 2px solid #ef4444; color: #7f1d1d; }
+
+.kuis-var-option {
+  display: block; width: 100%; text-align: left;
+  background: #f1f5f9; border: 2px solid #cbd5e1;
+  border-radius: 12px; padding: 12px 18px;
+  font-size: 16px; font-family: monospace; color: #0f172a;
+  cursor: pointer; margin-bottom: 8px; transition: all 0.15s;
+}
+.kuis-var-option:hover { background: #e0e7ff; border-color: #818cf8; }
+.kuis-var-option.benar { background: #f0fdf4 !important; border-color: #22c55e !important; color: #14532d; }
+.kuis-var-option.salah { background: #fef2f2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+.vis-bar-wrap { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin: 16px 0; justify-content: center; }
+.vis-bar {
+  width: 48px; border-radius: 8px 8px 0 0;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-end; padding-bottom: 4px;
+  font-size: 11px; font-weight: bold; color: white;
+  transition: all 0.4s;
+  background: #6366f1;
+}
+.vis-bar.current { background: #f59e0b; transform: scaleY(1.05); }
+.vis-bar.max-found { background: #22c55e; }
+.vis-bar-label { font-size: 10px; color: #64748b; text-align: center; margin-top: 2px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
 }

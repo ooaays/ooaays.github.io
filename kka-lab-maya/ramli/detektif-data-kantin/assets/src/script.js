@@ -372,8 +372,15 @@ function closeModal(id) {
 /* ────────────────────────────────────────────────────────── */
 /*  TUJUAN MODAL                                              */
 /* ────────────────────────────────────────────────────────── */
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
+
 function openTujuanModal() {
   hasSeenTujuan = true;
+  try { sessionStorage.setItem('detektif_tujuanRead', 'true'); } catch(e){}
+  setCheckVisible('check-tujuan', true);
   checkStartButtonState();
   openModal('tujuanModal');
 }
@@ -383,6 +390,8 @@ function openTujuanModal() {
 /* ────────────────────────────────────────────────────────── */
 function openCaraModal() {
   hasSeenCara = true;
+  try { sessionStorage.setItem('detektif_caraRead', 'true'); } catch(e){}
+  setCheckVisible('check-cara', true);
   checkStartButtonState();
   currentCaraSlide = 0;
   updateCaraSlideView();
@@ -984,5 +993,311 @@ document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'G') { e.preventDefault(); toggleGuruMode(); }
 });
 
+/* ══════════════════════════════════════════════════════════
+   FITUR 1 – REFLEKSI INTERAKTIF
+   ══════════════════════════════════════════════════════════ */
+const REFLEKSI_QS = [
+  { q: 'Mengapa data mentah perlu dipisahkan ke dalam list yang berbeda?', ph: 'Contoh: jika nama produk dan harga dicampur, Python tidak bisa tahu mana yang merupakan nama dan mana angka. Coba jelaskan dengan caramu sendiri...' },
+  { q: 'Apa yang terjadi jika kita langsung pakai data campur tanpa dipisahkan?', ph: 'Contoh: max(["Pensil", 5000, "Buku", 12000]) — Python akan bingung membandingkan teks dengan angka. Apa lagi yang mungkin terjadi?' },
+  { q: 'Sebutkan satu contoh situasi di kehidupan nyata di mana kamu perlu memilah data!', ph: 'Contoh: di laporan nilai sekolah, nama siswa dan nilai angka disimpan terpisah agar mudah dihitung rata-rata. Kamu bisa cari contoh lain?' },
+  { q: 'Fungsi Python mana yang paling berguna menurutmu, dan mengapa?', ph: 'Contoh: "for sangat berguna karena bisa memproses 100 data tanpa harus menulis 100 baris kode." — Pilihanmu: max(), if, for, atau zip()? Jelaskan!' },
+];
+
+function openRefleksiInteraktif() {
+  const list = document.getElementById('refleksiQList');
+  list.innerHTML = REFLEKSI_QS.map((item, i) => `
+    <div>
+      <label class="block text-slate-800 font-bold mb-2">${i+1}. ${item.q}</label>
+      <textarea class="refleksi-textarea" id="rq_${i}" placeholder="${item.ph}"></textarea>
+    </div>`).join('');
+  document.getElementById('simpanRefleksiBtn').textContent = 'Simpan Refleksi ✓';
+  openModal('refleksiModal');
+}
+
+function simpanRefleksiDetektif() {
+  const btn = document.getElementById('simpanRefleksiBtn');
+  btn.textContent = '✅ Tersimpan!';
+  btn.style.background = '#16a34a';
+  setTimeout(() => { btn.textContent = 'Simpan Refleksi ✓'; btn.style.background = ''; }, 2000);
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 2 – DETEKTIF KODE
+   ══════════════════════════════════════════════════════════ */
+const DETEKTIF_KODE_DATA = [
+  {
+    desc: 'Kode ini seharusnya menampilkan daftar harga. Klik baris yang salah!',
+    lines: [
+      'harga = [5000, 12000, 80000, 150000, 25000]',
+      'print("Harga tertinggi:", max(data_produk))',
+      'print("Data siap diproses")',
+    ],
+    bugLine: 1,
+    explain: 'Baris ke-2 salah: max() harus dipanggil dengan list harga, bukan data_produk!',
+  },
+  {
+    desc: 'Kode ini seharusnya menyaring produk mahal. Klik baris yang salah!',
+    lines: [
+      'harga = [5000, 12000, 80000]',
+      'for h in harga:',
+      '    if h > 10000',
+      '        print("Mahal:", h)',
+    ],
+    bugLine: 2,
+    explain: 'Baris ke-3 salah: kondisi if harus diakhiri tanda titik dua (:) — "if h > 10000:"',
+  },
+  {
+    desc: 'Kode ini seharusnya menampilkan semua produk dan harganya. Klik baris yang salah!',
+    lines: [
+      'produk = ["Pensil", "Buku", "Tas"]',
+      'harga  = [5000, 12000, 80000]',
+      'for nama, harga in zip(produk, harga):',
+      '    print(produk, "=", harga)',
+    ],
+    bugLine: 3,
+    explain: 'Baris ke-4 salah: variabel loop adalah nama (bukan produk), jadi harus print(nama, "=", harga)',
+  },
+];
+
+let dkIdx = 0;
+let dkAnswered = false;
+
+function openDetektifKode() {
+  dkIdx = 0; dkAnswered = false;
+  renderDetektifKode();
+  openModal('detektifKodeModal');
+}
+
+function renderDetektifKode() {
+  const d = DETEKTIF_KODE_DATA[dkIdx];
+  document.getElementById('detektifKodeDesc').textContent = d.desc;
+  document.getElementById('detektifKodeFeedback').className = 'mt-3 text-base font-semibold hidden';
+  document.getElementById('nextDetektifKodeBtn').classList.add('hidden');
+  document.getElementById('detektifKodeProg').textContent = `Tantangan ${dkIdx+1} / ${DETEKTIF_KODE_DATA.length}`;
+  dkAnswered = false;
+  document.getElementById('detektifKodeBody').innerHTML = `
+    <div class="detektif-kode-block">${d.lines.map((l, i) =>
+      `<span class="detektif-kode-line" onclick="checkDetektifLine(${i})" data-line="${i}">${i+1}&nbsp;&nbsp;${escapeHtml(l)}</span>`
+    ).join('')}</div>`;
+}
+
+function checkDetektifLine(i) {
+  if (dkAnswered) return;
+  dkAnswered = true;
+  const d = DETEKTIF_KODE_DATA[dkIdx];
+  const lines = document.querySelectorAll('.detektif-kode-line');
+  const fb = document.getElementById('detektifKodeFeedback');
+  if (i === d.bugLine) {
+    lines[i].classList.add('correct-bug');
+    fb.textContent = '✅ Tepat! ' + d.explain;
+    fb.className = 'mt-3 text-base font-semibold text-green-700';
+  } else {
+    lines[i].classList.add('wrong-bug');
+    lines[d.bugLine].classList.add('correct-bug');
+    fb.textContent = '❌ Belum tepat. ' + d.explain;
+    fb.className = 'mt-3 text-base font-semibold text-red-700';
+  }
+  if (dkIdx < DETEKTIF_KODE_DATA.length - 1) document.getElementById('nextDetektifKodeBtn').classList.remove('hidden');
+}
+
+function nextDetektifKode() {
+  dkIdx++;
+  if (dkIdx < DETEKTIF_KODE_DATA.length) renderDetektifKode();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 3 – PREDIKSI OUTPUT
+   ══════════════════════════════════════════════════════════ */
+const PREDIKSI_DATA = [
+  {
+    desc: 'Apa yang akan tercetak jika kode ini dijalankan?',
+    code: 'harga = [5000, 12000, 80000]\nprint(max(harga))',
+    answer: '80000',
+    hint: 'max() mengembalikan nilai terbesar dari list.',
+  },
+  {
+    desc: 'Apa yang akan tercetak jika kode ini dijalankan?',
+    code: 'produk = ["Pensil", "Buku", "Tas"]\nprint(len(produk))',
+    answer: '3',
+    hint: 'len() mengembalikan jumlah elemen dalam list.',
+  },
+  {
+    desc: 'Berapa baris output yang muncul?',
+    code: 'harga = [5000, 80000, 25000]\nfor h in harga:\n    if h > 10000:\n        print(h)',
+    answer: '2',
+    hint: '80000 dan 25000 lebih besar dari 10000 — jadi 2 baris.',
+  },
+];
+
+let prIdx = 0;
+
+function openPrediksiOutput() {
+  prIdx = 0;
+  renderPrediksi();
+  openModal('prediksiModal');
+}
+
+function renderPrediksi() {
+  const d = PREDIKSI_DATA[prIdx];
+  document.getElementById('prediksiDesc').textContent = d.desc;
+  document.getElementById('prediksiCodeBlock').textContent = d.code;
+  document.getElementById('prediksiInput').value = '';
+  document.getElementById('prediksiResult').style.display = 'none';
+  document.getElementById('nextPrediksiBtn').classList.add('hidden');
+  document.getElementById('prediksiProg').textContent = `Soal ${prIdx+1} / ${PREDIKSI_DATA.length}`;
+}
+
+function cekPrediksi() {
+  const d = PREDIKSI_DATA[prIdx];
+  const jawaban = document.getElementById('prediksiInput').value.trim();
+  const res = document.getElementById('prediksiResult');
+  res.style.display = 'block';
+  if (jawaban === d.answer) {
+    res.className = 'prediksi-result benar';
+    res.innerHTML = `✅ <strong>Tepat!</strong> Outputnya memang <code>${d.answer}</code>. ${d.hint}`;
+  } else {
+    res.className = 'prediksi-result salah';
+    res.innerHTML = `❌ <strong>Belum tepat.</strong> Output yang benar: <code>${d.answer}</code>. ${d.hint}`;
+  }
+  if (prIdx < PREDIKSI_DATA.length - 1) document.getElementById('nextPrediksiBtn').classList.remove('hidden');
+}
+
+function nextPrediksi() {
+  prIdx++;
+  if (prIdx < PREDIKSI_DATA.length) renderPrediksi();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 4 – KUIS NILAI VARIABEL
+   ══════════════════════════════════════════════════════════ */
+const KUIS_VAR_DATA = [
+  {
+    code: 'harga = [5000, 12000, 80000]\ntertinggi = max(harga)',
+    q: 'Nilai variabel <code>tertinggi</code> setelah kode ini adalah…',
+    opts: ['5000', '12000', '80000', 'max(harga)'],
+    correct: 2,
+    explain: 'max([5000, 12000, 80000]) mengembalikan 80000.',
+  },
+  {
+    code: 'produk = ["Pensil", "Buku", "Tas"]\njumlah = len(produk)',
+    q: 'Nilai variabel <code>jumlah</code> adalah…',
+    opts: ['1', '2', '3', '4'],
+    correct: 2,
+    explain: 'List produk punya 3 elemen, jadi len() = 3.',
+  },
+  {
+    code: 'x = 10\ny = x * 2 + 5',
+    q: 'Nilai variabel <code>y</code> adalah…',
+    opts: ['15', '20', '25', '30'],
+    correct: 2,
+    explain: '10 × 2 = 20, lalu 20 + 5 = 25.',
+  },
+];
+
+let kvIdx = 0;
+let kvAnswered = false;
+
+function openKuisVariabel() {
+  kvIdx = 0; kvAnswered = false;
+  renderKuisVar();
+  openModal('kuisVariabelModal');
+}
+
+function renderKuisVar() {
+  kvAnswered = false;
+  document.getElementById('nextKuisVarBtn').classList.add('hidden');
+  const d = KUIS_VAR_DATA[kvIdx];
+  document.getElementById('kuisVarProg').textContent = `Soal ${kvIdx+1} / ${KUIS_VAR_DATA.length}`;
+  document.getElementById('kuisVarBody').innerHTML = `
+    <div class="detektif-kode-block mb-4" style="cursor:default;">${escapeHtml(d.code)}</div>
+    <p class="text-slate-800 font-bold text-lg mb-3">${d.q}</p>
+    ${d.opts.map((o, i) => `<button class="kuis-var-option" onclick="answerKuisVar(${i})" id="kvo_${i}">${o}</button>`).join('')}
+    <div id="kvFeedback" class="mt-3 text-base font-semibold hidden"></div>`;
+}
+
+function answerKuisVar(i) {
+  if (kvAnswered) return;
+  kvAnswered = true;
+  const d = KUIS_VAR_DATA[kvIdx];
+  const fb = document.getElementById('kvFeedback');
+  const btns = document.querySelectorAll('.kuis-var-option');
+  btns[d.correct].classList.add('benar');
+  if (i === d.correct) {
+    fb.textContent = '✅ Benar! ' + d.explain;
+    fb.className = 'mt-3 text-base font-semibold text-green-700';
+  } else {
+    btns[i].classList.add('salah');
+    fb.textContent = '❌ Belum tepat. ' + d.explain;
+    fb.className = 'mt-3 text-base font-semibold text-red-700';
+  }
+  fb.classList.remove('hidden');
+  if (kvIdx < KUIS_VAR_DATA.length - 1) document.getElementById('nextKuisVarBtn').classList.remove('hidden');
+}
+
+function nextKuisVar() {
+  kvIdx++;
+  if (kvIdx < KUIS_VAR_DATA.length) renderKuisVar();
+}
+
+/* ══════════════════════════════════════════════════════════
+   FITUR 5 – VISUALISASI MAX
+   ══════════════════════════════════════════════════════════ */
+const VIS_DATA = [5000, 12000, 80000, 150000, 25000];
+const VIS_LABELS = ['Pensil', 'Buku', 'Tas', 'Sepatu', 'Botol'];
+let visTimerId = null;
+
+function openVisualisasiMax() {
+  resetVisualisasi();
+  openModal('visualisasiMaxModal');
+}
+
+function resetVisualisasi() {
+  if (visTimerId) { clearTimeout(visTimerId); visTimerId = null; }
+  document.getElementById('visStatus').textContent = '';
+  document.getElementById('visStartBtn').disabled = false;
+  renderVisBars(-1, -1);
+}
+
+function renderVisBars(currentIdx, maxIdx) {
+  const maxVal = Math.max(...VIS_DATA);
+  const wrap = document.getElementById('visBars');
+  const lblWrap = document.getElementById('visLabels');
+  wrap.innerHTML = VIS_DATA.map((v, i) => {
+    const h = Math.round((v / maxVal) * 100);
+    let cls = 'vis-bar';
+    if (i === currentIdx) cls += ' current';
+    else if (i === maxIdx && maxIdx !== -1) cls += ' max-found';
+    return `<div class="${cls}" style="height:${h}px;"><span>${v >= 10000 ? Math.round(v/1000)+'rb' : v}</span></div>`;
+  }).join('');
+  lblWrap.innerHTML = VIS_DATA.map((v, i) =>
+    `<div class="vis-bar-label" style="width:48px;">${VIS_LABELS[i]}</div>`
+  ).join('');
+}
+
+function startVisualisasi() {
+  document.getElementById('visStartBtn').disabled = true;
+  let curMax = VIS_DATA[0];
+  let curMaxIdx = 0;
+  let step = 0;
+  function tick() {
+    if (step >= VIS_DATA.length) {
+      renderVisBars(-1, curMaxIdx);
+      document.getElementById('visStatus').textContent = `✅ Nilai terbesar: ${curMax} (${VIS_LABELS[curMaxIdx]})`;
+      return;
+    }
+    if (VIS_DATA[step] > curMax) { curMax = VIS_DATA[step]; curMaxIdx = step; }
+    renderVisBars(step, curMaxIdx);
+    document.getElementById('visStatus').textContent = `Memeriksa ${VIS_LABELS[step]} (${VIS_DATA[step]}) — max sekarang: ${curMax}`;
+    step++;
+    visTimerId = setTimeout(tick, 800);
+  }
+  tick();
+}
+
 /* ── Boot ─────────────────────────────────────────────────── */
+try {
+  if (sessionStorage.getItem('detektif_tujuanRead') === 'true') { hasSeenTujuan = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('detektif_caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  checkStartButtonState();
+} catch(e) {}
 renderAll();
