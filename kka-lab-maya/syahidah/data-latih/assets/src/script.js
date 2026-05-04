@@ -173,15 +173,39 @@ function updateSlideView(){
     if (slides[currentSlide]) slides[currentSlide].classList.remove('hidden-slide');
     const activeDot = document.getElementById('dot-' + currentSlide);
     if (activeDot) { activeDot.classList.remove('bg-slate-300', 'w-3'); activeDot.classList.add('bg-orange-500', 'w-8'); }
-    document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
-    document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+    
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    
+    if (currentSlide === 0) {
+        prevBtn.style.visibility = 'hidden';
+        prevBtn.style.pointerEvents = 'none';
+    } else {
+        prevBtn.style.visibility = 'visible';
+        prevBtn.style.pointerEvents = 'auto';
+    }
+    
+    if (currentSlide === totalSlides - 1) {
+        nextBtn.style.visibility = 'hidden';
+        nextBtn.style.pointerEvents = 'none';
+    } else {
+        nextBtn.style.visibility = 'visible';
+        nextBtn.style.pointerEvents = 'auto';
+    }
     
     // Tombol tutup: muncul di slide terakhir jika pertama kali, atau di semua slide jika sudah pernah dibuka
-    const closeBtn = document.getElementById('closeBtn');
     if (hasSeenCaraFully) {
         closeBtn.style.visibility = 'visible';
+        closeBtn.style.pointerEvents = 'auto';
     } else {
-        closeBtn.style.visibility = currentSlide === totalSlides - 1 ? 'visible' : 'hidden';
+        if (currentSlide === totalSlides - 1) {
+            closeBtn.style.visibility = 'visible';
+            closeBtn.style.pointerEvents = 'auto';
+        } else {
+            closeBtn.style.visibility = 'hidden';
+            closeBtn.style.pointerEvents = 'none';
+        }
     }
 }
 
