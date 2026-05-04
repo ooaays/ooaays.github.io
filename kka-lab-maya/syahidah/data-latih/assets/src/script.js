@@ -72,6 +72,8 @@ function openCPModal(){
     checkStartButtonState();
     document.getElementById("cpModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
+    try { sessionStorage.setItem('detektif_tujuanRead', 'true'); } catch(e){}
+    setCheckVisible('check-tujuan', true);
 }
 
 function closeCPModal(){
