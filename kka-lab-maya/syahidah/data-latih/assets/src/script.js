@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   let tujuanRead = false;
   let caraRead = false;
+  let hasSeenCaraFully = false;
 
   window.openCPModal = function(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
   window.closeCPModal = function(){
@@ -114,6 +115,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
   loadReadFlags();
 
+});
+
   window.tryOpenLabPage = function(){
     const btn = document.getElementById('btn-start');
     if(btn && btn.classList.contains('disabled-style')){
@@ -124,10 +127,8 @@ document.addEventListener('DOMContentLoaded', function(){
     openIntroModal();
   }
 
-function closeIntroModal() {
-    document.getElementById('introModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
+  window.openIntroModal = function(){ document.getElementById('introModal').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+  window.closeIntroModal = function(){ document.getElementById('introModal').classList.add('hidden'); document.body.style.overflow='auto'; }
 
     function speakText(text) {
         if (!soundEnabled || !('speechSynthesis' in window)) return;
@@ -141,18 +142,7 @@ function closeIntroModal() {
 
     // ================= MODAL CONTROL =================
 
-// TUJUAN PEMBELAJARAN
-function openCPModal(){
-    hasSeenCP = true;
-    checkStartButtonState();
-    document.getElementById("cpModal").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-}
-
-function closeCPModal(){
-    document.getElementById("cpModal").classList.add("hidden");
-    document.body.style.overflow = "auto";
-}
+// TUJUAN PEMBELAJARAN sudah di atas
 
 // CARA PENGGUNAAN sudah di atas
 
@@ -199,7 +189,6 @@ function updateSlideView(){
 // ==============================================
 // SCRIPT MODAL BIODATA PENGEMBANG
 // ==============================================
-const bioModal = document.getElementById('bioModal');
 let bioCurrentSlide = 0;
 const bioTotalSlides = 2;
 
@@ -312,7 +301,7 @@ const trainingLib = {
         let isTrained = false;
 
         window.onload = () => {
-            checkStartButtonState();
+            tryEnableStart();
             addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
         };
 
