@@ -144,9 +144,12 @@ function updateDots(){
 function updateButtons(){
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
+    const closeBtn = document.getElementById("closeBtn");
 
     prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
     nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
+    closeBtn.style.visibility = currentSlide === totalSlides - 1 ? "visible" : "hidden";
+
 }
 
 
