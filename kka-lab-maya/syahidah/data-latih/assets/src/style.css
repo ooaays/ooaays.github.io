@@ -352,3 +352,26 @@ body {
     flex: 1;
     min-width: 60px;
 }
+
+/* READ CHECK STYLES */
+.read-check {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: #16a34a;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.read-check.visible {
+    display: flex;
+}
+}

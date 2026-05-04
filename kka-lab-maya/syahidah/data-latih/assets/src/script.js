@@ -1,53 +1,128 @@
 
-let soundEnabled = false;
-let hasSeenIntro = false;
-let hasSeenCP = false;
-let hasSeenCara = false;
+// Main script moved from inline <script>
+document.addEventListener('DOMContentLoaded', function(){
+  // =========================
+  // PAGE SWITCH
+  // =========================
+  window.showPage = function(id){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-function tryOpenLabPage() {
-    if (!hasSeenCP || !hasSeenCara) {
-        const lockedPopup = document.getElementById("lockedPopup");
-        if (lockedPopup) lockedPopup.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-        return;
+  // =========================
+  // MODALS + Locking logic
+  // =========================
+  const cpModal = document.getElementById('cpModal');
+  const bioModal = document.getElementById('bioModal');
+  const refleksiModal = document.getElementById('refleksiModal');
+  const caraModal = document.getElementById('caraModal');
+
+  let tujuanRead = false;
+  let caraRead = false;
+
+  window.openCPModal = function(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+  window.closeCPModal = function(){
+    cpModal.classList.add('hidden');
+    document.body.style.overflow='auto';
+    tujuanRead = true;
+    tryEnableStart();
+    try { sessionStorage.setItem('datalatih_tujuanRead', 'true'); } catch(e){}
+    setCheckVisible('check-tujuan', true);
+  }
+
+  let currentBioSlide = 0;
+
+  window.openBioModal = function(){ bioModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+  window.closeBioModal = function(){
+    bioModal.classList.add('hidden');
+    document.body.style.overflow='auto';
+    // reset ke slide pertama
+    currentBioSlide = 0;
+    document.querySelectorAll('.bio-slide').forEach((s,i) => s.classList.toggle('hidden', i !== 0));
+    const prev = document.getElementById('bioPrevBtn');
+    const next = document.getElementById('bioNextBtn');
+    if(prev) prev.style.visibility = 'hidden';
+    if(next) next.style.visibility = 'visible';
+  }
+
+  window.changeBioSlide = function(direction){
+    const slides = document.querySelectorAll('.bio-slide');
+    currentBioSlide = Math.max(0, Math.min(slides.length - 1, currentBioSlide + direction));
+    slides.forEach((s, i) => s.classList.toggle('hidden', i !== currentBioSlide));
+    const prev = document.getElementById('bioPrevBtn');
+    const next = document.getElementById('bioNextBtn');
+    if(prev) prev.style.visibility = currentBioSlide === 0 ? 'hidden' : 'visible';
+    if(next) next.style.visibility = currentBioSlide === slides.length - 1 ? 'hidden' : 'visible';
+  }
+
+  window.openRefleksiModal = function(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+  window.closeRefleksiModal = function(){ refleksiModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+
+  window.openCaraModal = function(){
+    caraModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    currentSlide = 0;
+    updateSlideView();
+  }
+
+  window.closeCaraModal = function(){
+    caraModal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    caraRead = true;
+    hasSeenCaraFully = true;
+    tryEnableStart();
+    try { 
+      sessionStorage.setItem('datalatih_caraRead', 'true'); 
+      sessionStorage.setItem('datalatih_caraFullyRead', 'true'); 
+    } catch(e){}
+    setCheckVisible('check-cara', true);
+  }
+
+  function tryEnableStart(){
+    const btn = document.getElementById('btn-start');
+    if(!btn) return;
+    if(tujuanRead && caraRead){
+      btn.classList.remove('disabled-style');
+      btn.removeAttribute('aria-disabled');
+      btn.title = 'Mulai percobaan';
+      btn.onclick = function(){ showPage('labPage'); };
+    }
+  }
+
+  // helper to toggle small check badges
+  function setCheckVisible(id, visible){
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(visible) el.classList.add('visible'); else el.classList.remove('visible');
+  }
+
+  // load persisted read flags (if any)
+  function loadReadFlags(){
+    try{
+      const t = sessionStorage.getItem('datalatih_tujuanRead');
+      const c = sessionStorage.getItem('datalatih_caraRead');
+      const f = sessionStorage.getItem('datalatih_caraFullyRead');
+      tujuanRead = t === 'true' || tujuanRead === true;
+      caraRead = c === 'true' || caraRead === true;
+      hasSeenCaraFully = f === 'true' || hasSeenCaraFully === true;
+      setCheckVisible('check-tujuan', tujuanRead);
+      setCheckVisible('check-cara', caraRead);
+      tryEnableStart();
+    }catch(e){ /* ignore storage errors */ }
+  }
+
+  loadReadFlags();
+
+  window.tryOpenLabPage = function(){
+    const btn = document.getElementById('btn-start');
+    if(btn && btn.classList.contains('disabled-style')){
+      openCPModal();
+      return;
     }
     showPage('labPage');
-}
-
-function closeStartLockedPopup() {
-    const lockedPopup = document.getElementById('lockedPopup');
-    if (!lockedPopup) return;
-    lockedPopup.classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-function checkStartButtonState() {
-    const btnStart = document.getElementById('btn-start');
-    if (!btnStart) return;
-
-    if (hasSeenCP && hasSeenCara) {
-        btnStart.classList.remove('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'false');
-        btnStart.title = 'Mulai percobaan';
-    } else {
-        btnStart.classList.add('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'true');
-        btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
-    }
-}
-
-function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const page = document.getElementById(id);
-    if (page) page.classList.add('active');
-    window.scrollTo({ top:0, behavior:"smooth" });
-
-    if (id === 'labPage' && !hasSeenIntro) {
-        hasSeenIntro = true;
-        document.getElementById('introModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-}
+    openIntroModal();
+  }
 
 function closeIntroModal() {
     document.getElementById('introModal').classList.add('hidden');
@@ -79,30 +154,7 @@ function closeCPModal(){
     document.body.style.overflow = "auto";
 }
 
-// CARA PENGGUNAAN
-function openCaraModal(){
-    hasSeenCara = true;
-    checkStartButtonState();
-    document.getElementById("caraModal").classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-
-    // reset ke slide pertama
-    currentSlide = 0;
-
-    for(let i=0;i<totalSlides;i++){
-        document.getElementById("slide-" + i).classList.add("hidden-slide");
-    }
-
-    document.getElementById("slide-0").classList.remove("hidden-slide");
-
-    updateDots();
-    updateButtons();
-}
-
-function closeCaraModal(){
-    document.getElementById("caraModal").classList.add("hidden");
-    document.body.style.overflow = "auto";
-}
+// CARA PENGGUNAAN sudah di atas
 
 
 
@@ -111,42 +163,36 @@ let currentSlide = 0;
 const totalSlides = 4;
 
 function changeSlide(direction){
-    // sembunyikan slide sekarang
-    document.getElementById("slide-" + currentSlide).classList.add("hidden-slide");
-
-    // update index
+    const slides = getCaraSlides();
     currentSlide += direction;
-
-    // batas aman
-    if(currentSlide < 0) currentSlide = 0;
-    if(currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-
-    // tampilkan slide baru
-    document.getElementById("slide-" + currentSlide).classList.remove("hidden-slide");
-
-    updateDots();
-    updateButtons();
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+    updateSlideView();
 }
 
-function updateDots(){
-    for(let i=0;i<totalSlides;i++){
-        const dot = document.getElementById("dot-" + i);
-        if(i === currentSlide){
-            dot.classList.remove("w-3","bg-slate-300");
-            dot.classList.add("w-8","bg-orange-500");
-        }else{
-            dot.classList.remove("w-8","bg-orange-500");
-            dot.classList.add("w-3","bg-slate-300");
-        }
+function getCaraSlides(){ return document.querySelectorAll('.cara-slide'); }
+
+function updateSlideView(){
+    const slides = getCaraSlides();
+    const totalSlides = slides.length;
+    slides.forEach((slide, index) => {
+      slide.classList.add('hidden-slide');
+      const dot = document.getElementById('dot-' + index);
+      if (dot) { dot.classList.remove('bg-orange-500', 'w-8'); dot.classList.add('bg-slate-300', 'w-3'); }
+    });
+    if (slides[currentSlide]) slides[currentSlide].classList.remove('hidden-slide');
+    const activeDot = document.getElementById('dot-' + currentSlide);
+    if (activeDot) { activeDot.classList.remove('bg-slate-300', 'w-3'); activeDot.classList.add('bg-orange-500', 'w-8'); }
+    document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+    document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+    
+    // Tombol tutup: muncul di slide terakhir jika pertama kali, atau di semua slide jika sudah pernah dibuka
+    const closeBtn = document.getElementById('closeBtn');
+    if (hasSeenCaraFully) {
+        closeBtn.style.visibility = 'visible';
+    } else {
+        closeBtn.style.visibility = currentSlide === totalSlides - 1 ? 'visible' : 'hidden';
     }
-}
-
-function updateButtons(){
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
-    nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
 }
 
 
