@@ -63,7 +63,10 @@ function closeIntroModal() {
         utterance.pitch = 1.1;
         window.speechSynthesis.speak(utterance);
     }
-
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
     // ================= MODAL CONTROL =================
 
 // TUJUAN PEMBELAJARAN
@@ -72,7 +75,7 @@ function openCPModal(){
     checkStartButtonState();
     document.getElementById("cpModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
-    try { sessionStorage.setItem('detektif_tujuanRead', 'true'); } catch(e){}
+    try { sessionStorage.setItem('tujuanRead', 'true'); } catch(e){}
     setCheckVisible('check-tujuan', true);
 }
 
@@ -99,6 +102,9 @@ function openCaraModal(){
 
     updateDots();
     updateButtons();
+
+    try { sessionStorage.setItem('caraRead', 'true'); } catch(e){}
+    setCheckVisible('check-cara', true);
 }
 
 function closeCaraModal(){
@@ -446,3 +452,10 @@ const trainingLib = {
                 { cat: 'unknown', matches: [], confidences: confidences } : 
                 { cat: winner, matches: matches[winner], confidences: confidences };
         }
+
+try {
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  checkStartButtonState();
+} catch(e) {}
+r
