@@ -132,7 +132,7 @@
                     </svg>
                 </div>
                 <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2 gap-2">
-                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Pembelajaran</span>
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
                     <span id="check-tujuan" class="read-check hidden">✓</span>
                 </div>
             </button>
@@ -149,7 +149,7 @@
                 </div>
             </button>
 
-            <button id="startButton" onclick="tryStart()" disabled aria-disabled="true" title="Buka Tujuan Pembelajaran dan Cara Penggunaan terlebih dahulu" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-not-allowed pointer-events-none opacity-70 border-none p-0 text-left">
+            <button id="startButton" onclick="tryStart()" disabled aria-disabled="true" title="Buka Tujuan Praktikum dan Cara Penggunaan terlebih dahulu" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-not-allowed pointer-events-none opacity-70 border-none p-0 text-left">
                 <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                         <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
@@ -406,7 +406,7 @@
         <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-3xl w-full shadow-2xl border-4 border-slate-200 flex flex-col">
             <div class="mb-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-black text-slate-900">Belum Bisa Dibuka</h2>
-                <p class="mt-4 text-lg md:text-xl text-slate-600">Tombol "Mulai Percobaan" hanya dapat digunakan setelah kamu membuka Tujuan Pembelajaran dan Cara Penggunaan.</p>
+                <p class="mt-4 text-lg md:text-xl text-slate-600">Tombol "Mulai Percobaan" hanya dapat digunakan setelah kamu membuka Tujuan Praktikum dan Cara Penggunaan.</p>
             </div>
             <div class="flex justify-center">
                 <button onclick="closeLockedModal()" class="bg-[#2bc4eb] hover:bg-[#22a6d6] text-white text-2xl font-bold py-4 px-10 rounded-[20px] shadow-[0_6px_0_#1b7ca0] active:shadow-[0_0px_0_#1b7ca0] active:translate-y-[6px] transition-all">Baik, Saya Mengerti</button>
@@ -532,7 +532,7 @@
                 startButton.classList.remove('cursor-pointer');
                 startButton.disabled = true;
                 startButton.setAttribute('aria-disabled', 'true');
-                startButton.setAttribute('title', 'Buka Tujuan Pembelajaran dan Cara Penggunaan terlebih dahulu');
+                startButton.setAttribute('title', 'Buka Tujuan Praktikum dan Cara Penggunaan terlebih dahulu');
             }
         }
 
