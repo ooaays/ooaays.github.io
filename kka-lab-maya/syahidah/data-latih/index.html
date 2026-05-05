@@ -128,6 +128,11 @@
                         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Data Latih <span class="text-blue-600">KA</span></h1>
                     </div>
                     <div class="flex gap-2">
+                        <!-- Level Toggle -->
+                        <div class="flex bg-gray-100 rounded-lg p-1">
+                            <button id="level-1" onclick="toggleLevel(1)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors active">Level 1</button>
+                            <button id="level-2" onclick="toggleLevel(2)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors">Level 2</button>
+                        </div>
                         <button onclick="fillDemoData()" class="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-bold rounded-xl hover:bg-blue-200 transition-colors"><i class="fa-solid fa-flask-vial mr-1"></i> Muat Data Uji</button>
                         <button onclick="resetAll()" class="px-4 py-2 bg-red-100 text-red-700 text-sm font-bold rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-trash mr-1"></i> Hapus Data</button>
                     </div>
@@ -140,32 +145,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-4">
-                        <!-- IPA -->
-                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
-                            <label class="flex items-center gap-2 text-xs font-bold text-green-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-flask"></i> Ilmu Pengetahuan Alam (Sains)</label>
-                            <div class="tag-container" id="ipa-tags-container" onclick="focusInput('ipa-input')">
-                                <div id="ipa-tags" class="flex flex-wrap gap-1.5"></div>
-                                <input type="text" id="ipa-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'ipa')">
-                            </div>
-                        </div>
-
-                        <!-- MATEMATIKA -->
-                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
-                            <label class="flex items-center gap-2 text-xs font-bold text-blue-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-calculator"></i> Matematika</label>
-                            <div class="tag-container" id="mtk-tags-container" onclick="focusInput('mtk-input')">
-                                <div id="mtk-tags" class="flex flex-wrap gap-1.5"></div>
-                                <input type="text" id="mtk-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'mtk')">
-                            </div>
-                        </div>
-
-                        <!-- BAHASA -->
-                        <div class="p-4 rounded-2xl bg-white border border-gray-100 shadow-sm">
-                            <label class="flex items-center gap-2 text-xs font-bold text-orange-700 mb-2 uppercase tracking-wider"><i class="fa-solid fa-book"></i> Bahasa Indonesia</label>
-                            <div class="tag-container" id="indo-tags-container" onclick="focusInput('indo-input')">
-                                <div id="indo-tags" class="flex flex-wrap gap-1.5"></div>
-                                <input type="text" id="indo-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, 'indo')">
-                            </div>
-                        </div>
+                        <!-- Categories will be dynamically generated here -->
                     </div>
 
                     <button onclick="trainModel()" class="w-full py-4 bg-gray-900 hover:bg-black text-white rounded-2xl font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2">
@@ -190,40 +170,7 @@
 
                     <!-- Menambahkan Bar Confidence -->
                     <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
-                        <h4 class="text-xs font-bold text-gray-700 mb-2"><i class="fa-solid fa-chart-pie mr-1"></i> Tingkat Keyakinan Per Kategori</h4>
-                        
-                        <!-- IPA -->
-                        <div>
-                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
-                                <span>Ilmu Pengetahuan Alam</span>
-                                <span id="conf-val-ipa">0%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div id="conf-bar-ipa" class="bg-green-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Matematika -->
-                        <div>
-                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
-                                <span>Matematika</span>
-                                <span id="conf-val-mtk">0%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div id="conf-bar-mtk" class="bg-blue-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Bahasa Indonesia -->
-                        <div>
-                            <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
-                                <span>Bahasa Indonesia</span>
-                                <span id="conf-val-indo">0%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div id="conf-bar-indo" class="bg-orange-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
+                        <!-- Confidence bars will be dynamically generated here -->
                     </div>
                 </div>
             </div>
