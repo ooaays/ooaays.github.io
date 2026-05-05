@@ -275,15 +275,6 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
 			setCheckVisible('check-tujuan', true);
 		}
     	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; hasSeenCP = true; checkStartButtonState(); }
-
-    	const refleksiModal = document.getElementById('refleksiModal');
-    	function openRefleksiModal(){ refleksiModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    	function closeRefleksiModal(){ refleksiModal.classList.add('hidden'); document.body.style.overflow='auto'; }
-
-    	const freeModeModal = document.getElementById('freeModeModal');
-    	function openFreeModeModal(){ freeModeModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    	function closeFreeModeModal(){ freeModeModal.classList.add('hidden'); document.body.style.overflow='auto'; }
-
     // =========================
     // CARA PENGGUNAAN SLIDES
     // =========================
