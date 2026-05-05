@@ -29,6 +29,10 @@ let hasSeenTujuan = false;
 let hasSeenCara = false;
 const lockedPopup = document.getElementById('lockedPopup');
 
+window.onload = () => {
+    updateStartButton();
+};
+
 function updateStartButton() {
     const unlocked = hasSeenTujuan && hasSeenCara;
     if (!startBtn) return;
