@@ -267,7 +267,13 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
     // MODALS
     // =========================
     	const cpModal = document.getElementById('cpModal');
-    	function openCPModal(){ cpModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    	function openCPModal(){ 
+			cpModal.classList.remove('hidden'); 
+			document.body.style.overflow='hidden'; 
+			try { sessionStorage.setItem('tujuanRead', 'true'); } 
+			catch(e){}
+			setCheckVisible('check-tujuan', true);
+		}
     	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; hasSeenCP = true; checkStartButtonState(); }
 
     	const refleksiModal = document.getElementById('refleksiModal');
@@ -290,13 +296,16 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
     		document.body.style.overflow = 'hidden';
     		currentSlide = 0;
     		updateSlideView();
+			try { sessionStorage.setItem('caraRead', 'true'); } 
+			catch(e){}
+			setCheckVisible('check-cara', true);
     	}
 
     	function closeCaraModal() {
     		caraModal.classList.add('hidden');
     		document.body.style.overflow = 'auto';
-        hasSeenCara = true;
-        checkStartButtonState();
+        	hasSeenCara = true;
+        	checkStartButtonState();
     		updateSlideView();
     	}
 
@@ -315,6 +324,7 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
 
     		document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
     		document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+			document.getElementById('closeBtn').style.visibility = currentSlide === totalSlides - 1 ? 'visible' : 'hidden';
     	}
 
 
@@ -420,6 +430,7 @@ function updateBioSlideView() {
 
     const prevBtn = document.getElementById('bioPrevBtn');
     const nextBtn = document.getElementById('bioNextBtn');
+	
 
     if (prevBtn) {
         prevBtn.style.visibility = bioCurrentSlide === 0 ? 'hidden' : 'visible';
@@ -435,3 +446,21 @@ function changeSlide(direction) {
     if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
     updateSlideView();
 }
+
+
+
+window.onload = () => {
+    checkStartButtonState();
+};
+
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
+
+try {
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  checkStartButtonState();
+} catch(e) {}
+renderAll();
