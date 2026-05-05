@@ -19,9 +19,9 @@ const STAGES = {
     title: 'Tahap 1 — Nyalakan Satu Piksel',
     tag: 'Konsep Dasar',
     focus: 'Memahami bahwa satu kotak pada grid mewakili satu data piksel.',
-    mission: 'Aktifkan minimal 1 piksel agar terlihat bahwa satu perubahan data saja sudah mengubah tampilan visual.',
+    mission: 'Aktifkan tepat 1 piksel agar terlihat bahwa satu perubahan saja sudah mengubah tampilan visual.',
     dataset: 'Grid 10 × 10 berisi nilai 0 dan 1. Pada awal tahap, semua piksel bernilai 0.',
-    tips: 'Klik satu kotak saja dulu. Amati bagaimana satu angka 1 muncul pada output matrix.',
+    tips: 'Klik satu kotak saja dulu. Amati bagaimana satu piksel yang menyala langsung mengubah tampilan.',
     targetType: 'single',
     targetPattern: [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     example: {
@@ -29,8 +29,8 @@ const STAGES = {
       code: `[0, 0, 0]
 [0, 1, 0]
 [0, 0, 0]`,
-      output: 'Pada contoh ini, hanya piksel tengah yang aktif.',
-      why: 'Satu angka 1 berarti ada satu posisi yang aktif. Komputer membaca lokasi itu sebagai bagian dari gambar.'
+      output: 'Pada contoh ini, hanya satu piksel yang aktif.',
+      why: 'Satu piksel yang aktif sudah cukup untuk menunjukkan bahwa gambar digital tersusun dari banyak kotak kecil.'
     }
   },
   2: {
@@ -39,7 +39,7 @@ const STAGES = {
     tag: 'Membaca Pola',
     focus: 'Memahami bahwa susunan beberapa nilai 1 pada posisi berurutan membentuk pola yang lebih jelas.',
     mission: 'Buat satu garis mendatar atau tegak yang terdiri dari minimal 5 piksel aktif berturut-turut.',
-    dataset: 'Kamu boleh membuat garis secara manual atau memakai pola cepat Garis 5 Piksel.',
+    dataset: 'Susun sendiri lima piksel aktif yang berurutan hingga membentuk garis.',
     tips: 'Perhatikan bahwa posisi angka 1 yang berurutan menghasilkan bentuk garis.',
     targetType: 'line',
     targetPattern: [[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0]],
@@ -55,7 +55,7 @@ const STAGES = {
     title: 'Tahap 3 — Bentuk Tanda Plus',
     tag: 'Representasi Bentuk',
     focus: 'Menghubungkan pola data dua arah dengan bentuk visual yang lebih kompleks.',
-    mission: 'Bentuk tanda plus pada grid. Kamu boleh menyusunnya manual atau memakai pola cepat Tanda Plus.',
+    mission: 'Bentuk tanda plus pada grid dengan menyusun piksel secara manual.',
     dataset: 'Targetnya adalah satu baris tengah dan satu kolom tengah yang aktif.',
     tips: 'Bentuk ini menunjukkan bahwa gambar tersusun dari kombinasi baris dan kolom data.',
     targetType: 'plus',
@@ -76,7 +76,7 @@ const STAGES = {
     title: 'Tahap 4 — Geser Pola',
     tag: 'Transformasi Posisi',
     focus: 'Memahami bahwa gambar dapat berubah pembacaannya ketika posisi piksel berubah.',
-    mission: 'Geser pola minimal satu kali ke arah mana pun, lalu amati perubahan pada matrix dan posisi piksel aktif.',
+    mission: 'Geser pola minimal satu kali ke arah mana pun, lalu amati perubahan posisi piksel aktif.',
     dataset: 'Saat masuk tahap ini, pola tanda plus disiapkan sebagai titik awal.',
     tips: 'Setelah digeser, bandingkan posisi angka 1 sebelum dan sesudah.',
     targetType: 'shift',
@@ -98,10 +98,10 @@ Sesudah digeser ke kanan:
     shortLabel: 'Mandiri',
     title: 'Tahap 5 — Ubah Pola Secara Mandiri',
     tag: 'Kreasi dan Interpretasi',
-    focus: 'Mendorong siswa membuat pola sendiri sambil tetap membaca matrix sebagai data.',
+    focus: 'Mendorong siswa membuat pola sendiri sambil tetap membaca susunan data.',
     mission: 'Setelah pola digeser, lakukan minimal 3 perubahan manual pada grid agar bentuknya berubah lagi.',
     dataset: 'Tidak ada satu jawaban tunggal. Yang penting kamu bisa menjelaskan perubahan data dan hasil visualnya.',
-    tips: 'Coba tambah atau kurangi piksel pada posisi tertentu, lalu amati matrix dan bentuknya.',
+    tips: 'Coba tambah atau kurangi piksel pada posisi tertentu, lalu amati data dan bentuknya.',
     targetType: 'custom',
     targetPattern: [[0,1,0,1,0],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0],[0,0,1,0,0]],
     example: {
@@ -119,8 +119,6 @@ Sesudah digeser ke kanan:
 const state = {
   tujuanRead: false,
   caraRead: false,
-  introRead: false,
-  hasSeenIntro: false,
   currentCara: 0,
   currentBio: 0,
   currentStage: 1,
@@ -131,7 +129,8 @@ const state = {
   lastPosition: '-',
   shiftCount: 0,
   manualEditsStage5: 0,
-  enteredStage5: false
+  enteredStage5: false,
+  quizAnswers: {}
 };
 
 function init() {
@@ -148,6 +147,7 @@ function init() {
   renderProgress();
   updateStartButton();
   updateNextButton();
+  renderQuizSummary();
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -183,7 +183,6 @@ function closeModal(id) {
 function openTujuanModal(){ openModal('tujuanModal'); }
 function openCaraModal(){ state.currentCara = 0; syncCaraSlides(); openModal('caraModal'); }
 function openBioModal(){ state.currentBio = 0; syncBioSlides(); openModal('bioModal'); }
-function openQuizModal(){ openModal('quizModal'); }
 
 function setCheckVisible(id, visible){
   const el = document.getElementById(id);
@@ -206,11 +205,6 @@ function completeCara(){
   updateStartButton();
 }
 
-function completeIntro(){
-  state.introRead = true;
-  closeModal('introModal');
-}
-
 function updateStartButton(){
   const btn = document.getElementById('btn-start');
   const banner = document.getElementById('homeUnlockBanner');
@@ -227,10 +221,6 @@ function tryOpenLabPage(){
     return;
   }
   showPage('labPage');
-  if (!state.hasSeenIntro) {
-    state.hasSeenIntro = true;
-    openModal('introModal');
-  }
 }
 
 function showPage(id){
@@ -282,6 +272,7 @@ function highestUnlockedStage(){
 
 function renderStageNav(){
   const nav = document.getElementById('stageNav');
+  if (!nav) return;
   nav.innerHTML = '';
   const unlocked = highestUnlockedStage();
   for (let i = 1; i <= TOTAL_STAGES; i++) {
@@ -344,6 +335,10 @@ function renderMissionPanel(){
     <div class="mb-4">
       <div class="font-black text-slate-800 mb-2">Dataset / Kondisi Awal</div>
       <div class="dataset-box">${stage.dataset}</div>
+    </div>
+    <div class="concept-box mb-4">
+      <div class="concept-box-label">Inti Konsep</div>
+      Satu kotak pada grid mewakili satu piksel. Nilai <b>1</b> berarti piksel aktif, sedangkan nilai <b>0</b> berarti piksel tidak aktif. Bentuk gambar ditentukan oleh posisi piksel-piksel yang aktif.
     </div>
     <div class="info-box">
       <b>Petunjuk:</b><br>${stage.tips}
@@ -514,13 +509,10 @@ function renderOutputs(customExplain){
   document.getElementById('matrixOutput').textContent = matrixText;
   const active = countActive();
   document.getElementById('activeCountSummary').textContent = `Jumlah piksel aktif: ${active}`;
-  document.getElementById('binarySummary').textContent = active === 0 ?
-    'Belum ada piksel aktif. Aktifkan satu kotak untuk melihat bahwa satu data bisa mengubah tampilan visual.' :
-    `Saat ini ada ${active} piksel aktif dan ${state.gridSize*state.gridSize-active} piksel tidak aktif. Pola yang terlihat ditentukan oleh posisi piksel-piksel aktif tersebut.`;
   const tc = getTopRowCol();
   document.getElementById('changeSummary').textContent = state.lastAction;
   document.getElementById('changePanel').innerHTML = `<p><strong>Aksi terakhir:</strong> ${state.lastAction}</p><p><strong>Posisi terakhir:</strong> ${state.lastPosition}</p><p><strong>Baris paling aktif:</strong> ${tc.topRow}</p><p><strong>Kolom paling aktif:</strong> ${tc.topCol}</p>`;
-  document.getElementById('explainBox').textContent = customExplain || 'Setiap angka 1 menandakan piksel aktif dan setiap angka 0 menandakan piksel tidak aktif. Susunan nilai itulah yang membuat komputer dapat menampilkan pola visual.';
+  document.getElementById('explainBox').textContent = customExplain || 'Angka 1 menandakan piksel aktif dan angka 0 menandakan piksel tidak aktif. Posisi piksel aktif menentukan bentuk gambar.';
 }
 
 function checkStage(){
@@ -536,11 +528,43 @@ function checkStage(){
   renderStageNav();
   renderProgress();
   updateNextButton();
+  showStageResult(ok);
+}
+
+function showStageResult(ok){
+  const title = document.getElementById('stageResultTitle');
+  const message = document.getElementById('stageResultMessage');
+  const detail = document.getElementById('stageResultDetail');
+  const iconWrap = document.getElementById('stageResultIcon');
+  const iconText = document.getElementById('stageResultIconText');
+  const nextBtn = document.getElementById('stageResultNextBtn');
+  const canContinue = ok && state.currentStage < TOTAL_STAGES;
+
+  if (ok) {
+    title.textContent = state.currentStage === TOTAL_STAGES ? 'Tahap Selesai' : 'Jawaban Benar';
+    message.textContent = successMessage(state.currentStage);
+    detail.textContent = state.currentStage === TOTAL_STAGES
+      ? 'Semua tahap selesai. Kamu bisa lanjut ke kuis refleksi atau meninjau kembali pola yang sudah dibuat.'
+      : 'Kamu boleh lanjut ke tahap berikutnya.';
+    iconWrap.className = 'w-20 h-20 rounded-full flex items-center justify-center bg-emerald-100';
+    iconText.className = 'text-4xl font-black text-emerald-600';
+    iconText.textContent = '✓';
+  } else {
+    title.textContent = 'Coba Lagi';
+    message.textContent = failMessage(state.currentStage);
+    detail.textContent = 'Perbaiki susunan pikselmu dulu. Setelah itu, tekan Periksa Tahap lagi.';
+    iconWrap.className = 'w-20 h-20 rounded-full flex items-center justify-center bg-rose-100';
+    iconText.className = 'text-4xl font-black text-rose-600';
+    iconText.textContent = '!';
+  }
+
+  nextBtn.style.display = canContinue ? 'inline-flex' : 'none';
+  openModal('stageResultModal');
 }
 
 function stagePassed(stageNo){
   const active = countActive();
-  if (stageNo === 1) return active >= 1;
+  if (stageNo === 1) return active === 1;
   if (stageNo === 2) return hasStreak(5);
   if (stageNo === 3) return plusPatternMatches();
   if (stageNo === 4) return state.shiftCount >= 1;
@@ -550,7 +574,7 @@ function stagePassed(stageNo){
 
 function successMessage(stageNo){
   return {
-    1:'Berhasil. Satu piksel aktif sudah cukup untuk menunjukkan bahwa satu data bisa memengaruhi tampilan.',
+    1:'Berhasil. Tepat satu piksel aktif menunjukkan bahwa satu data saja sudah bisa mengubah tampilan.',
     2:'Berhasil. Kamu sudah membentuk satu garis dari lima piksel aktif yang berurutan.',
     3:'Berhasil. Pola plus terbentuk dan menunjukkan hubungan baris, kolom, dan bentuk gambar.',
     4:'Berhasil. Pola sudah digeser. Sekarang siswa dapat melihat bahwa posisi data ikut berubah.',
@@ -570,9 +594,9 @@ function explanationMessage(stageNo){
 
 function failMessage(stageNo){
   return {
-    1:'Belum tepat. Aktifkan minimal satu piksel pada grid, lalu periksa lagi.',
+    1:'Belum tepat. Tahap 1 hanya boleh berisi tepat satu piksel aktif. Jika lebih dari satu, matikan kembali sampai tersisa satu.',
     2:'Belum tepat. Buat satu garis mendatar atau tegak dengan minimal lima piksel aktif yang berurutan.',
-    3:'Belum tepat. Bentuk pola plus utuh, atau gunakan tombol pola cepat Tanda Plus lalu periksa lagi.',
+    3:'Belum tepat. Bentuk pola plus utuh dengan menyusun piksel pada baris dan kolom yang tepat.',
     4:'Belum tepat. Geser pola minimal satu kali ke arah mana pun.',
     5:'Belum tepat. Lakukan minimal tiga perubahan manual setelah pola digeser, lalu periksa lagi.'
   }[stageNo];
@@ -603,11 +627,23 @@ function renderProgress(){
   const steps = document.getElementById('progressSteps');
   steps.innerHTML = '';
   for (let i=1;i<=TOTAL_STAGES;i++) {
-    const dot = document.createElement('div');
-    dot.className = 'prog-step-dot';
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'prog-step';
+    dot.innerHTML = `<span class="prog-step-num">${i}</span><span class="prog-step-label">${STAGES[i].shortLabel}</span>`;
     if (state.completed[i]) dot.classList.add('done');
     if (!state.completed[i] && i === state.currentStage) dot.classList.add('current');
+    if (i <= highestUnlockedStage()) {
+      dot.onclick = () => changeStage(i);
+    } else {
+      dot.disabled = true;
+    }
     steps.appendChild(dot);
+    if (i < TOTAL_STAGES) {
+      const line = document.createElement('div');
+      line.className = 'prog-line' + (state.completed[i] ? ' done' : '');
+      steps.appendChild(line);
+    }
   }
   const quizBtn = document.getElementById('startQuizBtn');
   if (done === TOTAL_STAGES) quizBtn.classList.remove('hidden-btn');
@@ -628,12 +664,45 @@ function handleQuiz(button){
   const key = button.dataset.quiz;
   const feedbackId = {q1:'quizFeedback1', q2:'quizFeedback2', q3:'quizFeedback3'}[key];
   const all = document.querySelectorAll(`.quiz-option[data-quiz="${key}"]`);
-  all.forEach(btn => btn.classList.remove('correct','wrong'));
+  all.forEach(btn => {
+    btn.classList.remove('correct','wrong');
+    btn.disabled = true;
+    if (btn.dataset.answer === 'true') btn.classList.add('correct');
+  });
   button.classList.add(isCorrect ? 'correct' : 'wrong');
+  state.quizAnswers[key] = isCorrect;
   const feedback = document.getElementById(feedbackId);
   feedback.style.display = 'block';
-  feedback.textContent = isCorrect ? 'Benar. Itulah inti konsep representasi gambar pada lab ini.' : 'Belum tepat. Coba baca lagi konsep dasar dan amati output matrix.';
+  feedback.textContent = isCorrect ? 'Benar. Itulah inti konsep representasi gambar pada lab ini.' : 'Belum tepat. Coba baca lagi petunjuk tahap dan amati output data.';
   feedback.className = 'quiz-feedback ' + (isCorrect ? 'success' : 'error');
+  renderQuizSummary();
+}
+
+function openQuizModal(){
+  renderQuizSummary();
+  openModal('quizModal');
+}
+
+function renderQuizSummary(){
+  const summary = document.getElementById('quizSummary');
+  if (!summary) return;
+  const answered = Object.keys(state.quizAnswers).length;
+  const correct = Object.values(state.quizAnswers).filter(Boolean).length;
+  if (answered === 0) {
+    summary.textContent = 'Jawab semua soal untuk melihat ringkasan pemahaman.';
+    summary.className = 'quiz-summary';
+    return;
+  }
+  if (answered < 3) {
+    summary.textContent = `Sementara ${correct} dari ${answered} jawaban sudah tepat. Lanjutkan sampai semua soal selesai.`;
+    summary.className = 'quiz-summary in-progress';
+    return;
+  }
+  const message = correct === 3
+    ? 'Mantap. Semua jawaban tepat dan konsep representasi gambar sudah terbaca dengan baik.'
+    : `Kuis selesai. ${correct} dari 3 jawaban tepat. Ulangi diskusi pada konsep data, posisi, dan output hasil agar lebih kuat.`;
+  summary.textContent = message;
+  summary.className = 'quiz-summary ' + (correct === 3 ? 'success' : 'review');
 }
 
 function renderAll(){
