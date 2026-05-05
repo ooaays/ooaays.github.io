@@ -63,7 +63,10 @@ function closeIntroModal() {
         utterance.pitch = 1.1;
         window.speechSynthesis.speak(utterance);
     }
-
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
     // ================= MODAL CONTROL =================
 
 // TUJUAN PEMBELAJARAN
@@ -72,6 +75,8 @@ function openCPModal(){
     checkStartButtonState();
     document.getElementById("cpModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
+    try { sessionStorage.setItem('tujuanRead', 'true'); } catch(e){}
+    setCheckVisible('check-tujuan', true);
 }
 
 function closeCPModal(){
@@ -97,6 +102,9 @@ function openCaraModal(){
 
     updateDots();
     updateButtons();
+
+    try { sessionStorage.setItem('caraRead', 'true'); } catch(e){}
+    setCheckVisible('check-cara', true);
 }
 
 function closeCaraModal(){
@@ -144,9 +152,12 @@ function updateDots(){
 function updateButtons(){
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
+    const closeBtn = document.getElementById("closeBtn");
 
     prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
     nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
+    closeBtn.style.visibility = currentSlide === totalSlides - 1 ? "visible" : "hidden";
+
 }
 
 
@@ -441,3 +452,9 @@ const trainingLib = {
                 { cat: 'unknown', matches: [], confidences: confidences } : 
                 { cat: winner, matches: matches[winner], confidences: confidences };
         }
+
+try {
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  checkStartButtonState();
+} catch(e) {}
