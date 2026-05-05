@@ -205,3 +205,4 @@ try {
   if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
   updateStartButton();
 } catch(e) {}
+renderAll();
