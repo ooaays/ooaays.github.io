@@ -67,8 +67,19 @@ function closeLockedPopup() {
     document.body.style.overflow = 'auto';
 }
 
-function openCPModal() { hasSeenTujuan = true; updateStartButton(); cpModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
+function openCPModal() {
+    hasSeenTujuan = true;
+    updateStartButton();
+    cpModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    try { sessionStorage.setItem('tujuanRead', 'true'); } 
+    catch(e){}
+    setCheckVisible('check-tujuan', true);
+
+}
+function closeCPModal() { 
+    cpModal.classList.add('hidden'); 
+    document.body.style.overflow = 'auto'; }
 
 // ==============================================
 // SCRIPT MODAL CARA PENGGUNAAN (9 SLIDES)
@@ -84,6 +95,9 @@ function openCaraModal() {
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
     updateSlideView();
+
+    try { sessionStorage.setItem('caraRead', 'true'); } catch(e){}
+    setCheckVisible('check-cara', true);
 }
 
 function closeCaraModal() {
@@ -176,3 +190,10 @@ function updateBioSlideView() {
         nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
     }
 }
+
+
+try {
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  updateStartButton();
+} catch(e) {}
