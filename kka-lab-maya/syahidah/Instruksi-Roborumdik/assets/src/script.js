@@ -132,6 +132,7 @@ function updateSlideView() {
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.getElementById('closeBtn');
     
     if (currentSlide === 0) { 
         prevBtn.style.visibility = 'hidden'; 
@@ -141,9 +142,14 @@ function updateSlideView() {
     
     if (currentSlide === totalSlides - 1) { 
         nextBtn.style.visibility = 'hidden'; 
+        closeBtn.style.visibility = 'visible';
     } else { 
         nextBtn.style.visibility = 'visible'; 
+        closeBtn.style.visibility = 'hidden';
     }
+
+    
+
 }
 
 // ==============================================
