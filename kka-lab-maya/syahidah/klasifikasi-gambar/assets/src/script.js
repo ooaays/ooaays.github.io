@@ -69,6 +69,9 @@ function openCPModal() {
     updateStartButton();
     cpModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    try { sessionStorage.setItem('tujuanRead', 'true'); } 
+    catch(e){}
+    setCheckVisible('check-tujuan', true);
 }
 function closeCPModal() { cpModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
@@ -130,6 +133,7 @@ function updateSlideView() {
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.getElementById('closeBtn');
     
     if (currentSlide === 0) { 
         if (prevBtn) prevBtn.style.visibility = 'hidden'; 
@@ -139,8 +143,10 @@ function updateSlideView() {
     
     if (currentSlide === totalSlides - 1) { 
         if (nextBtn) nextBtn.style.visibility = 'hidden'; 
+        if (closeBtn) closeBtn.style.visibility = 'visible';
     } else { 
         if (nextBtn) nextBtn.style.visibility = 'visible'; 
+        if (closeBtn) closeBtn.style.visibility = 'hidden';
     }
 }
 
@@ -183,8 +189,26 @@ function updateBioSlideView() {
 
     if (prevBtn) {
         prevBtn.style.visibility = bioCurrentSlide === 0 ? 'hidden' : 'visible';
+    
     }
     if (nextBtn) {
         nextBtn.style.visibility = bioCurrentSlide === bioTotalSlides - 1 ? 'hidden' : 'visible';
     }
 }
+
+
+window.onload = () => {
+    updateStartButton();
+};
+
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
+
+try {
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenTujuan = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  updateStartButton();
+} catch(e) {}
+renderAll();
