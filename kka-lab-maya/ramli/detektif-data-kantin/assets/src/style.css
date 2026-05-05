@@ -252,15 +252,32 @@ body {
 .page.active { display: block; }
 
 /* ── Disabled style (kunci menu) ─────────────────────────── */
-.disabled-style { opacity: 0.45 !important; cursor: not-allowed !important; }
-.disabled-style:hover { transform: none !important; box-shadow: none !important; }
+.disabled-style { opacity: .5 !important; cursor: not-allowed !important; }
+.disabled-style:hover { transform: none !important; box-shadow: 0 8px 0 rgba(0,0,0,.2) !important; }
 
 /* ── Header ──────────────────────────────────────────────── */
 .header-bg {
-  background: linear-gradient(90deg, #4338ca 0%, #4f46e5 28%, #5856ee 56%, #5b66f2 78%, #6172f5 100%);
+  background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
   color: white;
-  box-shadow: 0 6px 16px rgba(37, 43, 105, 0.24);
-  border-bottom: 4px solid rgba(255,255,255,0.25);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.lab-header-inner{
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:24px;
+  padding:16px 24px;
+}
+.lab-header-left{display:flex;align-items:center;gap:16px;min-width:0;}
+.lab-header-main-logo{height:56px;flex-shrink:0;}
+.lab-header-text{font-size:14px;line-height:1.25;font-weight:600;}
+.lab-header-logos{display:flex;align-items:center;gap:20px;flex-shrink:0;}
+.lab-header-logos img{height:48px;object-fit:contain;}
+@media (max-width:1023px){
+  .lab-header-text,.lab-header-logos{display:none;}
 }
 
 .header-text {
@@ -332,22 +349,23 @@ body {
 .hero-desc { color: #475569; line-height: 1.9; max-width: 640px; margin-bottom: 28px; font-size: 17px; }
 
 /* ── Menu Buttons ────────────────────────────────────────── */
-.hero-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 780px; }
+.hero-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
 .menu-btn {
-  display: flex; width: 100%; height: 92px; border-radius: 20px;
+  display: flex; width: 100%; min-height: 90px; border-radius: 20px;
   border: none; padding: 0; cursor: pointer; text-align: left;
-  box-shadow: 0 8px 0 rgba(0,0,0,0.25); transition: all .15s ease;
+  box-shadow: 0 8px 0 rgba(0,0,0,.2); transition: transform .15s ease, box-shadow .15s ease;
 }
-.menu-btn:active { transform: translateY(8px); box-shadow: 0 0 0 rgba(0,0,0,0.25); }
+.menu-btn:active { transform: translateY(7px); box-shadow: 0 1px 0 rgba(0,0,0,.2); }
 .menu-btn-icon {
-  width: 96px; display: flex; align-items: center; justify-content: center;
+  width: 90px; display: flex; align-items: center; justify-content: center;
   background: #3f3f46; color: white; flex-shrink: 0;
   border-radius: 20px 0 0 20px;
 }
+.menu-btn-icon svg { width: 44px; height: 44px; }
 .menu-btn-label {
   flex: 1; display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 900; font-size: 22px; text-transform: uppercase;
-  text-align: center; padding: 0 12px; line-height: 1.15;
+  color: white; font-weight: 900; font-size: 20px; text-transform: uppercase;
+  text-align: center; padding: 10px 12px; line-height: 1.2;
   border-radius: 0 20px 20px 0; position: relative;
 }
 
@@ -441,7 +459,7 @@ body {
 /* ── Modal ───────────────────────────────────────────────── */
 .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(4px); z-index:50; display:none; align-items:center; justify-content:center; padding:16px; }
 .modal-backdrop.show { display:flex; }
-.modal-card { background:white; border-radius:30px; padding:26px; max-width:980px; width:100%; max-height:86vh; overflow:auto; box-shadow:0 20px 40px rgba(0,0,0,.18); border:4px solid #dbeafe; }
+.modal-card { background:white; border-radius:28px; padding:28px; max-width:900px; width:100%; max-height:88vh; overflow:auto; box-shadow:0 24px 48px rgba(0,0,0,.2); border:2px solid #dbeafe; }
 .example-code { background:#0f172a; color:#e2e8f0; border-radius:18px; padding:16px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; line-height:1.8; overflow:auto; }
 
 /* ── Cara / Bio Slides ───────────────────────────────────── */

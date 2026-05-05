@@ -28,12 +28,26 @@ img { max-width: 100%; display: block; }
 
 /* ── Header ────────────────────────────────────────────────── */
 .header-bg {
-  background:
-    radial-gradient(circle at 18% 8%, rgba(255,255,255,.16), transparent 18%),
-    linear-gradient(90deg, #4a35d4 0%, #5444e9 30%, #4b63f4 58%, #3889eb 82%, #2b9bdd 100%);
+  background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
-  border-bottom: 2px solid rgba(255,255,255,.28);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.lab-header-inner{
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:24px;
+  padding:16px 24px;
+}
+.lab-header-left{display:flex;align-items:center;gap:16px;min-width:0;}
+.lab-header-main-logo{height:56px;flex-shrink:0;}
+.lab-header-text{font-size:14px;line-height:1.25;font-weight:600;}
+.lab-header-logos{display:flex;align-items:center;gap:20px;flex-shrink:0;}
+.lab-header-logos img{height:48px;object-fit:contain;}
+@media (max-width:1023px){
+  .lab-header-text,.lab-header-logos{display:none;}
 }
 .header-inner {
   min-height: 118px;
