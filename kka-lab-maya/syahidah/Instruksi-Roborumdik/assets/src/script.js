@@ -132,7 +132,7 @@ function updateSlideView() {
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const closeBtn = document.getElementById("closeBtn");
+    const closeBtn = document.getElementById('closeBtn');
     
     if (currentSlide === 0) { 
         prevBtn.style.visibility = 'hidden'; 
