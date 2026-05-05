@@ -478,6 +478,20 @@
             element.classList.toggle('hidden', !visible);
         }
 
+        function loadReadState() {
+            try {
+                if (sessionStorage.getItem('algoritma_tujuanRead') === 'true') {
+                    materiOpened = true;
+                }
+                if (sessionStorage.getItem('algoritma_caraRead') === 'true') {
+                    caraOpened = true;
+                }
+            } catch (e) {
+                // sesi storage mungkin tidak tersedia
+            }
+            updateStartButton();
+        }
+
         function updateStartButton() {
             const startButton = document.getElementById('startButton');
             if (!startButton) return;
@@ -511,6 +525,7 @@
         // MODAL CAPAIAN PEMBELAJARAN
         function openCPModal() {
             materiOpened = true;
+            try { sessionStorage.setItem('algoritma_tujuanRead', 'true'); } catch (e) {}
             updateStartButton();
             document.getElementById('cpModal').classList.remove('hidden');
         }
@@ -567,6 +582,7 @@
 
         function openCaraModal() {
             caraOpened = true;
+            try { sessionStorage.setItem('algoritma_caraRead', 'true'); } catch (e) {}
             updateStartButton();
             document.getElementById('caraModal').classList.remove('hidden');
             currentSlide = 0;
@@ -634,7 +650,7 @@
             document.getElementById('lockedModal').classList.add('hidden');
         }
 
-        updateStartButton();
+        loadReadState();
     </script>
 </body>
 </html>
