@@ -309,13 +309,6 @@ const trainingLib = {
         return bestMatch;
     }
 };
-        
-        // State Dataset
-        let activeTags = {
-            ipa: [],
-            mtk: [],
-            indo: []
-        };
 
         const botResponses = {
             // Level 1 responses
