@@ -29,10 +29,6 @@ let hasSeenTujuan = false;
 let hasSeenCara = false;
 const lockedPopup = document.getElementById('lockedPopup');
 
-window.onload = () => {
-    updateStartButton();
-};
-
 function updateStartButton() {
     const unlocked = hasSeenTujuan && hasSeenCara;
     if (!startBtn) return;
@@ -195,13 +191,17 @@ function updateBioSlideView() {
     }
 }
 
+window.onload = () => {
+    updateStartButton();
+};
+
 function setCheckVisible(id, visible){
   const el = document.getElementById(id);
   if (el) el.classList.toggle('visible', visible);
 }
 
 try {
-  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
+  if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenTujuan = true; setCheckVisible('check-tujuan', true); }
   if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
   updateStartButton();
 } catch(e) {}
