@@ -178,7 +178,7 @@ function updateStartUnlock() {
   } else {
     btn.classList.add('disabled-style');
     btn.setAttribute('aria-disabled', 'true');
-    btn.title = 'Baca Tujuan Pembelajaran dan Cara Penggunaan terlebih dahulu';
+    btn.title = 'Baca Tujuan Praktikum dan Cara Penggunaan terlebih dahulu';
     banner.classList.add('hidden');
   }
 }

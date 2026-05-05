@@ -1,7 +1,7 @@
 # Lab Maya Informatika – Representasi Gambar
 
 ## Isi utama
-- Beranda dengan menu: Tujuan Pembelajaran, Cara Penggunaan, Mulai Percobaan, Biodata Pengembang
+- Beranda dengan menu: Tujuan Praktikum, Cara Penggunaan, Mulai Percobaan, Biodata Pengembang
 - Tombol Mulai terkunci sampai Tujuan dan Cara Penggunaan dibaca
 - Pop-up konsep dasar muncul saat pertama kali masuk lab
 - Lab piksel 10×10 dengan 5 tahap bertahap
