@@ -63,6 +63,27 @@
             border-style: solid;
             border-color: white transparent transparent transparent;
         }
+
+        .read-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 26px;
+            min-height: 26px;
+            padding: 0 6px;
+            border-radius: 9999px;
+            background: #22c55e;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .read-check.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
 </head>
 
@@ -112,7 +133,7 @@
                 </div>
                 <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2 gap-2">
                     <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Materi Pembelajaran</span>
-                    <span id="check-tujuan" class="hidden text-green-200 text-2xl font-black">✓</span>
+                    <span id="check-tujuan" class="read-check hidden">✓</span>
                 </div>
             </button>
 
@@ -124,7 +145,7 @@
                 </div>
                 <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2 gap-2">
                     <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
-                    <span id="check-cara" class="hidden text-green-200 text-2xl font-black">✓</span>
+                    <span id="check-cara" class="read-check hidden">✓</span>
                 </div>
             </button>
 
@@ -476,6 +497,7 @@
             const element = document.getElementById(id);
             if (!element) return;
             element.classList.toggle('hidden', !visible);
+            element.classList.toggle('visible', visible);
         }
 
         function loadReadState() {
@@ -524,12 +546,13 @@
 
         // MODAL CAPAIAN PEMBELAJARAN
         function openCPModal() {
-            materiOpened = true;
-            try { sessionStorage.setItem('algoritma_tujuanRead', 'true'); } catch (e) {}
-            updateStartButton();
             document.getElementById('cpModal').classList.remove('hidden');
         }
         function closeCPModal() {
+            materiOpened = true;
+            try { sessionStorage.setItem('algoritma_tujuanRead', 'true'); } catch (e) {}
+            setCheckVisible('check-tujuan', true);
+            updateStartButton();
             document.getElementById('cpModal').classList.add('hidden');
         }
 
@@ -581,15 +604,16 @@
         const totalSlides = 7;
 
         function openCaraModal() {
-            caraOpened = true;
-            try { sessionStorage.setItem('algoritma_caraRead', 'true'); } catch (e) {}
-            updateStartButton();
             document.getElementById('caraModal').classList.remove('hidden');
             currentSlide = 0;
             updateSlide();
         }
 
         function closeCaraModal() {
+            caraOpened = true;
+            try { sessionStorage.setItem('algoritma_caraRead', 'true'); } catch (e) {}
+            setCheckVisible('check-cara', true);
+            updateStartButton();
             document.getElementById('caraModal').classList.add('hidden');
         }
 
