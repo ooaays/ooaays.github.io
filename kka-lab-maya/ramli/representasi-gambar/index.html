@@ -32,15 +32,13 @@
       <div class="hero-copy">
         <div class="hero-badge">
           <img src="assets/img/kemendikdasmen.webp" alt="" class="h-5 w-5 object-contain">
-          Pengelolaan Data dalam Situasi Kehidupan
+          Pengelolaan Data
         </div>
         <h1 class="hero-title">Representasi Gambar</h1>
-        <div class="hero-subtitle">Dari piksel biner menjadi gambar yang bisa dibaca komputer.</div>
+        <div class="hero-subtitle">Satu piksel mewakili satu data.</div>
         <p class="hero-desc">
-          Pada kegiatan ini, siswa belajar bahwa gambar digital tersusun dari banyak <b>piksel</b>.
-          Setiap piksel dapat direpresentasikan dengan nilai <b>0</b> dan <b>1</b>. Melalui lab ini,
-          siswa tidak hanya menyalakan kotak, tetapi memahami hubungan antara <b>data</b>, <b>posisi</b>,
-          dan <b>bentuk gambar</b>.
+          Setiap kotak pada grid mewakili satu <b>piksel</b>. Saat piksel aktif berubah,
+          bentuk gambar ikut berubah.
         </p>
 
         <div class="hero-buttons">
@@ -50,7 +48,7 @@
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan<span id="check-tujuan" class="read-check">✓</span></div>
           </button>
 
           <button onclick="openCaraModal()" class="menu-btn">
@@ -59,7 +57,7 @@
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#f97316;">Panduan<span id="check-cara" class="read-check">✓</span></div>
           </button>
 
           <button id="btn-start" onclick="tryOpenLabPage()" aria-disabled="true" title="Buka Tujuan dan Cara Penggunaan terlebih dahulu" class="menu-btn disabled-style">
@@ -68,7 +66,7 @@
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#06b6d4;">Mulai Percobaan</div>
+            <div class="menu-btn-label" style="background:#06b6d4;">Mulai Lab</div>
           </button>
 
           <button onclick="openBioModal()" class="menu-btn">
@@ -77,12 +75,12 @@
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#84cc16;">Biodata Pengembang</div>
+            <div class="menu-btn-label" style="background:#84cc16;">Pengembang</div>
           </button>
         </div>
 
         <div id="homeUnlockBanner" class="unlock-banner" style="display:none;">
-          Semua prasyarat awal sudah dibaca. Menu mulai aktif dan konsep dasar akan tampil otomatis saat pertama kali masuk ke lab.
+          Semua prasyarat awal sudah dibaca. Menu mulai aktif dan kamu bisa langsung masuk ke lab.
         </div>
       </div>
 
@@ -114,7 +112,6 @@
           <h2 class="text-3xl font-black text-sky-700">LAB MAYA REPRESENTASI GAMBAR</h2>
           <p class="text-slate-500">Belajar memahami piksel, data biner, posisi, dan bentuk gambar</p>
         </div>
-        <div class="stage-nav" id="stageNav"></div>
       </div>
 
       <div class="progress-section">
@@ -138,71 +135,70 @@
           <div id="missionPanel"></div>
         </div>
 
-        <div class="panel">
-          <div class="section-title">Manipulator Variabel</div>
-          <div class="info-box">
-            <b>Gunakan kontrol berikut:</b><br>
-            Klik kotak pada grid untuk mengubah nilai piksel dari 0 ke 1 atau dari 1 ke 0. Gunakan pola cepat dan tombol geser untuk mengamati bagaimana data berubah.
-          </div>
-
-          <div class="lab-tool-grid" style="margin-top:14px;">
-            <button class="lab-tool-btn" onclick="applyPreset('single')">Satu Piksel</button>
-            <button class="lab-tool-btn" onclick="applyPreset('line')">Garis 5 Piksel</button>
-            <button class="lab-tool-btn" onclick="applyPreset('plus')">Tanda Plus</button>
-            <button class="lab-tool-btn" onclick="applyPreset('frame')">Bingkai</button>
-          </div>
-
-          <div class="lab-shift-box">
-            <div class="font-black text-slate-800 mb-3">Geser Pola</div>
-            <div class="lab-shift-grid">
-              <div class="blank">.</div>
-              <button class="lab-tool-btn" onclick="shiftGrid('up')">Atas</button>
-              <div class="blank">.</div>
-              <button class="lab-tool-btn" onclick="shiftGrid('left')">Kiri</button>
-              <button class="lab-tool-btn danger" onclick="clearGrid()">Hapus</button>
-              <button class="lab-tool-btn" onclick="shiftGrid('right')">Kanan</button>
-              <div class="blank">.</div>
-              <button class="lab-tool-btn" onclick="shiftGrid('down')">Bawah</button>
-              <div class="blank">.</div>
-            </div>
-          </div>
-
-          <div class="lab-summary-box">
-            <div class="font-black text-slate-800 mb-2">Status Saat Ini</div>
-            <div id="activeCountSummary" class="text-slate-700 leading-7">Jumlah piksel aktif: 0</div>
-            <div id="binarySummary" class="helper-box" style="margin-top:12px;">
-              Belum ada piksel aktif. Aktifkan satu kotak untuk melihat bahwa satu data bisa mengubah tampilan visual.
-            </div>
-          </div>
-
-          <div class="action-row" style="margin-top:16px;">
-            <button class="action-btn bg-slate-200 text-slate-700" onclick="resetCurrentStage()">Reset Tahap</button>
-            <button class="action-btn bg-emerald-500 text-white" onclick="checkStage()">Periksa Tahap</button>
-          </div>
-        </div>
-
         <div class="dark-panel">
           <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
             <div>
               <div class="text-3xl font-black text-sky-400">Kanvas Piksel</div>
               <div class="text-slate-400 text-sm">Setiap kotak mewakili satu data biner.</div>
             </div>
-            <div class="flex gap-3 flex-wrap">
-              <button id="stageNextBtn" class="px-5 py-3 rounded-2xl font-black bg-indigo-500 text-white opacity-50 cursor-not-allowed" onclick="goNextStage()" disabled>Tahap Berikutnya</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-sky-600 text-white" onclick="openExampleModal()">Contoh Tahap Ini</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('istilahModal')">Istilah Penting</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('refleksiModal')">Refleksi</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white" onclick="openModal('introModal')">Konsep Dasar</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#6366f1;" onclick="openTebakModal()">Tebak Matrix</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#dc2626;" onclick="openDetektifModal()">🐛 Detektif Bug</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#d97706;" onclick="openJumlahSamaModal()">Jumlah Sama</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#0284c7;" onclick="openAnimasiModal()">Animasi Baca</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-500 text-white" onclick="showPage('homePage')">Kembali ke Beranda</button>
+            <button class="lab-menu-btn lab-menu-btn-home lab-menu-btn-home-top" onclick="showPage('homePage')">Kembali ke Beranda</button>
+          </div>
+          <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
+            <div class="lab-menu-bar">
+              <button id="stageNextBtn" class="lab-menu-btn lab-menu-btn-next opacity-50 cursor-not-allowed" onclick="goNextStage()" disabled>Tahap Berikutnya</button>
+              <button class="lab-menu-btn lab-menu-btn-example" onclick="openExampleModal()">Contoh Tahap Ini</button>
+              <button class="lab-menu-btn lab-menu-btn-term" onclick="openModal('istilahModal')">Istilah Penting</button>
+              <button class="lab-menu-btn lab-menu-btn-reflect" onclick="openModal('refleksiModal')">Refleksi</button>
+              <button class="lab-menu-btn lab-menu-btn-game" onclick="openTebakModal()">Tebak Matrix</button>
+              <button class="lab-menu-btn lab-menu-btn-bug" onclick="openDetektifModal()">Detektif Bug</button>
+              <button class="lab-menu-btn lab-menu-btn-compare" onclick="openJumlahSamaModal()">Jumlah Sama</button>
+              <button class="lab-menu-btn lab-menu-btn-animate" onclick="openAnimasiModal()">Animasi Baca</button>
             </div>
           </div>
 
-          <div class="pixel-board-wrap">
-            <div id="pixelBoard" class="pixel-board"></div>
+          <div class="canvas-workspace">
+            <div class="canvas-board-area">
+              <div class="board-status-strip">
+                <div class="board-status-item">
+                  <span class="board-status-dot active"></span>
+                  1 = aktif
+                </div>
+                <div class="board-status-item">
+                  <span class="board-status-dot"></span>
+                  0 = tidak aktif
+                </div>
+                <div id="activeCountSummary" class="board-status-item emphasis">Jumlah piksel aktif: 0</div>
+              </div>
+
+              <div class="pixel-board-wrap">
+                <div id="pixelBoard" class="pixel-board"></div>
+              </div>
+            </div>
+
+            <div class="canvas-control-shell">
+              <div class="canvas-control-copy">
+                <div class="canvas-control-title">Manipulator</div>
+                <div class="canvas-control-text">Klik piksel untuk mengubah isi grid. Gunakan geser jika perlu, lalu periksa hasilnya.</div>
+              </div>
+              <div class="lab-shift-box canvas-shift-box">
+                <div class="font-black text-slate-800 mb-2">Geser</div>
+                <div class="lab-shift-grid">
+                  <div class="blank">.</div>
+                  <button class="lab-tool-btn" onclick="shiftGrid('up')">Atas</button>
+                  <div class="blank">.</div>
+                  <button class="lab-tool-btn" onclick="shiftGrid('left')">Kiri</button>
+                  <button class="lab-tool-btn danger" onclick="clearGrid()">Hapus</button>
+                  <button class="lab-tool-btn" onclick="shiftGrid('right')">Kanan</button>
+                  <div class="blank">.</div>
+                  <button class="lab-tool-btn" onclick="shiftGrid('down')">Bawah</button>
+                  <div class="blank">.</div>
+                </div>
+                <div class="action-row canvas-action-row compact">
+                  <button class="action-btn canvas-reset-btn" onclick="resetCurrentStage()">Reset Tahap</button>
+                  <button class="action-btn canvas-check-btn" onclick="checkStage()">Periksa Tahap</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="pixel-stats">
@@ -218,11 +214,11 @@
 
           <div class="matrix-shell">
             <div class="matrix-card">
-              <div class="matrix-head">Output Matrix</div>
+              <div class="matrix-head">Output Data</div>
               <div id="matrixOutput" class="matrix-body">[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</div>
             </div>
             <div id="explainBox" class="side-explain">
-              Setiap angka 1 menandakan piksel aktif dan setiap angka 0 menandakan piksel tidak aktif. Susunan nilai itulah yang membuat komputer dapat menampilkan pola visual.
+              Angka 1 menandakan piksel aktif dan angka 0 menandakan piksel tidak aktif. Posisi piksel aktif menentukan bentuk gambar.
             </div>
           </div>
 
@@ -246,7 +242,7 @@
         2. menjelaskan bahwa setiap piksel dapat direpresentasikan dengan nilai biner 0 dan 1;<br>
         3. menghubungkan susunan data biner dengan pola visual yang terbentuk;<br>
         4. memanipulasi susunan piksel untuk mengubah bentuk gambar; dan<br>
-        5. membaca serta menafsirkan matrix sederhana menjadi gambar.
+        5. membaca data sederhana menjadi gambar.
       </div>
       <div class="pt-6 flex justify-center">
         <button onclick="completeTujuan()" class="bg-sky-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">OK, Mengerti!</button>
@@ -293,7 +289,7 @@
               <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>0</b><br><span class="text-slate-600">Piksel tidak aktif / kosong.</span></div>
               <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>1</b><br><span class="text-slate-600">Piksel aktif / menyala.</span></div>
             </div>
-            <p class="mt-5 text-lg text-slate-700 leading-8">Komputer membaca gambar sebagai susunan nilai-nilai ini.</p>
+            <p class="mt-5 text-lg text-slate-700 leading-8">Komputer membaca gambar sebagai susunan data.</p>
           </div>
         </div>
         <div class="cara-slide hidden">
@@ -308,7 +304,7 @@
             <p class="text-lg text-slate-700 leading-8 mb-4">Panel tengah berisi tombol untuk:</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-white rounded-2xl p-4 border border-orange-100">menyalakan piksel dengan klik langsung</div>
-              <div class="bg-white rounded-2xl p-4 border border-orange-100">menerapkan pola cepat</div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100">menerapkan susunan piksel</div>
               <div class="bg-white rounded-2xl p-4 border border-orange-100">menggeser pola ke empat arah</div>
               <div class="bg-white rounded-2xl p-4 border border-orange-100">menghapus atau mereset tahap</div>
             </div>
@@ -323,7 +319,7 @@
         <div class="cara-slide hidden">
           <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
             <h3 class="text-3xl font-black text-orange-900 mb-4">6. Baca Output Matrix</h3>
-            <p class="text-lg text-slate-700 leading-8">Setelah pola berubah, perhatikan output matrix. Di situlah komputer membaca gambar dalam bentuk data.</p>
+            <p class="text-lg text-slate-700 leading-8">Setelah pola berubah, perhatikan output data. Di situlah komputer membaca gambar.</p>
           </div>
         </div>
         <div class="cara-slide hidden">
@@ -337,7 +333,7 @@
             <h3 class="text-3xl font-black text-orange-900 mb-4">8. Gunakan Bantuan Lainnya</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Contoh Tahap Ini</b><br><span class="text-slate-600">Memberi contoh pola yang relevan dengan tahap aktif.</span></div>
-              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Istilah Penting</b><br><span class="text-slate-600">Menjelaskan piksel, biner, matrix, dan grid.</span></div>
+              <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Istilah Penting</b><br><span class="text-slate-600">Menjelaskan piksel, biner, dan grid.</span></div>
               <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Refleksi</b><br><span class="text-slate-600">Mengajak siswa berpikir tentang hubungan data dan gambar.</span></div>
               <div class="bg-white rounded-2xl p-4 border border-orange-100"><b>Kuis Refleksi</b><br><span class="text-slate-600">Muncul setelah semua tahap selesai.</span></div>
             </div>
@@ -349,22 +345,6 @@
         <button id="caraPrevBtn" onclick="changeCaraSlide(-1)" style="visibility:hidden;" class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">&larr; Sebelumnya</button>
         <button id="caraCloseBtn" onclick="completeCara()" class="hidden bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">Tutup</button>
         <button id="caraNextBtn" onclick="changeCaraSlide(1)" class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">Selanjutnya &rarr;</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="introModal" class="modal-backdrop">
-    <div class="modal-card">
-      <h2 class="text-4xl font-black text-sky-700 text-center mb-6">Konsep Dasar Sebelum Mulai</h2>
-      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
-        <p><b>1.</b> Gambar digital tersusun dari banyak kotak kecil yang disebut <b>piksel</b>.</p>
-        <p><b>2.</b> Pada lab ini, <b>1</b> berarti piksel aktif dan <b>0</b> berarti piksel tidak aktif.</p>
-        <p><b>3.</b> Komputer tidak melihat gambar seperti manusia, tetapi membaca susunan data 0 dan 1.</p>
-        <p><b>4.</b> Posisi piksel aktif sama pentingnya dengan jumlah piksel aktif. Jumlah yang sama bisa menghasilkan bentuk berbeda.</p>
-      </div>
-      <div class="pt-8 flex justify-center gap-4 flex-wrap">
-        <button onclick="completeIntro()" class="bg-sky-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Mulai Belajar</button>
-        <button onclick="completeIntro(); openExampleModal();" class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Lihat Contoh Pola</button>
       </div>
     </div>
   </div>
@@ -427,8 +407,8 @@
           <textarea id="refleksi3" class="refleksi-textarea" placeholder="Petunjuk: coba buat dua pola berbeda di grid yang sama-sama memiliki 5 piksel aktif (lima angka 1). Apakah gambarnya identik? Apa kesimpulanmu tentang hubungan jumlah vs. posisi piksel?"></textarea>
         </div>
         <div>
-          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">4. Apa manfaat melihat output matrix setelah kamu mengubah pola pada grid?</label>
-          <textarea id="refleksi4" class="refleksi-textarea" placeholder="Petunjuk: matrix adalah cara komputer 'melihat' gambarmu — bukan sebagai bentuk visual tapi sebagai deretan angka. Mengapa ini penting untuk memahami bagaimana komputer menyimpan dan memproses gambar?"></textarea>
+          <label style="font-weight:bold;font-size:14px;color:#334155;display:block;">4. Apa manfaat melihat output data setelah kamu mengubah pola pada grid?</label>
+          <textarea id="refleksi4" class="refleksi-textarea" placeholder="Petunjuk: data adalah cara komputer 'melihat' gambarmu — bukan sebagai bentuk visual tapi sebagai deretan angka. Mengapa ini penting untuk memahami bagaimana komputer menyimpan dan memproses gambar?"></textarea>
         </div>
       </div>
       <div class="pt-4 flex gap-3 justify-center" style="border-top:2px solid #eef2ff;margin-top:8px;flex-shrink:0;">
@@ -519,34 +499,54 @@
     </div>
   </div>
 
+  <div id="stageResultModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:520px; text-align:center;">
+      <div class="mb-4 flex justify-center">
+        <div id="stageResultIcon" class="w-20 h-20 rounded-full flex items-center justify-center bg-sky-100">
+          <span id="stageResultIconText" class="text-4xl font-black text-sky-600">!</span>
+        </div>
+      </div>
+      <h3 id="stageResultTitle" class="text-3xl font-black text-slate-900 mb-3">Hasil Tahap</h3>
+      <p id="stageResultMessage" class="text-slate-700 text-lg leading-relaxed mb-4"></p>
+      <div id="stageResultDetail" class="text-slate-600 text-base leading-relaxed mb-6"></div>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button onclick="closeModal('stageResultModal')" class="stage-result-close-btn">Tutup</button>
+        <button id="stageResultNextBtn" onclick="goNextStage(); closeModal('stageResultModal')" class="stage-result-next-btn">Lanjut Tahap</button>
+      </div>
+    </div>
+  </div>
+
   <div id="quizModal" class="modal-backdrop">
     <div class="modal-card">
       <h2 class="text-4xl font-black text-indigo-700 text-center mb-6">Kuis Refleksi</h2>
+      <div id="quizSummary" class="quiz-summary">
+        Jawab semua soal untuk melihat ringkasan pemahaman.
+      </div>
       <div class="grid gap-4">
         <div class="quiz-card">
           <div class="font-black text-slate-800">1. Pada lab ini, angka 1 menunjukkan bahwa...</div>
           <div class="quiz-options">
-            <button class="quiz-option" data-quiz="q1" data-answer="false" onclick="handleQuiz(this)">gambar sudah selesai dibuat</button>
-            <button class="quiz-option" data-quiz="q1" data-answer="true" onclick="handleQuiz(this)">piksel pada posisi itu aktif</button>
-            <button class="quiz-option" data-quiz="q1" data-answer="false" onclick="handleQuiz(this)">barisnya harus dihapus</button>
+            <button class="quiz-option" data-quiz="q1" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>gambar sudah selesai dibuat</span></button>
+            <button class="quiz-option" data-quiz="q1" data-answer="true" onclick="handleQuiz(this)"><span class="quiz-option-key">B</span><span>piksel pada posisi itu aktif</span></button>
+            <button class="quiz-option" data-quiz="q1" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">C</span><span>barisnya harus dihapus</span></button>
           </div>
           <div id="quizFeedback1" class="quiz-feedback" style="display:none;"></div>
         </div>
         <div class="quiz-card">
           <div class="font-black text-slate-800">2. Dua gambar bisa berbeda walaupun jumlah angka 1 sama karena...</div>
           <div class="quiz-options">
-            <button class="quiz-option" data-quiz="q2" data-answer="true" onclick="handleQuiz(this)">posisi piksel aktif menentukan bentuk</button>
-            <button class="quiz-option" data-quiz="q2" data-answer="false" onclick="handleQuiz(this)">angka 1 selalu berubah warna</button>
-            <button class="quiz-option" data-quiz="q2" data-answer="false" onclick="handleQuiz(this)">jumlah baris selalu berbeda</button>
+            <button class="quiz-option" data-quiz="q2" data-answer="true" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>posisi piksel aktif menentukan bentuk</span></button>
+            <button class="quiz-option" data-quiz="q2" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">B</span><span>angka 1 selalu berubah warna</span></button>
+            <button class="quiz-option" data-quiz="q2" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">C</span><span>jumlah baris selalu berbeda</span></button>
           </div>
           <div id="quizFeedback2" class="quiz-feedback" style="display:none;"></div>
         </div>
         <div class="quiz-card">
-          <div class="font-black text-slate-800">3. Mengapa output matrix penting untuk diamati?</div>
+          <div class="font-black text-slate-800">3. Mengapa output data penting untuk diamati?</div>
           <div class="quiz-options">
-            <button class="quiz-option" data-quiz="q3" data-answer="true" onclick="handleQuiz(this)">karena matrix menunjukkan bagaimana komputer membaca gambar sebagai data</button>
-            <button class="quiz-option" data-quiz="q3" data-answer="false" onclick="handleQuiz(this)">karena matrix hanya menggantikan warna dengan angka</button>
-            <button class="quiz-option" data-quiz="q3" data-answer="false" onclick="handleQuiz(this)">karena matrix membuat gambar otomatis berwarna</button>
+            <button class="quiz-option" data-quiz="q3" data-answer="true" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>karena data menunjukkan bagaimana komputer membaca gambar</span></button>
+            <button class="quiz-option" data-quiz="q3" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">B</span><span>karena data hanya menggantikan warna dengan angka</span></button>
+            <button class="quiz-option" data-quiz="q3" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">C</span><span>karena data membuat gambar otomatis berwarna</span></button>
           </div>
           <div id="quizFeedback3" class="quiz-feedback" style="display:none;"></div>
         </div>
@@ -561,7 +561,7 @@
   <div id="tebakModal" class="modal-backdrop">
     <div class="modal-card">
       <h2 class="text-3xl font-black text-indigo-700 text-center mb-1">Tebak Gambar dari Matrix</h2>
-      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:14px;">Baca matrix di kiri, lalu aktifkan piksel yang sesuai di kanan.</p>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:14px;">Baca data di kiri, lalu aktifkan piksel yang sesuai di kanan.</p>
       <p id="tebakLabel" style="text-align:center;font-weight:bold;font-size:14px;color:#4f46e5;margin-bottom:12px;"></p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
         <div>
@@ -586,7 +586,7 @@
   <div id="detektifModal" class="modal-backdrop">
     <div class="modal-card">
       <h2 class="text-3xl font-black text-center mb-1" style="color:#dc2626;">🐛 Detektif Matrix</h2>
-      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:6px;">Bandingkan gambar target dengan matrix yang ada. Klik sel yang <b>salah</b> pada matrix kanan!</p>
+      <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:6px;">Bandingkan gambar target dengan data yang ada. Klik sel yang <b>salah</b> pada bagian kanan!</p>
       <p id="detektifLabel" style="text-align:center;font-weight:bold;font-size:13px;color:#dc2626;margin-bottom:14px;"></p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
         <div>
