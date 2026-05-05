@@ -9,24 +9,22 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════
-       HEADER
-  ════════════════════════════════════════════════════════ -->
+  <!-- HEADER KEMDIKBUD (FULL WIDTH) -->
   <header class="header-bg">
-    <div class="container header-inner">
-      <div class="header-left">
-        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="header-main-logo">
-        <div class="header-text">
-          <div>Direktorat Jenderal</div>
-          <div>Pendidikan Anak Usia Dini,</div>
-          <div>Pendidikan Dasar, dan</div>
-          <div>Pendidikan Nonformal dan Informal</div>
+    <div class="lab-header-inner">
+      <div class="lab-header-left">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="lab-header-main-logo">
+        <div class="lab-header-text">
+          Direktorat Jenderal<br>
+          Pendidikan Anak Usia Dini,<br>
+          Pendidikan Dasar, dan<br>
+          Pendidikan Nonformal dan Informal
         </div>
       </div>
-      <div class="header-logos">
+      <div class="lab-header-logos">
         <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu untuk Semua">
-        <img src="assets/img/ramah.png" alt="Program Ramah">
-        <img src="assets/img/sobatsmp.png" alt="Sobat SMP" class="logo-sobatsmp">
+        <img src="assets/img/ramah.png" alt="Logo Ramah">
+        <img src="assets/img/sobatsmp.png" alt="SobatSMP">
       </div>
     </div>
   </header>
@@ -67,7 +65,7 @@
                 <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/>
               </svg>
             </span>
-            <span class="menu-btn-label purple">Tujuan<span id="check-tujuan" class="read-check">✓</span></span>
+            <span class="menu-btn-label purple">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></span>
           </button>
 
           <button class="menu-btn" onclick="openCaraModal()">
@@ -82,7 +80,7 @@
           <button id="btnStart"
                   class="menu-btn disabled-style"
                   aria-disabled="true"
-                  title="Baca Tujuan dan Cara Penggunaan terlebih dahulu"
+                  title="Baca Tujuan Praktikum dan Cara Penggunaan terlebih dahulu"
                   onclick="tryOpenLabPage()">
             <span class="menu-btn-icon">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -475,29 +473,20 @@ masukkan ke Tong Hitam</div>
     </div>
   </div>
 
-  <div id="tujuanModal" class="modal-backdrop" style="background:rgba(15,23,42,.6); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px;">
-    <div class="modal-card" style="background:white; border-radius:30px; padding:24px; max-width:980px; width:100%; height:85vh; min-height:480px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,.18); border:4px solid #e0e7ff;">
-      <div style="flex-shrink:0; margin-bottom:24px;">
-        <h2 style="font-size:2.5rem; font-weight:900; color:#4338ca; text-align:center; margin:0;">Tujuan</h2>
+  <!-- Tujuan Praktikum -->
+  <div id="tujuanModal" class="modal-backdrop">
+    <div class="modal-card">
+      <h2 class="modal-title indigo">Tujuan Praktikum</h2>
+      <div class="goal-box">
+        Setelah menggunakan lab ini, peserta didik diharapkan mampu:<br><br>
+        1. menjelaskan bahwa komputer mengambil keputusan berdasarkan kondisi yang diperiksa satu per satu;<br>
+        2. menyusun aturan <strong>If &rarr; Else If &rarr; Else</strong> secara berurutan dari kondisi yang paling khusus ke yang lebih umum;<br>
+        3. menjelaskan bahwa satu item dapat cocok dengan lebih dari satu kondisi, sehingga urutan aturan menentukan hasil;<br>
+        4. menggunakan aturan <strong>SELAIN ITU</strong> sebagai solusi cadangan ketika semua kondisi gagal;<br>
+        5. mengevaluasi kesalahan keputusan sistem, menemukan sumber bug, lalu memperbaiki aturannya.
       </div>
-      <div style="flex:1 1 auto; overflow-y:auto; padding-right:16px; padding-bottom:16px; text-align:left;">
-        <div class="bg-slate-50 border-l-8 border-blue-500 rounded-2xl p-6 shadow-sm mb-4">
-          <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
-          <p class="text-slate-800 text-lg">Berpikir Komputasional</p>
-        </div>
-        <div class="bg-[#faf5ff] border-l-8 border-purple-500 rounded-2xl p-6 shadow-sm mb-4">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">Tujuan Pembelajaran</h3>
-          <p class="text-slate-800 text-lg leading-relaxed">Menerapkan Pemecahan Masalah Sederhana dalam Situasi Kehidupan</p>
-        </div>
-        <div class="bg-[#f0fdf4] border-l-8 border-emerald-500 rounded-2xl p-6 shadow-sm">
-          <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3>
-          <p class="text-slate-800 text-lg leading-relaxed">Untuk memahami penerapan konsep dasar algoritma dan pemikiran komputasional, khususnya logika percabangan (If - Else If - Else), dalam mengotomatisasi pemecahan masalah di situasi kehidupan sehari-hari. Murid diharapkan mampu menyusun urutan instruksi yang logis agar sistem dapat mengambil keputusan (memilah jenis sampah ke tong yang tepat) berdasarkan kondisi tertentu.</p>
-        </div>
-      </div>
-      <div style="flex-shrink:0; padding-top:24px; display:flex; justify-content:center; border-top:2px solid #e0e7ff;">
-        <button onclick="markTujuanRead()" style="background:#4338ca; color:white; font-weight:900; font-size:1.5rem; padding:1rem 4rem; border-radius:20px; box-shadow:0 6px 0 #3730a3; transition:all .15s; width:100%; max-width:23rem; cursor:pointer;">
-          OK, Mengerti!
-        </button>
+      <div class="modal-actions center">
+        <button class="pill-btn indigo" onclick="markTujuanRead()">OK, Mengerti!</button>
       </div>
     </div>
   </div>
@@ -521,6 +510,15 @@ masukkan ke Tong Hitam</div>
       <div id="caraSlidesWrap" class="cara-slides-wrap">
         <div class="cara-slide">
           <div class="cara-panel">
+            <h3>Prasyarat</h3>
+            <p>Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:</p>
+            <ol>
+              <li>Algoritma sebagai urutan langkah untuk membantu pengambilan keputusan.</li>
+              <li>Logika percabangan sederhana dalam bentuk JIKA kondisi terpenuhi, MAKA lakukan aksi tertentu.</li>
+              <li>Pengenalan kategori data, misalnya jenis sampah organik, anorganik, dan B3.</li>
+              <li>Hubungan antara aturan, keputusan, dan hasil klasifikasi.</li>
+            </ol>
+
             <h3>1. Kenali Tampilan Lab</h3>
             <div class="cara-grid-2">
               <div class="cara-box"><strong>Panel Kiri</strong><br>Tempat menyusun aturan logika JIKA &rarr; MAKA. Di sinilah kamu membangun otak sistem.</div>
@@ -575,8 +573,8 @@ masukkan ke Tong Hitam</div>
       </div>
 
       <div class="modal-footer-nav">
-        <button id="caraPrevBtn" class="pill-btn light" style="visibility:hidden" onclick="changeCaraSlide(-1)">&larr; Sebelumnya</button>
-        <button class="pill-btn orange" onclick="finishCaraRead()">Saya Sudah Membaca</button>
+        <button id="caraPrevBtn" class="pill-btn amber" style="visibility:hidden" onclick="changeCaraSlide(-1)">&larr; Sebelumnya</button>
+        <button id="caraCloseBtn" class="pill-btn orange hidden" onclick="finishCaraRead()">Tutup</button>
         <button id="caraNextBtn" class="pill-btn amber" onclick="changeCaraSlide(1)">Selanjutnya &rarr;</button>
       </div>
     </div>
@@ -776,7 +774,7 @@ masukkan ke Tong Hitam</div>
         </svg>
       </div>
       <h3 class="small-title">Belum Bisa Dibuka</h3>
-      <p class="small-text">Silakan baca terlebih dahulu <strong>Tujuan</strong> dan <strong>Cara Penggunaan</strong> sebelum memulai percobaan.</p>
+      <p class="small-text">Silakan baca terlebih dahulu <strong>Tujuan Praktikum</strong> dan <strong>Cara Penggunaan</strong> sebelum memulai percobaan.</p>
       <div class="modal-actions center">
         <button class="pill-btn sky" onclick="closeModal('lockedModal')">Oke, Mengerti</button>
       </div>
