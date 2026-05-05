@@ -91,6 +91,9 @@ function openCaraModal() {
     document.body.style.overflow = 'hidden';
     currentSlide = 0; 
     updateSlideView();
+    try { sessionStorage.setItem('caraRead', 'true'); } 
+    catch(e){}
+    setCheckVisible('check-cara', true);
 }
 
 function closeCaraModal() {
