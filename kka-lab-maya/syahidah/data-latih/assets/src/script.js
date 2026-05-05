@@ -35,6 +35,20 @@ fetch('assets/src/indonesian-badword.json')
     })
     .catch(err => console.log('Failed to load badword list:', err));
 
+// Page navigation
+function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+    });
+    
+    // Show target page
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.remove('hidden');
+    }
+}
+
 function tryOpenLabPage() {
     if (!hasSeenCP || !hasSeenCara) {
         const lockedPopup = document.getElementById("lockedPopup");
@@ -48,35 +62,31 @@ function tryOpenLabPage() {
 function closeStartLockedPopup() {
     const lockedPopup = document.getElementById('lockedPopup');
     if (!lockedPopup) return;
-    lockedPopup.classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    lockedPopup.classList.add("hidden");
+    document.body.style.overflow = "auto";
 }
 
 function checkStartButtonState() {
-    const btnStart = document.getElementById('btn-start');
-    if (!btnStart) return;
-
+    const btn = document.getElementById('btn-start');
+    if (!btn) return;
+    
     if (hasSeenCP && hasSeenCara) {
-        btnStart.classList.remove('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'false');
-        btnStart.title = 'Mulai percobaan';
+        btn.classList.remove('disabled-style');
+        btn.removeAttribute('aria-disabled');
     } else {
-        btnStart.classList.add('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'true');
-        btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
+        btn.classList.add('disabled-style');
+        btn.setAttribute('aria-disabled', 'true');
     }
 }
 
-function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const page = document.getElementById(id);
-    if (page) page.classList.add('active');
-    window.scrollTo({ top:0, behavior:"smooth" });
-
-    if (id === 'labPage' && !hasSeenIntro) {
-        hasSeenIntro = true;
-        document.getElementById('introModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+function setCheckVisible(elementId, visible) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        if (visible) {
+            element.classList.remove('hidden');
+        } else {
+            element.classList.add('hidden');
+        }
     }
 }
 
@@ -85,18 +95,14 @@ function closeIntroModal() {
     document.body.style.overflow = 'auto';
 }
 
-    function speakText(text) {
-        if (!soundEnabled || !('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'id-ID';
-        utterance.rate = 1.0;
-        utterance.pitch = 1.1;
-        window.speechSynthesis.speak(utterance);
-    }
-function setCheckVisible(id, visible){
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('visible', visible);
+function speakText(text) {
+    if (!soundEnabled || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
 }
     // ================= MODAL CONTROL =================
 
@@ -370,23 +376,6 @@ const trainingLib = {
             ]
         };
 
-        let isTrained = false;
-
-        window.onload = () => {
-            checkStartButtonState();
-            addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
-            
-            // Initialize level system
-            updateLevelUI();
-            updateCategorySections();
-            
-            // Set default level to 1
-            currentLevel = 1;
-            activeTags = { ...datasets[1] };
-        };
-
-        function focusInput(id) { document.getElementById(id).focus(); }
-
         // MANAJEMEN TAG
         function handleTagInput(e, category) {
             const input = e.target;
@@ -477,6 +466,24 @@ const trainingLib = {
         }
 
         function trainModel() {
+            // Validasi minimum data latih
+            const minDataPerCategory = 3;
+            const categories = Object.keys(activeTags);
+            let insufficientCategories = [];
+            
+            categories.forEach(cat => {
+                if (activeTags[cat].length < minDataPerCategory) {
+                    insufficientCategories.push(getCategoryDisplayName(cat));
+                }
+            });
+            
+            if (insufficientCategories.length > 0) {
+                const message = `Data latih belum mencukupi. Setiap kategori memerlukan minimal ${minDataPerCategory} kata kunci. Kategori yang masih kurang: ${insufficientCategories.join(', ')}.`;
+                addChatMessage(message, 'warning');
+                document.getElementById('insight-text').textContent = message;
+                return;
+            }
+            
             const log = document.getElementById('train-log');
             log.classList.remove('hidden');
             
@@ -763,6 +770,15 @@ const trainingLib = {
                 transportasi: 'Transportasi'
             };
             
+            const categoryColors = {
+                ipa: 'from-green-500 to-green-600',
+                mtk: 'from-blue-500 to-blue-600',
+                indo: 'from-orange-500 to-orange-600',
+                makanan: 'from-red-500 to-red-600',
+                hobi: 'from-purple-500 to-purple-600',
+                transportasi: 'from-teal-500 to-teal-600'
+            };
+            
             container.innerHTML = `
                 <h4 class="text-xs font-bold text-gray-700 mb-2"><i class="fa-solid fa-chart-pie mr-1"></i> Tingkat Keyakinan Per Kategori</h4>
                 ${categories.map(cat => `
@@ -772,7 +788,7 @@ const trainingLib = {
                             <span id="conf-val-${cat}">0%</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-1.5">
-                            <div id="conf-bar-${cat}" class="bg-gradient-to-r from-blue-500 to-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            <div id="conf-bar-${cat}" class="bg-gradient-to-r ${categoryColors[cat]} h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                         </div>
                     </div>
                 `).join('')}
@@ -784,3 +800,32 @@ try {
   if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
   checkStartButtonState();
 } catch(e) {}
+
+        let isTrained = false;
+
+        window.onload = () => {
+            checkStartButtonState();
+            addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
+            addChatMessage("💡 Instruksi: Setiap kategori memerlukan minimal 3 kata kunci agar sistem dapat belajar dengan baik. Contoh: IPA (energi, atom, sel), Matematika (rumus, pecahan, grafik).", 'bot');
+            
+            // Initialize level system
+            updateLevelUI();
+            updateCategorySections();
+            
+            // Set default level to 1
+            currentLevel = 1;
+            activeTags = { ...datasets[1] };
+        };
+
+        function focusInput(id) { document.getElementById(id).focus(); }
+
+        function addChatMessage(text, sender) {
+            const win = document.getElementById('chat-window');
+            if (!win) return;
+            
+            const div = document.createElement('div');
+            div.className = `message ${sender === 'user' ? 'user-msg' : (sender === 'warning' ? 'warning-msg' : 'bot-msg')}`;
+            div.textContent = text;
+            win.appendChild(div);
+            win.scrollTo({ top: win.scrollHeight, behavior: 'smooth' });
+        }

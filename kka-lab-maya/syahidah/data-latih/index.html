@@ -406,6 +406,132 @@
     </div>
 </div>
 
+<!-- LAB PAGE (FULL WIDTH) -->
+<section id="labPage" class="page hidden">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <!-- Header with Level Toggle and Status -->
+        <div class="bg-white shadow-sm border-b">
+            <div class="px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <button onclick="showPage('homePage')" class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span class="font-medium">Kembali</span>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">
+                        Data Latih <span class="text-blue-600">KA</span>
+                    </h1>
+                </div>
+                
+                <!-- Level Toggle -->
+                <div class="flex bg-gray-100 rounded-lg p-1">
+                    <button id="level-1" onclick="toggleLevel(1)" class="level-toggle px-4 py-2 rounded-md text-sm font-medium transition-all active">
+                        Pelajaran
+                    </button>
+                    <button id="level-2" onclick="toggleLevel(2)" class="level-toggle px-4 py-2 rounded-md text-sm font-medium transition-all">
+                        Kehidupan Sehari-hari
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex gap-6 p-6 h-[calc(100vh-80px)]">
+            <!-- Left Panel: Data Input -->
+            <div class="w-80 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+                <div class="p-6 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Data Latih</h3>
+                    <p class="text-sm text-gray-600">Masukkan kata kunci untuk setiap kategori</p>
+                </div>
+                
+                <div class="flex-1 p-6 overflow-y-auto">
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- Confidence Bars Section -->
+                    <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
+                        <!-- Confidence bars will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="p-6 border-t border-gray-100 space-y-3">
+                    <button onclick="fillDemoData()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
+                        <i class="fa-solid fa-magic mr-2"></i>Isi Data Demo
+                    </button>
+                    <button onclick="resetAll()" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
+                        <i class="fa-solid fa-refresh mr-2"></i>Reset Semua
+                    </button>
+                    <button onclick="trainModel()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
+                        <i class="fa-solid fa-brain mr-2"></i>Mulai Pelatihan Model
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Phone Mockup and Chat -->
+            <div class="flex-1 flex gap-6">
+                <!-- Phone Mockup -->
+                <div class="flex-1 flex justify-center">
+                    <div class="relative">
+                        <!-- Phone Frame -->
+                        <div class="w-80 h-[600px] bg-black rounded-[3rem] p-2 shadow-2xl">
+                            <div class="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
+                                <!-- Phone Header with Status -->
+                                <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
+                                    <div class="text-sm font-bold">AI Assistant</div>
+                                    <div id="insight-text-mobile" class="text-xs font-medium text-right">
+                                        Belum ada data latih
+                                    </div>
+                                </div>
+                                
+                                <!-- Chat Window -->
+                                <div id="chat-window" class="h-[450px] overflow-y-auto p-4 space-y-3 bg-gray-50">
+                                    <!-- Chat messages will appear here -->
+                                </div>
+                                
+                                <!-- Input Area -->
+                                <div class="p-4 border-t border-gray-200 bg-white">
+                                    <div class="flex gap-2">
+                                        <input 
+                                            type="text" 
+                                            id="user-input" 
+                                            placeholder="Ketik pesan Anda..." 
+                                            class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            onkeypress="handleChatKeyPress(event)"
+                                        >
+                                        <button 
+                                            onclick="sendMessage()" 
+                                            class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-all duration-150"
+                                        >
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Training Progress Indicator -->
+                        <div id="train-log" class="absolute inset-0 bg-black/80 rounded-[3rem] flex items-center justify-center hidden">
+                            <div class="text-center text-white">
+                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                                <p class="font-medium">Melatih Model...</p>
+                                <p class="text-sm opacity-80">Mohon tunggu sebentar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insight Panel -->
+                <div class="w-80 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Insight & Status</h3>
+                    <div id="insight-text" class="text-sm text-gray-700 leading-relaxed p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        Sistem siap menerima data latih. Masukkan minimal 3 kata kunci per kategori untuk hasil terbaik.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="assets/src/script.js"></script>
 </body>
 </html>
