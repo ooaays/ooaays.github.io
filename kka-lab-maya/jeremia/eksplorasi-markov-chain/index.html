@@ -120,7 +120,7 @@
                     </svg>
                 </div>
                 <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
-                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Materi Pembelajaran</span>
+                    <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
                 </div>
             </button>
 
@@ -153,16 +153,16 @@
         <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
             
             <div class="shrink-0 mb-6">
-                <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Materi Pembelajaran</h2>
+                <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Praktikum</h2>
             </div>
 
             <div class="flex-1 overflow-y-auto pr-4 space-y-6 text-left pb-4">
-                <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
+                <!-- <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
                     <h3 class="text-2xl md:text-3xl font-bold text-indigo-900 mb-2">Elemen</h3>
                     <p class="text-xl md:text-2xl text-slate-800 font-medium">Literasi dan Etika Kecerdasan Artifisial</p>
-                </div>
+                </div> -->
                 <div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
-                    <h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Pembelajaran</h3>
+                    <!-- <h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3> -->
                     <p class="text-lg md:text-xl text-slate-800 font-medium leading-relaxed text-justify">
                         Memahami konsep dan cara kerja Kecerdasan Artifisial (KA) Generatif melalui simulasi interaktif yang memperlihatkan bagaimana sistem membangun kalimat dari sebuah dataset. Dalam kegiatan ini siswa mengamati proses tokenisasi data, pembentukan pola probabilitas kata menggunakan konteks kata sebelumnya (Rantai Markov), serta proses pemilihan kata berikutnya berdasarkan perhitungan peluang. Melalui pengaturan tingkat kreativitas mesin, siswa dapat melihat perbedaan antara perilaku sistem yang cenderung deterministik (pasti) dan stokastik (acak berbobot). Dengan demikian siswa memahami bahwa sistem generatif tidak benar-benar memahami makna seperti manusia, melainkan menghasilkan teks berdasarkan pola statistik dan perhitungan matematis dari data pelatihan yang tersedia.
                     </p>
@@ -388,11 +388,11 @@
 
             <!-- BUTTON NAVIGASI MODAL PENGGUNAAN -->
             <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
-                <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all flex gap-2 items-center">
+                <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-[#ff5722] hover:bg-[#e64a19] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#bf360c] active:shadow-[0_0px_0_#bf360c] active:translate-y-[4px] transition-all flex gap-2 items-center">
                     &larr; <span class="hidden md:inline">Sebelumnya</span>
                 </button>
                 <div class="flex-1 flex justify-end gap-4">
-                    <button id="closeCaraBtn" onclick="closeCaraModal()" style="display: none;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">
+                    <button id="closeCaraBtn" onclick="closeCaraModal()" style="display: none;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e82e09] active:shadow-[0_0px_0_#e82e09] active:translate-y-[4px] transition-all">
                         Tutup
                     </button>
                     <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff5722] hover:bg-[#e64a19] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#bf360c] active:shadow-[0_0px_0_#bf360c] active:translate-y-[4px] transition-all flex gap-2 items-center">
