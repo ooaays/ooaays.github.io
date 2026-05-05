@@ -191,6 +191,10 @@ function updateBioSlideView() {
     }
 }
 
+function setCheckVisible(id, visible){
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible', visible);
+}
 
 try {
   if (sessionStorage.getItem('tujuanRead') === 'true') { hasSeenCP = true; setCheckVisible('check-tujuan', true); }
