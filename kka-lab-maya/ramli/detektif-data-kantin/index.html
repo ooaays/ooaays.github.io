@@ -321,6 +321,15 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
         <!-- Slide 1 -->
         <div class="cara-slide">
           <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">Prasyarat</h3>
+            <p class="text-lg text-slate-700 leading-8 mb-4">Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:</p>
+            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-2 mb-6">
+              <li>Data sebagai kumpulan informasi yang dapat dibaca, dibandingkan, dan diolah.</li>
+              <li>Tabel sederhana yang terdiri dari baris, kolom, dan nilai pada setiap sel.</li>
+              <li>Konsep variabel untuk menyimpan nilai sementara selama proses pengolahan data.</li>
+              <li>Instruksi dasar pengolahan data seperti memilih, menghitung, membandingkan, dan menampilkan hasil.</li>
+            </ol>
+
             <h3 class="text-3xl font-black text-orange-900 mb-4">1. Kenali Tampilan Lab</h3>
             <p class="text-lg text-slate-700 leading-8 mb-5">Halaman lab dibagi menjadi tiga panel utama:</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -466,11 +475,11 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="mt-6 pt-5 border-t-2 border-orange-100 flex items-center justify-between gap-4">
         <button id="caraPrevBtn" onclick="changeCaraSlide(-1)"
                 style="visibility:hidden;"
-                class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
+                class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
           &larr; Sebelumnya
         </button>
-        <button onclick="closeModal('caraModal')"
-                class="bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">
+        <button id="caraCloseBtn" onclick="closeModal('caraModal')"
+                class="hidden bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">
           Tutup
         </button>
         <button id="caraNextBtn" onclick="changeCaraSlide(1)"

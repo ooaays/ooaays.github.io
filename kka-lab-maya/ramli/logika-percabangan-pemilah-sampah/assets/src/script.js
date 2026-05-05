@@ -232,6 +232,7 @@ function updateCaraSlideView() {
   const lastIndex = slides.length - 1;
   qs('caraPrevBtn').style.visibility = appState.currentCaraSlide === 0 ? 'hidden' : 'visible';
   qs('caraNextBtn').style.visibility = appState.currentCaraSlide === lastIndex ? 'hidden' : 'visible';
+  qs('caraCloseBtn').classList.toggle('hidden', appState.currentCaraSlide !== lastIndex);
 }
 
 function finishCaraRead() {

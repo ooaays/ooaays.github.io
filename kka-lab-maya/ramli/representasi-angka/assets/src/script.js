@@ -150,6 +150,8 @@ document.addEventListener('DOMContentLoaded', function(){
     if (activeDot) { activeDot.classList.remove('bg-slate-300', 'w-3'); activeDot.classList.add('bg-orange-500', 'w-8'); }
     document.getElementById('prevBtn').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
     document.getElementById('nextBtn').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+    const closeBtn = document.getElementById('closeCaraBtn');
+    if (closeBtn) closeBtn.classList.toggle('hidden', currentSlide !== totalSlides - 1);
   }
 
   // =========================
