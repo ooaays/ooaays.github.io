@@ -201,6 +201,7 @@ body{
 .lab-layout{ display:grid; grid-template-columns:330px 1fr; gap:24px; align-items:start; }
 .lab-right{ display:grid; gap:18px; }
 .ascii-table-wrap{ max-height:620px; overflow:auto; border-radius:18px; border:1px solid #e2e8f0; }
+.ascii-table-wrap table{ min-width:420px; }
 .ascii-row.active{ background:#dbeafe !important; }
 .ascii-row{ cursor:pointer; }
 .ascii-row:hover{ background:#eff6ff; }
@@ -259,21 +260,65 @@ body{
 }
 
 @media (max-width: 1024px){
-  .home-hero-wrap{ grid-template-columns:1fr; gap:28px; padding-top:34px; }
-  .hero-copy{ text-align:center; }
-  .hero-desc{ margin-left:auto; margin-right:auto; }
-  .hero-buttons{ max-width:100%; }
-  .hero-output-cards, .output-cards{ grid-template-columns:1fr; }
-  .lab-header-row{ grid-template-columns:1fr; }
-  .lab-toolbar{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
-  .lab-layout{ grid-template-columns:1fr; }
-  .hero-float-card{ position:static; margin-top:14px; text-align:center; }
+  html,
+  body{
+    min-width:1200px;
+    overflow-x:auto;
+  }
+  .lab-header-text{ display:block; }
+  .lab-header-logos{ display:flex; }
+  .page{
+    min-width:1200px;
+  }
+  .home-hero-wrap{
+    min-width:1200px;
+    grid-template-columns:minmax(520px,1fr) minmax(480px,560px);
+  }
+  .lab-shell{
+    min-width:1200px;
+  }
+  .lab-header-row{
+    grid-template-columns:minmax(260px, .95fr) minmax(420px, 1.35fr);
+  }
+  .lab-layout{
+    grid-template-columns:330px 1fr;
+  }
+  .refleksi-list{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .refleksi-list .refleksi-card:nth-child(3){
+    grid-column:1 / -1;
+  }
+  .istilah-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .intro-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .intro-example-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .intro-card{
+    grid-template-columns:64px 1fr;
+    gap:16px;
+    padding:18px;
+  }
+  .intro-icon{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    font-size:20px;
+  }
 }
 
 @media (max-width: 700px){
-  .hero-buttons{ grid-template-columns:1fr; }
-  .lab-toolbar{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
-  .bit-grid, .hero-bits{ grid-template-columns:repeat(4,1fr); }
+  .hero-buttons{ grid-template-columns:1fr 1fr; }
+  .lab-toolbar{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
+  .bit-grid,
+  .hero-bits{ grid-template-columns:repeat(8,1fr); }
+  .hero-output-cards,
+  .output-cards{ grid-template-columns:repeat(3,1fr); }
+  .decode-options-grid{ grid-template-columns:1fr 1fr; }
 }
 
 /* Small helper for disabled start button */
@@ -719,6 +764,82 @@ body{
   }
   .intro-title{ font-size:18px; }
   .intro-text{ font-size:14px; line-height:1.6; }
+}
+
+/* Mode C: layar kecil memakai kanvas desktop yang bisa digeser horizontal. */
+@media (max-width:1024px){
+  html,
+  body,
+  .page,
+  .home-hero-wrap,
+  .lab-shell{
+    min-width:1200px !important;
+  }
+  html,
+  body{
+    overflow-x:auto !important;
+  }
+  .fixed.inset-0{
+    min-width:1200px !important;
+    align-items:flex-start !important;
+    justify-content:center !important;
+    overflow:auto !important;
+    padding-top:16px !important;
+    padding-bottom:24px !important;
+  }
+  .lab-header-text{ display:block !important; }
+  .lab-header-logos{ display:flex !important; }
+  .home-hero-wrap{
+    grid-template-columns:minmax(520px,1fr) minmax(480px,560px) !important;
+  }
+  .lab-header-row{
+    grid-template-columns:minmax(260px, .95fr) minmax(420px, 1.35fr) !important;
+  }
+  .lab-layout{
+    grid-template-columns:330px 1fr !important;
+  }
+  .hero-buttons{
+    grid-template-columns:1fr 1fr !important;
+  }
+  .hero-output-cards,
+  .output-cards{
+    grid-template-columns:repeat(3,1fr) !important;
+  }
+  .lab-toolbar{
+    grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
+  }
+  .bit-grid,
+  .hero-bits{
+    grid-template-columns:repeat(8,1fr) !important;
+  }
+  .decode-options-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
+  .refleksi-list,
+  .istilah-grid,
+  .intro-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .refleksi-list .refleksi-card:nth-child(3),
+  .intro-example{
+    grid-column:1 / -1 !important;
+  }
+  .intro-example-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+  .intro-card{
+    grid-template-columns:64px 1fr !important;
+    gap:16px !important;
+    padding:18px !important;
+  }
+  .intro-icon{
+    width:56px !important;
+    height:56px !important;
+    border-radius:16px !important;
+    font-size:20px !important;
+  }
+  .intro-title{ font-size:20px !important; }
+  .intro-text{ font-size:15px !important; line-height:1.7 !important; }
 }
 
 @keyframes shake {
