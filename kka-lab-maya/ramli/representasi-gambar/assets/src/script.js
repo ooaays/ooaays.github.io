@@ -253,6 +253,8 @@ function syncCaraSlides(){
   slides.forEach((_, index) => document.getElementById(`caraDot-${index}`).classList.toggle('active', index === state.currentCara));
   document.getElementById('caraPrevBtn').style.visibility = state.currentCara === 0 ? 'hidden' : 'visible';
   document.getElementById('caraNextBtn').style.visibility = state.currentCara === slides.length - 1 ? 'hidden' : 'visible';
+  const closeBtn = document.getElementById('caraCloseBtn');
+  if (closeBtn) closeBtn.classList.toggle('hidden', state.currentCara !== slides.length - 1);
 }
 
 function changeBioSlide(direction){

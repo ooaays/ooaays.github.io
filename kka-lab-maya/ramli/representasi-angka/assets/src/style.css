@@ -18,6 +18,24 @@ body{
   box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 
+.lab-header-inner{
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:24px;
+  padding:16px 24px;
+}
+.lab-header-left{display:flex;align-items:center;gap:16px;min-width:0;}
+.lab-header-main-logo{height:56px;flex-shrink:0;}
+.lab-header-text{font-size:14px;line-height:1.25;font-weight:600;}
+.lab-header-logos{display:flex;align-items:center;gap:20px;flex-shrink:0;}
+.lab-header-logos img{height:48px;object-fit:contain;}
+@media (max-width:1023px){
+  .lab-header-text,.lab-header-logos{display:none;}
+}
+
 .page{ display:none; }
 .page.active{ display:block; }
 
@@ -79,9 +97,9 @@ body{
 .hero-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:16px;
+  gap:14px;
   width:100%;
-  max-width:760px;
+  margin-bottom:28px;
 }
 
 .hero-visual{
@@ -191,7 +209,8 @@ body{
 }
 
 /* Small helper for disabled start button */
-.disabled-style{ opacity:0.6; pointer-events:none; }
+.disabled-style{ opacity:.5; cursor:not-allowed; }
+.disabled-style:hover{ transform:none !important; box-shadow:0 8px 0 rgba(0,0,0,.2) !important; }
 
 /* Read-check badge */
 .read-check {

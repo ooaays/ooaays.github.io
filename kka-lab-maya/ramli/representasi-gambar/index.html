@@ -7,21 +7,22 @@
   <link rel="stylesheet" href="assets/src/style.css" />
 </head>
 <body>
+  <!-- HEADER KEMDIKBUD (FULL WIDTH) -->
   <header class="header-bg">
-    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
-      <div class="flex items-center gap-4 min-w-0">
-        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="h-14 shrink-0">
-        <div class="header-text">
+    <div class="lab-header-inner">
+      <div class="lab-header-left">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="lab-header-main-logo">
+        <div class="lab-header-text">
           Direktorat Jenderal<br>
           Pendidikan Anak Usia Dini,<br>
           Pendidikan Dasar, dan<br>
           Pendidikan Nonformal dan Informal
         </div>
       </div>
-      <div class="header-logos items-center gap-5 shrink-0">
-        <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu untuk Semua" class="h-12">
-        <img src="assets/img/ramah.png" alt="Logo Ramah" class="h-12">
-        <img src="assets/img/sobatsmp.png" alt="SobatSMP" class="h-12">
+      <div class="lab-header-logos">
+        <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu untuk Semua">
+        <img src="assets/img/ramah.png" alt="Logo Ramah">
+        <img src="assets/img/sobatsmp.png" alt="SobatSMP">
       </div>
     </div>
   </header>
@@ -272,6 +273,15 @@
       <div id="caraSlidesWrap" class="min-h-[360px]">
         <div class="cara-slide">
           <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
+            <h3 class="text-3xl font-black text-orange-900 mb-4">Prasyarat</h3>
+            <p class="text-lg text-slate-700 leading-8 mb-4">Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:</p>
+            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-2 mb-6">
+              <li>Gambar digital tersusun dari titik-titik kecil yang disebut piksel.</li>
+              <li>Konsep baris dan kolom untuk membaca posisi pada kisi atau grid.</li>
+              <li>Bilangan biner sederhana yang menggunakan nilai 0 dan 1.</li>
+              <li>Hubungan antara pola nilai pada grid dengan bentuk gambar yang terlihat.</li>
+            </ol>
+
             <h3 class="text-3xl font-black text-orange-900 mb-4">1. Kenali Tujuan Lab</h3>
             <p class="text-lg text-slate-700 leading-8">Pada lab ini, siswa belajar bahwa gambar digital tersusun dari banyak piksel. Setiap piksel dapat diberi nilai <b>0</b> atau <b>1</b>.</p>
           </div>
@@ -336,8 +346,8 @@
       </div>
 
       <div class="mt-6 pt-5 border-t-2 border-orange-100 flex items-center justify-between gap-4">
-        <button id="caraPrevBtn" onclick="changeCaraSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">&larr; Sebelumnya</button>
-        <button onclick="completeCara()" class="bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">Saya Sudah Membaca Cara Penggunaan</button>
+        <button id="caraPrevBtn" onclick="changeCaraSlide(-1)" style="visibility:hidden;" class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">&larr; Sebelumnya</button>
+        <button id="caraCloseBtn" onclick="completeCara()" class="hidden bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">Tutup</button>
         <button id="caraNextBtn" onclick="changeCaraSlide(1)" class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">Selanjutnya &rarr;</button>
       </div>
     </div>

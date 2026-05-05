@@ -413,8 +413,10 @@ function updateCaraSlideView() {
   });
   const prev = document.getElementById('caraPrevBtn');
   const next = document.getElementById('caraNextBtn');
+  const closeBtn = document.getElementById('caraCloseBtn');
   if (prev) prev.style.visibility = currentCaraSlide === 0 ? 'hidden' : 'visible';
   if (next) next.style.visibility = currentCaraSlide === slides.length - 1 ? 'hidden' : 'visible';
+  if (closeBtn) closeBtn.classList.toggle('hidden', currentCaraSlide !== slides.length - 1);
 }
 
 /* ────────────────────────────────────────────────────────── */
