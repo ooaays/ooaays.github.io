@@ -10,25 +10,26 @@
 </head>
 <body>
 
-  <!-- HEADER KEMDIKBUD (FULL WIDTH) -->
-  <header class="header-bg">
-    <div class="lab-header-inner">
-      <div class="lab-header-left">
-        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="lab-header-main-logo">
-        <div class="lab-header-text">
+  <!-- HEADER -->
+  <div class="header-bg">
+    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
+      <div class="flex items-center gap-4 min-w-0">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemendikdasmen" class="h-14 shrink-0">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
           Direktorat Jenderal<br>
           Pendidikan Anak Usia Dini,<br>
           Pendidikan Dasar, dan<br>
           Pendidikan Nonformal dan Informal
         </div>
       </div>
-      <div class="lab-header-logos">
-        <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu untuk Semua">
-        <img src="assets/img/ramah.png" alt="Logo Ramah">
-        <img src="assets/img/sobatsmp.png" alt="SobatSMP">
+
+      <div class="flex items-center gap-5 shrink-0 header-logos">
+        <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu" class="h-12">
+        <img src="assets/img/ramah.png" alt="Logo Ramah" class="h-12 hidden sm:block">
+        <img src="assets/img/sobatsmp.png" alt="SobatSMP" class="h-12">
       </div>
     </div>
-  </header>
+  </div>
 
   <!-- HOMEPAGE -->
   <section id="homePage" class="page active">
@@ -52,49 +53,49 @@
 
         <div class="hero-buttons">
 
-          <button onclick="openTujuanModal()" id="btn-tujuan" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
+          <button onclick="openTujuanModal()" id="btn-tujuan" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#a855f7] flex items-center justify-center px-3 rounded-r-[20px] relative">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
+            <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-3 rounded-r-[20px] relative">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan</span>
               <span id="check-tujuan" class="read-check">✓</span>
             </div>
           </button>
 
-          <button onclick="openCaraModal()" id="btn-cara" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
+          <button onclick="openCaraModal()" id="btn-cara" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#f97316] flex items-center justify-center px-3 rounded-r-[20px] relative">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-3 rounded-r-[20px] relative">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
               <span id="check-cara" class="read-check">✓</span>
             </div>
           </button>
 
-          <button id="btn-start" onclick="tryOpenLabPage()" aria-disabled="true" title="Buka Tujuan dan Cara Penggunaan terlebih dahulu" class="flex w-full min-h-[90px] rounded-[20px] disabled-style shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
+          <button id="btn-start" onclick="tryOpenLabPage()" aria-disabled="true" title="Buka Tujuan dan Cara Penggunaan terlebih dahulu" class="flex w-full h-20 md:h-24 rounded-[20px] disabled-style shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
             </div>
             <div class="flex-1 bg-[#06b6d4] flex items-center justify-center px-3 rounded-r-[20px]">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase">Mulai Percobaan</span>
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase">Mulai Percobaan</span>
             </div>
           </button>
 
-          <button onclick="openBioModal()" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
+          <button onclick="openBioModal()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
+            <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#84cc16] flex items-center justify-center px-3 rounded-r-[20px]">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            <div class="flex-1 bg-[#8bc34a] flex items-center justify-center px-3 rounded-r-[20px]">
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
             </div>
           </button>
 
@@ -165,35 +166,35 @@
   <!-- LAB PAGE -->
   <section id="labPage" class="page">
     <div class="lab-shell">
-      <div class="lab-header-row">
+      <div class="flex justify-between items-center mb-6">
         <div>
           <h2 class="text-2xl md:text-3xl font-black text-indigo-700">Representasi Angka (8-bit)</h2>
           <p class="text-slate-500">Aktifkan bit, lihat biner, hitung desimal, dan baca karakter ASCII</p>
         </div>
 
-        <div class="lab-toolbar">
-          <button onclick="openIntroLabModal()" class="lab-tool-btn lab-tool-violet">
+        <div class="flex gap-3 flex-wrap justify-end">
+          <button onclick="openIntroLabModal()" class="bg-violet-600 hover:bg-violet-700 text-white font-bold px-5 py-3 rounded-xl">
             Materi Singkat
           </button>
-          <button onclick="openIstilahModal()" class="lab-tool-btn lab-tool-sky">
+          <button onclick="openIstilahModal()" class="bg-slate-500 hover:bg-slate-600 text-white font-bold px-5 py-3 rounded-xl">
             Istilah Penting
           </button>
-          <button onclick="openRefleksiModal()" class="lab-tool-btn lab-tool-indigo">
+          <button onclick="openRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl">
             ✍️ Refleksi
           </button>
-          <button onclick="openInisialModal()" class="lab-tool-btn lab-tool-purple">
+          <button onclick="openInisialModal()" class="text-white font-bold px-5 py-3 rounded-xl" style="background:#7c3aed;">
             🔤 Inisialku
           </button>
-          <button onclick="openKalkulatorBitModal()" class="lab-tool-btn lab-tool-emerald">
+          <button onclick="openKalkulatorBitModal()" class="text-white font-bold px-5 py-3 rounded-xl" style="background:#059669;">
             🧮 Kalkulator Bit
           </button>
-          <button onclick="openDetektif1BitModal()" class="lab-tool-btn lab-tool-rose">
+          <button onclick="openDetektif1BitModal()" class="text-white font-bold px-5 py-3 rounded-xl" style="background:#e11d48;">
             🔎 Detektif 1-Bit
           </button>
-          <button onclick="openPerbandinganModal()" class="lab-tool-btn lab-tool-amber">
+          <button onclick="openPerbandinganModal()" class="text-white font-bold px-5 py-3 rounded-xl" style="background:#d97706;">
             📊 3 Representasi
           </button>
-          <button onclick="showPage('homePage')" class="lab-tool-btn lab-tool-blue">
+          <button onclick="showPage('homePage')" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl">
             Kembali ke Beranda
           </button>
         </div>
@@ -205,7 +206,6 @@
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-xl font-black text-slate-800">Daftar Tabel ASCII Code</h3>
           </div>
-          <p class="text-xs text-slate-500 mb-3">Klik salah satu baris untuk melihat arti karakter ASCII tersebut.</p>
 
           <div class="ascii-table-wrap">
             <table class="w-full text-sm border-collapse">
@@ -239,33 +239,17 @@
           <!-- ENCODE PANEL -->
           <div id="encodePanel">
             <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
-              <div class="mb-4 bg-indigo-50 border border-indigo-100 rounded-2xl px-4 py-3">
-                <div class="text-xs font-black text-indigo-800 text-center mb-2">
-                  Nilai bit = pangkat dua
-                </div>
-                <div class="grid grid-cols-4 md:grid-cols-8 gap-2 text-center">
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">128<br><span class="text-indigo-700">2<sup>7</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">64<br><span class="text-indigo-700">2<sup>6</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">32<br><span class="text-indigo-700">2<sup>5</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">16<br><span class="text-indigo-700">2<sup>4</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">8<br><span class="text-indigo-700">2<sup>3</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">4<br><span class="text-indigo-700">2<sup>2</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">2<br><span class="text-indigo-700">2<sup>1</sup></span></div>
-                  <div class="bg-white rounded-lg border border-indigo-100 py-2 px-1 text-xs font-bold text-slate-700">1<br><span class="text-indigo-700">2<sup>0</sup></span></div>
-                </div>
-              </div>
-
-              <div class="flex justify-between items-center mb-4">
+              <div class="flex justify-between items-center mb-5">
                 <h3 class="text-xl font-black text-slate-800">Manipulator Variabel (8-bit Switch)</h3>
-                <button onclick="resetBits()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2 rounded-xl">
+                <button onclick="resetBits()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl">
                   Reset
                 </button>
               </div>
 
               <div id="bitGrid" class="bit-grid"></div>
 
-              <p class="text-center text-slate-500 text-sm mt-4">
-                Klik tombol di atas untuk mengubah status bit (0 atau 1). Bit yang aktif dijumlahkan dari kiri ke kanan.
+              <p class="text-center text-slate-500 text-sm mt-5">
+                Klik tombol di atas untuk mengubah status bit (0 atau 1)
               </p>
             </div>
 
@@ -353,16 +337,23 @@
 
   <!-- MODAL TUJUAN -->
   <div id="tujuanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[28px] p-7 max-w-[1100px] w-full max-h-[90vh] overflow-y-auto shadow-[0_24px_48px_rgba(0,0,0,0.2)] border-2 border-indigo-100 flex flex-col">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
       <div class="shrink-0 mb-6">
-        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Praktikum</h2>
+        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan</h2>
       </div>
 
       <div class="flex-1 overflow-y-auto pr-4 text-left pb-4">
-        <div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
-          <p class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
-            Untuk memahami bagaimana informasi dalam bentuk karakter (ASCII), bilangan, dan gambar dapat direpresentasikan menggunakan sistem biner (0 dan 1), serta bagaimana pemahaman terhadap sistem representasi dan struktur data diperlukan untuk mendekode dan mengelola data dalam situasi kehidupan sehari-hari secara tepat, efisien, dan bermakna.
-          </p>
+        <div class="bg-slate-50 border-l-8 border-blue-500 rounded-2xl p-6 shadow-sm mb-4">
+          <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
+          <p class="text-slate-800 text-lg">Berpikir Komputasional</p>
+        </div>
+        <div class="bg-[#faf5ff] border-l-8 border-purple-500 rounded-2xl p-6 shadow-sm mb-4">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">Tujuan Pembelajaran</h3>
+          <p class="text-slate-800 text-lg leading-relaxed">Mengelola Data dalam Situasi Kehidupan</p>
+        </div>
+        <div class="bg-[#f0fdf4] border-l-8 border-emerald-500 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3>
+          <p class="text-slate-800 text-lg leading-relaxed">Untuk memahami bagaimana informasi dalam bentuk karakter (ASCII), bilangan, dan gambar dapat direpresentasikan menggunakan sistem biner (0 dan 1), serta bagaimana pemahaman terhadap sistem representasi dan struktur data diperlukan untuk mendekode dan mengelola data dalam situasi kehidupan sehari-hari secara tepat, efisien, dan bermakna.</p>
         </div>
       </div>
 
@@ -376,7 +367,7 @@
 
   <!-- MODAL CARA -->
   <div id="caraModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[28px] p-7 max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-[0_24px_48px_rgba(0,0,0,0.2)] border-2 border-orange-100 flex flex-col">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
       <div class="shrink-0 mb-4">
         <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
         <div class="flex justify-center gap-2 flex-wrap">
@@ -392,15 +383,6 @@
 
         <div class="cara-slide">
           <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
-            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">Prasyarat</h3>
-            <p class="text-lg text-slate-700 mb-4">Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:</p>
-            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-2 mb-6">
-              <li>Bilangan desimal dan operasi penjumlahan sederhana.</li>
-              <li>Konsep dasar bilangan biner yang menggunakan angka 0 dan 1.</li>
-              <li>Pengertian bit sebagai satuan data terkecil dan susunan 8-bit sebagai satu byte.</li>
-              <li>Pengenalan bahwa huruf, angka, dan simbol dapat direpresentasikan sebagai kode angka di komputer.</li>
-            </ol>
-
             <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">1. Mengenal Tampilan Lab Maya</h3>
             <p class="text-lg text-slate-700 mb-4">Lab maya terdiri dari tiga bagian utama:</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -490,11 +472,11 @@
       </div>
 
       <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
-        <button id="prevBtn" onclick="changeSlide(-1)" style="visibility:hidden;" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all">
+        <button id="prevBtn" onclick="changeSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">
           &larr; <span class="hidden md:inline">Sebelumnya</span>
         </button>
 
-        <button id="closeCaraBtn" onclick="closeCaraModal()" class="hidden flex-1 max-w-[200px] bg-[#f97316] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">
+        <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">
           Tutup
         </button>
 
@@ -507,7 +489,7 @@
 
   <!-- MODAL BIODATA -->
   <div id="bioModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[28px] p-7 max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-[0_24px_48px_rgba(0,0,0,0.2)] border-2 border-lime-200 flex flex-col">
+    <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-6xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
 
       <div class="shrink-0 mb-6">
         <h2 class="text-4xl font-black text-lime-700 text-center">Biodata Pengembang</h2>
@@ -612,7 +594,7 @@
       <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-100 gap-4">
         <button id="bioPrevBtn" onclick="changeBioSlide(-1)"
                 style="visibility:hidden;"
-                class="bg-lime-500 hover:bg-lime-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
+                class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
           &larr; Sebelumnya
         </button>
         <button onclick="closeBioModal()"
@@ -630,27 +612,23 @@
 
   <!-- MODAL REFLEKSI INTERAKTIF -->
   <div id="refleksiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-5xl w-full shadow-2xl border-4 border-sky-100 flex flex-col max-h-[90vh]">
-      <div class="shrink-0 flex items-start justify-between gap-4 mb-5">
-        <div>
-          <div class="inline-block bg-sky-100 text-sky-700 text-xs font-black px-3 py-1 rounded-full mb-3">Setelah Mencoba Lab</div>
-          <h2 class="text-2xl md:text-3xl font-black text-sky-700 leading-tight">Refleksi Interaktif</h2>
-          <p class="text-slate-500 text-sm mt-1">Tuliskan pemahamanmu dengan kalimat sendiri.</p>
-        </div>
-        <button onclick="closeRefleksiModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 w-10 h-10 rounded-xl text-2xl font-bold leading-none shrink-0">&times;</button>
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-sky-100 flex flex-col max-h-[88vh]">
+      <div class="shrink-0 flex items-center justify-between mb-4">
+        <h2 class="text-2xl md:text-3xl font-black text-sky-700">✍️ Refleksi Interaktif</h2>
+        <button onclick="closeRefleksiModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold leading-none">&times;</button>
       </div>
-      <div class="flex-1 overflow-y-auto pr-1 refleksi-list" id="repangRefleksiList"></div>
-      <div id="repangRefleksiStatus" class="refleksi-status hidden"></div>
-      <div class="shrink-0 pt-4 flex flex-col sm:flex-row gap-3 justify-end border-t border-slate-100 mt-4">
-        <button onclick="simpanRefleksiRepang()" id="repangSimpanBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-black py-3 px-8 rounded-2xl shadow-[0_4px_0_#0369a1] active:shadow-none active:translate-y-1 transition-all">Simpan ✓</button>
-        <button onclick="closeRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-2xl">Tutup</button>
+      <p class="text-slate-500 text-sm shrink-0 mb-4">Tulis jawabanmu — tidak ada yang benar atau salah!</p>
+      <div class="flex-1 overflow-y-auto space-y-4 pr-1" id="repangRefleksiList"></div>
+      <div class="shrink-0 pt-4 flex gap-3 justify-end border-t border-slate-100 mt-4">
+        <button onclick="simpanRefleksiRepang()" id="repangSimpanBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-black py-3 px-8 rounded-2xl">Simpan ✓</button>
+        <button onclick="closeRefleksiModal()" class="bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-2xl">Tutup</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL TULIS INISIALMU -->
   <div id="inisialModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-3xl w-full shadow-2xl border-4 border-violet-100 flex flex-col" style="max-height:90vh;">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-violet-100 flex flex-col" style="max-height:90vh;">
       <!-- Header — shrink-0 -->
       <div class="shrink-0">
         <div class="flex items-center justify-between mb-3">
@@ -668,46 +646,45 @@
       <div id="inisialResult" class="flex-1 overflow-y-auto pr-1"></div>
       <!-- Footer — shrink-0 -->
       <div class="shrink-0 mt-4 pt-4 border-t border-slate-100 text-center">
-        <button onclick="closeInisialModal()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-xl">Tutup</button>
+        <button onclick="closeInisialModal()" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-xl">Tutup</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL KALKULATOR BIT -->
   <div id="kalkulatorBitModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-4xl w-full shadow-2xl border-4 border-emerald-100">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-emerald-100">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-black text-emerald-700">🧮 Kalkulator Nilai Bit</h2>
         <button onclick="closeKalkulatorBitModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-500 text-sm mb-5">Klik bit untuk ON/OFF dan lihat kontribusi nilai masing-masing posisi secara real-time!</p>
-      <div id="kalBitGrid" class="kal-bit-grid mb-5"></div>
+      <div id="kalBitGrid" class="flex gap-3 justify-center flex-wrap mb-5"></div>
       <div id="kalBitEquation" class="text-center font-mono text-sm text-slate-600 mb-3"></div>
       <div class="text-center bg-emerald-50 rounded-2xl py-4 px-6 border border-emerald-200">
         <div class="text-slate-500 text-sm mb-1">Total Nilai Desimal</div>
         <div id="kalBitTotal" class="text-4xl font-black text-emerald-700">0</div>
       </div>
       <div class="mt-4 text-center">
-        <button onclick="closeKalkulatorBitModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-xl">Tutup</button>
+        <button onclick="closeKalkulatorBitModal()" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-xl">Tutup</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL DETEKTIF 1-BIT ERROR -->
   <div id="detektif1BitModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-3xl w-full shadow-2xl border-4 border-rose-100">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-rose-100">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-black text-rose-700">🔎 Detektif 1-Bit Error</h2>
         <button onclick="closeDetektif1BitModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
       </div>
-      <p class="text-slate-500 text-sm mb-5" id="d1bDesc">Bit apa yang tepat untuk diperbaiki agar hasilnya menjadi karakter <strong id="d1bChar">?</strong> dengan nilai desimal <strong id="d1bCode">?</strong>?</p>
+      <p class="text-slate-500 text-sm mb-5" id="d1bDesc">Seharusnya menghasilkan karakter <strong id="d1bChar">?</strong> — tapi ada <strong>1 bit yang terbalik</strong>. Klik bit yang salah!</p>
       <div id="d1bGrid" class="flex gap-2 justify-center mb-4 flex-wrap"></div>
-      <div class="text-center text-slate-600 font-mono text-lg mb-4">Karakter saat ini: <strong id="d1bCurrentChar" class="text-rose-600">?</strong> <span class="text-sm">(desimal <strong id="d1bCurrentCode">?</strong>)</span></div>
+      <div class="text-center text-slate-600 font-mono text-lg mb-4">Karakter saat ini: <strong id="d1bCurrentChar" class="text-rose-600">?</strong></div>
       <div id="d1bFeedback" style="display:none;" class="rounded-xl p-4 text-sm font-semibold mb-4"></div>
       <div class="flex gap-3 justify-center flex-wrap">
-        <button onclick="retryDetektif1Bit()" id="retryD1BBtn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl hidden">Coba Lagi</button>
         <button onclick="nextDetektif1Bit()" id="nextD1BBtn" class="bg-rose-600 text-white font-bold py-2 px-6 rounded-xl hidden">Tantangan Berikutnya →</button>
-        <button onclick="closeDetektif1BitModal()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-5 rounded-xl">Tutup</button>
+        <button onclick="closeDetektif1BitModal()" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">Tutup</button>
       </div>
       <div class="text-slate-400 text-xs text-center mt-3" id="d1bProg"></div>
     </div>
@@ -715,7 +692,7 @@
 
   <!-- MODAL PERBANDINGAN TIGA REPRESENTASI -->
   <div id="perbandinganModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-4xl w-full shadow-2xl border-4 border-amber-100 flex flex-col max-h-[90vh]">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-2xl w-full shadow-2xl border-4 border-amber-100 flex flex-col max-h-[88vh]">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-black text-amber-700">📊 Perbandingan 3 Representasi</h2>
         <button onclick="closePerbandinganModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
@@ -728,93 +705,54 @@
       </div>
       <div id="perbResult" class="flex-1 overflow-y-auto"></div>
       <div class="shrink-0 mt-4 pt-4 border-t border-slate-100 text-center">
-        <button onclick="closePerbandinganModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl">Tutup</button>
+        <button onclick="closePerbandinganModal()" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-xl">Tutup</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: MATERI SINGKAT (Intro Lab) -->
   <div id="introLabModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col max-h-[92vh]">
-      <div class="shrink-0 mb-5">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col max-h-[85vh]">
+      <div class="shrink-0 mb-4">
         <div class="inline-block bg-indigo-100 text-indigo-700 text-xs font-black px-3 py-1 rounded-full mb-3">Sebelum Mulai</div>
-        <h2 class="text-3xl md:text-4xl font-black text-indigo-700">Materi Singkat</h2>
-        <p class="text-slate-500 text-base mt-1">Pahami hubungan bit, bilangan biner, desimal, dan ASCII sebelum memulai percobaan.</p>
+        <h2 class="text-2xl md:text-3xl font-black text-indigo-700">Materi Singkat</h2>
+        <p class="text-slate-500 text-sm mt-1">Pahami konsep ini sebelum memulai percobaan</p>
       </div>
 
-      <div class="flex-1 overflow-y-auto pr-1 pb-2">
-        <div class="intro-grid">
+      <div class="flex-1 overflow-y-auto space-y-3 pr-1 pb-2">
 
-          <div class="intro-card bg-indigo-50 border-indigo-100">
-            <div class="intro-icon bg-indigo-600">Bit</div>
-            <div>
-              <div class="intro-title">Bit (Binary Digit)</div>
-              <p class="intro-text">Bit adalah satuan data terkecil dalam komputer. Nilainya hanya dua kemungkinan, yaitu <strong>0</strong> atau <strong>1</strong>. Pada lab ini, 0 dapat dibayangkan sebagai tombol mati, sedangkan 1 sebagai tombol menyala.</p>
-            </div>
+        <div class="flex gap-4 items-start bg-indigo-50 rounded-2xl p-4 border border-indigo-100">
+          <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-base shrink-0 text-center leading-tight">Bit</div>
+          <div>
+            <div class="font-black text-slate-800 mb-1">Bit (Binary Digit)</div>
+            <div class="text-slate-600 text-sm leading-relaxed">Satuan data terkecil dalam komputer. Hanya bernilai <strong>0</strong> (mati) atau <strong>1</strong> (nyala).</div>
           </div>
-
-          <div class="intro-card bg-emerald-50 border-emerald-100">
-            <div class="intro-icon bg-emerald-600">01</div>
-            <div>
-              <div class="intro-title">Biner 8-bit</div>
-              <p class="intro-text">Biner adalah sistem bilangan berbasis 2 yang hanya menggunakan angka 0 dan 1. Dalam susunan 8-bit, setiap posisi memiliki nilai: <strong>128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</strong>. Bit yang bernilai 1 dijumlahkan untuk mendapatkan angka desimal.</p>
-            </div>
-          </div>
-
-          <div class="intro-card bg-sky-50 border-sky-100">
-            <div class="intro-icon bg-sky-600">8b</div>
-            <div>
-              <div class="intro-title">Mengapa Lab Ini Menggunakan 8 Bit?</div>
-              <p class="intro-text">Delapan bit membentuk <strong>1 byte</strong>, satuan yang umum dipakai komputer untuk menyimpan satu karakter teks. Dengan 8 bit, tersedia <strong>256 kemungkinan nilai</strong>, yaitu dari 0 sampai 255. Rentang ini cukup luas untuk menunjukkan banyak karakter ASCII, tetapi masih sederhana untuk dihitung dan diamati oleh siswa.</p>
-            </div>
-          </div>
-
-          <div class="intro-card bg-orange-50 border-orange-100">
-            <div class="intro-icon bg-orange-500">10</div>
-            <div>
-              <div class="intro-title">Desimal</div>
-              <p class="intro-text">Desimal adalah sistem bilangan yang biasa kita gunakan sehari-hari, yaitu angka 0 sampai 9. Pada lab ini, angka desimal diperoleh dari penjumlahan nilai bit yang aktif. Contoh: bit 64 dan 1 aktif, maka <strong>64 + 1 = 65</strong>.</p>
-            </div>
-          </div>
-
-          <div class="intro-card bg-violet-50 border-violet-100">
-            <div class="intro-icon bg-violet-600">Aa</div>
-            <div>
-              <div class="intro-title">ASCII</div>
-              <p class="intro-text">ASCII adalah standar yang memetakan angka ke karakter. Misalnya, angka <strong>65</strong> dibaca sebagai huruf <strong>A</strong>, angka <strong>97</strong> dibaca sebagai huruf <strong>a</strong>, dan angka <strong>48</strong> dibaca sebagai karakter <strong>0</strong>. Artinya, komputer menyimpan teks sebagai kode angka.</p>
-            </div>
-          </div>
-
-          <div class="intro-card bg-rose-50 border-rose-100">
-            <div class="intro-icon bg-rose-600">Ctrl</div>
-            <div>
-              <div class="intro-title">Karakter Kontrol</div>
-              <p class="intro-text">Tidak semua kode ASCII tampil sebagai huruf atau simbol. Nilai 0 sampai 31 disebut karakter kontrol, misalnya untuk perintah seperti baris baru, tab, atau pengaturan aliran data. Karena itu, beberapa hasil di lab akan muncul sebagai nama karakter seperti <strong>NUL</strong>, bukan huruf yang terlihat.</p>
-            </div>
-          </div>
-
-          <div class="intro-example">
-            <div class="intro-title">Contoh Cara Membaca 8 Bit</div>
-            <div class="intro-example-grid">
-              <div class="intro-mini-card">
-                <div class="intro-mini-label text-indigo-700">Biner</div>
-                <div class="intro-mini-value font-mono">01000001</div>
-                <div class="intro-mini-note">Bit yang aktif adalah 64 dan 1.</div>
-              </div>
-              <div class="intro-mini-card">
-                <div class="intro-mini-label text-orange-700">Desimal</div>
-                <div class="intro-mini-value">64 + 1 = 65</div>
-                <div class="intro-mini-note">Hasil penjumlahannya adalah 65.</div>
-              </div>
-              <div class="intro-mini-card">
-                <div class="intro-mini-label text-violet-700">ASCII</div>
-                <div class="intro-mini-value">65 = A</div>
-                <div class="intro-mini-note">Kode tersebut dibaca sebagai huruf A.</div>
-              </div>
-            </div>
-          </div>
-
         </div>
+
+        <div class="flex gap-4 items-start bg-emerald-50 rounded-2xl p-4 border border-emerald-100">
+          <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-sm shrink-0 text-center leading-tight">Bi<br>ner</div>
+          <div>
+            <div class="font-black text-slate-800 mb-1">Biner 8-bit</div>
+            <div class="text-slate-600 text-sm leading-relaxed">Kombinasi 8 bit berurutan. Setiap posisi memiliki nilai: <strong>128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</strong>. Bit yang nyala dijumlahkan.</div>
+          </div>
+        </div>
+
+        <div class="flex gap-4 items-start bg-orange-50 rounded-2xl p-4 border border-orange-100">
+          <div class="w-12 h-12 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-sm shrink-0 text-center leading-tight">Des<br>imal</div>
+          <div>
+            <div class="font-black text-slate-800 mb-1">Desimal</div>
+            <div class="text-slate-600 text-sm leading-relaxed">Hasil penjumlahan bit aktif. Contoh: bit 64 dan 1 aktif → 64 + 1 = <strong>65</strong>.</div>
+          </div>
+        </div>
+
+        <div class="flex gap-4 items-start bg-violet-50 rounded-2xl p-4 border border-violet-100">
+          <div class="w-12 h-12 rounded-xl bg-violet-600 text-white flex items-center justify-center font-black text-2xl shrink-0">A</div>
+          <div>
+            <div class="font-black text-slate-800 mb-1">ASCII</div>
+            <div class="text-slate-600 text-sm leading-relaxed">Standar yang memetakan angka ke karakter. Angka <strong>65 = 'A'</strong>, angka <strong>97 = 'a'</strong>. Komputer membaca teks sebagai rangkaian angka.</div>
+          </div>
+        </div>
+
       </div>
 
       <div class="shrink-0 pt-5 mt-4 border-t-2 border-indigo-50">
@@ -827,12 +765,12 @@
 
   <!-- MODAL: ISTILAH PENTING -->
   <div id="istilahModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-4xl w-full shadow-2xl border-4 border-slate-100 flex flex-col max-h-[90vh]">
+    <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-slate-100 flex flex-col max-h-[85vh]">
       <div class="shrink-0 mb-5">
         <h2 class="text-2xl md:text-3xl font-black text-slate-800">Istilah Penting</h2>
       </div>
 
-      <div class="flex-1 overflow-y-auto istilah-grid pr-1 pb-2">
+      <div class="flex-1 overflow-y-auto space-y-3 pr-1 pb-2">
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4">
           <div class="font-black text-indigo-800 mb-1">Bit</div>
           <div class="text-slate-700 text-sm">Satuan data terkecil. Hanya bernilai 0 (mati) atau 1 (nyala).</div>
@@ -860,42 +798,10 @@
       </div>
 
       <div class="shrink-0 pt-5 mt-4 border-t-2 border-slate-100">
-        <button onclick="closeIstilahModal()" class="w-full bg-sky-600 hover:bg-sky-700 text-white text-xl font-black py-4 rounded-[16px]">
+        <button onclick="closeIstilahModal()" class="w-full bg-slate-700 hover:bg-slate-800 text-white text-xl font-black py-4 rounded-[16px]">
           Tutup
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- MODAL: INFORMASI KARAKTER ASCII -->
-  <div id="asciiInfoModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-[28px] p-6 max-w-2xl w-full shadow-2xl border-2 border-sky-100">
-      <div class="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <h2 class="text-2xl font-black text-sky-700">Informasi Karakter ASCII</h2>
-          <p class="text-sm text-slate-500">Detail karakter yang dipilih dari tabel.</p>
-        </div>
-        <button onclick="closeAsciiInfoModal()" class="bg-sky-600 hover:bg-sky-700 text-white font-black w-10 h-10 rounded-xl">&times;</button>
-      </div>
-      <div class="grid grid-cols-3 gap-3 mb-4 text-center">
-        <div class="bg-sky-50 rounded-xl border border-sky-100 p-3">
-          <div class="text-xs font-black text-sky-700 uppercase">Desimal</div>
-          <div id="asciiInfoDecimal" class="text-2xl font-black text-slate-900">0</div>
-        </div>
-        <div class="bg-sky-50 rounded-xl border border-sky-100 p-3">
-          <div class="text-xs font-black text-sky-700 uppercase">Biner</div>
-          <div id="asciiInfoBinary" class="text-lg font-black text-slate-900 font-mono">00000000</div>
-        </div>
-        <div class="bg-sky-50 rounded-xl border border-sky-100 p-3">
-          <div class="text-xs font-black text-sky-700 uppercase">Karakter</div>
-          <div id="asciiInfoLabel" class="text-2xl font-black text-slate-900">NUL</div>
-        </div>
-      </div>
-      <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4">
-        <div id="asciiInfoType" class="text-sm font-black text-sky-700 mb-2">Karakter Kontrol</div>
-        <p id="asciiInfoDesc" class="text-slate-700 leading-relaxed text-sm"></p>
-      </div>
-      <button onclick="closeAsciiInfoModal()" class="mt-5 w-full bg-sky-600 hover:bg-sky-700 text-white font-black py-3 rounded-xl">Tutup</button>
     </div>
   </div>
 

@@ -8,27 +8,40 @@
 </head>
 <body>
 
-  <!-- HEADER KEMDIKBUD (FULL WIDTH) -->
+  <!-- ═══════════════════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════════════════════ -->
   <header class="header-bg">
-    <div class="lab-header-inner">
-      <div class="lab-header-left">
+    <div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4 gap-6">
+
+      <!-- Kiri: Logo + Teks Direktorat -->
+      <div class="flex items-center gap-4 min-w-0">
         <img src="assets/img/kemendikdasmen.webp"
              alt="Logo Kemendikdasmen"
-             class="lab-header-main-logo"
+             class="h-14 shrink-0"
              onclick="handleLogoClick()"
              style="cursor:pointer;" title="">
-        <div class="lab-header-text">
+        <div class="header-text">
           Direktorat Jenderal<br>
           Pendidikan Anak Usia Dini,<br>
           Pendidikan Dasar, dan<br>
           Pendidikan Nonformal dan Informal
         </div>
       </div>
-      <div class="lab-header-logos">
-        <img src="assets/img/pendidikan.png" alt="Pendidikan Bermutu untuk Semua">
-        <img src="assets/img/ramah.png" alt="Logo Ramah">
-        <img src="assets/img/sobatsmp.png" alt="SobatSMP">
+
+      <!-- Kanan: Logo program (urutan: Bermutu → Ramah → SobatSMP) -->
+      <div class="header-logos">
+        <img src="assets/img/pendidikan.png"
+             alt="Pendidikan Bermutu untuk Semua"
+             class="h-12">
+        <img src="assets/img/ramah.png"
+             alt="Logo Ramah"
+             class="h-12">
+        <img src="assets/img/sobatsmp.png"
+             alt="SobatSMP"
+             class="h-12">
       </div>
+
     </div>
   </header>
 
@@ -58,14 +71,14 @@
         <!-- URUTAN MENU: Tujuan → Cara Penggunaan → Mulai → Biodata -->
         <div class="hero-buttons">
 
-          <!-- 1. Tujuan Praktikum -->
+          <!-- 1. Tujuan -->
           <button onclick="openTujuanModal()" class="menu-btn">
             <div class="menu-btn-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan<span id="check-tujuan" class="read-check">✓</span></div>
           </button>
 
           <!-- 2. Cara Penggunaan -->
@@ -264,20 +277,31 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
 
 
   <!-- ═══════════════════════════════════════════════════════
-       MODAL: TUJUAN PEMBELAJARAN
+       MODAL: TUJUAN
   ════════════════════════════════════════════════════════ -->
-  <div id="tujuanModal" class="modal-backdrop">
-    <div class="modal-card">
-      <h2 class="text-4xl font-black text-sky-700 text-center mb-6">Tujuan Praktikum</h2>
-      <div class="bg-sky-50 border-l-8 border-sky-500 p-6 rounded-2xl text-slate-800 text-xl leading-relaxed">
-        Memperkenalkan konsep teknologi untuk mengolah data melalui penerapan berpikir komputasional dengan Python.
-        Murid akan belajar bagaimana memanipulasi variabel, memecah dataset mentah menjadi struktur data yang lebih
-        teratur, mengenali pola, menyaring informasi penting, dan menyusun langkah algoritmik untuk memproses
-        data secara otomatis.
+  <div id="tujuanModal" class="modal-backdrop" style="background:rgba(15,23,42,.6); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:16px;">
+    <div class="modal-card" style="background:white; border-radius:30px; padding:24px; max-width:980px; width:100%; height:85vh; min-height:480px; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,.18); border:4px solid #e0e7ff;">
+      <div style="flex-shrink:0; margin-bottom:24px;">
+        <h2 style="font-size:2.5rem; font-weight:900; color:#4338ca; text-align:center; margin:0;">Tujuan</h2>
       </div>
-      <div class="pt-6 flex justify-center">
-        <button onclick="closeModal('tujuanModal')"
-                class="bg-sky-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">OK, Mengerti!</button>
+      <div style="flex:1 1 auto; overflow-y:auto; padding-right:16px; padding-bottom:16px; text-align:left;">
+        <div class="bg-slate-50 border-l-8 border-blue-500 rounded-2xl p-6 shadow-sm mb-4">
+          <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
+          <p class="text-slate-800 text-lg">Berpikir Komputasional</p>
+        </div>
+        <div class="bg-[#faf5ff] border-l-8 border-purple-500 rounded-2xl p-6 shadow-sm mb-4">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">Tujuan Pembelajaran</h3>
+          <p class="text-slate-800 text-lg leading-relaxed">Menerapkan Teknologi untuk Mengolah Data</p>
+        </div>
+        <div class="bg-[#f0fdf4] border-l-8 border-emerald-500 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3>
+          <p class="text-slate-800 text-lg leading-relaxed">Memperkenalkan konsep teknologi untuk mengolah data melalui penerapan berpikir komputasional dengan Python. Murid akan belajar bagaimana memanipulasi variabel, memecah dataset mentah menjadi struktur data yang lebih teratur, mengenali pola, menyaring informasi penting, dan menyusun langkah algoritmik untuk memproses data secara otomatis.</p>
+        </div>
+      </div>
+      <div style="flex-shrink:0; padding-top:24px; display:flex; justify-content:center; border-top:2px solid #e0e7ff;">
+        <button onclick="closeModal('tujuanModal')" style="background:#4338ca; color:white; font-weight:900; font-size:1.5rem; padding:1rem 4rem; border-radius:20px; box-shadow:0 6px 0 #3730a3; transition:all .15s; width:100%; max-width:23rem; cursor:pointer;">
+          OK, Mengerti!
+        </button>
       </div>
     </div>
   </div>
@@ -308,15 +332,6 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
         <!-- Slide 1 -->
         <div class="cara-slide">
           <div class="bg-orange-50 border-l-8 border-orange-500 rounded-2xl p-6">
-            <h3 class="text-3xl font-black text-orange-900 mb-4">Prasyarat</h3>
-            <p class="text-lg text-slate-700 leading-8 mb-4">Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:</p>
-            <ol class="list-decimal ml-6 text-lg text-slate-800 space-y-2 mb-6">
-              <li>Data sebagai kumpulan informasi yang dapat dibaca, dibandingkan, dan diolah.</li>
-              <li>Tabel sederhana yang terdiri dari baris, kolom, dan nilai pada setiap sel.</li>
-              <li>Konsep variabel untuk menyimpan nilai sementara selama proses pengolahan data.</li>
-              <li>Instruksi dasar pengolahan data seperti memilih, menghitung, membandingkan, dan menampilkan hasil.</li>
-            </ol>
-
             <h3 class="text-3xl font-black text-orange-900 mb-4">1. Kenali Tampilan Lab</h3>
             <p class="text-lg text-slate-700 leading-8 mb-5">Halaman lab dibagi menjadi tiga panel utama:</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -462,11 +477,11 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="mt-6 pt-5 border-t-2 border-orange-100 flex items-center justify-between gap-4">
         <button id="caraPrevBtn" onclick="changeCaraSlide(-1)"
                 style="visibility:hidden;"
-                class="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
+                class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
           &larr; Sebelumnya
         </button>
-        <button id="caraCloseBtn" onclick="closeModal('caraModal')"
-                class="hidden bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">
+        <button onclick="closeModal('caraModal')"
+                class="bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-3 px-8 rounded-xl">
           Tutup
         </button>
         <button id="caraNextBtn" onclick="changeCaraSlide(1)"
@@ -818,7 +833,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <h3 class="text-2xl font-black text-slate-900 mb-4">Belum Bisa Dibuka</h3>
       <p class="text-slate-700 text-lg leading-relaxed mb-6">
         Silakan baca terlebih dahulu bagian
-        <strong>Tujuan Praktikum</strong> dan <strong>Cara Penggunaan</strong>
+        <strong>Tujuan</strong> dan <strong>Cara Penggunaan</strong>
         sebelum memulai percobaan.
       </p>
       <button onclick="closeModal('lockedModal')"
