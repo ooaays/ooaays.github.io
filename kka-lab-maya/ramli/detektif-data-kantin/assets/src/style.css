@@ -1084,3 +1084,46 @@ body {
   25% { transform: translateX(-6px); }
   75% { transform: translateX(6px); }
 }
+
+/* Mode desktop-scroll untuk layar kecil: tampilan tetap seperti desktop, bisa digeser horizontal. */
+@media (max-width:1024px){
+  html,
+  body,
+  .page,
+  .hero-wrap,
+  .lab-shell{
+    min-width:1200px !important;
+  }
+  html,
+  body{ overflow-x:auto !important; }
+  .lab-header-text,
+  .header-text{ display:block !important; }
+  .lab-header-logos,
+  .header-logos{ display:flex !important; }
+  .hero-wrap{
+    grid-template-columns:minmax(520px, 1fr) minmax(460px, 560px) !important;
+  }
+  .lab-grid{
+    grid-template-columns:340px 340px 1fr !important;
+  }
+  .hero-buttons,
+  .action-row,
+  .note-grid,
+  .term-grid,
+  .bio-grid,
+  .cara-grid-2{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .debug-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .stack-two{ grid-template-columns:1fr 200px !important; }
+  .bins-grid{ grid-template-columns:repeat(5,1fr) !important; }
+  .conveyor{ grid-template-columns:repeat(8,minmax(0,1fr)) !important; }
+  .bin-items{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .modal-backdrop{
+    min-width:1200px !important;
+    align-items:flex-start !important;
+    overflow:auto !important;
+    padding-top:16px !important;
+    padding-bottom:24px !important;
+  }
+}

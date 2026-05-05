@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Functions</title>
+</head>
+<body>
+    <h1>Testing New Features</h1>
+    <div id="output"></div>
+    <script src="assets/src/script.js"></script>
+    <script>
+        // Test functions after script loads
+        setTimeout(() => {
+            const output = document.getElementById('output');
+            
+            // Test normalization
+            const testInput = "Hello, WORLD! How are you?";
+            const normalized = trainingLib.normalizeText(testInput);
+            output.innerHTML += `<p>Normalization: "${testInput}" → "${normalized}"</p>`;
+            
+            // Test Levenshtein
+            const dist = trainingLib.levenshtein("rumus", "rumu");
+            output.innerHTML += `<p>Levenshtein distance "rumus" vs "rumu": ${dist}</p>`;
+            
+            // Test similarity
+            const sim = trainingLib.similarity("rumus", "rumu");
+            output.innerHTML += `<p>Similarity "rumus" vs "rumu": ${(sim * 100).toFixed(1)}%</p>`;
+            
+            // Test badword detection (should work after fetch)
+            setTimeout(() => {
+                const hasBadword = trainingLib.containsToxicWord("anjing");
+                output.innerHTML += `<p>Badword detection "anjing": ${hasBadword}</p>`;
+            }, 1000);
+            
+        }, 1000);
+    </script>
+</body>
+</html>

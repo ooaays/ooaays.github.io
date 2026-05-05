@@ -164,6 +164,41 @@ document.addEventListener('DOMContentLoaded', function(){
     "CAN","EM","SUB","ESC","FS","GS","RS","US"
   ];
 
+  const controlDescriptions = [
+    'Null. Penanda kosong; dahulu dipakai sebagai pengisi data atau akhir string pada beberapa sistem.',
+    'Start of Heading. Menandai awal bagian kepala/header pesan.',
+    'Start of Text. Menandai awal isi teks utama dalam pesan.',
+    'End of Text. Menandai akhir isi teks utama.',
+    'End of Transmission. Menandai akhir pengiriman data.',
+    'Enquiry. Permintaan respons dari perangkat penerima.',
+    'Acknowledge. Tanda bahwa data sudah diterima dengan benar.',
+    'Bell. Sinyal bunyi/peringatan pada terminal lama.',
+    'Backspace. Perintah mundur satu posisi karakter.',
+    'Horizontal Tab. Perintah tab untuk memberi jarak horizontal.',
+    'Line Feed. Perintah pindah ke baris berikutnya.',
+    'Vertical Tab. Perintah tab vertikal pada perangkat lama.',
+    'Form Feed. Perintah pindah halaman pada printer lama.',
+    'Carriage Return. Perintah kembali ke awal baris.',
+    'Shift Out. Perintah berpindah ke set karakter alternatif.',
+    'Shift In. Perintah kembali ke set karakter standar.',
+    'Data Link Escape. Penanda kontrol khusus pada komunikasi data.',
+    'Device Control 1. Kontrol perangkat; sering dipakai sebagai XON untuk melanjutkan transmisi.',
+    'Device Control 2. Kontrol perangkat kedua.',
+    'Device Control 3. Kontrol perangkat; sering dipakai sebagai XOFF untuk menghentikan sementara transmisi.',
+    'Device Control 4. Kontrol perangkat keempat.',
+    'Negative Acknowledge. Tanda data tidak diterima dengan benar.',
+    'Synchronous Idle. Penjaga sinkronisasi pada komunikasi data.',
+    'End of Transmission Block. Menandai akhir blok data.',
+    'Cancel. Membatalkan data atau operasi sebelumnya.',
+    'End of Medium. Menandai akhir media penyimpanan/transmisi.',
+    'Substitute. Pengganti karakter yang rusak atau tidak valid.',
+    'Escape. Memulai urutan perintah khusus.',
+    'File Separator. Pemisah berkas/file dalam data.',
+    'Group Separator. Pemisah kelompok data.',
+    'Record Separator. Pemisah rekaman/baris data.',
+    'Unit Separator. Pemisah unit data terkecil.'
+  ];
+
   function pad8(n){ return n.toString(2).padStart(8, '0'); }
 
   function getAsciiInfo(n){
@@ -174,6 +209,40 @@ document.addEventListener('DOMContentLoaded', function(){
     return { label: '-', printable: false, desc: 'Di luar rentang ASCII standar' };
   }
 
+  function getAsciiDetail(n){
+    const info = getAsciiInfo(n);
+    if(n >= 0 && n <= 31){
+      return { type: 'Karakter Kontrol (tidak tercetak)', description: controlDescriptions[n], ...info };
+    }
+    if(n === 32){
+      return { type: 'Karakter tercetak khusus', description: 'SPACE adalah karakter spasi. Komputer menyimpannya sebagai kode desimal 32, walaupun tampilannya hanya berupa jarak kosong.', ...info };
+    }
+    if(n >= 33 && n <= 126){
+      return { type: 'Karakter tercetak', description: `Karakter ini bisa tampil di layar sebagai simbol "${info.label}". Komputer menyimpannya sebagai angka desimal ${n}.`, ...info };
+    }
+    if(n === 127){
+      return { type: 'Karakter Kontrol (tidak tercetak)', description: 'DEL atau Delete dahulu dipakai untuk menandai penghapusan karakter pada media seperti pita kertas.', ...info };
+    }
+    return { type: 'Di luar ASCII standar', description: 'Nilai ini tidak termasuk rentang ASCII standar 0 sampai 127.', ...info };
+  }
+
+  window.openAsciiInfoModal = function(n){
+    const modal = document.getElementById('asciiInfoModal');
+    const detail = getAsciiDetail(n);
+    document.getElementById('asciiInfoDecimal').textContent = n;
+    document.getElementById('asciiInfoBinary').textContent = pad8(n);
+    document.getElementById('asciiInfoLabel').textContent = detail.label;
+    document.getElementById('asciiInfoType').textContent = detail.type;
+    document.getElementById('asciiInfoDesc').textContent = detail.description;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.closeAsciiInfoModal = function(){
+    document.getElementById('asciiInfoModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
   function renderAsciiTable(selectedValue = 0){
     const tbody = document.getElementById('asciiTableBody'); if(!tbody) return;
     tbody.innerHTML = '';
@@ -181,6 +250,8 @@ document.addEventListener('DOMContentLoaded', function(){
       const info = getAsciiInfo(i);
       const tr = document.createElement('tr');
       tr.className = 'ascii-row ' + (i === selectedValue ? 'active' : '');
+      tr.onclick = function(){ openAsciiInfoModal(i); };
+      tr.title = 'Klik untuk melihat informasi karakter ASCII';
       tr.innerHTML = `
         <td class="px-3 py-2 border-b border-slate-100 font-semibold">${i}</td>
         <td class="px-3 py-2 border-b border-slate-100 font-mono">${pad8(i)}</td>
@@ -496,6 +567,26 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
+  function getDecodeGuidance(value, chosenValue){
+    const binary = pad8(value);
+    const weights = [128, 64, 32, 16, 8, 4, 2, 1];
+    const activeWeights = weights.filter((weight, index) => binary[index] === '1');
+    const activeText = activeWeights.length ? activeWeights.join(' + ') : 'tidak ada bit yang aktif';
+    const chosenText = Number.isFinite(chosenValue)
+      ? ` Pilihanmu bernilai desimal ${chosenValue}; bandingkan lagi dengan hasil penjumlahan bit aktif.`
+      : '';
+
+    return `
+      <strong>Belum tepat.</strong> Coba ulangi langkah membacanya:
+      <ol class="decode-feedback-steps">
+        <li>Lihat bit yang bernilai <strong>1</strong> pada biner <strong>${binary}</strong>.</li>
+        <li>Gunakan nilai tempat <strong>128 · 64 · 32 · 16 · 8 · 4 · 2 · 1</strong> dari kiri ke kanan.</li>
+        <li>Pada soal ini, bit aktif berada pada nilai <strong>${activeText}</strong>. Jumlahkan nilai tersebut.</li>
+        <li>Cari hasil penjumlahannya pada tabel ASCII di sebelah kiri, lalu cocokkan dengan karakternya.</li>
+      </ol>
+      <p class="decode-fb-context">${chosenText} Setelah menemukan total desimalnya, pilih karakter yang memiliki angka desimal yang sama.</p>`;
+  }
+
   window.checkDecodeAnswer = function(chosenValue){
     const isCorrect = chosenValue === currentDecodeValue;
     decodeTotal++;
@@ -505,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.decode-option-btn').forEach(btn => {
       btn.classList.add('answered');
       const v = parseInt(btn.dataset.value);
-      if(v === currentDecodeValue) btn.classList.add('decode-correct');
+      if(isCorrect && v === currentDecodeValue) btn.classList.add('decode-correct');
       else if(v === chosenValue && !isCorrect) btn.classList.add('decode-wrong');
     });
 
@@ -527,11 +618,11 @@ document.addEventListener('DOMContentLoaded', function(){
       : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 shrink-0 mt-0.5"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd"/></svg>`;
       const head = isCorrect
         ? `<strong>Benar!</strong> Biner ${pad8(currentDecodeValue)} = desimal ${currentDecodeValue} = karakter "${asciiInfo.label}"`
-        : `<strong>Belum tepat.</strong> Jawaban yang benar: ${pad8(currentDecodeValue)} = desimal ${currentDecodeValue} = karakter "${asciiInfo.label}"`;
+        : getDecodeGuidance(currentDecodeValue, chosenValue);
       feedback.innerHTML = `
         <div class="${cls}">
           <div class="decode-fb-icon">${icon}</div>
-          <div>${head}${context ? `<p class="decode-fb-context">${context}</p>` : ''}</div>
+          <div>${head}${isCorrect && context ? `<p class="decode-fb-context">${context}</p>` : ''}</div>
         </div>`;
     }
 
@@ -552,16 +643,47 @@ document.addEventListener('DOMContentLoaded', function(){
     { q: 'Berikan contoh situasi nyata di mana 8 bit (1 byte) terasa sangat kecil untuk menyimpan data!', ph: 'Petunjuk: 1 byte hanya bisa menyimpan 1 karakter teks. Satu foto kamera HP berukuran ~3 MB = sekitar 3 juta byte = 3 juta karakter. Bayangkan jika kamu harus menyimpan video 1 jam!' },
     { q: 'Apa hubungan antara angka biner dan karakter yang kamu lihat di layar HP atau komputer?', ph: 'Petunjuk: saat kamu ketik huruf "A", keyboard mengirim kode 65 ke komputer. Komputer melihat tabel ASCII, menemukan 65 = "A", lalu menampilkan bentuk huruf itu di layar. Bagaimana menurutmu?' },
   ];
+  const REFLEKSI_STORAGE_KEY = 'repang_refleksi_answers';
+
+  function getSavedRefleksiAnswers(){
+    try {
+      const saved = localStorage.getItem(REFLEKSI_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function setRefleksiStatus(message, type){
+    const status = document.getElementById('repangRefleksiStatus');
+    if(!status) return;
+    status.textContent = message;
+    status.className = `refleksi-status refleksi-status-${type}`;
+  }
 
   window.openRefleksiModal = function() {
     const list = document.getElementById('repangRefleksiList');
+    const savedAnswers = getSavedRefleksiAnswers();
     list.innerHTML = REFLEKSI_REPANG_QS.map((item, i) => `
-      <div>
-        <label style="display:block;font-weight:700;color:#0f172a;margin-bottom:8px;">${i+1}. ${item.q}</label>
-        <textarea class="refleksi-textarea" id="rrq_${i}" placeholder="${item.ph}"></textarea>
+      <div class="refleksi-card">
+        <div class="refleksi-question-row">
+          <div class="refleksi-number">${i+1}</div>
+          <label class="refleksi-label" for="rrq_${i}">${item.q}</label>
+        </div>
+        <div class="refleksi-hint">${item.ph}</div>
+        <textarea class="refleksi-textarea" id="rrq_${i}" placeholder="Tulis jawabanmu di sini...">${savedAnswers[i] || ''}</textarea>
       </div>`).join('');
+    list.querySelectorAll('.refleksi-textarea').forEach(textarea => {
+      textarea.addEventListener('input', function(){
+        this.classList.remove('refleksi-textarea-error');
+        const status = document.getElementById('repangRefleksiStatus');
+        if(status) status.className = 'refleksi-status hidden';
+      });
+    });
     const btn = document.getElementById('repangSimpanBtn');
     btn.textContent = 'Simpan ✓'; btn.style.background = '';
+    const status = document.getElementById('repangRefleksiStatus');
+    if(status) status.className = 'refleksi-status hidden';
     refleksiModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   };
@@ -573,8 +695,33 @@ document.addEventListener('DOMContentLoaded', function(){
 
   window.simpanRefleksiRepang = function() {
     const btn = document.getElementById('repangSimpanBtn');
+    const answers = REFLEKSI_REPANG_QS.map((_, i) => {
+      const field = document.getElementById(`rrq_${i}`);
+      return field ? field.value.trim() : '';
+    });
+    const emptyIndex = answers.findIndex(answer => !answer);
+    document.querySelectorAll('.refleksi-textarea').forEach(field => field.classList.remove('refleksi-textarea-error'));
+
+    if(emptyIndex !== -1){
+      const emptyField = document.getElementById(`rrq_${emptyIndex}`);
+      if(emptyField){
+        emptyField.classList.add('refleksi-textarea-error');
+        emptyField.focus();
+      }
+      setRefleksiStatus(`Jawaban nomor ${emptyIndex + 1} masih kosong. Isi dulu sebelum menyimpan.`, 'error');
+      btn.textContent = 'Lengkapi dulu';
+      btn.style.background = '#dc2626';
+      setTimeout(() => { btn.textContent = 'Simpan ✓'; btn.style.background = ''; }, 1800);
+      return;
+    }
+
+    try {
+      localStorage.setItem(REFLEKSI_STORAGE_KEY, JSON.stringify(answers));
+    } catch(e) {}
+
     btn.textContent = '✅ Tersimpan!';
     btn.style.background = '#16a34a';
+    setRefleksiStatus('Refleksi berhasil disimpan di browser perangkat ini.', 'success');
     setTimeout(() => { btn.textContent = 'Simpan ✓'; btn.style.background = ''; }, 2000);
   };
 
@@ -676,10 +823,12 @@ document.addEventListener('DOMContentLoaded', function(){
   function renderD1B() {
     d1bAnswered = false;
     document.getElementById('nextD1BBtn').classList.add('hidden');
+    document.getElementById('retryD1BBtn').classList.add('hidden');
     document.getElementById('d1bFeedback').style.display = 'none';
     const ch = D1B_CHALLENGES[d1bIdx];
     document.getElementById('d1bProg').textContent = `Tantangan ${d1bIdx+1} / ${D1B_CHALLENGES.length}`;
     document.getElementById('d1bChar').textContent = ch.correctChar;
+    document.getElementById('d1bCode').textContent = ch.correctCode;
     d1bFlippedBit = Math.floor(Math.random() * 8);
     d1bBits = KAL_WEIGHTS.map((w, i) => {
       let b = (ch.correctCode & w) ? 1 : 0;
@@ -689,6 +838,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const currentVal = d1bBits.reduce((s,b,i) => s + b * KAL_WEIGHTS[i], 0);
     document.getElementById('d1bCurrentChar').textContent =
       currentVal >= 32 && currentVal <= 126 ? String.fromCharCode(currentVal) : '(' + currentVal + ')';
+    document.getElementById('d1bCurrentCode').textContent = currentVal;
     document.getElementById('d1bGrid').innerHTML = d1bBits.map((b, i) =>
       `<div class="d1b-cell ${b ? 'bit1' : 'bit0'}" id="d1bc_${i}" onclick="checkD1Bit(${i})">
         <span>${b}</span>
@@ -697,21 +847,33 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   window.checkD1Bit = function(i) {
     if (d1bAnswered) return;
-    d1bAnswered = true;
+    const clickedCell = document.getElementById(`d1bc_${i}`);
+    if (clickedCell && clickedCell.classList.contains('eliminated-flip')) return;
     const ch = D1B_CHALLENGES[d1bIdx];
     const fb = document.getElementById('d1bFeedback');
     fb.style.display = 'block';
     if (i === d1bFlippedBit) {
-      document.getElementById(`d1bc_${i}`).classList.add('correct-flip');
+      d1bAnswered = true;
+      clickedCell.classList.add('correct-flip');
+      document.getElementById('retryD1BBtn').classList.add('hidden');
       fb.style.background = '#f0fdf4'; fb.style.color = '#15803d'; fb.style.border = '2px solid #22c55e';
       fb.textContent = `✅ Tepat! Bit ke-${i} (nilai ${KAL_WEIGHTS[i]}) yang terbalik. Kode benar: ${ch.correctCode} = "${ch.correctChar}".`;
+      if (d1bIdx < D1B_CHALLENGES.length - 1) document.getElementById('nextD1BBtn').classList.remove('hidden');
     } else {
-      document.getElementById(`d1bc_${i}`).classList.add('wrong-flip');
-      document.getElementById(`d1bc_${d1bFlippedBit}`).classList.add('correct-flip');
+      clickedCell.classList.add('wrong-flip', 'eliminated-flip');
+      clickedCell.removeAttribute('onclick');
       fb.style.background = '#fef2f2'; fb.style.color = '#dc2626'; fb.style.border = '2px solid #ef4444';
-      fb.textContent = `❌ Bukan itu. Yang terbalik adalah bit ke-${d1bFlippedBit} (nilai ${KAL_WEIGHTS[d1bFlippedBit]}).`;
+      fb.textContent = '❌ Bukan itu. Bit tersebut dihapus dari pilihan. Silakan pilih bit lain.';
+      document.getElementById('retryD1BBtn').classList.remove('hidden');
     }
-    if (d1bIdx < D1B_CHALLENGES.length - 1) document.getElementById('nextD1BBtn').classList.remove('hidden');
+  };
+  window.retryDetektif1Bit = function() {
+    document.getElementById('d1bFeedback').style.display = 'none';
+    document.getElementById('retryD1BBtn').classList.add('hidden');
+    document.querySelectorAll('#d1bGrid .d1b-cell').forEach((el, index) => {
+      el.classList.remove('wrong-flip', 'eliminated-flip');
+      el.setAttribute('onclick', `checkD1Bit(${index})`);
+    });
   };
   window.nextDetektif1Bit = function() {
     d1bIdx++;

@@ -4,6 +4,51 @@ let hasSeenIntro = false;
 let hasSeenCP = false;
 let hasSeenCara = false;
 
+// Level system
+let currentLevel = 1; // 1: Pelajaran, 2: Kehidupan sehari-hari
+
+// Dynamic datasets
+const datasets = {
+    1: { // Level 1: Pelajaran
+        ipa: [],
+        mtk: [],
+        indo: []
+    },
+    2: { // Level 2: Kehidupan sehari-hari
+        makanan: [],
+        hobi: [],
+        transportasi: []
+    }
+};
+
+// Active tags (current level)
+let activeTags = { ...datasets[1] };
+
+// Load badword library
+let badwordList = [];
+fetch('assets/src/indonesian-badword.json')
+    .then(response => response.json())
+    .then(data => {
+        badwordList = data.categories.flatMap(cat => 
+            cat.words.flatMap(word => [word.word.toLowerCase(), ...(word.variations || []).map(v => v.toLowerCase())])
+        );
+    })
+    .catch(err => console.log('Failed to load badword list:', err));
+
+// Page navigation
+function showPage(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+    });
+    
+    // Show target page
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.remove('hidden');
+    }
+}
+
 function tryOpenLabPage() {
     if (!hasSeenCP || !hasSeenCara) {
         const lockedPopup = document.getElementById("lockedPopup");
@@ -17,35 +62,31 @@ function tryOpenLabPage() {
 function closeStartLockedPopup() {
     const lockedPopup = document.getElementById('lockedPopup');
     if (!lockedPopup) return;
-    lockedPopup.classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    lockedPopup.classList.add("hidden");
+    document.body.style.overflow = "auto";
 }
 
 function checkStartButtonState() {
-    const btnStart = document.getElementById('btn-start');
-    if (!btnStart) return;
-
+    const btn = document.getElementById('btn-start');
+    if (!btn) return;
+    
     if (hasSeenCP && hasSeenCara) {
-        btnStart.classList.remove('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'false');
-        btnStart.title = 'Mulai percobaan';
+        btn.classList.remove('disabled-style');
+        btn.removeAttribute('aria-disabled');
     } else {
-        btnStart.classList.add('disabled-style');
-        btnStart.setAttribute('aria-disabled', 'true');
-        btnStart.title = 'Buka Tujuan dan Cara Penggunaan terlebih dahulu';
+        btn.classList.add('disabled-style');
+        btn.setAttribute('aria-disabled', 'true');
     }
 }
 
-function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const page = document.getElementById(id);
-    if (page) page.classList.add('active');
-    window.scrollTo({ top:0, behavior:"smooth" });
-
-    if (id === 'labPage' && !hasSeenIntro) {
-        hasSeenIntro = true;
-        document.getElementById('introModal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+function setCheckVisible(elementId, visible) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        if (visible) {
+            element.classList.remove('hidden');
+        } else {
+            element.classList.add('hidden');
+        }
     }
 }
 
@@ -54,18 +95,14 @@ function closeIntroModal() {
     document.body.style.overflow = 'auto';
 }
 
-    function speakText(text) {
-        if (!soundEnabled || !('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'id-ID';
-        utterance.rate = 1.0;
-        utterance.pitch = 1.1;
-        window.speechSynthesis.speak(utterance);
-    }
-function setCheckVisible(id, visible){
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('visible', visible);
+function speakText(text) {
+    if (!soundEnabled || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'id-ID';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
 }
     // ================= MODAL CONTROL =================
 
@@ -213,12 +250,11 @@ function updateBioSlideView() {
 
 
 const trainingLib = {
-    toxicWords: ["bodoh", "tolol", "anjing", "babi", "bangsat", "goblok", "asu", "jelek"],
     normalizeText(value) {
         return value
             .trim()
             .toLowerCase()
-            .replace(/[^a-z0-9\u00C0-\u017F\s]+/g, ' ')
+            .replace(/[^\w\s\u00C0-\u017F]/g, ' ')
             .replace(/\s+/g, ' ')
             .trim();
     },
@@ -226,24 +262,62 @@ const trainingLib = {
         const normalized = this.normalizeText(tag);
         return normalized
             .split(' ')
-            .some(word => this.toxicWords.includes(word));
+            .some(word => badwordList.includes(word));
     },
     containsToxicWord(text) {
         const normalized = this.normalizeText(text);
         return normalized
             .split(' ')
-            .some(word => this.toxicWords.includes(word));
+            .some(word => badwordList.includes(word));
+    },
+    // Levenshtein Distance for typo detection
+    levenshtein(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= a.length; j++) {
+            matrix[0][j] = j;
+        }
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    },
+    similarity(a, b) {
+        const maxLen = Math.max(a.length, b.length);
+        if (maxLen === 0) return 1.0;
+        const distance = this.levenshtein(a, b);
+        return (maxLen - distance) / maxLen;
+    },
+    findClosestWord(word, dataset) {
+        let bestMatch = null;
+        let bestSimilarity = 0;
+        for (let category in dataset) {
+            dataset[category].forEach(correctWord => {
+                const sim = this.similarity(word, correctWord);
+                if (sim > bestSimilarity && sim >= 0.7) {
+                    bestMatch = correctWord;
+                    bestSimilarity = sim;
+                }
+            });
+        }
+        return bestMatch;
     }
 };
-        
-        // State Dataset
-        let activeTags = {
-            ipa: [],
-            mtk: [],
-            indo: []
-        };
 
         const botResponses = {
+            // Level 1 responses
             ipa: [
                 "Berdasarkan analisis, kalimat ini berkaitan dengan Ilmu Pengetahuan Alam.",
                 "Sistem mendeteksi pola yang merujuk pada fenomena alam dan sains.",
@@ -265,23 +339,42 @@ const trainingLib = {
                 "Hasil pemrosesan menunjukkan keterkaitan dengan struktur kalimat dan kebahasaan.",
                 "Kalimat tersebut memiliki probabilitas tinggi pada kategori Bahasa Indonesia."
             ],
+            // Level 2 responses
+            makanan: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan topik makanan.",
+                "Sistem mendeteksi pola yang merujuk pada jenis-jenis makanan atau kuliner.",
+                "Konteks kalimat ini terklasifikasi ke dalam kategori makanan.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan dunia kuliner.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori makanan."
+            ],
+            hobi: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan topik hobi atau kegiatan rekreasi.",
+                "Sistem mendeteksi pola yang merujuk pada aktivitas atau kesenangan pribadi.",
+                "Konteks kalimat ini terklasifikasi ke dalam kategori hobi.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan kegiatan rekreasi.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori hobi."
+            ],
+            transportasi: [
+                "Berdasarkan analisis, kalimat ini berkaitan dengan topik transportasi.",
+                "Sistem mendeteksi pola yang merujuk pada alat transportasi atau mobilitas.",
+                "Konteks kalimat ini terklasifikasi ke dalam kategori transportasi.",
+                "Hasil pemrosesan menunjukkan keterkaitan dengan sarana transportasi.",
+                "Kalimat tersebut memiliki probabilitas tinggi pada kategori transportasi."
+            ],
             unknown: [
                 "Mohon maaf, sistem belum dapat mengidentifikasi pola kalimat tersebut.",
                 "Data latih tidak mencukupi untuk melakukan klasifikasi pada kalimat ini.",
                 "Sistem gagal menemukan kecocokan dengan basis data yang ada.",
                 "Kata kunci pada kalimat tidak terdaftar dalam memori sistem.",
                 "Silakan berikan tambahan data latih agar sistem dapat mengenali konteks ini."
+            ],
+            multiple: [
+                "Kalimat ini memiliki kemungkinan beberapa kategori dengan tingkat keyakinan yang sama.",
+                "Sistem mendeteksi beberapa pola yang cocok dengan kategori berbeda.",
+                "Hasil analisis menunjukkan kemungkinan multi-kategori.",
+                "Kalimat tersebut dapat diklasifikasikan ke dalam beberapa kategori sekaligus."
             ]
         };
-
-        let isTrained = false;
-
-        window.onload = () => {
-            checkStartButtonState();
-            addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
-        };
-
-        function focusInput(id) { document.getElementById(id).focus(); }
 
         // MANAJEMEN TAG
         function handleTagInput(e, category) {
@@ -306,6 +399,7 @@ const trainingLib = {
 
         function renderTags(category) {
             const container = document.getElementById(`${category}-tags`);
+            if (!container) return; // Skip if container doesn't exist for current level
             container.innerHTML = "";
             activeTags[category].forEach((tag, index) => {
                 const tagEl = document.createElement('div');
@@ -324,15 +418,22 @@ const trainingLib = {
         function fillDemoData() {
             resetAll();
             
-            const demo = {
-                ipa: "energi, gaya, massa, zat, atom, molekul, sel, jaringan, organ, ekosistem, fotosintesis, gravitasi, listrik, magnet, suhu, kalor, reaksi, senyawa, unsur, gelombang",
-                mtk: "penjumlahan, pengurangan, perkalian, pembagian, pecahan, desimal, persentase, aljabar, persamaan, fungsi, geometri, sudut, luas, volume, bilangan, akar, pangkat, statistika, peluang, grafik",
-                indo: "kata, kalimat, paragraf, wacana, sinonim, antonim, imbuhan, awalan, akhiran, ejaan, tanda baca, narasi, deskripsi, eksposisi, persuasi, dialog, teks, makna, diksi, struktur"
+            const demoData = {
+                1: { // Level 1: Pelajaran
+                    ipa: "energi, gaya, massa, zat, atom, molekul, sel, jaringan, organ, ekosistem, fotosintesis, gravitasi, listrik, magnet, suhu, kalor, reaksi, senyawa, unsur, gelombang",
+                    mtk: "penjumlahan, pengurangan, perkalian, pembagian, pecahan, desimal, persentase, aljabar, persamaan, fungsi, geometri, sudut, luas, volume, bilangan, akar, pangkat, statistika, peluang, grafik",
+                    indo: "kata, kalimat, paragraf, wacana, sinonim, antonim, imbuhan, awalan, akhiran, ejaan, tanda baca, narasi, deskripsi, eksposisi, persuasi, dialog, teks, makna, diksi, struktur"
+                },
+                2: { // Level 2: Kehidupan sehari-hari
+                    makanan: "nasi goreng, bakso, sate, rendang, gado gado, ayam goreng, mie goreng, capcay, pizza, burger, spaghetti, sushi, dimsum, roti, kue, es krim, jus, teh, kopi, air mineral",
+                    hobi: "futsal, sepakbola, basket, voli, badminton, tenis, renang, lari, bersepeda, menggambar, melukis, menyanyi, menari, memasak, membaca, menulis, fotografi, traveling, hiking, camping",
+                    transportasi: "mobil, motor, sepeda, bus, kereta, pesawat, kapal, helikopter, truk, taksi, ojek, becak, delman, kuda, unta, gajah, onta, kuda nil, perahu, kapal laut"
+                }
             };
 
-            for (let cat in demo) {
-                activeTags[cat === 'mtk' ? 'mtk' : (cat === 'indo' ? 'indo' : 'ipa')] = 
-                    demo[cat].split(',').map(s => s.trim().toLowerCase());
+            const currentDemo = demoData[currentLevel];
+            for (let cat in currentDemo) {
+                activeTags[cat] = currentDemo[cat].split(',').map(s => s.trim().toLowerCase());
                 renderTags(cat);
             }
             
@@ -340,30 +441,56 @@ const trainingLib = {
         }
 
         function resetAll() {
-            activeTags = { ipa: [], mtk: [], indo: [] };
-            renderTags('ipa');
-            renderTags('mtk');
-            renderTags('indo');
+            activeTags = { ...datasets[currentLevel] };
+            // Reset all tag containers
+            Object.keys(datasets[currentLevel]).forEach(cat => {
+                const container = document.getElementById(`${cat}-tags`);
+                if (container) container.innerHTML = "";
+            });
             document.getElementById('chat-window').innerHTML = "";
             addChatMessage("Seluruh data latih telah dihapus. Sistem siap menerima instruksi baru.", 'bot');
             isTrained = false;
             document.getElementById('insight-text').textContent = "Sistem telah diatur ulang ke kondisi awal.";
             
-            // Atur ulang Bar Confidence
-            ['ipa', 'mtk', 'indo'].forEach(cat => {
-                document.getElementById(`conf-val-${cat}`).textContent = "0%";
-                document.getElementById(`conf-bar-${cat}`).style.width = "0%";
+            // Reset confidence bars
+            resetConfidenceBars();
+        }
+
+        function resetConfidenceBars() {
+            Object.keys(datasets[currentLevel]).forEach(cat => {
+                const valEl = document.getElementById(`conf-val-${cat}`);
+                const barEl = document.getElementById(`conf-bar-${cat}`);
+                if (valEl) valEl.textContent = "0%";
+                if (barEl) barEl.style.width = "0%";
             });
         }
 
         function trainModel() {
+            // Validasi minimum data latih
+            const minDataPerCategory = 3;
+            const categories = Object.keys(activeTags);
+            let insufficientCategories = [];
+            
+            categories.forEach(cat => {
+                if (activeTags[cat].length < minDataPerCategory) {
+                    insufficientCategories.push(getCategoryDisplayName(cat));
+                }
+            });
+            
+            if (insufficientCategories.length > 0) {
+                const message = `Data latih belum mencukupi. Setiap kategori memerlukan minimal ${minDataPerCategory} kata kunci. Kategori yang masih kurang: ${insufficientCategories.join(', ')}.`;
+                addChatMessage(message, 'warning');
+                document.getElementById('insight-text').textContent = message;
+                return;
+            }
+            
             const log = document.getElementById('train-log');
             log.classList.remove('hidden');
             
             setTimeout(() => {
                 log.classList.add('hidden');
                 isTrained = true;
-                const total = activeTags.ipa.length + activeTags.mtk.length + activeTags.indo.length;
+                const total = Object.values(activeTags).reduce((sum, arr) => sum + arr.length, 0);
                 document.getElementById('insight-text').textContent = `Pelatihan model berhasil diselesaikan menggunakan ${total} kata kunci.`;
                 addChatMessage("Proses pelatihan selesai. Sistem kini siap melakukan klasifikasi teks.", 'bot');
             }, 1000);
@@ -377,10 +504,11 @@ const trainingLib = {
             const text = input.value.trim();
             if (!text) return;
 
+            // Check for bad words first
             if (trainingLib.containsToxicWord(text)) {
                 addChatMessage(text, 'user');
                 input.value = "";
-                setTimeout(() => addChatMessage("Peringatan Sistem: Dilarang menggunakan bahasa yang tidak pantas.", 'warning'), 400);
+                setTimeout(() => addChatMessage("Input mengandung kata yang tidak pantas.", 'warning'), 400);
                 return;
             }
 
@@ -394,23 +522,65 @@ const trainingLib = {
 
             setTimeout(() => {
                 const res = predict(text);
-                const categoryList = botResponses[res.cat];
-                const msg = categoryList[Math.floor(Math.random() * categoryList.length)];
                 
-                addChatMessage(msg, 'bot');
-                if (res.cat !== 'unknown') {
-                    document.getElementById('insight-text').textContent = `Kalimat cocok dengan kategori ${res.cat.toUpperCase()} (Kata Kunci Ditemukan: ${res.matches.join(', ')})`;
+                // Handle typo suggestions
+                if (res.typoSuggestions.length > 0) {
+                    const suggestions = res.typoSuggestions.map(s => `"${s.suggestion}" untuk "${s.original}"`).join(', ');
+                    addChatMessage(`Apakah maksud Anda: ${suggestions}?`, 'bot');
+                }
+
+                // Handle classification result
+                let responseMsg;
+                if (res.categories.length === 0) {
+                    responseMsg = botResponses.unknown[Math.floor(Math.random() * botResponses.unknown.length)];
+                } else if (res.categories.length === 1) {
+                    responseMsg = `Kalimat ini termasuk kategori: ${getCategoryDisplayName(res.categories[0])}`;
+                } else {
+                    responseMsg = `Kalimat ini memiliki kemungkinan beberapa kategori: ${res.categories.map(cat => getCategoryDisplayName(cat)).join(', ')}`;
+                }
+                
+                addChatMessage(responseMsg, 'bot');
+
+                // Update insight text
+                if (res.categories.length > 0) {
+                    const matchesText = res.exactMatches.length > 0 ? ` (Kata Kunci: ${res.exactMatches.join(', ')})` : '';
+                    document.getElementById('insight-text').textContent = `Kalimat cocok dengan kategori ${res.categories.map(cat => cat.toUpperCase()).join(', ')}${matchesText}`;
                 } else {
                     document.getElementById('insight-text').textContent = "Sistem gagal mengidentifikasi kategori. Tidak ada kata kunci yang cocok.";
                 }
 
-                // Perbarui antarmuka Tingkat Keyakinan (Confidence) per Label
-                ['ipa', 'mtk', 'indo'].forEach(cat => {
-                    const conf = res.confidences[cat];
-                    document.getElementById(`conf-val-${cat}`).textContent = `${conf}%`;
-                    document.getElementById(`conf-bar-${cat}`).style.width = `${conf}%`;
-                });
+                // Update confidence bars with animation
+                updateConfidenceBars(res.confidences);
             }, 800);
+        }
+
+        function getCategoryDisplayName(category) {
+            const names = {
+                ipa: 'Ilmu Pengetahuan Alam',
+                mtk: 'Matematika', 
+                indo: 'Bahasa Indonesia',
+                makanan: 'Makanan',
+                hobi: 'Hobi',
+                transportasi: 'Transportasi'
+            };
+            return names[category] || category;
+        }
+
+        function updateConfidenceBars(confidences) {
+            // Reset all bars first
+            resetConfidenceBars();
+            
+            // Update bars with animation
+            setTimeout(() => {
+                Object.keys(confidences).forEach(cat => {
+                    const valEl = document.getElementById(`conf-val-${cat}`);
+                    const barEl = document.getElementById(`conf-bar-${cat}`);
+                    if (valEl && barEl) {
+                        valEl.textContent = `${confidences[cat]}%`;
+                        barEl.style.width = `${confidences[cat]}%`;
+                    }
+                });
+            }, 100);
         }
 
         function addChatMessage(text, sender) {
@@ -423,34 +593,206 @@ const trainingLib = {
         }
 
         function predict(input) {
-            const low = input.toLowerCase();
-            let scores = { ipa: 0, mtk: 0, indo: 0 };
-            let matches = { ipa: [], mtk: [], indo: [] };
-            let totalMatchCount = 0;
+            // 1. Normalisasi input
+            const normalizedInput = trainingLib.normalizeText(input);
+            const words = normalizedInput.split(' ').filter(w => w.length > 0);
+            
+            let scores = {};
+            let exactMatches = [];
+            let typoSuggestions = [];
+            
+            // Initialize scores for all categories
+            Object.keys(activeTags).forEach(cat => {
+                scores[cat] = 0;
+            });
 
-            for (let cat in activeTags) {
-                activeTags[cat].forEach(word => {
-                    if (word && low.includes(word)) {
-                        scores[cat]++;
-                        matches[cat].push(word);
-                        totalMatchCount++;
+            // 2. Process each word
+            words.forEach(word => {
+                let foundExact = false;
+                
+                // Check exact matches first
+                for (let cat in activeTags) {
+                    if (activeTags[cat].includes(word)) {
+                        scores[cat] += 1; // Exact match = 1 point
+                        exactMatches.push(word);
+                        foundExact = true;
                     }
+                }
+                
+                // If no exact match, try fuzzy matching
+                if (!foundExact) {
+                    const suggestion = trainingLib.findClosestWord(word, activeTags);
+                    if (suggestion) {
+                        // Find which category contains the suggestion
+                        for (let cat in activeTags) {
+                            if (activeTags[cat].includes(suggestion)) {
+                                scores[cat] += 0.8; // Typo match = 0.8 points
+                                typoSuggestions.push({ original: word, suggestion: suggestion });
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. Calculate confidences
+            const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+            let confidences = {};
+            
+            if (totalScore > 0) {
+                Object.keys(scores).forEach(cat => {
+                    confidences[cat] = Math.round((scores[cat] / totalScore) * 100);
+                });
+            } else {
+                Object.keys(scores).forEach(cat => {
+                    confidences[cat] = 0;
                 });
             }
 
-            let winner = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
-            
-            // Hitung persentase keyakinan per kategori
-            let confidences = { ipa: 0, mtk: 0, indo: 0 };
-            if (totalMatchCount > 0) {
-                for (let cat in scores) {
-                    confidences[cat] = Math.round((scores[cat] / totalMatchCount) * 100);
-                }
-            }
+            // 4. Determine categories (balanced classification)
+            const maxConfidence = Math.max(...Object.values(confidences));
+            const categories = Object.keys(confidences).filter(cat => confidences[cat] === maxConfidence && confidences[cat] > 0);
 
-            return (scores[winner] === 0) ? 
-                { cat: 'unknown', matches: [], confidences: confidences } : 
-                { cat: winner, matches: matches[winner], confidences: confidences };
+            return {
+                categories: categories,
+                confidences: confidences,
+                exactMatches: exactMatches,
+                typoSuggestions: typoSuggestions
+            };
+        }
+
+        // LEVEL TOGGLE FUNCTIONS
+        function toggleLevel(level) {
+            if (currentLevel === level) return;
+            
+            currentLevel = level;
+            activeTags = { ...datasets[level] };
+            
+            // Update UI
+            updateLevelUI();
+            
+            // Reset training state
+            isTrained = false;
+            resetAll();
+            
+            // Update category sections
+            updateCategorySections();
+        }
+
+        function updateLevelUI() {
+            // Update toggle buttons
+            document.querySelectorAll('.level-toggle').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`level-${currentLevel}`).classList.add('active');
+            
+            // Update page title
+            const titles = {
+                1: 'Lab Virtual Data Latih KA - Level 1: Pelajaran',
+                2: 'Lab Virtual Data Latih KA - Level 2: Kehidupan Sehari-hari'
+            };
+            document.title = titles[currentLevel];
+            
+            // Update main heading
+            const heading = document.querySelector('h1');
+            if (heading) {
+                heading.innerHTML = currentLevel === 1 ? 
+                    'Data Latih <span class="text-blue-600">KA</span>' : 
+                    'Data Latih <span class="text-green-600">KA</span>';
+            }
+        }
+
+        function updateCategorySections() {
+            const categories = Object.keys(datasets[currentLevel]);
+            const container = document.querySelector('.grid.grid-cols-1.gap-4');
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const categoryNames = {
+                    ipa: 'Ilmu Pengetahuan Alam (Sains)',
+                    mtk: 'Matematika',
+                    indo: 'Bahasa Indonesia',
+                    makanan: 'Makanan',
+                    hobi: 'Hobi',
+                    transportasi: 'Transportasi'
+                };
+                
+                const categoryIcons = {
+                    ipa: 'fa-flask',
+                    mtk: 'fa-calculator',
+                    indo: 'fa-book',
+                    makanan: 'fa-utensils',
+                    hobi: 'fa-gamepad',
+                    transportasi: 'fa-car'
+                };
+                
+                const categoryColors = {
+                    ipa: 'text-green-700',
+                    mtk: 'text-blue-700',
+                    indo: 'text-orange-700',
+                    makanan: 'text-red-700',
+                    hobi: 'text-purple-700',
+                    transportasi: 'text-teal-700'
+                };
+                
+                const section = document.createElement('div');
+                section.className = 'p-4 rounded-2xl bg-white border border-gray-100 shadow-sm';
+                section.innerHTML = `
+                    <label class="flex items-center gap-2 text-xs font-bold ${categoryColors[cat]} mb-2 uppercase tracking-wider">
+                        <i class="fa-solid ${categoryIcons[cat]}"></i> ${categoryNames[cat]}
+                    </label>
+                    <div class="tag-container" id="${cat}-tags-container" onclick="focusInput('${cat}-input')">
+                        <div id="${cat}-tags" class="flex flex-wrap gap-1.5"></div>
+                        <input type="text" id="${cat}-input" class="input-tag" placeholder="Ketik dan tekan koma..." onkeyup="handleTagInput(event, '${cat}')">
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+            
+            // Update confidence bars section
+            updateConfidenceBarsSection();
+        }
+
+        function updateConfidenceBarsSection() {
+            const container = document.querySelector('.mt-4.pt-3.border-t.border-gray-200.space-y-3');
+            if (!container) return;
+            
+            const categories = Object.keys(datasets[currentLevel]);
+            const categoryNames = {
+                ipa: 'Ilmu Pengetahuan Alam',
+                mtk: 'Matematika',
+                indo: 'Bahasa Indonesia',
+                makanan: 'Makanan',
+                hobi: 'Hobi',
+                transportasi: 'Transportasi'
+            };
+            
+            const categoryColors = {
+                ipa: 'from-green-500 to-green-600',
+                mtk: 'from-blue-500 to-blue-600',
+                indo: 'from-orange-500 to-orange-600',
+                makanan: 'from-red-500 to-red-600',
+                hobi: 'from-purple-500 to-purple-600',
+                transportasi: 'from-teal-500 to-teal-600'
+            };
+            
+            container.innerHTML = `
+                <h4 class="text-xs font-bold text-gray-700 mb-2"><i class="fa-solid fa-chart-pie mr-1"></i> Tingkat Keyakinan Per Kategori</h4>
+                ${categories.map(cat => `
+                    <div>
+                        <div class="flex justify-between text-[10px] font-bold text-gray-600 mb-1">
+                            <span>${categoryNames[cat]}</span>
+                            <span id="conf-val-${cat}">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                            <div id="conf-bar-${cat}" class="bg-gradient-to-r ${categoryColors[cat]} h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
         }
 
 try {
@@ -458,3 +800,32 @@ try {
   if (sessionStorage.getItem('caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
   checkStartButtonState();
 } catch(e) {}
+
+        let isTrained = false;
+
+        window.onload = () => {
+            checkStartButtonState();
+            addChatMessage("Selamat datang. Saya adalah Asisten AI. Silakan masukkan data latih pada panel kiri, kemudian jalankan proses pelatihan.", 'bot');
+            addChatMessage("💡 Instruksi: Setiap kategori memerlukan minimal 3 kata kunci agar sistem dapat belajar dengan baik. Contoh: IPA (energi, atom, sel), Matematika (rumus, pecahan, grafik).", 'bot');
+            
+            // Initialize level system
+            updateLevelUI();
+            updateCategorySections();
+            
+            // Set default level to 1
+            currentLevel = 1;
+            activeTags = { ...datasets[1] };
+        };
+
+        function focusInput(id) { document.getElementById(id).focus(); }
+
+        function addChatMessage(text, sender) {
+            const win = document.getElementById('chat-window');
+            if (!win) return;
+            
+            const div = document.createElement('div');
+            div.className = `message ${sender === 'user' ? 'user-msg' : (sender === 'warning' ? 'warning-msg' : 'bot-msg')}`;
+            div.textContent = text;
+            win.appendChild(div);
+            win.scrollTo({ top: win.scrollHeight, behavior: 'smooth' });
+        }

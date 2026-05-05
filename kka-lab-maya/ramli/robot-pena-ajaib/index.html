@@ -735,6 +735,46 @@
       opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none;
     }
     .read-check.visible { opacity:1; transform:translateY(-50%) scale(1); }
+
+    /* Mode desktop-scroll untuk layar kecil: tampilan tetap seperti desktop, bisa digeser horizontal. */
+    @media (max-width:1024px){
+      html,
+      body,
+      .page,
+      .home-hero-wrap,
+      .lab-shell{
+        min-width:1200px !important;
+      }
+      html,
+      body{
+        overflow-x:auto !important;
+      }
+      .fixed.inset-0{
+        min-width:1200px !important;
+        align-items:flex-start !important;
+        justify-content:center !important;
+        overflow:auto !important;
+        padding-top:16px !important;
+        padding-bottom:24px !important;
+      }
+      .lab-header-text{ display:block !important; }
+      .lab-header-logos{ display:flex !important; }
+      .home-hero-wrap{
+        grid-template-columns:minmax(520px,1fr) minmax(480px,560px) !important;
+      }
+      .lab-grid{
+        grid-template-columns:280px 380px 1fr !important;
+      }
+      .hero-buttons{
+        grid-template-columns:1fr 1fr !important;
+      }
+      .status-card{
+        grid-template-columns:repeat(5,1fr) !important;
+      }
+      .stage-tools{
+        justify-content:flex-end !important;
+      }
+    }
   </style>
 </head>
 <body>
