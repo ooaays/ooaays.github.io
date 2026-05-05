@@ -760,7 +760,7 @@
         </p>
 
         <div class="hero-buttons">
-          <!-- 1. Tujuan Pembelajaran -->
+          <!-- 1. Tujuan Praktikum -->
           <button onclick="openTujuanModal()" class="flex w-full h-20 md:h-24 rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
             <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0 rounded-l-[20px]">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
@@ -768,7 +768,7 @@
               </svg>
             </div>
             <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-3 rounded-r-[20px] relative">
-              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Pembelajaran</span>
+              <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
               <span id="check-tujuan" class="read-check">✓</span>
             </div>
           </button>
@@ -1009,7 +1009,7 @@
   <div id="tujuanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
       <div class="shrink-0 mb-6">
-        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Pembelajaran</h2>
+        <h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Praktikum</h2>
       </div>
 
       <div class="flex-1 overflow-y-auto pr-4 text-left pb-4">
@@ -1500,7 +1500,7 @@
     function tryOpenLabPage() {
       if (!tujuanRead || !caraRead) {
         const parts = [];
-        if (!tujuanRead) parts.push('Tujuan Pembelajaran');
+        if (!tujuanRead) parts.push('Tujuan Praktikum');
         if (!caraRead) parts.push('Cara Penggunaan');
         alert('Silakan baca ' + parts.join(' dan ') + ' terlebih dahulu sebelum memulai percobaan.');
         return;

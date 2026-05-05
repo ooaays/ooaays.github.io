@@ -11,6 +11,6 @@ Cocok untuk:
 - dibuka offline langsung dari folder
 
 Catatan:
-- tombol **Mulai Percobaan** terkunci sampai pengguna membuka **Tujuan Pembelajaran** dan **Cara Penggunaan**
+- tombol **Mulai Percobaan** terkunci sampai pengguna membuka **Tujuan Praktikum** dan **Cara Penggunaan**
 - aset item memakai file lokal
 - header memakai penulisan Direktorat yang sudah disesuaikan
