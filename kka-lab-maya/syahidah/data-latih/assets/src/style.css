@@ -32,9 +32,10 @@ background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
 background-size: 30px 30px;
 color: var(--text-main);
 min-height: 100vh;
+min-width:1200px;
 margin: 0;
 padding: 0;
-overflow-x: hidden;
+overflow-x:auto;
 }
 
 /* KODE STYLE HEADER KEMDIKBUD */
