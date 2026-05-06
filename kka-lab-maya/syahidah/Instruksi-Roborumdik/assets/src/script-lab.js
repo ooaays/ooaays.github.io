@@ -213,7 +213,7 @@
 
     function renderDots() {
         const dotsContainer = document.getElementById('dots-container');
-        dotsContainer.innerHTML = '<div class="absolute top-1/2 left-6 right-6 h-1 bg-white/20 -mt-0.5 z-0"></div>';
+        dotsContainer.innerHTML = '<div class="dots"></div>';
         
         experiments.forEach((exp, index) => {
             const btn = document.createElement('button');
@@ -288,7 +288,7 @@
         if (!valObj || typeof valObj !== 'object') valObj = { mode: 'number', value: typeof valObj === 'number' ? valObj : 0 };
 
         const container = document.createElement('div');
-        container.className = 'inline-flex items-center bg-black/10 rounded-full pl-1 pr-1.5 py-0.5 gap-1 shadow-inner border border-black/5 mx-1 relative';
+        container.className = 'inline-flex items-center bg-white  rounded-full pl-1 pr-1.5 py-0.5 gap-1 shadow-inner border border-black/5 mx-1 relative';
 
         const modeBtn = document.createElement('button');
         modeBtn.className = 'bg-white hover:bg-gray-100 rounded-full h-5 px-2 shadow-sm text-[11px] font-black text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 z-10 shrink-0';
@@ -359,12 +359,12 @@
         } else {
             if (valObj.mode === 'number') {
                 const inp = document.createElement('input'); inp.type = 'number'; inp.value = valObj.value;
-                inp.className = 'w-12 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-mono font-bold shadow-inner';
+                inp.className = 'w-24 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-mono font-bold shadow-inner';
                 inp.oninput = e => onChange({ ...valObj, value: parseFloat(e.target.value)||0 }, false);
                 container.appendChild(inp);
             } else if (valObj.mode === 'text') {
                 const inp = document.createElement('input'); inp.type = 'text'; inp.value = valObj.value;
-                inp.className = 'w-24 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-sans font-bold shadow-inner';
+                inp.className = 'w-50 text-xs h-5 rounded-full px-2 text-slate-800 outline-none font-sans font-bold shadow-inner';
                 inp.oninput = e => onChange({ ...valObj, value: e.target.value }, false);
                 container.appendChild(inp);
             } else if (valObj.mode === 'variable') {

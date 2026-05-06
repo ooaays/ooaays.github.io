@@ -45,7 +45,7 @@
         
         
             <div id="dots-container" class="flex items-center gap-2">
-<div class="absolute top-1/2 left-6 right-6 h-1 bg-white/20 -mt-0.5 z-0"></div>
+            <div class="dots"></div>
                 <!-- Diisi otomatis oleh JS -->
             </div>
 
@@ -111,7 +111,7 @@
             </div>
             <div class="p-3 flex justify-between items-center border-b border-slate-100 bg-white shadow-sm z-10 shrink-0">
                 <h2 class="font-bold text-slate-700 text-sm"><i class="fa-solid fa-puzzle-piece text-slate-700 mr-2"></i>Area Skrip (<span id="active-sprite-name">Robot</span>)</h2>
-                <button onclick="clearScript()" class="text-xs text-red-500 font-bold hover:underline">Hapus Semua</button>
+                <button onclick="clearScript()" class="bg-white-400/90 text-xs text-red-500 rounded-full shadow-2xl border border-red-500 font-bold text-xs px-1 py-1 hover:bg-red-100 ">Hapus Semua</button>
             </div>
             <div id="script-area" class="flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-robot pb-10 transition-colors relative scroll-smooth">
                 <div id="blocks-container" class="relative z-10 flex flex-col min-w-max"></div>
@@ -175,7 +175,7 @@
             <div class="bg-yellow-400/95 text-yellow-900 px-4 py-3 font-black flex justify-between items-center text-[15px]">
                 <span id="tutorial-title-text" class="block"></span>
                 <button id="tutorial-minimize-btn" onclick="minimizeTutorialPanel()" class="text-yellow-900 bg-white/20 hover:bg-white/30 rounded-full px-3 py-1 text-sm font-bold transition-all shadow-sm">
-                    <i class="fa-solid fa-window-minimize"></i>
+                    v
                 </button>
             </div>
             <div class="p-5 text-[14.5px] leading-relaxed text-slate-700 bg-yellow-50 min-h-[160px]" id="tutorial-content"></div>

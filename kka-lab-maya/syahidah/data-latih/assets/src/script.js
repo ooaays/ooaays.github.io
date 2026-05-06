@@ -1026,7 +1026,7 @@ try {
             const element = document.getElementById(id);
             if (element) element.focus();
         }
-
+  
         function addChatMessage(text, sender) {
             const win = document.getElementById('chat-window');
             if (!win) return;
