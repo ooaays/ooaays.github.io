@@ -48,7 +48,7 @@
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#a855f7;">Tujuan<span id="check-tujuan" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></div>
           </button>
 
           <button onclick="openCaraModal()" class="menu-btn">
@@ -57,7 +57,7 @@
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#f97316;">Panduan<span id="check-cara" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></div>
           </button>
 
           <button id="btn-start" onclick="tryOpenLabPage()" aria-disabled="true" title="Buka Tujuan dan Cara Penggunaan terlebih dahulu" class="menu-btn disabled-style">
@@ -66,7 +66,7 @@
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#06b6d4;">Mulai Lab</div>
+            <div class="menu-btn-label" style="background:#06b6d4;">Mulai Percobaan</div>
           </button>
 
           <button onclick="openBioModal()" class="menu-btn">
@@ -75,7 +75,7 @@
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#84cc16;">Pengembang</div>
+            <div class="menu-btn-label" style="background:#84cc16;">Biodata Pengembang</div>
           </button>
         </div>
 
@@ -107,15 +107,15 @@
 
   <section id="labPage" class="page">
     <div class="lab-shell">
-      <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+      <div class="lab-heading">
         <div>
-          <h2 class="text-3xl font-black text-sky-700">LAB MAYA REPRESENTASI GAMBAR</h2>
-          <p class="text-slate-500">Belajar memahami piksel, data biner, posisi, dan bentuk gambar</p>
+          <h2 class="lab-heading-title">LAB MAYA REPRESENTASI GAMBAR</h2>
+          <p class="lab-heading-subtitle">Belajar memahami piksel, data biner, posisi, dan bentuk gambar</p>
         </div>
       </div>
 
       <div class="progress-section">
-        <div class="progress-meta mb-2">
+        <div class="progress-meta">
           <div id="progressLabel" class="progress-label">0 / 5 Tahap Selesai (0%)</div>
           <div class="flex items-center gap-3 flex-wrap">
             <div id="progressSteps" class="prog-steps"></div>
@@ -136,14 +136,14 @@
         </div>
 
         <div class="dark-panel">
-          <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
-            <div>
+          <div class="canvas-topbar">
+            <div class="canvas-topbar-head">
+              <div class="canvas-title-wrap">
               <div class="text-3xl font-black text-sky-400">Kanvas Piksel</div>
               <div class="text-slate-400 text-sm">Setiap kotak mewakili satu data biner.</div>
+              </div>
+              <button class="lab-menu-btn lab-menu-btn-home lab-menu-btn-home-top" onclick="showPage('homePage')">Kembali ke Beranda</button>
             </div>
-            <button class="lab-menu-btn lab-menu-btn-home lab-menu-btn-home-top" onclick="showPage('homePage')">Kembali ke Beranda</button>
-          </div>
-          <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
             <div class="lab-menu-bar">
               <button id="stageNextBtn" class="lab-menu-btn lab-menu-btn-next opacity-50 cursor-not-allowed" onclick="goNextStage()" disabled>Tahap Berikutnya</button>
               <button class="lab-menu-btn lab-menu-btn-example" onclick="openExampleModal()">Contoh Tahap Ini</button>
@@ -171,7 +171,11 @@
               </div>
 
               <div class="pixel-board-wrap">
-                <div id="pixelBoard" class="pixel-board"></div>
+                <div class="pixel-board-axis-top" id="pixelBoardAxisTop"></div>
+                <div class="pixel-board-shell">
+                  <div class="pixel-board-axis-left" id="pixelBoardAxisLeft"></div>
+                  <div id="pixelBoard" class="pixel-board"></div>
+                </div>
               </div>
             </div>
 
@@ -194,8 +198,8 @@
                   <div class="blank">.</div>
                 </div>
                 <div class="action-row canvas-action-row compact">
-                  <button class="action-btn canvas-reset-btn" onclick="resetCurrentStage()">Reset Tahap</button>
                   <button class="action-btn canvas-check-btn" onclick="checkStage()">Periksa Tahap</button>
+                  <button class="action-btn canvas-reset-btn" onclick="resetCurrentStage()">Reset Tahap</button>
                 </div>
               </div>
             </div>
@@ -361,6 +365,10 @@
         <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
           <div class="font-black text-sky-800 mb-2">Hasil Visual</div>
           <div id="exampleOutput" class="text-slate-700 whitespace-pre-wrap"></div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <div class="font-black text-amber-700 mb-2">Apa Arti Datanya?</div>
+          <div id="exampleMeaning" class="text-slate-700 leading-relaxed"></div>
         </div>
         <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
           <div class="font-black text-emerald-800 mb-2">Kenapa Begitu?</div>
