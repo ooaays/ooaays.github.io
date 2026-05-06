@@ -21,8 +21,13 @@ const datasets = {
     }
 };
 
+function createEmptyTags(level) {
+    return Object.fromEntries(Object.keys(datasets[level]).map(cat => [cat, []]));
+}
+
 // Active tags (current level)
-let activeTags = { ...datasets[1] };
+let activeTags = createEmptyTags(1);
+const REFLECTION_CACHE_KEY = 'reflectionAnswerDataLatih';
 
 // Load badword library
 let badwordList = [];
@@ -79,14 +84,76 @@ function checkStartButtonState() {
     }
 }
 
+function toggleSampleSentences() {
+    const panel = document.getElementById('sample-sentences-panel');
+    const reflection = document.getElementById('reflection-panel');
+    if (!panel) return;
+    panel.classList.toggle('hidden');
+    if (reflection && !reflection.classList.contains('hidden')) {
+        reflection.classList.add('hidden');
+    }
+}
+
+function toggleReflectionForm() {
+    const panel = document.getElementById('reflection-panel');
+    const samples = document.getElementById('sample-sentences-panel');
+    const answerEl = document.getElementById('reflection-answer');
+    if (!panel || !answerEl) return;
+    panel.classList.toggle('hidden');
+    if (samples && !samples.classList.contains('hidden')) {
+        samples.classList.add('hidden');
+    }
+    if (!panel.classList.contains('hidden')) {
+        const saved = sessionStorage.getItem(REFLECTION_CACHE_KEY);
+        answerEl.value = saved || '';
+    }
+}
+
+function copySampleSentence(sentence) {
+    if (!navigator.clipboard) {
+        return;
+    }
+    navigator.clipboard.writeText(sentence).catch(() => {
+        console.warn('Gagal menyalin kalimat.');
+    });
+}
+
+function saveReflection() {
+    const answerEl = document.getElementById('reflection-answer');
+    if (!answerEl) return;
+    const answer = answerEl.value.trim();
+    if (!answer) {
+        // Removed chat message for empty answer
+        return;
+    }
+
+    sessionStorage.setItem(REFLECTION_CACHE_KEY, answer);
+    // Removed chat message for save confirmation
+    const insight = document.getElementById('insight-text');
+    if (insight) {
+        insight.textContent = 'Jawaban refleksi telah disimpan.';
+    }
+}
+
+function resetReflection() {
+    const answerEl = document.getElementById('reflection-answer');
+    if (!answerEl) return;
+    answerEl.value = '';
+    sessionStorage.removeItem(REFLECTION_CACHE_KEY);
+    // Removed chat message for reset
+    const insight = document.getElementById('insight-text');
+    if (insight) {
+        insight.textContent = 'Jawaban refleksi telah dihapus.';
+    }
+}
+
 function setCheckVisible(elementId, visible) {
     const element = document.getElementById(elementId);
-    if (element) {
-        if (visible) {
-            element.classList.remove('hidden');
-        } else {
-            element.classList.add('hidden');
-        }
+    if (!element) return;
+    if (visible) {
+        element.classList.add('visible');
+    } else {
+        element.classList.remove('visible');
     }
 }
 
@@ -176,6 +243,7 @@ function changeSlide(direction){
 function updateDots(){
     for(let i=0;i<totalSlides;i++){
         const dot = document.getElementById("dot-" + i);
+        if (!dot) continue;
         if(i === currentSlide){
             dot.classList.remove("w-3","bg-slate-300");
             dot.classList.add("w-8","bg-orange-500");
@@ -191,10 +259,9 @@ function updateButtons(){
     const nextBtn = document.getElementById("nextBtn");
     const closeBtn = document.getElementById("closeBtn");
 
-    prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
-    nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
-    closeBtn.style.visibility = currentSlide === totalSlides - 1 ? "visible" : "hidden";
-
+    if (prevBtn) prevBtn.style.visibility = currentSlide === 0 ? "hidden" : "visible";
+    if (nextBtn) nextBtn.style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
+    if (closeBtn) closeBtn.style.visibility = currentSlide === totalSlides - 1 ? "visible" : "hidden";
 }
 
 
@@ -420,14 +487,14 @@ const trainingLib = {
             
             const demoData = {
                 1: { // Level 1: Pelajaran
-                    ipa: "energi, gaya, massa, zat, atom, molekul, sel, jaringan, organ, ekosistem, fotosintesis, gravitasi, listrik, magnet, suhu, kalor, reaksi, senyawa, unsur, gelombang",
-                    mtk: "penjumlahan, pengurangan, perkalian, pembagian, pecahan, desimal, persentase, aljabar, persamaan, fungsi, geometri, sudut, luas, volume, bilangan, akar, pangkat, statistika, peluang, grafik",
+                    ipa: "energi, gaya, massa, zat, atom, molekul, sel, jaringan, organ, ekosistem, fotosintesis, gravitasi, listrik, magnet, suhu, kalor, reaksi, senyawa, unsur, gelombang, fenomena alam",
+                    mtk: "penjumlahan, pengurangan, perkalian, pembagian, pecahan, desimal, persentase, aljabar, persamaan, fungsi, geometri, sudut, luas, volume, bilangan, akar, pangkat, statistika, peluang, grafik,rumus",
                     indo: "kata, kalimat, paragraf, wacana, sinonim, antonim, imbuhan, awalan, akhiran, ejaan, tanda baca, narasi, deskripsi, eksposisi, persuasi, dialog, teks, makna, diksi, struktur"
                 },
                 2: { // Level 2: Kehidupan sehari-hari
                     makanan: "nasi goreng, bakso, sate, rendang, gado gado, ayam goreng, mie goreng, capcay, pizza, burger, spaghetti, sushi, dimsum, roti, kue, es krim, jus, teh, kopi, air mineral",
                     hobi: "futsal, sepakbola, basket, voli, badminton, tenis, renang, lari, bersepeda, menggambar, melukis, menyanyi, menari, memasak, membaca, menulis, fotografi, traveling, hiking, camping",
-                    transportasi: "mobil, motor, sepeda, bus, kereta, pesawat, kapal, helikopter, truk, taksi, ojek, becak, delman, kuda, unta, gajah, onta, kuda nil, perahu, kapal laut"
+                    transportasi: "mobil, motor, sepeda, bus, kereta, pesawat, kapal, helikopter, truk, taksi, ojek, becak, delman"
                 }
             };
 
@@ -441,16 +508,18 @@ const trainingLib = {
         }
 
         function resetAll() {
-            activeTags = { ...datasets[currentLevel] };
+            activeTags = createEmptyTags(currentLevel);
             // Reset all tag containers
             Object.keys(datasets[currentLevel]).forEach(cat => {
                 const container = document.getElementById(`${cat}-tags`);
                 if (container) container.innerHTML = "";
             });
-            document.getElementById('chat-window').innerHTML = "";
+            const chatWindow = document.getElementById('chat-window');
+            if (chatWindow) chatWindow.innerHTML = "";
             addChatMessage("Seluruh data latih telah dihapus. Sistem siap menerima instruksi baru.", 'bot');
             isTrained = false;
-            document.getElementById('insight-text').textContent = "Sistem telah diatur ulang ke kondisi awal.";
+            const insight = document.getElementById('insight-text');
+            if (insight) insight.textContent = "Sistem telah diatur ulang ke kondisi awal.";
             
             // Reset confidence bars
             resetConfidenceBars();
@@ -485,13 +554,14 @@ const trainingLib = {
             }
             
             const log = document.getElementById('train-log');
-            log.classList.remove('hidden');
+            if (log) log.classList.remove('hidden');
             
             setTimeout(() => {
-                log.classList.add('hidden');
+                if (log) log.classList.add('hidden');
                 isTrained = true;
                 const total = Object.values(activeTags).reduce((sum, arr) => sum + arr.length, 0);
-                document.getElementById('insight-text').textContent = `Pelatihan model berhasil diselesaikan menggunakan ${total} kata kunci.`;
+                const insight = document.getElementById('insight-text');
+                if (insight) insight.textContent = `Pelatihan model berhasil diselesaikan menggunakan ${total} kata kunci.`;
                 addChatMessage("Proses pelatihan selesai. Sistem kini siap melakukan klasifikasi teks.", 'bot');
             }, 1000);
         }
@@ -585,6 +655,7 @@ const trainingLib = {
 
         function addChatMessage(text, sender) {
             const win = document.getElementById('chat-window');
+            if (!win) return;
             const div = document.createElement('div');
             div.className = `message ${sender === 'user' ? 'user-msg' : (sender === 'warning' ? 'warning-msg' : 'bot-msg')}`;
             div.textContent = text;
@@ -606,8 +677,123 @@ const trainingLib = {
                 scores[cat] = 0;
             });
 
-            // 2. Process each word
-            words.forEach(word => {
+            // 2. Check for exact phrase matches first (multi-word phrases)
+            let processedIndices = new Set(); // Track which word indices have been processed
+            
+            // Check for 3-word phrases first (highest priority)
+            for (let i = 0; i <= words.length - 3; i++) {
+                if (processedIndices.has(i)) continue;
+                
+                const phrase = words[i] + ' ' + words[i + 1] + ' ' + words[i + 2];
+                let foundExactPhrase = false;
+                
+                // Check exact phrase match first
+                for (let cat in activeTags) {
+                    if (activeTags[cat].includes(phrase)) {
+                        scores[cat] += 3; // 3-word phrase match = 3 points
+                        exactMatches.push(phrase);
+                        
+                        // Mark these indices as processed
+                        processedIndices.add(i);
+                        processedIndices.add(i + 1);
+                        processedIndices.add(i + 2);
+                        foundExactPhrase = true;
+                        break;
+                    }
+                }
+                
+                // If no exact phrase match, try fuzzy matching for 3-word phrases
+                if (!foundExactPhrase) {
+                    let bestPhraseMatch = null;
+                    let bestPhraseSimilarity = 0;
+                    let bestPhraseCategory = null;
+                    
+                    // Find the closest matching 3-word phrase across all categories
+                    for (let cat in activeTags) {
+                        activeTags[cat].forEach(existingPhrase => {
+                            if ((existingPhrase.match(/ /g) || []).length >= 2) { // Only check 3+ word phrases
+                                const similarity = trainingLib.similarity(phrase, existingPhrase);
+                                if (similarity > bestPhraseSimilarity && similarity >= 0.7) {
+                                    bestPhraseMatch = existingPhrase;
+                                    bestPhraseSimilarity = similarity;
+                                    bestPhraseCategory = cat;
+                                }
+                            }
+                        });
+                    }
+                    
+                    // If found a good fuzzy phrase match
+                    if (bestPhraseMatch) {
+                        const fuzzyScore = bestPhraseSimilarity >= 0.8 ? 3.0 : 2.0; // High similarity = same as exact phrase
+                        scores[bestPhraseCategory] += fuzzyScore;
+                        typoSuggestions.push({ original: phrase, suggestion: bestPhraseMatch });
+                        
+                        // Mark these indices as processed
+                        processedIndices.add(i);
+                        processedIndices.add(i + 1);
+                        processedIndices.add(i + 2);
+                    }
+                }
+            }
+            
+            // Check for 2-word phrases
+            for (let i = 0; i <= words.length - 2; i++) {
+                if (processedIndices.has(i) || processedIndices.has(i + 1)) continue;
+                
+                const phrase = words[i] + ' ' + words[i + 1];
+                let foundExactPhrase = false;
+                
+                // Check exact phrase match first
+                for (let cat in activeTags) {
+                    if (activeTags[cat].includes(phrase)) {
+                        scores[cat] += 2; // 2-word phrase match = 2 points
+                        exactMatches.push(phrase);
+                        
+                        // Mark these indices as processed
+                        processedIndices.add(i);
+                        processedIndices.add(i + 1);
+                        foundExactPhrase = true;
+                        break;
+                    }
+                }
+                
+                // If no exact phrase match, try fuzzy matching for phrases
+                if (!foundExactPhrase) {
+                    let bestPhraseMatch = null;
+                    let bestPhraseSimilarity = 0;
+                    let bestPhraseCategory = null;
+                    
+                    // Find the closest matching phrase across all categories
+                    for (let cat in activeTags) {
+                        activeTags[cat].forEach(existingPhrase => {
+                            if (existingPhrase.includes(' ')) { // Only check multi-word phrases
+                                const similarity = trainingLib.similarity(phrase, existingPhrase);
+                                if (similarity > bestPhraseSimilarity && similarity >= 0.7) {
+                                    bestPhraseMatch = existingPhrase;
+                                    bestPhraseSimilarity = similarity;
+                                    bestPhraseCategory = cat;
+                                }
+                            }
+                        });
+                    }
+                    
+                    // If found a good fuzzy phrase match
+                    if (bestPhraseMatch) {
+                        const fuzzyScore = bestPhraseSimilarity >= 0.8 ? 2.0 : 1.5; // High similarity = same as exact phrase
+                        scores[bestPhraseCategory] += fuzzyScore;
+                        typoSuggestions.push({ original: phrase, suggestion: bestPhraseMatch });
+                        
+                        // Mark these indices as processed
+                        processedIndices.add(i);
+                        processedIndices.add(i + 1);
+                    }
+                }
+            }
+            
+            // 3. Process remaining individual words
+            words.forEach((word, index) => {
+                if (processedIndices.has(index)) return; // Skip if already processed as part of a phrase
+                
                 let foundExact = false;
                 
                 // Check exact matches first
@@ -619,14 +805,34 @@ const trainingLib = {
                     }
                 }
                 
-                // If no exact match, try fuzzy matching
+                // If no exact match, try matching individual words inside multi-word tags
+                if (!foundExact) {
+                    for (let cat in activeTags) {
+                        for (let existingTag of activeTags[cat]) {
+                            const phraseWords = existingTag.split(' ');
+                            if (phraseWords.includes(word)) {
+                                scores[cat] += 1;
+                                exactMatches.push(word);
+                                foundExact = true;
+                                break;
+                            }
+                        }
+                        if (foundExact) break;
+                    }
+                }
+
+                // If still no exact match, try fuzzy matching
                 if (!foundExact) {
                     const suggestion = trainingLib.findClosestWord(word, activeTags);
                     if (suggestion) {
+                        // Calculate similarity for scoring
+                        const similarity = trainingLib.similarity(word, suggestion);
+                        const fuzzyScore = similarity >= 0.8 ? 1.0 : 0.7; // High similarity = same as exact match
+                        
                         // Find which category contains the suggestion
                         for (let cat in activeTags) {
                             if (activeTags[cat].includes(suggestion)) {
-                                scores[cat] += 0.8; // Typo match = 0.8 points
+                                scores[cat] += fuzzyScore;
                                 typoSuggestions.push({ original: word, suggestion: suggestion });
                                 break;
                             }
@@ -649,9 +855,9 @@ const trainingLib = {
                 });
             }
 
-            // 4. Determine categories (balanced classification)
-            const maxConfidence = Math.max(...Object.values(confidences));
-            const categories = Object.keys(confidences).filter(cat => confidences[cat] === maxConfidence && confidences[cat] > 0);
+            // 4. Determine categories (multi-category classification)
+            // Include all categories that have any score > 0
+            const categories = Object.keys(confidences).filter(cat => confidences[cat] > 0);
 
             return {
                 categories: categories,
@@ -666,7 +872,7 @@ const trainingLib = {
             if (currentLevel === level) return;
             
             currentLevel = level;
-            activeTags = { ...datasets[level] };
+            activeTags = createEmptyTags(level);
             
             // Update UI
             updateLevelUI();
@@ -684,14 +890,15 @@ const trainingLib = {
             document.querySelectorAll('.level-toggle').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.getElementById(`level-${currentLevel}`).classList.add('active');
+            const activeBtn = document.getElementById(`level-${currentLevel}`);
+            if (activeBtn) activeBtn.classList.add('active');
             
             // Update page title
             const titles = {
                 1: 'Lab Virtual Data Latih KA - Level 1: Pelajaran',
                 2: 'Lab Virtual Data Latih KA - Level 2: Kehidupan Sehari-hari'
             };
-            document.title = titles[currentLevel];
+            document.title = titles[currentLevel] || document.title;
             
             // Update main heading
             const heading = document.querySelector('h1');
@@ -770,13 +977,13 @@ const trainingLib = {
                 transportasi: 'Transportasi'
             };
             
-            const categoryColors = {
-                ipa: 'from-green-500 to-green-600',
-                mtk: 'from-blue-500 to-blue-600',
-                indo: 'from-orange-500 to-orange-600',
-                makanan: 'from-red-500 to-red-600',
-                hobi: 'from-purple-500 to-purple-600',
-                transportasi: 'from-teal-500 to-teal-600'
+            const categoryGradients = {
+                ipa: 'linear-gradient(to right, #22c55e, #16a34a)',
+                mtk: 'linear-gradient(to right, #3b82f6, #2563eb)',
+                indo: 'linear-gradient(to right, #fb923c, #f97316)',
+                makanan: 'linear-gradient(to right, #f87171, #dc2626)',
+                hobi: 'linear-gradient(to right, #a78bfa, #7c3aed)',
+                transportasi: 'linear-gradient(to right, #2dd4bf, #0d9488)'
             };
             
             container.innerHTML = `
@@ -787,8 +994,8 @@ const trainingLib = {
                             <span>${categoryNames[cat]}</span>
                             <span id="conf-val-${cat}">0%</span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5">
-                            <div id="conf-bar-${cat}" class="bg-gradient-to-r ${categoryColors[cat]} h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                            <div id="conf-bar-${cat}" class="h-1.5 rounded-full transition-all duration-500" style="width: 0%; background: ${categoryGradients[cat]};"></div>
                         </div>
                     </div>
                 `).join('')}
@@ -809,15 +1016,16 @@ try {
             addChatMessage("💡 Instruksi: Setiap kategori memerlukan minimal 3 kata kunci agar sistem dapat belajar dengan baik. Contoh: IPA (energi, atom, sel), Matematika (rumus, pecahan, grafik).", 'bot');
             
             // Initialize level system
+            currentLevel = 1;
+            activeTags = createEmptyTags(currentLevel);
             updateLevelUI();
             updateCategorySections();
-            
-            // Set default level to 1
-            currentLevel = 1;
-            activeTags = { ...datasets[1] };
         };
 
-        function focusInput(id) { document.getElementById(id).focus(); }
+        function focusInput(id) {
+            const element = document.getElementById(id);
+            if (element) element.focus();
+        }
 
         function addChatMessage(text, sender) {
             const win = document.getElementById('chat-window');

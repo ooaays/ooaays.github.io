@@ -110,101 +110,163 @@
     </section>
 
 <!-- MAIN APP AREA (LAB PAGE) -->
-<section id="labPage" class="page">
+<section id="labPage" class="page hidden">
     <div class="lab-wrapper">
-        <div class="container">
+        <div class="lab-container">
             <div class="flex justify-between items-center mb-6">
                 <button onclick="showPage('homePage')" class="bg-slate-700 hover:bg-slate-800 text-white px-5 py-2 rounded-lg font-semibold shadow">
                     ← Kembali
                 </button>
             </div>
 
-            <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        
-            <!-- LEFT PANEL: CONTROL CENTER -->
-            <div class="lg:col-span-7 space-y-6">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Data Latih <span class="text-blue-600">KA</span></h1>
-                    </div>
-                    <div class="flex gap-2">
-                        <!-- Level Toggle -->
-                        <div class="flex bg-gray-100 rounded-lg p-1">
-                            <button id="level-1" onclick="toggleLevel(1)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors active">Level 1</button>
-                            <button id="level-2" onclick="toggleLevel(2)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors">Level 2</button>
+            <div class="w-full lab-grid grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Data Latih <span class="text-blue-600">KA</span></h1>
                         </div>
-                        <button onclick="fillDemoData()" class="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-bold rounded-xl hover:bg-blue-200 transition-colors"><i class="fa-solid fa-flask-vial mr-1"></i> Muat Data Uji</button>
-                        <button onclick="resetAll()" class="px-4 py-2 bg-red-100 text-red-700 text-sm font-bold rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-trash mr-1"></i> Hapus Data</button>
+                        <div class="flex gap-2">
+                            <!-- Level Toggle -->
+                            <div class="flex bg-gray-100 rounded-lg p-1">
+                                <button id="level-1" onclick="toggleLevel(1)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors active">Data 1</button>
+                                <button id="level-2" onclick="toggleLevel(2)" class="level-toggle px-3 py-1 text-sm font-medium rounded-md transition-colors">Data 2</button>
+                            </div>
+                            <button onclick="fillDemoData()" class="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-bold rounded-xl hover:bg-blue-200 transition-colors"><i class="fa-solid fa-flask-vial mr-1"></i> Muat Data Uji</button>
+                            <button onclick="resetAll()" class="px-4 py-2 bg-red-100 text-red-700 text-sm font-bold rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-trash mr-1"></i> Hapus Data</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-3xl shadow-xl space-y-5">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm"><i class="fa-solid fa-1"></i></div>
+                            <h2 class="text-xl font-bold">Masukkan Data Latih Per Kategori</h2>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Categories will be dynamically generated here -->
+                        </div>
+
+                        <button onclick="trainModel()" class="w-full py-4 bg-gray-900 hover:bg-black text-white rounded-2xl font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-microchip"></i>
+                            <span id="btn-text">Mulai Pelatihan Model</span>
+                        </button>
+
+                        <div id="train-log" class="hidden animate-pulse flex items-center gap-2 text-blue-600 font-semibold text-sm justify-center py-1">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i>
+                            Memproses dan memetakan data ke dalam memori sistem...
+                        </div>
                     </div>
                 </div>
 
-                <div class="glass-card p-6 rounded-3xl shadow-xl space-y-5">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm"><i class="fa-solid fa-1"></i></div>
-                        <h2 class="text-xl font-bold">Masukkan Data Latih Per Kategori</h2>
-                    </div>
+                <div class="lg:col-span-1 flex justify-center">
+                    <div class="phone-case">
+                        <div class="dynamic-island"></div>
+                        <div class="phone-screen flex flex-col">
+                            <div class="p-4 pt-10 bg-white/80 backdrop-blur-md border-b flex items-center gap-3 z-40">
+                                <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-sm leading-none">Asisten KA</p>
+                                    <p class="text-[10px] text-green-500 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Aktif
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div class="grid grid-cols-1 gap-4">
-                        <!-- Categories will be dynamically generated here -->
-                    </div>
+                            <div id="chat-window" class="chat-container"></div>
 
-                    <button onclick="trainModel()" class="w-full py-4 bg-gray-900 hover:bg-black text-white rounded-2xl font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-microchip"></i>
-                        <span id="btn-text">Mulai Pelatihan Model</span>
-                    </button>
-
-                    <div id="train-log" class="hidden animate-pulse flex items-center gap-2 text-blue-600 font-semibold text-sm justify-center py-1">
-                        <i class="fa-solid fa-circle-notch fa-spin"></i>
-                        Memproses dan memetakan data ke dalam memori sistem...
+                            <div class="p-4 bg-white border-t flex items-center gap-2">
+                                <input type="text" id="user-input" class="flex-1 bg-gray-100 rounded-full py-2 px-4 text-xs outline-none focus:ring-1 focus:ring-blue-400" placeholder="Ketik pesan kita di sini..." onkeypress="handleChatKeyPress(event)">
+                                <button onclick="sendMessage()" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white transition-transform active:scale-90">
+                                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="glass-card p-5 rounded-3xl shadow-lg border-l-4 border-yellow-400">
-                    <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-yellow-500"></i>
-                        Status Sistem
-                    </h3>
-                    <p id="insight-text" class="text-xs text-gray-600 mt-2 italic leading-relaxed">
-                        "Sistem menunggu instruksi. Gunakan tombol 'Muat Data Uji' untuk mencoba data secara instan."
-                    </p>
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="glass-card p-5 rounded-3xl shadow-lg border-l-4 border-yellow-400">
+                        <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-yellow-500"></i>
+                            Status Sistem
+                        </h3>
+                        <p id="insight-text" class="text-xs text-gray-600 mt-2 italic leading-relaxed">
+                            "Sistem menunggu instruksi. Gunakan tombol 'Muat Data Uji' untuk mencoba data secara instan."
+                        </p>
 
-                    <!-- Menambahkan Bar Confidence -->
-                    <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
-                        <!-- Confidence bars will be dynamically generated here -->
+                        <!-- Menambahkan Bar Confidence -->
+                        <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
+                            <!-- Confidence bars will be dynamically generated here -->
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-3">
+                        <button onclick="toggleSampleSentences()" class="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition-colors">Contoh Kalimat Pengujian</button>
+                        <button onclick="toggleReflectionForm()" class="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition-colors">Pertanyaan Refleksi</button>
+                    </div>
+
+                    <div id="sample-sentences-panel" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 text-sm text-slate-700 mt-4">
+                        <div class="font-semibold mb-2">Pengujian data 1</div>
+                        <ol class="list-decimal list-inside space-y-2 mb-4">
+                            <li class="flex items-center justify-between gap-3">
+                                <span class="mr-3">Energi listrik mengalir melalui kabel.</span>
+                                <button onclick="copySampleSentence('Energi listrik mengalir melalui kabel.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span class="mr-3">Rumus untuk menghitung luas lingkaran.</span>
+                                <button onclick="copySampleSentence('Rumus untuk menghitung luas lingkaran.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span class="mr-3">Paragraf cerita ini menggunakan banyak kata sifat.</span>
+                                <button onclick="copySampleSentence('Paragraf cerita ini menggunakan banyak kata sifat.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span class="mr-3">Energi dan rumu berguna untuk menjelaskan fnomena alam.</span>
+                                <button onclick="copySampleSentence('Energi dan rumu berguna untuk menjelaskan fnomena alam.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span class="mr-3">Paragraf rumus, energi, dan struktur teks disusun dengan baik.</span>
+                                <button onclick="copySampleSentence('Paragraf rumus, energi, dan struktur teks disusun dengan baik.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                        </ol>
+                        <div class="font-semibold mb-2">Pengujian data 2</div>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li class="flex items-center justify-between gap-3">
+                                <span>Saya suka nasi goreng.</span>
+                                <button onclick="copySampleSentence('Saya suka nasi goreng.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span>Saya makan nasi pakai cpcay sambil menynyi di bus.</span>
+                                <button onclick="copySampleSentence('Saya makan nasi pakai cpcay sambil menynyi di bus.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span>Setelah futsal saya minum air mineral.</span>
+                                <button onclick="copySampleSentence('Setelah futsal saya minum air mineral.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span>Mobil dan ojek membantu perjalanan ke sekolah.</span>
+                                <button onclick="copySampleSentence('Mobil dan ojek membantu perjalanan ke sekolah.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                            <li class="flex items-center justify-between gap-3">
+                                <span>Saya beli naasi goreng di kantin.</span>
+                                <button onclick="copySampleSentence('Saya beli naasi goreng di kantin.')" class="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div id="reflection-panel" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-4">
+                        <p class="font-semibold text-slate-900 mb-2">Pertanyaan Refleksi</p>
+                        <p class="text-sm text-slate-600 mb-3">Setelah mencoba pengujian, tuliskan apa yang kamu pelajari tentang data latih dan cara sistem menentukan kategori.</p>
+                        <textarea id="reflection-answer" class="w-full min-h-[120px]  border border-slate-300 bg-white p-3 text-sm text-slate-800 focus:border-blue-500 focus:outline-none" placeholder="Tulis jawaban refleksi di sini..."></textarea>
+                        <div class="mt-3 flex flex-col sm:flex-row gap-3">
+                            <button onclick="saveReflection()" class="flex-1 py-3 bg-gray-300 text-slate-900 rounded-2xl font-semibold hover:bg-gray-400 transition-colors">Simpan Jawaban</button>
+                            <button onclick="resetReflection()" class="flex-1 py-3 bg-gray-300 text-slate-900 rounded-2xl font-semibold hover:bg-gray-400 transition-colors">Reset Jawaban</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- RIGHT PANEL: SMARTPHONE MOCKUP -->
-            <div class="lg:col-span-5 flex justify-center">
-                <div class="phone-case">
-                    <div class="dynamic-island"></div>
-                    <div class="phone-screen flex flex-col">
-                        <div class="p-4 pt-10 bg-white/80 backdrop-blur-md border-b flex items-center gap-3 z-40">
-                            <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
-                            <div>
-                                <p class="font-bold text-sm leading-none">Asisten KA</p>
-                                <p class="text-[10px] text-green-500 flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Aktif
-                                </p>
-                            </div>
-                        </div>
-
-                        <div id="chat-window" class="chat-container"></div>
-
-                        <div class="p-4 bg-white border-t flex items-center gap-2">
-                            <input type="text" id="user-input" class="flex-1 bg-gray-100 rounded-full py-2 px-4 text-xs outline-none focus:ring-1 focus:ring-blue-400" placeholder="Ketik pesan kita di sini..." onkeypress="handleChatKeyPress(event)">
-                            <button onclick="sendMessage()" class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white transition-transform active:scale-90">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         </div>
     </div>
 </section>
@@ -405,132 +467,6 @@
         </button>
     </div>
 </div>
-
-<!-- LAB PAGE (FULL WIDTH) -->
-<section id="labPage" class="page hidden">
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <!-- Header with Level Toggle and Status -->
-        <div class="bg-white shadow-sm border-b">
-            <div class="px-6 py-4 flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <button onclick="showPage('homePage')" class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-                        <i class="fa-solid fa-arrow-left"></i>
-                        <span class="font-medium">Kembali</span>
-                    </button>
-                    <h1 class="text-2xl font-bold text-gray-800">
-                        Data Latih <span class="text-blue-600">KA</span>
-                    </h1>
-                </div>
-                
-                <!-- Level Toggle -->
-                <div class="flex bg-gray-100 rounded-lg p-1">
-                    <button id="level-1" onclick="toggleLevel(1)" class="level-toggle px-4 py-2 rounded-md text-sm font-medium transition-all active">
-                        Pelajaran
-                    </button>
-                    <button id="level-2" onclick="toggleLevel(2)" class="level-toggle px-4 py-2 rounded-md text-sm font-medium transition-all">
-                        Kehidupan Sehari-hari
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex gap-6 p-6 h-[calc(100vh-80px)]">
-            <!-- Left Panel: Data Input -->
-            <div class="w-80 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col">
-                <div class="p-6 border-b border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Data Latih</h3>
-                    <p class="text-sm text-gray-600">Masukkan kata kunci untuk setiap kategori</p>
-                </div>
-                
-                <div class="flex-1 p-6 overflow-y-auto">
-                    <div class="grid grid-cols-1 gap-4">
-                        <!-- Categories will be populated by JavaScript -->
-                    </div>
-                    
-                    <!-- Confidence Bars Section -->
-                    <div class="mt-4 pt-3 border-t border-gray-200 space-y-3">
-                        <!-- Confidence bars will be populated by JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="p-6 border-t border-gray-100 space-y-3">
-                    <button onclick="fillDemoData()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
-                        <i class="fa-solid fa-magic mr-2"></i>Isi Data Demo
-                    </button>
-                    <button onclick="resetAll()" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
-                        <i class="fa-solid fa-refresh mr-2"></i>Reset Semua
-                    </button>
-                    <button onclick="trainModel()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-150">
-                        <i class="fa-solid fa-brain mr-2"></i>Mulai Pelatihan Model
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right Panel: Phone Mockup and Chat -->
-            <div class="flex-1 flex gap-6">
-                <!-- Phone Mockup -->
-                <div class="flex-1 flex justify-center">
-                    <div class="relative">
-                        <!-- Phone Frame -->
-                        <div class="w-80 h-[600px] bg-black rounded-[3rem] p-2 shadow-2xl">
-                            <div class="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
-                                <!-- Phone Header with Status -->
-                                <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex justify-between items-center">
-                                    <div class="text-sm font-bold">AI Assistant</div>
-                                    <div id="insight-text-mobile" class="text-xs font-medium text-right">
-                                        Belum ada data latih
-                                    </div>
-                                </div>
-                                
-                                <!-- Chat Window -->
-                                <div id="chat-window" class="h-[450px] overflow-y-auto p-4 space-y-3 bg-gray-50">
-                                    <!-- Chat messages will appear here -->
-                                </div>
-                                
-                                <!-- Input Area -->
-                                <div class="p-4 border-t border-gray-200 bg-white">
-                                    <div class="flex gap-2">
-                                        <input 
-                                            type="text" 
-                                            id="user-input" 
-                                            placeholder="Ketik pesan Anda..." 
-                                            class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            onkeypress="handleChatKeyPress(event)"
-                                        >
-                                        <button 
-                                            onclick="sendMessage()" 
-                                            class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-all duration-150"
-                                        >
-                                            <i class="fa-solid fa-paper-plane"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Training Progress Indicator -->
-                        <div id="train-log" class="absolute inset-0 bg-black/80 rounded-[3rem] flex items-center justify-center hidden">
-                            <div class="text-center text-white">
-                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                                <p class="font-medium">Melatih Model...</p>
-                                <p class="text-sm opacity-80">Mohon tunggu sebentar</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Insight Panel -->
-                <div class="w-80 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">Insight & Status</h3>
-                    <div id="insight-text" class="text-sm text-gray-700 leading-relaxed p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        Sistem siap menerima data latih. Masukkan minimal 3 kata kunci per kategori untuk hasil terbaik.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <script src="assets/src/script.js"></script>
 </body>
