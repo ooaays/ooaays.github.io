@@ -51,8 +51,11 @@
 
 
         <div class="flex gap-2 items-center justify-end">
+            <button onclick="resetProgress()" class="bg-blue-500 hover:bg-slate-400 text-white font-bold py-2 px-6 rounded-full shadow-[0_4px_0_#475569] active:shadow-[0_0px_0_#475569] active:translate-y-1 transition-all">
+                <i class="fa-solid fa-rotate-left mr-2"></i> Hapus Data Progress
+            </button>
             <button onclick="runProgram()" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-6 rounded-full shadow-[0_4px_0_#16a34a] active:shadow-[0_0px_0_#16a34a] active:translate-y-1 transition-all">
-                <i class="fa-solid fa-play mr-2"></i> Jalankan
+                <i class="fa-solid fa-play mr-2"></i> Jalankann
             </button>
             <button onclick="stopProgram()" class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-6 rounded-full shadow-[0_4px_0_#dc2626] active:shadow-[0_0px_0_#dc2626] active:translate-y-1 transition-all">
                 <i class="fa-solid fa-stop mr-2"></i> Reset
@@ -162,7 +165,7 @@
                 </div>
             </div>
             
-            <div id="success-overlay" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
+            <div id="success-overlay" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center pt-24 p-8 text-center backdrop-blur-sm">
                 <div class="text-7xl mb-4 flex items-center justify-center gap-4 text-teal-600"><i class="fa-solid fa-star"></i><img src="assets/img/Roborumdik.png" alt="Roborumdik" class="w-16 h-16 object-contain" /><i class="fa-solid fa-star"></i></div>
                 <h2 class="text-3xl font-black text-teal-600 mb-2">Luar Biasa!</h2>
                 <p class="text-slate-700 font-bold mb-6">Kamu telah berhasil menyelesaikan semua 4 percobaan dengan sempurna.</p>

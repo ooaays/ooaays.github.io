@@ -124,10 +124,18 @@
                 { text: "<b>5.</b> Klik kolom Aa kedua sampai menjadi <b>[ v ]</b>. Pilih Variabel <b>\"Jawaban\"</b>.", check: () => appData.robot.scripts.some(b => b.type === 'say' && b.val.mode === 'join' && b.val.right.value === 'VAR_answer') },
                 { text: "<b>6.</b> Klik <b><i class='fa-solid fa-stop'></i> Reset</b> terlebih dahulu, kemudian klik <b><i class='fa-solid fa-play'></i> Jalankan</b>. Selamat bereksperimen!", requireRun: true, check: () => true }
             ]
+        },
+        {
+            title: "Kreasi - Bebas Bereksperimen",
+            steps: [
+                { text: "<b>Selamat!</b> Anda telah menyelesaikan semua 4 percobaan dengan sempurna.<br><br>Sekarang saatnya untuk <b>bebas berkreasi</b>! Gunakan semua blok yang telah dipelajari untuk membuat program robot yang unik dan menarik.", requireRun: false, check: () => true },
+                { text: "Anda dapat kembali ke tahap sebelumnya kapan saja untuk melihat hasil percobaan Anda. Klik nomor tahap di bagian atas untuk melihat <b>riwayat pekerjaan Anda</b>.", requireRun: false, check: () => true },
+                { text: "Setiap perubahan dan hasil eksperimen akan <b>otomatis tersimpan</b>. Anda dapat menutup aplikasi ini dan membukanya kembali nanti, semua progress Anda akan tetap ada.", requireRun: false, check: () => true }
+            ]
         }
     ];
 
-    let currentExpIndex = 0; let currentStepIndex = 0; let unlockedExpIndex = 0;
+    let currentExpIndex = 0; let currentStepIndex = 0; let unlockedExpIndex = 0; let completedExp = {};
     const tutorialPanel = document.getElementById('tutorial-panel');
     const tutorialMinimizedBar = document.getElementById('tutorial-minimized-bar');
     const tutorialRestoreCountdown = document.getElementById('tutorial-restore-countdown');
@@ -137,6 +145,59 @@
     let tutorialAutoMinimized = false;
     let tutorialRestoreTimeout = null;
     let tutorialRestoreInterval = null;
+
+    // ================= PERSISTENCE SYSTEM (LocalStorage) =================
+    const STORAGE_KEY_PROGRESS = 'roborumdik_progress';
+    const STORAGE_KEY_PHASES = 'roborumdik_phases';
+
+    function saveProgress() {
+        const progressData = {
+            currentExpIndex: currentExpIndex,
+            currentStepIndex: currentStepIndex,
+            unlockedExpIndex: unlockedExpIndex,
+            completedExp: completedExp,
+            timestamp: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(progressData));
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem(STORAGE_KEY_PROGRESS);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                currentExpIndex = data.currentExpIndex || 0;
+                currentStepIndex = data.currentStepIndex || 0;
+                unlockedExpIndex = data.unlockedExpIndex || 0;
+                completedExp = data.completedExp || {};
+                return true;
+            } catch (e) {
+                console.error('Error loading progress:', e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function savePhaseData(expIndex) {
+        const phasesData = JSON.parse(localStorage.getItem(STORAGE_KEY_PHASES) || '{}');
+        phasesData[expIndex] = {
+            appData: JSON.parse(JSON.stringify(appData)),
+            spriteState: JSON.parse(JSON.stringify(spriteState)),
+            globalVars: JSON.parse(JSON.stringify(globalVars)),
+            activeSprite: activeSprite,
+            timestamp: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY_PHASES, JSON.stringify(phasesData));
+    }
+
+    function loadPhaseData(expIndex) {
+        const phasesData = JSON.parse(localStorage.getItem(STORAGE_KEY_PHASES) || '{}');
+        if (phasesData[expIndex]) {
+            return phasesData[expIndex];
+        }
+        return null;
+    }
 
     function clearTutorialRestoreTimeout() {
         if (tutorialRestoreTimeout) {
@@ -217,21 +278,81 @@
         
         experiments.forEach((exp, index) => {
             const btn = document.createElement('button');
+            btn.className = 'relative w-10 h-10 rounded-full flex items-center justify-center font-bold text-base transition-all duration-200 shadow-md hover:scale-110';
+            btn.title = exp.title;
+            
             if (index === currentExpIndex) {
-                btn.className = "w-8 h-8 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center shadow-md"; btn.innerText = index + 1;
+                btn.className += ' bg-blue-500 text-white shadow-lg scale-110';
+            } else if (completedExp[index]) {
+                btn.className += ' bg-green-500 text-white shadow-lg completed-phase';
             } else if (index <= unlockedExpIndex) {
-                btn.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center"; btn.innerText = "✓"; btn.onclick = () => switchExp(index);
+                btn.className += ' bg-slate-200 text-slate-500 hover:bg-slate-300';
             } else {
-                btn.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center"; btn.innerText = index + 1;
+                btn.className += ' bg-slate-200 text-slate-400';
             }
+            btn.innerText = index + 1;
+            
+            if (index <= unlockedExpIndex && index !== currentExpIndex) {
+                btn.style.cursor = 'pointer';
+                if (completedExp[index]) btn.onclick = () => viewPhaseHistory(index);
+                else btn.onclick = () => switchExp(index);
+            } else if (index > unlockedExpIndex) {
+                btn.style.cursor = 'not-allowed';
+                btn.style.opacity = '0.6';
+            }
+            
             dotsContainer.appendChild(btn);
         });
     }
 
+    function viewPhaseHistory(phaseIndex) {
+        const phaseData = loadPhaseData(phaseIndex);
+        if (!phaseData) {
+            alert('Tidak ada data untuk tahap ini. Silakan selesaikan tahap ini terlebih dahulu.');
+            return;
+        }
+
+        Object.assign(appData, phaseData.appData);
+        Object.assign(spriteState, phaseData.spriteState);
+        Object.assign(globalVars, phaseData.globalVars);
+        setActiveSprite(phaseData.activeSprite || 'robot');
+
+        currentExpIndex = phaseIndex;
+        currentStepIndex = 0;
+        saveProgress();
+        renderDots();
+        renderScript();
+        updateVisuals('robot');
+        updateVisuals('battery');
+
+        tutorialPanel.classList.add('hidden');
+        tutorialMinimized = false;
+
+        console.log(`Viewing phase history ${phaseIndex + 1}: ${experiments[phaseIndex].title}`);
+    }
+
     function switchExp(index) {
         if (index > unlockedExpIndex) return; 
-        currentExpIndex = index; currentStepIndex = 0; tutorialRunTriggered = false;
-        renderDots(); tutorialPanel.classList.remove('hidden'); renderTutorialStep();
+        savePhaseData(currentExpIndex);
+        currentExpIndex = index; 
+        currentStepIndex = 0; 
+        tutorialRunTriggered = false;
+        
+        const phaseData = loadPhaseData(index);
+        if (phaseData) {
+            Object.assign(appData, phaseData.appData);
+            Object.assign(spriteState, phaseData.spriteState);
+            Object.assign(globalVars, phaseData.globalVars);
+            setActiveSprite(phaseData.activeSprite || 'robot');
+        }
+        
+        saveProgress();
+        renderDots(); 
+        renderScript();
+        updateVisuals('robot');
+        updateVisuals('battery');
+        tutorialPanel.classList.remove('hidden'); 
+        renderTutorialStep();
     }
 
     function renderTutorialStep() {
@@ -271,16 +392,49 @@
 
     function nextStep() {
         if (currentStepIndex < experiments[currentExpIndex].steps.length - 1) {
-            currentStepIndex++; renderTutorialStep();
+            currentStepIndex++; 
+            renderTutorialStep();
         } else {
+            savePhaseData(currentExpIndex);
+            completedExp[currentExpIndex] = true;
+            
             if (currentExpIndex < experiments.length - 1) {
                 unlockedExpIndex = Math.max(unlockedExpIndex, currentExpIndex + 1);
+                saveProgress();
                 switchExp(currentExpIndex + 1);
             } else {
-                unlockedExpIndex = 4; renderDots();
+                unlockedExpIndex = experiments.length - 1;
+                saveProgress();
+                savePhaseData(currentExpIndex);
+                renderDots();
                 document.getElementById('success-overlay').classList.remove('hidden');
             }
         }
+    }
+
+    function resetProgress() {
+        if (!confirm('Reset semua progress dan cache?')) return;
+        localStorage.removeItem(STORAGE_KEY_PROGRESS);
+        localStorage.removeItem(STORAGE_KEY_PHASES);
+        currentExpIndex = 0;
+        currentStepIndex = 0;
+        unlockedExpIndex = 0;
+        completedExp = {};
+        appData.robot.scripts = [];
+        appData.battery.scripts = [];
+        spriteState = JSON.parse(JSON.stringify(initialSpriteState));
+        globalVars = { battery: 90, answer: "" };
+        setActiveSprite('robot');
+        tutorialMinimized = false;
+        tutorialAutoMinimized = false;
+        clearTutorialRestoreTimeout();
+        document.getElementById('success-overlay').classList.add('hidden');
+        renderDots();
+        renderScript();
+        updateVisuals('robot');
+        updateVisuals('battery');
+        tutorialPanel.classList.remove('hidden');
+        renderTutorialStep();
     }
 
     // ================= RICH INPUT SYSTEM =================
@@ -379,12 +533,17 @@
     }
 
     // ================= SCRIPT MANAGEMENT =================
-    function switchSprite(spriteId) {
+    function setActiveSprite(spriteId) {
         activeSprite = spriteId;
         document.getElementById('tab-robot').className = spriteId === 'robot' ? 'flex-1 py-3 font-bold text-sm tab-active-robot' : 'flex-1 py-3 font-bold text-sm tab-inactive';
         document.getElementById('tab-battery').className = spriteId === 'battery' ? 'flex-1 py-3 font-bold text-sm tab-active-battery' : 'flex-1 py-3 font-bold text-sm tab-inactive';
         scriptArea.className = spriteId === 'robot' ? 'flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-robot pb-10 transition-colors relative scroll-smooth' : 'flex-1 overflow-y-auto overflow-x-auto p-4 bg-script-battery pb-10 transition-colors relative scroll-smooth';
         document.getElementById('active-sprite-name').innerText = spriteId === 'robot' ? 'Robot' : 'Baterai';
+    }
+
+    function switchSprite(spriteId) {
+        savePhaseData(currentExpIndex);
+        setActiveSprite(spriteId);
         tutorialRunTriggered = false;
         renderScript(); checkStepValidation();
     }
@@ -398,18 +557,34 @@
         
         appData[activeSprite].scripts.push(block);
         tutorialRunTriggered = false;
-        renderScript(); setTimeout(() => scriptArea.scrollTop = scriptArea.scrollHeight, 50);
+        renderScript(); 
+        savePhaseData(currentExpIndex); 
+        setTimeout(() => scriptArea.scrollTop = scriptArea.scrollHeight, 50);
     }
 
-    function removeBlock(id) { appData[activeSprite].scripts = appData[activeSprite].scripts.filter(b => b.id !== id); tutorialRunTriggered = false; renderScript(); }
-    function clearScript() { appData[activeSprite].scripts = []; tutorialRunTriggered = false; renderScript(); }
+    function removeBlock(id) { 
+        appData[activeSprite].scripts = appData[activeSprite].scripts.filter(b => b.id !== id); 
+        tutorialRunTriggered = false; 
+        renderScript(); 
+        savePhaseData(currentExpIndex);
+    }
+    
+    function clearScript() { 
+        appData[activeSprite].scripts = []; 
+        tutorialRunTriggered = false; 
+        renderScript(); 
+        savePhaseData(currentExpIndex);
+    }
     
     function updateBlockVal(id, field, value, shouldRender = true) { 
         const block = appData[activeSprite].scripts.find(b => b.id === id); 
         if(block) block[field] = value; 
         tutorialRunTriggered = false; 
         checkStepValidation(); 
-        if (shouldRender) renderScript(); 
+        if (shouldRender) {
+            renderScript();
+            savePhaseData(currentExpIndex);
+        }
     }
 
     function moveBlock(index, direction) {
@@ -417,6 +592,7 @@
         if (direction === -1 && index > 0) [scripts[index], scripts[index - 1]] = [scripts[index - 1], scripts[index]];
         else if (direction === 1 && index < scripts.length - 1) [scripts[index], scripts[index + 1]] = [scripts[index + 1], scripts[index]];
         renderScript();
+        savePhaseData(currentExpIndex);
     }
 
     function getMessageDropdown(val, onChangeFn) {
@@ -566,6 +742,8 @@
         if (myRunId === currentRunId) {
             isRunning = false;
             document.querySelectorAll('.active-block').forEach(el => el.classList.remove('active-block'));
+            // Save phase data setelah program selesai
+            savePhaseData(currentExpIndex);
             if (tutorialMinimized && tutorialAutoMinimized) {
                 startTutorialRestoreCountdown(3);
                 await sleep(3000);
@@ -644,4 +822,12 @@
     }
 
     // INIT
-    updateVisuals('robot'); switchExp(0);
+    updateVisuals('robot'); 
+    
+    // Load progress dari localStorage
+    if (loadProgress()) {
+        // Recreate renderer untuk reflect loaded state
+        switchExp(currentExpIndex);
+    } else {
+        switchExp(0);
+    }
