@@ -624,10 +624,10 @@
 
             const leftContent = document.createElement('div'); leftContent.className = "flex items-center gap-1 flex-wrap flex-grow py-0.5";
 
-            if (block.type === 'changeX') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-right mr-2'></i>Ubah X sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeY') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-up mr-2'></i>Ubah Y sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            if (block.type === 'changeX') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-right mr-2'></i>Ubah X sebesar `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'changeY') { leftContent.innerHTML = `<i class='fa-solid fa-arrow-up mr-2'></i>Ubah Y sebesar `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
             else if (block.type === 'setBattery') { leftContent.innerHTML = `<i class='fa-solid fa-bolt mr-2'></i>Set Baterai ke `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
-            else if (block.type === 'changeBattery') { leftContent.innerHTML = `<i class='fa-solid fa-bolt mr-2'></i>Ubah Baterai sbsr `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
+            else if (block.type === 'changeBattery') { leftContent.innerHTML = `<i class='fa-solid fa-bolt mr-2'></i>Ubah Baterai sebesar `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
             else if (block.type === 'repeat') { leftContent.innerHTML = `<i class='fa-solid fa-repeat mr-2'></i>Ulangi `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` kali`); }
             else if (block.type === 'say') { leftContent.innerHTML = `<i class='fa-solid fa-comment mr-2'></i>Katakan `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); } 
             else if (block.type === 'ask') { leftContent.innerHTML = `<i class='fa-solid fa-question-circle mr-2'></i>Tanya `; leftContent.appendChild(createRichInput(block.val, (v, r) => updateBlockVal(block.id, 'val', v, r))); leftContent.append(` & tunggu`); } 
