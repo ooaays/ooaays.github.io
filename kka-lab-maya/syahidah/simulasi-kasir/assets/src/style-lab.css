@@ -427,6 +427,9 @@ header h2 {
     padding-left: 30px;
 }
 
+.indent2 {
+    padding-left: 60px;
+}
 .comment {
     color: #5c6370;
     font-style: italic;

@@ -319,10 +319,10 @@
                         <!-- Balon Percakapan -->
                         <!-- BAGIAN SVG BALON DIPERBESAR -->
                         <g id="calloutGrup" display="none" transform="translate(430, 20)">
-                            <path d="M 0 0 h 340 v 160 h -250 l -40 40 v -40 h -50 z" fill="#ffffff" stroke="#94a3b8"
+                            <path d="M -150 0 h 340 v 200 h -50 v 40 l -40 -40 h -250 z" fill="rgba(255,255,255,0.5)" stroke="#94a3b8"
                                 stroke-width="4" filter="drop-shadow(3px 5px 8px rgba(0,0,0,0.2))" />
-                            <text id="calloutText" x="25" y="35" font-family="'Segoe UI', Arial, sans-serif"
-                                font-size="20" font-weight="bold" fill="#1e293b"></text>
+                            <text id="calloutText" x="-120" y="35" font-family="'Segoe UI', Arial, sans-serif"
+                                 font-size="16" font-weight="bold" fill="#1e293b"></text>
                         </g>
                     </svg>
 
@@ -479,14 +479,14 @@
                                 <span class="pastezone" id="dz_if"></span> uang_pembeli > total_bayar:
                             </div>
 
-                            <div class="line indent">
+                            <div class="line indent2">
                                 <span class="pastezone" id="dz_ret2"></span> uang_pembeli - total_bayar
                             </div>
 
                             <div class="line indent">
                                 <span class="pastezone" id="dz_elif"></span> uang_pembeli < total_bayar: </div>
 
-                                    <div class="line indent">
+                                    <div class="line indent2">
                                         return "Uang Anda kurang"
                                     </div>
 
@@ -494,7 +494,7 @@
                                         <span class="pastezone" id="dz_else"></span>
                                     </div>
 
-                                    <div class="line indent">
+                                    <div class="line indent2">
                                         return "Uang Anda pas"
                                     </div>
                             </div>
