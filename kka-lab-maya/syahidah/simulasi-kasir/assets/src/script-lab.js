@@ -77,7 +77,7 @@ pastezones.forEach(zone => {
 // ================= INTERAKSI LAYAR SENTUH (KLIK SVG) =================
 grupPembeli.addEventListener('click', () => {
     if (currentStep === 1) {
-        popupText.innerHTML = "<b>KERANJANG KOSONG!</b><br><br>Belum ada data barang.<br>Uang Pembeli: Rp 0";
+        popupText.innerHTML = "<b>SISTEM BELUM DIPROGRAM!</b><br><br>Belum ada data barang.<br>Belum ada data uang pembeli";
         popup.style.display = 'block';
     } 
     else if (currentStep === 4) {
@@ -263,7 +263,7 @@ function applyLogic() {
 
     if (currentStep === 1) {
         btnAction.style.display = 'block';
-        btnAction.textContent = 'Sentuh Pembeli di Kiri...';
+        btnAction.textContent = 'Sentuh Pembeli di Kiri';
         grupPembeli.classList.add('glow-active');
     } else if (currentStep === 2) {
         grupPembeli.classList.remove('glow-active');
@@ -278,7 +278,7 @@ function applyLogic() {
     } else if (currentStep === 4) {
         sec2.classList.remove('active');
         btnAction.style.display = 'block';
-        btnAction.textContent = '⏳ Sentuh Keranjang di Kiri...';
+        btnAction.textContent = 'Sentuh Keranjang di Kiri';
         grupPembeli.classList.add('glow-active');
     } else if (currentStep === 5) {
         grupPembeli.classList.remove('glow-active');

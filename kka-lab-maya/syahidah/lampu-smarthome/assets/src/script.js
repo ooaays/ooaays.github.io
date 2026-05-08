@@ -14,6 +14,7 @@ let selectedValue = null;
         function placeBlock(slot) {
         	if (!selectedValue) {
 			logToTerminal("<i class=\"fa-solid fa-triangle-exclamation\"></i> Ups! Kamu harus mengeklik (memilih) salah satu alat di atas terlebih dahulu!", "error");
+			return;
         	}
 
             // Tampilan teks berdasarkan tipe (tambahkan kutip jika string)
@@ -46,7 +47,7 @@ let selectedValue = null;
         	const timestamp = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
         	const newLog = document.createElement("div");
-        	newLog.style.marginTop = "6px";
+        	newLog.className = "terminal-line";
         	newLog.innerHTML = `<span class="log-time">[${timestamp}]</span> <span class="${colorClass}">${msg}</span>`;
 
         	term.appendChild(newLog);
@@ -54,59 +55,58 @@ let selectedValue = null;
         }
 
         function resetSimulation() {
-        	activeTimers.forEach(clearInterval);
-        	activeTimers = [];
+            activeTimers.forEach(clearInterval);
+            activeTimers = [];
 
-        	document.querySelectorAll('.slot').forEach(slot => {
-        		slot.innerText = "???";
-        		slot.className = "slot"; 
-        		slot.removeAttribute('data-val');
-        	});
+            document.querySelectorAll('.slot').forEach(slot => {
+                slot.innerText = "???";
+                slot.className = "slot";
+                slot.removeAttribute('data-val');
+            });
 
-        	document.getElementById('input-tamu').value = 3;
-        	document.getElementById('input-tidur').value = 5;
-        	document.getElementById('input-dapur').value = 2;
-        	document.getElementById('input-mandi').value = 4;
+            document.getElementById('input-tamu').value = 3;
+            document.getElementById('input-tidur').value = 5;
+            document.getElementById('input-dapur').value = 2;
+            document.getElementById('input-mandi').value = 4;
 
-document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is-on'));
-        	document.querySelectorAll('.countdown').forEach(c => c.innerText = "");
+            document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is-on'));
+            document.querySelectorAll('.room-countdown').forEach(c => c.innerText = "");
 
-        	selectedValue = null;
-        	selectedType = null;
-        	document.querySelectorAll('.block').forEach(b => b.classList.remove('selected'));
+            selectedValue = null;
+            selectedType = null;
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('selected'));
 
-        	const term = document.getElementById('terminal');
-        	term.innerHTML = `<span class="log-info"> Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!</span>`;
+            const term = document.getElementById('terminal');
+            term.innerHTML = "";
+            logToTerminal("Simulasi berhasil di-reset. Mari kita susun kode dari awal lagi!", "info");
 
             simSuccess = false; // Kembalikan status ke gagal
             checkProgress(); // Perbarui indikator UI
         }
 
         function runSimulation() {
-        	activeTimers.forEach(clearInterval);
-        	activeTimers = [];
+            activeTimers.forEach(clearInterval);
+            activeTimers = [];
             simSuccess = false; // Reset terlebih dahulu
             checkProgress();
-            
-            const term = document.getElementById('terminal');
-            term.innerHTML = ""; 
-            logToTerminal("<i class=\"fa-solid fa-rocket\"></i> Menjalankan kodemu...", "info");
 
-            // Validasi: Apakah ada slot "???" yang belum diisi?
+            const term = document.getElementById('terminal');
+            term.innerHTML = "";
+            logToTerminal('<i class="fa-solid fa-rocket"></i> Menjalankan kodemu...', "info");
+
             const allSlots = Array.from(document.querySelectorAll('.slot'));
             const emptySlots = allSlots.filter(s => !s.getAttribute('data-val'));
-            
+
             if (emptySlots.length > 0) {
-			logToTerminal(`<i class="fa-solid fa-xmark"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi. Lengkapi dulu di baris 3-6 dan 9-16 sebelum menjalankan lagi.`, "error");
-			return;
+                logToTerminal(`<i class="fa-solid fa-xmark"></i> Gagal: Masih ada ${emptySlots.length} kotak '???' yang belum kamu isi. Lengkapi dulu di baris 3-6 dan 9-16 sebelum menjalankan lagi.`, "error");
+                return;
             }
 
-            // Ambil data puzzle logika di LANGKAH 2
             const valFor = document.getElementById('slot-for').getAttribute('data-val');
             const valIf1 = document.getElementById('slot-if1').getAttribute('data-val');
             const valIf2 = document.getElementById('slot-if2').getAttribute('data-val');
             const valElse = document.getElementById('slot-else').getAttribute('data-val');
-            
+
             const valKey1 = document.getElementById('slot-key1').getAttribute('data-val');
             const valKey2 = document.getElementById('slot-key2').getAttribute('data-val');
             const valKey3 = document.getElementById('slot-key3').getAttribute('data-val');
@@ -114,64 +114,61 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
             const logicLampu = document.getElementById('logic-if-lampu').getAttribute('data-val');
             const logicTimer = document.getElementById('logic-if-timer').getAttribute('data-val');
 
-            // Cek kesesuaian syntax python (for, if, else)
             if (valFor !== 'for' || valIf1 !== 'if' || valIf2 !== 'if' || valElse !== 'else') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Syntax Error di baris 9-16: Penempatan for / if / else salah. Perbaiki susunan logika sesuai struktur kode di sebelah kiri.", "error");
-			return;
+                logToTerminal('<i class="fa-solid fa-xmark"></i> Syntax Error di baris 9-16: Penempatan for / if / else salah. Perbaiki susunan logika sesuai struktur kode di sebelah kiri.', "error");
+                return;
             }
 
-            // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "detik")
             if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 'detik') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error di baris 10-14: Kunci dictionary harus 'lampu', 'timer', dan 'detik'. Perbaiki penamaan kunci di baris tersebut.", "error");
-			return;
+                logToTerminal('<i class="fa-solid fa-xmark"></i> Key Error di baris 10-14: Kunci dictionary harus \'lampu\', \'timer\', dan \'detik\'. Perbaiki penamaan kunci di baris tersebut.', "error");
+                return;
             }
 
-            // Jika lulus semua validasi puzzle
             simSuccess = true;
             checkProgress(); // Perbarui indikator bahwa simulasi berjalan sukses
             
             let adaYangNyala = false;
 
             document.querySelectorAll('div[data-room]').forEach(row => {
-            	const id = row.getAttribute('data-room');
-            	const slots = row.querySelectorAll('.slot');
-            	const dataLampu = slots[0].getAttribute('data-val'); 
-            	const dataTimer = slots[1].getAttribute('data-val'); 
-            	const detik = parseInt(row.querySelector('input').value) || 0;
+                const id = row.getAttribute('data-room');
+                const slots = row.querySelectorAll('.slot');
+                const dataLampu = slots[0].getAttribute('data-val'); 
+                const dataTimer = slots[1].getAttribute('data-val'); 
+                const detik = parseInt(row.querySelector('input').value) || 0;
 
-            	const roomEl = document.getElementById('room-' + id);
-            	const cdEl = document.getElementById('cd-' + id);
-            	cdEl.innerText = "";
+                const roomEl = document.getElementById('room-' + id);
+                const cdEl = document.getElementById('cd-' + id);
+                cdEl.innerText = "";
 
-            	if (dataLampu === logicLampu && dataLampu === 'ON') {
-            		adaYangNyala = true;
-				roomEl.classList.add('active', 'is-on');
-            		if (dataTimer === logicTimer && dataTimer === 'ON') {
-            			let count = detik;
-            			cdEl.innerText = count + " detik";
-            			logToTerminal(` Menyalakan timer ${id} selama ${detik} detik...`);
+                if (dataLampu === logicLampu && dataLampu === 'ON') {
+                    adaYangNyala = true;
+                    roomEl.classList.add('active', 'is-on');
+                    if (dataTimer === logicTimer && dataTimer === 'ON') {
+                        let count = detik;
+                        cdEl.innerText = count + " detik";
+                        logToTerminal(` Menyalakan timer ${id} selama ${detik} detik...`);
 
-            			let t = setInterval(() => {
-            				count--;
-            				if(count > 0) {
-            					cdEl.innerText = count + " detik";
-            				} else {
-            					clearInterval(t);
-            					roomEl.classList.remove('active', 'is-on');
-            					cdEl.innerText = "";
-            					logToTerminal(`<i class=\"fa-solid fa-moon\"></i> Waktu habis! Lampu <b>${id}</b> otomatis DIMATIKAN.`, "info");
-            				}
-            			}, 1000);
-            			activeTimers.push(t);
-            		}
-            	} else {
-            		roomEl.classList.remove('active', 'is-on');
-            		logToTerminal(`<i class=\"fa-solid fa-minus\"></i> Lampu <b>${id}</b> tetap padam sesuai logika kode.`);
-            	}
+                        let t = setInterval(() => {
+                            count--;
+                            if(count > 0) {
+                                cdEl.innerText = count + " detik";
+                            } else {
+                                clearInterval(t);
+                                roomEl.classList.remove('active', 'is-on');
+                                cdEl.innerText = "";
+                                logToTerminal(`<i class="fa-solid fa-moon"></i> Waktu habis! Lampu <b>${id}</b> otomatis DIMATIKAN.`, "info");
+                            }
+                        }, 1000);
+                        activeTimers.push(t);
+                    }
+                } else {
+                    roomEl.classList.remove('active', 'is-on');
+                    logToTerminal(`<i class="fa-solid fa-minus"></i> Lampu <b>${id}</b> tetap padam sesuai logika kode.`);
+                }
             });
 
             if (!adaYangNyala) {
-            	logToTerminal("<i class=\"fa-solid fa-lightbulb\"></i> Tips: Coba atur status di LANGKAH 1 dan LANGKAH 2 menjadi 'ON' agar ada lampu yang menyala!", "info");
+                logToTerminal('<i class="fa-solid fa-lightbulb"></i> Tips: Coba atur status di LANGKAH 1 dan LANGKAH 2 menjadi \'ON\' agar ada lampu yang menyala!', "info");
             }
         }
 
