@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.port": 5504
+    "liveServer.settings.port": 5504,
+    "livePreview.defaultPreviewPath": "/kka-lab-maya/syahidah/lampu-smarthome/index.html"
 }

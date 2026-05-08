@@ -120,9 +120,9 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
 			return;
             }
 
-            // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "s")
-            if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 's') {
-			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error di baris 10-14: Kunci dictionary harus 'lampu', 'timer', dan 's'. Perbaiki penamaan kunci di baris tersebut.", "error");
+            // Cek kesesuaian nama Dictionary Keys ("lampu", "timer", "detik")
+            if (valKey1 !== 'lampu' || valKey2 !== 'timer' || valKey3 !== 'detik') {
+			logToTerminal("<i class=\"fa-solid fa-xmark\"></i> Key Error di baris 10-14: Kunci dictionary harus 'lampu', 'timer', dan 'detik'. Perbaiki penamaan kunci di baris tersebut.", "error");
 			return;
             }
 
@@ -267,12 +267,25 @@ document.querySelectorAll('.room').forEach(r => r.classList.remove('active', 'is
     // MODALS
     // =========================
     	const cpModal = document.getElementById('cpModal');
+    	const materiModal = document.getElementById('materiModal');
     	function openCPModal(){ 
 			cpModal.classList.remove('hidden'); 
 			document.body.style.overflow='hidden'; 
 			try { sessionStorage.setItem('tujuanRead', 'true'); } 
 			catch(e){}
 			setCheckVisible('check-tujuan', true);
+		}
+    	function openMateriModal(){ 
+			if (materiModal) {
+				materiModal.classList.remove('hidden');
+				document.body.style.overflow='hidden';
+			}
+		}
+    	function closeMateriModal(){ 
+			if (materiModal) {
+				materiModal.classList.add('hidden');
+				document.body.style.overflow='auto';
+			}
 		}
     	function closeCPModal(){ cpModal.classList.add('hidden'); document.body.style.overflow='auto'; hasSeenCP = true; checkStartButtonState(); }
     // =========================

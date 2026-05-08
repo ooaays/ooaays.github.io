@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1200, initial-scale=1.0">
+<meta name="viewport" content="width=1280">
 
 <title>Lab Virtual Instruksi untuk Roborumdik</title>
 
@@ -12,7 +12,7 @@
 
 </head>
 
-<body>
+<body class="bg-white min-h-screen flex flex-col min-w-[1280px] overflow-auto">
 
 <div class="header-bg flex justify-between items-center px-6 py-4">
     <div class="flex items-center gap-4">
@@ -481,7 +481,7 @@
         </div>
 
         <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-50 gap-4">
-            <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+            <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
             <button onclick="closeBioModal()" class="flex-1 max-w-[200px] bg-[#8bc34a] hover:bg-[#7cb342] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
             <button id="bioNextBtn" onclick="changeBioSlide(1)" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
         </div>

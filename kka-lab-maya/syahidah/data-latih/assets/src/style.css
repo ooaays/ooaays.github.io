@@ -32,9 +32,10 @@ background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
 background-size: 30px 30px;
 color: var(--text-main);
 min-height: 100vh;
+min-width:1200px;
 margin: 0;
 padding: 0;
-overflow-x: hidden;
+overflow-x:auto;
 }
 
 /* KODE STYLE HEADER KEMDIKBUD */
@@ -53,6 +54,31 @@ display: flex;
 flex-direction: column;
 align-items: center;
 padding: 40px 20px;
+}
+
+.lab-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1.5rem;
+width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .lab-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.lab-container {
+width: 100%;
+max-width: 1400px;
+background: var(--panel-bg);
+border: 1px solid rgba(148, 163, 184, 0.16);
+border-radius: 2rem;
+padding: 2.5rem;
+box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
+position: relative;
+z-index: 10;
 }
 
 .container {
@@ -364,6 +390,14 @@ body {
 }
 .read-check.visible { opacity: 1; transform: translateY(-50%) scale(1); }
 
+/* Force desktop-like layout on smaller screens */
+html, body {
+  min-width: 1280px !important;
+}
+
+.hidden.md\:inline {
+  display: inline !important;
+}
 
 .menu-btn-label {
   flex: 1; display: flex; align-items: center; 
@@ -389,6 +423,34 @@ body {
 
 .level-toggle:hover:not(.active) {
     color: #374151;
+}
+
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: rgba(148, 163, 184, 0.12);
+    color: #475569;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: rgba(148, 163, 184, 0.24);
+    color: #0f172a;
+    transform: translateY(-1px);
+}
+
+.copy-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.copy-btn i {
+    font-size: 0.95rem;
 }
 
 /* DYNAMIC CONFIDENCE BARS */

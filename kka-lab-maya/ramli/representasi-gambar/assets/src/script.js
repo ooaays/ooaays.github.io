@@ -22,6 +22,7 @@ const STAGES = {
     mission: 'Aktifkan tepat 1 piksel agar terlihat bahwa satu perubahan saja sudah mengubah tampilan visual.',
     dataset: 'Grid 10 × 10 berisi nilai 0 dan 1. Pada awal tahap, semua piksel bernilai 0.',
     tips: 'Klik satu kotak saja dulu. Amati bagaimana satu piksel yang menyala langsung mengubah tampilan.',
+    reflection: 'Sebelum menekan Periksa Tahap, jelaskan: piksel mana yang kamu aktifkan dan apa arti satu angka 1 pada grid.',
     targetType: 'single',
     targetPattern: [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     example: {
@@ -30,6 +31,7 @@ const STAGES = {
 [0, 1, 0]
 [0, 0, 0]`,
       output: 'Pada contoh ini, hanya satu piksel yang aktif.',
+      meaning: 'Nilai biner 1 berarti satu piksel menyala, sedangkan nilai 0 berarti piksel tidak menyala. Jadi komputer membaca contoh ini sebagai satu titik aktif di tengah.',
       why: 'Satu piksel yang aktif sudah cukup untuk menunjukkan bahwa gambar digital tersusun dari banyak kotak kecil.'
     }
   },
@@ -41,12 +43,14 @@ const STAGES = {
     mission: 'Buat satu garis mendatar atau tegak yang terdiri dari minimal 5 piksel aktif berturut-turut.',
     dataset: 'Susun sendiri lima piksel aktif yang berurutan hingga membentuk garis.',
     tips: 'Perhatikan bahwa posisi angka 1 yang berurutan menghasilkan bentuk garis.',
+    reflection: 'Amati dulu: apakah angka 1 milikmu sudah berurutan pada satu baris atau satu kolom? Mengapa itu membentuk garis?',
     targetType: 'line',
     targetPattern: [[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0]],
     example: {
       intro: 'Lima piksel aktif berurutan dapat membentuk satu garis sederhana.',
       code: '[1, 1, 1, 1, 1]',
       output: 'Jika kelima angka 1 diletakkan pada satu baris yang sama, terbentuk garis mendatar.',
+      meaning: 'Setiap angka 1 mewakili piksel aktif. Karena lima nilai 1 tersusun berurutan, komputer membacanya sebagai lima piksel yang saling tersambung.',
       why: 'Bentuk visual muncul bukan karena banyaknya angka 1 saja, tetapi karena angka-angka itu ditempatkan secara berurutan.'
     }
   },
@@ -58,6 +62,7 @@ const STAGES = {
     mission: 'Bentuk tanda plus pada grid dengan menyusun piksel secara manual.',
     dataset: 'Targetnya adalah satu baris tengah dan satu kolom tengah yang aktif.',
     tips: 'Bentuk ini menunjukkan bahwa gambar tersusun dari kombinasi baris dan kolom data.',
+    reflection: 'Coba sebutkan baris mana dan kolom mana yang menjadi pusat bentuk plus. Apa yang terjadi jika salah satu bagian tidak aktif?',
     targetType: 'plus',
     targetPattern: [[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0]],
     example: {
@@ -68,6 +73,7 @@ const STAGES = {
 [0,0,1,0,0]
 [0,0,1,0,0]`,
       output: 'Baris dan kolom yang saling berpotongan menghasilkan tanda plus.',
+      meaning: 'Angka 1 menandakan piksel aktif pada baris tengah dan kolom tengah. Angka 0 menandakan area yang tetap kosong, sehingga bentuk plus terlihat jelas.',
       why: 'Komputer membaca pola ini sebagai sekumpulan piksel aktif pada posisi tertentu. Ketika posisinya tepat, muncullah bentuk plus.'
     }
   },
@@ -79,6 +85,7 @@ const STAGES = {
     mission: 'Geser pola minimal satu kali ke arah mana pun, lalu amati perubahan posisi piksel aktif.',
     dataset: 'Saat masuk tahap ini, pola tanda plus disiapkan sebagai titik awal.',
     tips: 'Setelah digeser, bandingkan posisi angka 1 sebelum dan sesudah.',
+    reflection: 'Bandingkan sebelum dan sesudah geser: apakah jumlah piksel aktif berubah, atau hanya posisinya yang berubah?',
     targetType: 'shift',
     targetPattern: [[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0]],
     example: {
@@ -91,6 +98,7 @@ Sesudah digeser ke kanan:
 [0,0,0,1,0]
 [0,1,1,1,1]`,
       output: 'Bentuk dasarnya masih sama, tetapi posisinya berpindah.',
+      meaning: 'Nilai biner 1 tetap mewakili piksel aktif. Yang berubah bukan arti 0 dan 1, tetapi letak posisi 1 pada grid.',
       why: 'Perubahan posisi data mengubah letak bentuk pada grid. Inilah mengapa koordinat atau posisi piksel sangat penting.'
     }
   },
@@ -102,6 +110,7 @@ Sesudah digeser ke kanan:
     mission: 'Setelah pola digeser, lakukan minimal 3 perubahan manual pada grid agar bentuknya berubah lagi.',
     dataset: 'Tidak ada satu jawaban tunggal. Yang penting kamu bisa menjelaskan perubahan data dan hasil visualnya.',
     tips: 'Coba tambah atau kurangi piksel pada posisi tertentu, lalu amati data dan bentuknya.',
+    reflection: 'Setelah mengubah pola, jelaskan perubahan data yang kamu buat dan bagaimana perubahan itu memengaruhi bentuk gambar.',
     targetType: 'custom',
     targetPattern: [[0,1,0,1,0],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0],[0,0,1,0,0]],
     example: {
@@ -111,6 +120,7 @@ Sesudah digeser ke kanan:
 - hapus 1 piksel di tengah bawah
 - aktifkan 1 piksel di sisi kanan`,
       output: 'Bentuk baru muncul karena susunan angka 1 dan 0 berubah.',
+      meaning: 'Saat kamu menambah atau menghapus nilai 1, kamu sebenarnya mengubah piksel mana yang aktif. Itulah sebabnya tampilan gambar ikut berubah.',
       why: 'Ketika siswa mengubah pola secara mandiri, mereka berlatih membaca hubungan antara aksi, data, dan hasil gambar.'
     }
   }
@@ -123,7 +133,8 @@ const state = {
   currentBio: 0,
   currentStage: 1,
   completed: {},
-  gridSize: 10,
+  gridRows: 10,
+  gridCols: 13,
   grid: [],
   lastAction: 'Belum ada perubahan.',
   lastPosition: '-',
@@ -142,6 +153,7 @@ function init() {
   renderHeroPreview();
   renderStageNav();
   renderMissionPanel();
+  renderBoardAxes();
   renderBoard();
   renderOutputs();
   renderProgress();
@@ -153,7 +165,7 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 function createEmptyGrid() {
-  state.grid = Array.from({ length: state.gridSize }, () => Array(state.gridSize).fill(0));
+  state.grid = Array.from({ length: state.gridRows }, () => Array(state.gridCols).fill(0));
 }
 
 function renderHeroPreview() {
@@ -323,30 +335,29 @@ function setupStage(stageNo, preserveCurrent = false){
 function renderMissionPanel(){
   const stage = STAGES[state.currentStage];
   const box = document.getElementById('missionPanel');
+  const gridLabel = `${state.gridRows} × ${state.gridCols}`;
   box.innerHTML = `
     <div class="mission-card">
       <div class="mission-tag">${stage.tag}</div>
-      <div class="text-2xl font-black text-slate-900 mb-2">${stage.title}</div>
-      <div class="text-slate-600 leading-7 mb-3">${stage.focus}</div>
-      <div class="bg-white border border-sky-100 rounded-2xl p-4 text-slate-700 leading-7">
+      <div class="mission-title">${stage.title}</div>
+      <div class="mission-focus">${stage.focus}</div>
+      <div class="mission-box">
         <b>Misi:</b> ${stage.mission}
       </div>
     </div>
-    <div class="mb-4">
-      <div class="font-black text-slate-800 mb-2">Dataset / Kondisi Awal</div>
-      <div class="dataset-box">${stage.dataset}</div>
-    </div>
-    <div class="concept-box mb-4">
-      <div class="concept-box-label">Inti Konsep</div>
-      Satu kotak pada grid mewakili satu piksel. Nilai <b>1</b> berarti piksel aktif, sedangkan nilai <b>0</b> berarti piksel tidak aktif. Bentuk gambar ditentukan oleh posisi piksel-piksel yang aktif.
+    <div class="mission-block">
+      <div class="mission-block-title">Dataset / Kondisi Awal</div>
+      <div class="dataset-box">${stage.dataset.replace('10 × 10', gridLabel)}</div>
     </div>
     <div class="info-box">
       <b>Petunjuk:</b><br>${stage.tips}
     </div>
-    <div class="pixel-target-card">
-      <div class="pixel-target-title">Contoh target pola</div>
+    <div class="helper-box">
+      <b>Fokus berpikir:</b><br>${stage.reflection}
+    </div>
+    <div class="pixel-target-card compact">
+      <div class="pixel-target-title">Target pola</div>
       <div id="targetPatternWrap"></div>
-      <div class="target-note">Target ini membantu siswa membayangkan pola yang diharapkan pada tahap aktif.</div>
     </div>
   `;
   renderTargetPattern(stage.targetPattern);
@@ -367,6 +378,7 @@ function renderTargetPattern(pattern){
 function renderBoard(){
   const board = document.getElementById('pixelBoard');
   board.innerHTML = '';
+  board.style.setProperty('--grid-cols', state.gridCols);
   state.grid.forEach((row,rowIndex) => {
     row.forEach((value,colIndex) => {
       const cell = document.createElement('button');
@@ -375,6 +387,31 @@ function renderBoard(){
       board.appendChild(cell);
     });
   });
+}
+
+function renderBoardAxes(){
+  const topAxis = document.getElementById('pixelBoardAxisTop');
+  const leftAxis = document.getElementById('pixelBoardAxisLeft');
+  if (!topAxis || !leftAxis) return;
+
+  topAxis.innerHTML = '<div class="axis-corner-label"></div>';
+  leftAxis.innerHTML = '';
+  topAxis.style.setProperty('--grid-cols', state.gridCols);
+  leftAxis.style.setProperty('--grid-rows', state.gridRows);
+
+  for (let i = 1; i <= state.gridCols; i++) {
+    const col = document.createElement('div');
+    col.className = 'axis-label axis-label-col';
+    col.textContent = i;
+    topAxis.appendChild(col);
+  }
+
+  for (let i = 1; i <= state.gridRows; i++) {
+    const row = document.createElement('div');
+    row.className = 'axis-label axis-label-row';
+    row.textContent = i;
+    leftAxis.appendChild(row);
+  }
 }
 
 function toggleCell(row,col){
@@ -402,17 +439,19 @@ function resetCurrentStage(){
 }
 
 function applyPreset(type){
+  const midRow = Math.floor(state.gridRows / 2);
+  const midCol = Math.floor(state.gridCols / 2);
   if (type === 'single') {
     createEmptyGrid();
-    state.grid[4][4] = 1;
+    state.grid[midRow][midCol] = 1;
     state.lastAction = 'Pola cepat satu piksel diterapkan.';
-    state.lastPosition = 'Baris 5, kolom 5';
+    state.lastPosition = `Baris ${midRow+1}, kolom ${midCol+1}`;
   }
   if (type === 'line') {
     createEmptyGrid();
-    for (let i=2;i<7;i++) state.grid[4][i] = 1;
+    for (let i=midCol-2;i<=midCol+2;i++) state.grid[midRow][i] = 1;
     state.lastAction = 'Pola cepat garis 5 piksel diterapkan.';
-    state.lastPosition = 'Baris 5, kolom 3–7';
+    state.lastPosition = `Baris ${midRow+1}, kolom ${midCol-1}–${midCol+3}`;
   }
   if (type === 'plus') {
     applyPlusPattern(true);
@@ -420,8 +459,13 @@ function applyPreset(type){
   }
   if (type === 'frame') {
     createEmptyGrid();
-    for (let i=0;i<state.gridSize;i++) {
-      state.grid[0][i] = 1; state.grid[state.gridSize-1][i] = 1; state.grid[i][0] = 1; state.grid[i][state.gridSize-1] = 1;
+    for (let col=0;col<state.gridCols;col++) {
+      state.grid[0][col] = 1;
+      state.grid[state.gridRows-1][col] = 1;
+    }
+    for (let row=0;row<state.gridRows;row++) {
+      state.grid[row][0] = 1;
+      state.grid[row][state.gridCols-1] = 1;
     }
     state.lastAction = 'Pola cepat bingkai diterapkan.';
     state.lastPosition = 'Baris dan kolom tepi';
@@ -432,11 +476,10 @@ function applyPreset(type){
 
 function applyPlusPattern(withMessage = true){
   createEmptyGrid();
-  const mid = Math.floor(state.gridSize/2);
-  for (let i=0;i<state.gridSize;i++) {
-    state.grid[mid][i] = 1;
-    state.grid[i][mid] = 1;
-  }
+  const midRow = Math.floor(state.gridRows / 2);
+  const midCol = Math.floor(state.gridCols / 2);
+  for (let col=0;col<state.gridCols;col++) state.grid[midRow][col] = 1;
+  for (let row=0;row<state.gridRows;row++) state.grid[row][midCol] = 1;
   if (withMessage) {
     state.lastAction = 'Pola cepat tanda plus diterapkan.';
     state.lastPosition = 'Baris tengah dan kolom tengah';
@@ -446,17 +489,16 @@ function applyPlusPattern(withMessage = true){
 }
 
 function shiftGrid(direction, announce = true){
-  const size = state.gridSize;
-  const newGrid = Array.from({ length:size }, () => Array(size).fill(0));
-  for (let row=0; row<size; row++) {
-    for (let col=0; col<size; col++) {
+  const newGrid = Array.from({ length:state.gridRows }, () => Array(state.gridCols).fill(0));
+  for (let row=0; row<state.gridRows; row++) {
+    for (let col=0; col<state.gridCols; col++) {
       if (state.grid[row][col] !== 1) continue;
       let nr=row, nc=col;
       if (direction==='up') nr--;
       if (direction==='down') nr++;
       if (direction==='left') nc--;
       if (direction==='right') nc++;
-      if (nr>=0 && nr<size && nc>=0 && nc<size) newGrid[nr][nc] = 1;
+      if (nr>=0 && nr<state.gridRows && nc>=0 && nc<state.gridCols) newGrid[nr][nc] = 1;
     }
   }
   state.grid = newGrid;
@@ -477,17 +519,18 @@ function hasStreak(length){
   for (const row of state.grid) {
     let s=0; for (const v of row) { s = v===1 ? s+1 : 0; if (s>=length) return true; }
   }
-  for (let col=0; col<state.gridSize; col++) {
-    let s=0; for (let row=0; row<state.gridSize; row++) { s = state.grid[row][col]===1 ? s+1 : 0; if (s>=length) return true; }
+  for (let col=0; col<state.gridCols; col++) {
+    let s=0; for (let row=0; row<state.gridRows; row++) { s = state.grid[row][col]===1 ? s+1 : 0; if (s>=length) return true; }
   }
   return false;
 }
 
 function plusPatternMatches(){
-  const mid = Math.floor(state.gridSize/2);
-  for (let r=0;r<state.gridSize;r++) {
-    for (let c=0;c<state.gridSize;c++) {
-      const expected = (r===mid || c===mid) ? 1 : 0;
+  const midRow = Math.floor(state.gridRows / 2);
+  const midCol = Math.floor(state.gridCols / 2);
+  for (let r=0;r<state.gridRows;r++) {
+    for (let c=0;c<state.gridCols;c++) {
+      const expected = (r===midRow || c===midCol) ? 1 : 0;
       if (state.grid[r][c] !== expected) return false;
     }
   }
@@ -496,7 +539,7 @@ function plusPatternMatches(){
 
 function getTopRowCol(){
   const rows = state.grid.map(row => row.reduce((a,b) => a+b, 0));
-  const cols = Array.from({length:state.gridSize}, (_,c) => state.grid.reduce((a,row)=>a+row[c], 0));
+  const cols = Array.from({length:state.gridCols}, (_,c) => state.grid.reduce((a,row)=>a+row[c], 0));
   const maxR = Math.max(...rows), maxC = Math.max(...cols);
   return {
     topRow: maxR === 0 ? '-' : `Baris ${rows.indexOf(maxR)+1} (${maxR} piksel aktif)`,
@@ -512,7 +555,7 @@ function renderOutputs(customExplain){
   const tc = getTopRowCol();
   document.getElementById('changeSummary').textContent = state.lastAction;
   document.getElementById('changePanel').innerHTML = `<p><strong>Aksi terakhir:</strong> ${state.lastAction}</p><p><strong>Posisi terakhir:</strong> ${state.lastPosition}</p><p><strong>Baris paling aktif:</strong> ${tc.topRow}</p><p><strong>Kolom paling aktif:</strong> ${tc.topCol}</p>`;
-  document.getElementById('explainBox').textContent = customExplain || 'Angka 1 menandakan piksel aktif dan angka 0 menandakan piksel tidak aktif. Posisi piksel aktif menentukan bentuk gambar.';
+  document.getElementById('explainBox').textContent = customExplain || 'Setiap piksel direpresentasikan dengan bilangan biner: 1 berarti piksel aktif dan 0 berarti piksel tidak aktif. Komputer membaca susunan 0 dan 1 inilah sebagai gambar.';
 }
 
 function checkStage(){
@@ -524,6 +567,7 @@ function checkStage(){
     document.getElementById('explainBox').textContent = explanationMessage(state.currentStage);
   } else {
     feedback.innerHTML = failMessage(state.currentStage);
+    document.getElementById('explainBox').textContent = coachingMessage(state.currentStage);
   }
   renderStageNav();
   renderProgress();
@@ -574,31 +618,42 @@ function stagePassed(stageNo){
 
 function successMessage(stageNo){
   return {
-    1:'Berhasil. Tepat satu piksel aktif menunjukkan bahwa satu data saja sudah bisa mengubah tampilan.',
-    2:'Berhasil. Kamu sudah membentuk satu garis dari lima piksel aktif yang berurutan.',
-    3:'Berhasil. Pola plus terbentuk dan menunjukkan hubungan baris, kolom, dan bentuk gambar.',
-    4:'Berhasil. Pola sudah digeser. Sekarang siswa dapat melihat bahwa posisi data ikut berubah.',
-    5:'Berhasil. Kamu sudah mengubah pola secara mandiri. Ini menunjukkan bahwa gambar dapat dibangun dan dimodifikasi melalui data biner.'
+    1:'Berhasil. Tepat satu piksel aktif menunjukkan bahwa satu nilai biner 1 pada satu posisi sudah cukup untuk mengubah tampilan gambar.',
+    2:'Berhasil. Kamu sudah membentuk satu garis dari lima piksel aktif yang berurutan. Ini berarti susunan beberapa nilai biner 1 dapat dibaca komputer sebagai pola visual.',
+    3:'Berhasil. Pola plus terbentuk dan menunjukkan bahwa bentuk gambar muncul dari susunan nilai biner 0 dan 1 pada baris dan kolom tertentu.',
+    4:'Berhasil. Pola sudah digeser. Ini menunjukkan bahwa nilai biner aktifnya tetap dapat dibaca sebagai bentuk yang sama, tetapi posisinya berubah.',
+    5:'Berhasil. Kamu sudah mengubah pola secara mandiri. Ini menunjukkan bahwa gambar dapat dibangun dan dimodifikasi melalui susunan bilangan biner 0 dan 1.'
   }[stageNo];
 }
 
 function explanationMessage(stageNo){
   return {
-    1:'Satu kotak yang aktif berarti ada satu posisi data bernilai 1. Inilah dasar representasi gambar digital.',
-    2:'Ketika beberapa nilai 1 disusun berurutan, komputer membacanya sebagai pola garis.',
-    3:'Bentuk plus muncul karena kombinasi piksel aktif pada baris tengah dan kolom tengah.',
-    4:'Bentuk yang sama bisa terlihat pada posisi berbeda karena koordinat piksel berubah.',
-    5:'Perubahan mandiri pada grid membantu siswa memahami bahwa gambar adalah hasil dari susunan data, bukan objek yang berdiri sendiri.'
+    1:'Satu kotak yang aktif berarti ada satu posisi data bernilai biner 1, sedangkan kotak lain bernilai 0. Inilah dasar representasi gambar digital.',
+    2:'Ketika beberapa nilai biner 1 disusun berurutan, komputer membacanya sebagai pola garis pada kumpulan piksel.',
+    3:'Bentuk plus muncul karena kombinasi piksel bernilai 1 pada baris tengah dan kolom tengah, sedangkan posisi lain tetap 0.',
+    4:'Bentuk yang sama bisa terlihat pada posisi berbeda karena koordinat piksel bernilai 1 berubah, walaupun konsep binernya tetap sama.',
+    5:'Perubahan mandiri pada grid membantu siswa memahami bahwa gambar adalah hasil susunan data biner 0 dan 1, bukan objek yang berdiri sendiri.'
   }[stageNo];
 }
 
 function failMessage(stageNo){
+  const active = countActive();
   return {
-    1:'Belum tepat. Tahap 1 hanya boleh berisi tepat satu piksel aktif. Jika lebih dari satu, matikan kembali sampai tersisa satu.',
-    2:'Belum tepat. Buat satu garis mendatar atau tegak dengan minimal lima piksel aktif yang berurutan.',
-    3:'Belum tepat. Bentuk pola plus utuh dengan menyusun piksel pada baris dan kolom yang tepat.',
-    4:'Belum tepat. Geser pola minimal satu kali ke arah mana pun.',
-    5:'Belum tepat. Lakukan minimal tiga perubahan manual setelah pola digeser, lalu periksa lagi.'
+    1:`Belum tepat. Saat ini ada ${active} piksel aktif. Tahap 1 hanya boleh berisi tepat satu piksel aktif agar terlihat bahwa satu data saja sudah bisa mengubah gambar.`,
+    2:'Belum tepat. Buat satu garis mendatar atau tegak dengan minimal lima piksel aktif yang berurutan. Cek lagi apakah angka 1 milikmu masih terpencar.',
+    3:'Belum tepat. Bentuk pola plus utuh dengan menyusun piksel pada baris dan kolom yang tepat. Jika ada satu bagian bergeser, bentuk plus belum terbaca jelas.',
+    4:'Belum tepat. Geser pola minimal satu kali ke arah mana pun. Fokusnya bukan mengganti jumlah piksel, tetapi mengamati perpindahan posisinya.',
+    5:`Belum tepat. Lakukan minimal tiga perubahan manual setelah pola digeser, lalu periksa lagi. Saat ini jumlah piksel aktifmu ${active}, jadi jelaskan juga perubahan apa yang kamu buat.`
+  }[stageNo];
+}
+
+function coachingMessage(stageNo){
+  return {
+    1:'Coba sebutkan satu posisi yang ingin kamu nyalakan, lalu matikan kotak lain sampai hanya tersisa satu angka 1.',
+    2:'Perhatikan output data. Jika ingin membentuk garis, angka 1 perlu tersusun berurutan pada satu baris atau satu kolom.',
+    3:'Lihat hubungan baris dan kolom tengah. Bentuk plus baru muncul jika keduanya saling berpotongan dengan tepat.',
+    4:'Bandingkan matriks sebelum dan sesudah digeser. Tanyakan: apakah bentuknya sama, tetapi lokasinya berpindah?',
+    5:'Jangan hanya menambah piksel. Coba jelaskan piksel mana yang diubah dan bagaimana perubahan itu mengubah bentuk akhirnya.'
   }[stageNo];
 }
 
@@ -655,6 +710,7 @@ function openExampleModal(){
   document.getElementById('exampleIntro').textContent = stage.example.intro;
   document.getElementById('exampleCode').textContent = stage.example.code;
   document.getElementById('exampleOutput').textContent = stage.example.output;
+  document.getElementById('exampleMeaning').textContent = stage.example.meaning;
   document.getElementById('exampleWhy').textContent = stage.example.why;
   openModal('exampleModal');
 }
@@ -1017,7 +1073,7 @@ const JUMLAH_SAMA_PAIRS = [
     count: 8,
     gridA: [[1,1,1,1,1],[0,0,0,0,0],[1,1,1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     labelA: 'Pola A — 8 piksel aktif (garis + sebagian)',
-    gridB: [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1]],
+    gridB: [[1,0,0,0,1],[0,1,0,1,0],[0,0,0,0,0],[0,1,0,1,0],[1,0,0,0,1]],
     labelB: 'Pola B — 8 piksel aktif (diagonal silang)'
   },
   {
@@ -1040,11 +1096,17 @@ function openJumlahSamaModal() {
 function renderJumlahSama() {
   const pair = JUMLAH_SAMA_PAIRS[jumlahSamaIndex];
   const titleEl = document.getElementById('jumlahSamaTitle');
-  if (titleEl) titleEl.textContent = `Kedua pola berikut sama-sama memiliki ${pair.count} piksel aktif — tapi bentuknya berbeda total!`;
+  const countA = pair.gridA.flat().filter(v => v).length;
+  const countB = pair.gridB.flat().filter(v => v).length;
+  if (titleEl) {
+    titleEl.textContent = countA === countB
+      ? `Kedua pola berikut sama-sama memiliki ${countA} piksel aktif — tapi bentuknya berbeda total!`
+      : `Kedua pola berikut memiliki jumlah piksel aktif yang berbeda. Mari bandingkan bentuk dan datanya.`;
+  }
   renderStaticGrid('jumlahGridA', pair.gridA, pair.labelA);
   renderStaticGrid('jumlahGridB', pair.gridB, pair.labelB);
   const confirm = document.getElementById('jumlahSamaConfirm');
-  if (confirm) confirm.textContent = `Pola A: ${pair.gridA.flat().filter(v=>v).length} piksel aktif  |  Pola B: ${pair.gridB.flat().filter(v=>v).length} piksel aktif`;
+  if (confirm) confirm.textContent = `Pola A: ${countA} piksel aktif  |  Pola B: ${countB} piksel aktif`;
 }
 
 function renderStaticGrid(id, matrix, label) {
