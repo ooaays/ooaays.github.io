@@ -208,9 +208,16 @@
 		.main-container {
 			display: grid;
 			grid-template-columns: 2fr 3fr;
+			grid-template-rows: auto auto;
 			gap: 20px;
 			flex: 1;
 			min-height: 0;
+		}
+
+		.left-panel {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
 		}
 
 		/* --- HEADER --- */
@@ -239,7 +246,7 @@
 			padding: 22px;
 			border-radius: 32px;
 			border: 1px solid rgba(255,255,255,0.14);
-			flex: 1; display: flex; align-items: center; position: relative;
+			flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; position: relative;
 			box-shadow: 0 30px 80px rgba(15,23,42,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
 			min-height: 440px;
 		}
@@ -354,7 +361,7 @@
 		.house-blueprint .room-label {
 			position: relative;
 			z-index: 20;
-			background: rgba(15,23,42,0.92);
+			background: rgba(15,23,42,0.52);
 			border: 1px solid rgba(255,255,255,0.08);
 			color: #f8fafc;
 			padding: 8px 16px;
@@ -369,13 +376,13 @@
 		.house-blueprint .room-countdown {
 			position: absolute;
 			top: 12px;
-			right: 12px;
-			background: rgba(15,23,42,0.95);
+			left: 12px;
+			background: rgba(15,23,42,0.25);
 			padding: 6px 12px;
 			border-radius: 999px;
 			font-size: 0.8rem;
 			font-weight: 800;
-			color: #000000;
+			color: #ffffff;
 			box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 			z-index: 30;
 		}
@@ -546,6 +553,7 @@
 			background: white; border-radius: 20px; padding: 15px 25px;
 			box-shadow: 0 4px 15px rgba(148, 163, 184, 0.15); border: 1px solid #e2e8f0;
 			font-size: 0.9rem; font-weight: 600; overflow-y: auto; color: var(--text-main);
+			grid-column: 1 / -1;
 		}
 
 		.visual-card {

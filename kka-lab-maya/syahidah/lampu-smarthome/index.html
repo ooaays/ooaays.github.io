@@ -152,251 +152,326 @@
 	<!-- LAB PAGE -->
 
 	<section id="labPage" class="page">
-		<div style="
-			max-width:1500px;
-			margin:20px auto 0;
-			padding:0 20px;
-			display:flex;
-			justify-content:space-between;
-			align-items:center;
-			">
+<div class="app-wrapper">
+<div style="display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:24px;">
+<div>
+<h2 style="font-size:32px; font-weight:900; color:#4f46e5; margin:0;">Smart Home Logic Lab</h2>
+<p style="margin:10px 0 0; color:#475569; max-width:720px; line-height:1.6;">Selamat datang di lab interaktif Smart Home. Susun logika kondisi dan atur jadwal lampu untuk merancang sistem rumah pintar yang rapi dan mudah dipahami.</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<button onclick="openMateriModal()" style="background:#ffb300; color:#1f2937; font-weight:700; padding:12px 18px; border-radius:16px; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 6px 0 rgba(160, 81, 0, 0.35); transition:transform .15s ease;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v12h12V6H6Zm2 2h8v2H8V8Zm0 4h8v2H8v-2Z"/></svg>
+Materi Singkat
+</button>
+<button onclick="showPage('homePage')" style="background:#1e9df1a1; color:#1f2937; font-weight:700; padding:12px 18px; border-radius:16px; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 6px 0 rgba(0, 88, 160, 0.35); transition:transform .15s ease;"">
+Kembali ke Beranda
+</button>
+</div>
+</div>
 
-			<h2 style="
-			font-size:26px;
-			font-weight:900;
-			color:#4f46e5;
-			">
-				Smart Home Logic Lab
-			</h2>
+<div class="main-container">
+<div class="left-panel">
+<div class="house-container">
+<div class="house-header">Tampilan Rumah Pintar</div>
+<div class="house-blueprint">
+<div id="room-tidur" class="room room-tidur" onclick="toggleLight(this)">
+<div class="room-overlay"></div>
+<div class="light-glow"></div>
+<div class="lamp"></div>
+<svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+<pattern id="wood-floor-1" width="12" height="100" patternUnits="userSpaceOnUse">
+<line x1="12" y1="0" x2="12" y2="100" class="floor-wood"/>
+</pattern>
+<rect width="100" height="100" fill="url(#wood-floor-1)" />
+<g class="furniture-group">
+<rect x="15" y="55" width="45" height="35" rx="4" class="f-fabric" />
+<rect x="5" y="15" width="38" height="48" rx="4" class="f-wood" />
+<rect x="8" y="18" width="32" height="42" rx="3" class="f-base" />
+<rect x="8" y="38" width="32" height="22" rx="2" class="f-fabric" />
+<path d="M 8 38 L 40 38 L 40 42 L 8 42 Z" class="f-highlight" opacity="0.3" />
+<rect x="11" y="22" width="11" height="7" rx="2" class="f-highlight" />
+<rect x="26" y="22" width="11" height="7" rx="2" class="f-highlight" />
+<rect x="5" y="68" width="12" height="12" rx="2" class="f-wood" />
+<circle cx="11" cy="74" r="3" class="f-metal" />
+<circle cx="85" cy="85" r="8" class="f-plant" />
+<circle cx="85" cy="85" r="3" class="f-wood" />
+</g>
+</svg>
+<span class="room-label">Kamar Tidur</span>
+<span class="room-countdown" id="cd-tidur"></span>
+</div>
 
-			<button onclick="showPage('homePage')" style="
-		background:#334155;
-		color:white;
-		font-weight:700;
-		padding:10px 18px;
-		border-radius:12px;
-		border:none;
-		cursor:pointer;
-		">
+<div id="room-mandi" class="room room-mandi" onclick="toggleLight(this)">
+<div class="room-overlay"></div>
+<div class="light-glow"></div>
+<div class="lamp"></div>
+<svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+<pattern id="tile-floor-2" width="15" height="15" patternUnits="userSpaceOnUse">
+<rect width="15" height="15" class="floor-tile" />
+</pattern>
+<rect width="100" height="100" fill="url(#tile-floor-2)" />
+<g class="furniture-group">
+<rect x="65" y="8" width="28" height="45" rx="8" class="f-base" />
+<rect x="68" y="11" width="22" height="39" rx="6" class="f-ceramic" />
+<circle cx="79" cy="15" r="1.5" class="f-metal" />
+<rect x="5" y="8" width="18" height="35" rx="2" class="f-wood" />
+<ellipse cx="14" cy="25" rx="6" ry="8" class="f-ceramic" />
+<rect x="13" y="15" width="2" height="4" class="f-metal" />
+<rect x="5" y="70" width="12" height="18" rx="2" class="f-ceramic" />
+<ellipse cx="16" cy="79" rx="7" ry="6" class="f-ceramic" />
+</g>
+</svg>
+<span class="room-label">Kamar Mandi</span>
+<span class="room-countdown" id="cd-mandi"></span>
+</div>
 
-				Kembali ke Beranda
+<div id="room-tamu" class="room room-tamu" onclick="toggleLight(this)">
+<div class="room-overlay"></div>
+<div class="light-glow"></div>
+<div class="lamp"></div>
+<svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+<pattern id="wood-floor-3" width="12" height="100" patternUnits="userSpaceOnUse">
+<line x1="12" y1="0" x2="12" y2="100" class="floor-wood"/>
+</pattern>
+<rect width="100" height="100" fill="url(#wood-floor-3)" />
+<g class="furniture-group">
+<rect x="25" y="5" width="50" height="8" rx="2" class="f-wood" />
+<rect x="32" y="7" width="36" height="3" rx="1.5" class="f-metal" />
+<rect x="20" y="30" width="60" height="60" rx="8" class="f-fabric" />
+<rect x="40" y="50" width="20" height="20" rx="10" class="f-wood" />
+<rect x="45" y="55" width="10" height="10" rx="5" class="f-base" />
+<rect x="15" y="70" width="70" height="15" rx="4" class="f-base" />
+<rect x="70" y="35" width="15" height="45" rx="4" class="f-base" />
+<rect x="18" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+<rect x="35" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+<rect x="52" y="73" width="15" height="9" rx="2" class="f-highlight" opacity="0.15" />
+<circle cx="88" cy="15" r="7" class="f-plant" />
+</g>
+</svg>
+<span class="room-label">Ruang Tamu</span>
+<span class="room-countdown" id="cd-tamu"></span>
+</div>
 
-			</button>
+<div id="room-dapur" class="room room-dapur" onclick="toggleLight(this)">
+<div class="room-overlay"></div>
+<div class="light-glow"></div>
+<div class="lamp"></div>
+<svg class="room-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+<pattern id="tile-floor-4" width="15" height="15" patternUnits="userSpaceOnUse">
+<rect width="15" height="15" class="floor-tile" />
+</pattern>
+<rect width="100" height="100" fill="url(#tile-floor-4)" />
+<g class="furniture-group">
+<rect x="5" y="5" width="40" height="15" rx="2" class="f-wood" />
+<rect x="5" y="15" width="15" height="80" rx="2" class="f-wood" />
+<rect x="22" y="7" width="18" height="11" rx="1" class="f-metal" />
+<circle cx="26" cy="10" r="2" class="f-highlight" />
+<circle cx="34" cy="10" r="2" class="f-highlight" />
+<circle cx="26" cy="15" r="2" class="f-highlight" />
+<circle cx="34" cy="15" r="2" class="f-highlight" />
+<rect x="7" y="45" width="11" height="18" rx="2" class="f-metal" />
+<rect x="9" y="47" width="7" height="14" rx="1" class="f-ceramic" />
+<rect x="14" y="52" width="4" height="2" class="f-base" />
+<circle cx="65" cy="41" r="6" class="f-fabric" />
+<circle cx="65" cy="89" r="6" class="f-fabric" />
+<circle cx="41" cy="65" r="6" class="f-fabric" />
+<circle cx="89" cy="65" r="6" class="f-fabric" />
+<circle cx="65" cy="65" r="18" class="f-wood" />
+<circle cx="65" cy="65" r="8" class="f-base" opacity="0.3" />
+</g>
+</svg>
+<span class="room-label">Dapur</span>
+<span class="room-countdown" id="cd-dapur"></span>
+</div>
+</div>
+</div>
+<div class="task-container">
+<div class="task-header">
+<span>Langkah Praktikum</span>
+<span id="progressText">0/3 Selesai</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<ul class="task-list">
+<li id="task1" class="task-item active">
+<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
+<div><strong>Tahap 1:</strong> Lengkapi semua status lampu & timer pada konfigurasi di LANGKAH 1.</div>
+</li>
+<li id="task2" class="task-item">
+<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
+<div><strong>Tahap 2:</strong> Susun blok logika (For, If, Else) dan kunci Dictionary di LANGKAH 2.</div>
+</li>
+<li id="task3" class="task-item">
+<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
+<div><strong>Tahap 3:</strong> Klik JALANKAN tanpa ada pesan error di terminal!</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="editor-container">
+<div class="toolbar">
+<div class="tools-wrapper">
+<span style="font-size: 0.9rem; font-weight: 800; color: #64748b;">ALAT:</span>
 
-		</div>
+<div class="tool-group">
+<span class="tool-label">Logika:</span>
+<div class="block block-keyword" onclick="selectBlock('for', 'keyword', this)">for</div>
+<div class="block block-keyword" onclick="selectBlock('if', 'keyword', this)">if</div>
+<div class="block block-keyword" onclick="selectBlock('else', 'keyword', this)">else</div>
+</div>
 
-		<div class="app-wrapper">
-			<div class="main-container">
+<div class="tool-group">
+<span class="tool-label">Kunci:</span>
+<div class="block block-string" onclick="selectBlock('lampu', 'string', this)">"lampu"</div>
+<div class="block block-string" onclick="selectBlock('timer', 'string', this)">"timer"</div>
+<div class="block block-string" onclick="selectBlock('detik', 'string', this)">"detik"</div>
+</div>
 
-				<!-- Panel Kiri: Blueprint -->
-				<div class="house-container">
-					<h3 class="house-header">📍 Denah Rumah Pintarmu</h3>
-					<div class="house-blueprint">
-						<div class="floor-plan">
-							<div id="room-tidur" class="room room-tidur">
-								<div class="room-overlay"></div>
-								<div class="light-glow"></div>
-								<div class="lamp"></div>
-								<div class="furniture bed">
-									<div class="pillow"></div>
-								</div>
-								<div class="furniture rug-tidur"></div>
-								<span class="room-label">Kamar Tidur</span>
-								<span class="countdown" id="cd-tidur"></span>
-							</div>
-							<div id="room-mandi" class="room room-mandi">
-								<div class="room-overlay"></div>
-								<div class="light-glow"></div>
-								<div class="lamp"></div>
-								<div class="furniture tub"></div>
-								<div class="furniture toilet"></div>
-								<div class="furniture sink"></div>
-								<span class="room-label">Kamar Mandi</span>
-								<span class="countdown" id="cd-mandi"></span>
-							</div>
-							<div id="room-tamu" class="room room-tamu">
-								<div class="room-overlay"></div>
-								<div class="light-glow"></div>
-								<div class="lamp"></div>
-								<div class="furniture sofa-main"></div>
-								<div class="furniture sofa-side"></div>
-								<div class="furniture tv-tamu"></div>
-								<div class="furniture coffee-table"></div>
-								<div class="furniture plant"></div>
-								<span class="room-label">Ruang Tamu</span>
-								<span class="countdown" id="cd-tamu"></span>
-							</div>
-							<div id="room-dapur" class="room room-dapur">
-								<div class="room-overlay"></div>
-								<div class="light-glow"></div>
-								<div class="lamp"></div>
-								<div class="furniture counter"></div>
-								<div class="furniture stove"></div>
-								<div class="dining-table furniture"></div>
-								<div class="chair1"></div>
-								<div class="chair2"></div>
-								<span class="room-label">Dapur</span>
-								<span class="countdown" id="cd-dapur"></span>
-							</div>
-						</div>
-					</div>
+<div class="tool-group">
+<span class="tool-label">Status:</span>
+<div class="block block-on" onclick="selectBlock('ON', 'status', this)">ON</div>
+<div class="block block-off" onclick="selectBlock('OFF', 'status', this)">OFF</div>
+</div>
+</div>
 
-					<!-- Instruksi Bertahap -->
-					<div class="task-container">
-						<div class="task-header">
-							<span>Langkah Praktikum</span>
-							<span id="progressText">0/3 Selesai</span>
-						</div>
-						<div class="progress-bar">
-							<div class="progress-fill" id="progressFill"></div>
-						</div>
-						<ul class="task-list">
-							<li id="task1" class="task-item active">
-								<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-								<div><strong>Tahap 1:</strong> Lengkapi semua status lampu & timer pada konfigurasi di
-									LANGKAH 1.</div>
-							</li>
-							<li id="task2" class="task-item">
-								<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-								<div><strong>Tahap 2:</strong> Susun blok logika (For, If, Else) dan kunci Dictionary di
-									LANGKAH 2.</div>
-							</li>
-							<li id="task3" class="task-item">
-								<span class="task-icon"><i class="fa-solid fa-circle"></i></span>
-								<div><strong>Tahap 3:</strong> Klik JALANKAN tanpa ada pesan error di terminal!</div>
-							</li>
-						</ul>
-					</div>
+<div class="action-group">
+<button class="reset-btn" onclick="resetSimulation()">🔄 Reset</button>
+<button class="run-btn" onclick="runSimulation()">
+<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+<path d="M8 5v14l11-7z" />
+</svg>
+JALANKAN!
+</button>
+</div>
+</div>
 
+<div class="workspace">
+<svg class="workspace-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M10,50 L50,15 L90,50 L90,85 L10,85 Z" fill="none" stroke="#334155" stroke-width="2" stroke-linejoin="round" />
+<path d="M40,85 L40,60 L60,60 L60,85" fill="none" stroke="#334155" stroke-width="2" />
+<rect x="20" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2" />
+<rect x="68" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2" />
+</svg>
+
+<div class="code-content">
+<div class="code-line"><span class="comment"># LANGKAH 1: Atur Data Ruangan (Dictionary)</span></div>
+<div class="code-line"><span style="color: var(--keyword); font-weight: 600;">config</span> = {</div>
+<div class="code-line indent-1" data-room="tamu">"Tamu": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "detik": <input type="number" value="3" id="input-tamu">},</div>
+<div class="code-line indent-1" data-room="tidur">"Tidur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "detik": <input type="number" value="5" id="input-tidur">},</div>
+<div class="code-line indent-1" data-room="dapur">"Dapur": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "detik": <input type="number" value="2" id="input-dapur">},</div>
+<div class="code-line indent-1" data-room="mandi">"Mandi": {"lampu": <span class="slot" onclick="placeBlock(this)">???</span>, "timer": <span class="slot" onclick="placeBlock(this)">???</span>, "detik": <input type="number" value="4" id="input-mandi">}</div>
+<div class="code-line">}</div>
+
+<div class="code-line"><span class="comment"># LANGKAH 2: Susun Logika Utamanya</span></div>
+<div class="code-line"><span class="slot" onclick="placeBlock(this)" id="slot-for">???</span> ruang, pengaturan <span style="color: var(--keyword); font-weight: 600;">in</span> config.items():</div>
+<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)" id="slot-if1">???</span> pengaturan[<span class="slot" onclick="placeBlock(this)" id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-lampu">???</span>:</div>
+<div class="code-line indent-2"><span class="func">nyalakan_lampu</span>(ruang)</div>
+<div class="code-line indent-2"><span class="comment"># Cek apakah fitur timer aktif</span></div>
+<div class="code-line indent-2"><span class="slot" onclick="placeBlock(this)" id="slot-if2">???</span> pengaturan[<span class="slot" onclick="placeBlock(this)" id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)" id="logic-if-timer">???</span>:</div>
+<div class="code-line indent-3"><span class="func">tunggu</span>(pengaturan[<span class="slot" onclick="placeBlock(this)" id="slot-key3">???</span>])</div>
+<div class="code-line indent-3"><span class="func">matikan_lampu</span>(ruang)</div>
+<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)" id="slot-else">???</span>:</div>
+<div class="code-line indent-2"><span class="func">matikan_lampu</span>(ruang)</div>
+</div>
+</div>
+</div>
+
+
+	<div class="bottom-panel" id="terminal">
+		<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Halo! Pilih alat dari toolbar (atas), lalu tempelkan ke dalam tanda "???" untuk menyusun logika smart home kamu!</span>
+	</div>
+</div>
+</section>
+
+
+	<!-- MODAL MATERI SINGKAT -->
+	<div id="materiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+		<div class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-amber-100 flex flex-col h-auto max-h-[90vh] overflow-y-auto">
+			<div class="shrink-0 mb-6 flex items-start justify-between gap-4">
+				<div>
+					<h2 class="text-3xl md:text-4xl font-black text-amber-700">Belajar Dasar Python: Mengatur Data dan Mengambil Keputusan</h2>
+					<p class="text-slate-600 mt-3">Halo semuanya! Pernahkah kamu membayangkan bagaimana komputer di sekolah menyimpan dan memproses datamu? Hari ini kita akan belajar tiga konsep utama di bahasa pemrograman Python yang sering digunakan untuk mengatur data.</p>
 				</div>
-
-				<!-- Panel Kanan: Workspace Editor -->
-				<div class="editor-container">
-
-					<div class="toolbar">
-						<div class="tools-wrapper">
-							<span style="font-size: 0.9rem; font-weight: 800; color: #64748b;">🎒 ALAT:</span>
-
-							<div class="tool-group">
-								<span class="tool-label">Logika:</span>
-								<div class="block block-keyword" onclick="selectBlock('for', 'keyword', this)">for</div>
-								<div class="block block-keyword" onclick="selectBlock('if', 'keyword', this)">if</div>
-								<div class="block block-keyword" onclick="selectBlock('else', 'keyword', this)">else
-								</div>
-							</div>
-
-							<div class="tool-group">
-								<span class="tool-label">Kunci:</span>
-								<div class="block block-string" onclick="selectBlock('lampu', 'string', this)">"lampu"
-								</div>
-								<div class="block block-string" onclick="selectBlock('timer', 'string', this)">"timer"
-								</div>
-								<div class="block block-string" onclick="selectBlock('s', 'string', this)">"s"</div>
-							</div>
-
-							<div class="tool-group">
-								<span class="tool-label">Status:</span>
-								<div class="block block-on" onclick="selectBlock('ON', 'status', this)">ON</div>
-								<div class="block block-off" onclick="selectBlock('OFF', 'status', this)">OFF</div>
-							</div>
-						</div>
-
-						<div class="action-group">
-							<button class="reset-btn" onclick="resetSimulation()">🔄 Reset</button>
-							<button class="run-btn" onclick="runSimulation()">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-									<path d="M8 5v14l11-7z" />
-								</svg>
-								JALANKAN!
-							</button>
-						</div>
-					</div>
-
-					<div class="workspace">
-						<svg class="workspace-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-							<path d="M10,50 L50,15 L90,50 L90,85 L10,85 Z" fill="none" stroke="#334155" stroke-width="2"
-								stroke-linejoin="round" />
-							<path d="M40,85 L40,60 L60,60 L60,85" fill="none" stroke="#334155" stroke-width="2" />
-							<rect x="20" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2" />
-							<rect x="68" y="55" width="12" height="12" fill="none" stroke="#334155" stroke-width="2" />
-						</svg>
-
-						<div class="code-content">
-							<div class="code-line"><span class="comment"># LANGKAH 1: Atur Data Ruangan
-									(Dictionary)</span></div>
-							<div class="code-line"><span style="color: var(--keyword); font-weight: 600;">config</span>
-								= {</div>
-							<div class="code-line indent-1" data-room="tamu">"Tamu": {"lampu": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "timer": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "s": <input type="number" value="3"
-									id="input-tamu">},</div>
-							<div class="code-line indent-1" data-room="tidur">"Tidur": {"lampu": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "timer": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "s": <input type="number" value="5"
-									id="input-tidur">},</div>
-							<div class="code-line indent-1" data-room="dapur">"Dapur": {"lampu": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "timer": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "s": <input type="number" value="2"
-									id="input-dapur">},</div>
-							<div class="code-line indent-1" data-room="mandi">"Mandi": {"lampu": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "timer": <span class="slot"
-									onclick="placeBlock(this)">???</span>, "s": <input type="number" value="4"
-									id="input-mandi">}</div>
-							<div class="code-line">}</div>
-
-							<div class="code-line"><span class="comment"># LANGKAH 2: Susun Logika Utamanya</span></div>
-							<div class="code-line"><span class="slot" onclick="placeBlock(this)"
-									id="slot-for">???</span> ruang, spek <span
-									style="color: var(--keyword); font-weight: 600;">in</span> config.items():</div>
-							<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)"
-									id="slot-if1">???</span> spek[<span class="slot" onclick="placeBlock(this)"
-									id="slot-key1">???</span>] == <span class="slot" onclick="placeBlock(this)"
-									id="logic-if-lampu">???</span>:</div>
-							<div class="code-line indent-2"><span class="func">nyalakan_lampu</span>(ruang)</div>
-							<div class="code-line indent-2"><span class="comment"># Cek apakah fitur timer aktif</span>
-							</div>
-							<div class="code-line indent-2"><span class="slot" onclick="placeBlock(this)"
-									id="slot-if2">???</span> spek[<span class="slot" onclick="placeBlock(this)"
-									id="slot-key2">???</span>] == <span class="slot" onclick="placeBlock(this)"
-									id="logic-if-timer">???</span>:</div>
-							<div class="code-line indent-3"><span class="func">sleep</span>(spek[<span class="slot"
-									onclick="placeBlock(this)" id="slot-key3">???</span>])</div>
-							<div class="code-line indent-3"><span class="func">matikan_lampu</span>(ruang)</div>
-							<div class="code-line indent-1"><span class="slot" onclick="placeBlock(this)"
-									id="slot-else">???</span>:</div>
-							<div class="code-line indent-2"><span class="func">matikan_lampu</span>(ruang)</div>
-						</div>
-					</div>
-				</div>
-
+				<button onclick="closeMateriModal()" class="text-slate-500 hover:text-slate-900 rounded-full p-2 transition-all">
+					<i class="fa-solid fa-xmark text-2xl"></i>
+				</button>
 			</div>
+			<div class="space-y-5 text-slate-700 leading-relaxed text-base">
+				<div>
+					<p>Kita akan bahas satu per satu menggunakan contoh data siswa.</p>
+				</div>
+				<div>
+					<h3 class="text-2xl font-bold text-slate-900">1. Menyimpan Data dengan Dictionary (Kamus Data)</h3>
+					<p>Bayangkan Dictionary di Python seperti Kartu Pelajar. Di kartu pelajar, ada label seperti "Nama" dan "Kelas", lalu ada isinya yang sesungguhnya.</p>
+					<p>Di Python, "label" ini disebut Kunci (Key), dan "isinya" disebut Nilai (Value).</p>
+					<pre class="bg-slate-100 p-4 rounded-2xl overflow-x-auto text-sm text-slate-800"><code>data_budi = {
+    "nama": "Budi Santoso",
+    "nilai_ujian": 85,
+    "ekskul": "Basket"
+}</code></pre>
+					<p>Jika kita ingin tahu berapa nilai ujian Budi, kita cukup memanggil kuncinya:</p>
+					<pre class="bg-slate-100 p-4 rounded-2xl overflow-x-auto text-sm text-slate-800"><code>print(data_budi["nilai_ujian"])</code></pre>
+					<p>(Hasilnya: 85)</p>
+				</div>
+				<div>
+					<h3 class="text-2xl font-bold text-slate-900">2. Mengecek Satu per Satu dengan for (Perulangan)</h3>
+					<p>Sebagai guru, tidak mungkin mengecek kelulusan siswa satu per satu secara manual jika ada puluhan siswa di kelas. Kita butuh bantuan otomatisasi yang di Python disebut for loop.</p>
+					<p>for bertugas untuk memproses data dalam sebuah daftar satu per satu secara otomatis.</p>
+					<pre class="bg-slate-100 p-4 rounded-2xl overflow-x-auto text-sm text-slate-800"><code>data_kelas = {
+    "Siswa 1": {"nama": "Andi", "nilai": 85},
+    "Siswa 2": {"nama": "Budi", "nilai": 60},
+    "Siswa 3": {"nama": "Citra", "nilai": 95}
+}
 
-			<!-- Terminal Log -->
-			<div class="bottom-panel" id="terminal">
-				<span class="log-info"><i class="fa-solid fa-hand-wave"></i> Halo! Pilih alat dari toolbar (atas), lalu
-					tempelkan ke dalam tanda "???" untuk menyusun logika smart home kamu!</span>
+# Menyuruh Python mengecek setiap siswa
+for nomor_absen, info in data_kelas.items():
+    print("Sedang mengecek nilai:", info["nama"])</code></pre>
+					<p>Artinya: "Python, tolong datangi setiap siswa di data_kelas satu per satu, ambil datanya, dan cetak nama mereka."</p>
+				</div>
+				<div>
+					<h3 class="text-2xl font-bold text-slate-900">3. Membuat Keputusan dengan if dan else (Percabangan)</h3>
+					<p>Saat program mengecek data siswa, program harus bisa mengambil keputusan: apakah siswa ini Lulus atau harus Remedial? Kita gunakan if (Jika) dan else (Jika Tidak).</p>
+					<p>if (Jika): Mengecek apakah sebuah syarat terpenuhi (misal: nilai di atas 75).</p>
+					<p>else (Jika Tidak): Tindakan cadangan jika syarat if tidak terpenuhi (berarti nilai di bawah 75).</p>
+					<pre class="bg-slate-100 p-4 rounded-2xl overflow-x-auto text-sm text-slate-800"><code>for nomor_absen, info in data_kelas.items():
+    
+    # JIKA nilainya 75 atau lebih
+    if info["nilai"] >= 75:
+        print(info["nama"] + " dinyatakan Lulus.")
+    
+    # JIKA TIDAK (nilainya di bawah 75)
+    else:
+        print(info["nama"] + " harus ikut remedial.")</code></pre>
+				</div>
+				<div>
+					<h3 class="text-2xl font-bold text-slate-900">Ringkasan</h3>
+					<ul class="list-disc ml-6 space-y-2 text-slate-700">
+						<li>Dictionary digunakan untuk menyimpan data nama dan nilai siswa.</li>
+						<li>For Loop digunakan untuk memproses seluruh siswa di kelas secara otomatis.</li>
+						<li>If-Else digunakan untuk memutuskan status kelulusan berdasarkan nilai.</li>
+					</ul>
+					<p class="font-semibold">Selamat mencoba berkreasi dengan kodemu sendiri.</p>
+				</div>
+			</div>
+			<div class="shrink-0 mt-6 flex justify-end">
+				<button onclick="closeMateriModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-2xl shadow-[0_6px_0_rgba(160,81,0,0.5)] active:shadow-[0_0px_0_rgba(160,81,0,0.5)] active:translate-y-[2px] transition-all duration-150">
+					Tutup
+				</button>
 			</div>
 		</div>
-
-
-
-
-
-
-	</section>
-
+	</div>
 
 	<!-- MODAL CAPAIAN -->
-	<div id="cpModal"
-		class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+	<div id="cpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
 		<div
-			class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-[85vh]">
+			class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-indigo-100 flex flex-col h-auto max-h-[100vh] overflow-y-auto">
 			<div class="shrink-0 mb-6">
-				<h2 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Pembelajaran</h2>
+				<h3 class="text-3xl md:text-5xl font-black text-indigo-700 text-center">Tujuan Praktikum</h3>
 			</div>
 
 			<div class="flex-1 overflow-y-auto pr-4 space-y-6 text-left pb-4">
-				<div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
+				<!-- <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-8 border-indigo-500">
 					<h3 class="text-2xl md:text-3xl font-bold text-indigo-900 mb-2">Elemen</h3>
 					<p class="text-xl md:text-2xl text-slate-800 font-medium">Berpikir Komputasional</p>
 				</div>
@@ -407,19 +482,12 @@
 						Pengembangan Solusi Efektif untuk Permasalahan yang Kompleks
 
 					</p>
-				</div>
+				</div> -->
 
 				<div class="bg-emerald-50 p-6 md:p-8 rounded-2xl border-l-8 border-emerald-500">
-					<h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3>
+					<!-- <h3 class="text-2xl md:text-3xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3> -->
 					<p class="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">
-						Praktikum Simulasi Smart Home bertujuan untuk melatih murid dalam memahami bagaimana suatu
-						permasalahan dalam kehidupan sehari-hari dapat diselesaikan melalui pendekatan komputasional
-						dengan mengembangkan solusi yang efektif untuk permasalahan yang kompleks. Melalui kegiatan ini,
-						peserta didik mempelajari cara mengelola data, menyusun logika kondisi, dan menggunakan
-						pengaturan waktu (timer) untuk mengontrol lampu pada sistem rumah pintar secara otomatis. Dengan
-						menyusun instruksi dan aturan sederhana, peserta didik dapat memahami bagaimana sebuah sistem
-						mengambil keputusan dan menjalankan tindakan secara terstruktur sehingga menghasilkan solusi
-						yang sistematis, efektif, dan dapat diimplementasikan dalam bentuk algoritma.
+						Praktikum Simulasi Smart Home bertujuan melatih peserta didik memahami bahwa solusi efektif untuk permasalahan yang kompleks dapat dikembangkan melalui berpikir komputasional yang diimplementasikan pada pemrograman. Pada Praktikum ini menggunakan pemrograman Python dasar dengan mengelola data, menyusun logika kondisi, serta menggunakan timer untuk mengontrol sistem rumah pintar secara otomatis.
 					</p>
 				</div>
 			</div>
@@ -437,7 +505,7 @@
 	<div id="caraModal"
 		class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
 		<div
-			class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-[85vh]">
+			class="bg-white rounded-[30px] p-6 md:p-8 max-w-6xl w-full shadow-2xl border-4 border-orange-100 flex flex-col h-auto max-h-[100vh] overflow-y-auto">
 			<div class="shrink-0 mb-4">
 				<h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
 				<div class="flex justify-center gap-2 flex-wrap">
@@ -680,7 +748,7 @@
 	<div id="bioModal"
 		class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
 		<div
-			class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-[85vh]">
+			class="bg-white rounded-[30px] p-6 md:p-10 max-w-5xl w-full shadow-2xl border-4 border-lime-200 flex flex-col h-auto max-h-[100vh] overflow-y-auto">
 			<div class="shrink-0 mb-6">
 				<h2 class="text-3xl md:text-5xl font-black text-[#689f38] text-center">Biodata Pengembang</h2>
 			</div>
