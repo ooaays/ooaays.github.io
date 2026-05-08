@@ -387,7 +387,7 @@ header h2 {
     background: #ffffff;
     padding: 15px;
     overflow-y: scroll;
-    height: 500px;
+    height: 300px;
 }
 
 #interactiveCode {
@@ -584,4 +584,9 @@ button:hover {
     background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
     color: white;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-control{
+    padding-top: 15px;
+    padding-left: 15px;
 }
