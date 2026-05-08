@@ -385,7 +385,7 @@ header h2 {
 #editor-container {
     /* flex: 1; */
     background: #ffffff;
-    padding: 15px;
+    padding: 0px 15px;
     overflow-y: scroll;
     height: 300px;
 }
@@ -587,6 +587,5 @@ button:hover {
 }
 
 .btn-control{
-    padding-top: 15px;
-    padding-left: 15px;
+    padding: 15px;
 }
