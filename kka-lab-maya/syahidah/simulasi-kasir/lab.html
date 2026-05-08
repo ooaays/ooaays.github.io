@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1024, initial-scale=1.0">
+    <meta name="viewport" content="width=1200 ">
     <style>
-    html, body {
-        min-width: 1024px;
-        min-height: 100vh;
-    }
-    body {
-        overflow-x: auto;
-    }
-    #popup {
-        max-height: 80vh;
-        width: min(90vw, 420px);
-        overflow-y: auto;
-    }
+        html,
+        body {
+            min-width: 1024px;
+            min-height: 100vh;
+        }
+
+        body {
+            overflow-x: auto;
+        }
+
+        #popup {
+            max-height: 80vh;
+            width: min(90vw, 420px);
+            overflow-y: auto;
+        }
     </style>
     <title>Laboratorium Algoritma: Sistem Kasir</title>
     <script type="text/javascript" src="assets/src/brython/brython.min.js"></script>
     <script type="text/javascript" src="assets/src/brython/brython_stdlib.min.js"></script>
     <link href="assets/src/output.css" rel="stylesheet">
     <link href="assets/src/style-lab.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body onload="brython()">
@@ -37,348 +42,490 @@
             </div>
         </div>
         <div class="flex items-center gap-4">
-        <img src="assets/img/pendidikan.png" class="h-12 hidden sm:block">
-        <img src="assets/img/ramah.png" class="h-12 hidden sm:block">
-        <img src="assets/img/sobatsmp.png" class="h-12 hidden sm:block">
+            <img src="assets/img/pendidikan.png" class="h-12 hidden sm:block">
+            <img src="assets/img/ramah.png" class="h-12 hidden sm:block">
+            <img src="assets/img/sobatsmp.png" class="h-12 hidden sm:block">
         </div>
     </div>
-<header>
-    <div class="header-left">
-        <a href="index.html" class="back-btn">
-            &#8592; Kembali
-        </a>
-        <h2><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Kasir Virtual</h2>
-    </div>
-    <div class="step-indicator">
-        <div class="dot-wrapper active" id="dw1"><div class="dot active"></div><span class="dot-label">1. Cek</span></div>
-        <div class="dot-wrapper" id="dw2"><div class="dot"></div><span class="dot-label">2. Data</span></div>
-        <div class="dot-wrapper" id="dw3"><div class="dot"></div><span class="dot-label">3. Sapaan</span></div>
-        <div class="dot-wrapper" id="dw4"><div class="dot"></div><span class="dot-label">4. Cek Isi</span></div>
-        <div class="dot-wrapper" id="dw5"><div class="dot"></div><span class="dot-label">5. F. Total</span></div>
-        <div class="dot-wrapper" id="dw6"><div class="dot"></div><span class="dot-label">6. Panggil</span></div>
-        <div class="dot-wrapper" id="dw7"><div class="dot"></div><span class="dot-label">7. Kembali</span></div>
-        <div class="dot-wrapper" id="dw8"><div class="dot"></div><span class="dot-label">8. Eksekusi</span></div>
-    </div>
-</header>
+    <br>
+    <div class="app-wrapper">
 
-<div id="main-container">
-    <div id="left-panel">
-        <div id="svgContainer">
-            <svg id="kasirSvg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
-                <!-- Background Wall -->
-                <rect x="0" y="0" width="800" height="400" fill="#f2f4f6" />
-                
-                <!-- Floor -->
-                <rect x="0" y="395" width="800" height="205" fill="#d0d4d9" />
+        <header>
+            <div class="header-left">
+                <a href="index.html" class="back-btn">
+                    &#8592; Kembali
+                </a>
 
-                <!-- Rak Belanja (Kiri) -->
-                <g id="shelf">
-                    <rect x="50" y="75" width="300" height="320" rx="10" fill="#e2e6eb" />
-                    <line x1="50" y1="155" x2="350" y2="155" stroke="#cbd5e1" stroke-width="6" />
-                    <line x1="50" y1="235" x2="350" y2="235" stroke="#cbd5e1" stroke-width="6" />
-                    <line x1="50" y1="315" x2="350" y2="315" stroke="#cbd5e1" stroke-width="6" />
-                    <rect x="70" y="105" width="30" height="50" rx="3" fill="#fa8e93" />
-                    <rect x="110" y="115" width="40" height="40" rx="3" fill="#fcd36c" />
-                    <rect x="250" y="185" width="20" height="50" rx="2" fill="#8cbdf7" />
-                    <rect x="90" y="265" width="60" height="50" rx="4" fill="#59d8a1" />
-                </g>
-
-                <!-- Grup Interaktif: Pembeli & Troli (Gaya Animasi 2D Profesional) -->
-                <g id="grup-pembeli" class="svg-interactive">
-                    <!-- Kaki & Sepatu -->
-                    <ellipse cx="186" cy="408" rx="14" ry="4" fill="#f8fafc" />
-                    <ellipse cx="218" cy="408" rx="14" ry="4" fill="#f8fafc" />
-                    <path d="M 172 408 C 172 395, 200 395, 200 408 Z" fill="#334155" />
-                    <path d="M 204 408 C 204 395, 232 395, 232 408 Z" fill="#334155" />
-                    
-                    <!-- Celana Biru -->
-                    <path d="M 175 305 L 205 305 L 200 400 L 175 400 Z" fill="#1d4ed8" />
-                    <path d="M 205 305 L 240 305 L 230 400 L 200 400 Z" fill="#2563eb" />
-
-                    <!-- Lengan Kiri (Istirahat di pinggang) -->
-                    <path d="M 175 220 C 145 250, 155 290, 180 295" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
-                    <circle cx="180" cy="295" r="8" fill="#ffe4d6" />
-
-                    <!-- Badan (Kemeja Putih & Dasi Biru) -->
-                    <path d="M 170 215 C 170 215, 160 260, 175 305 L 245 305 C 255 260, 245 215, 245 215 Z" fill="#ffffff" />
-                    <path d="M 185 215 L 210 235 L 235 215 Z" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
-                    <polygon points="205,230 215,230 220,270 210,285 200,270" fill="#1d4ed8" />
-                    <polygon points="203,228 217,228 215,235 205,235" fill="#1e3a8a" />
-                    <rect x="225" y="245" width="12" height="15" rx="1" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
-
-                    <!-- Sabuk Coklat & Gesper Emas -->
-                    <rect x="172" y="295" width="76" height="10" fill="#451a03" />
-                    <rect x="203" y="293" width="14" height="14" rx="2" fill="#fbbf24" />
-                    <rect x="205" y="295" width="10" height="10" rx="1" fill="#451a03" />
-                    <rect x="207" y="295" width="6" height="10" fill="#fbbf24" />
-
-                    <!-- Telinga -->
-                    <path d="M 165 155 C 150 150, 150 170, 165 170" fill="#ffe4d6" />
-                    <path d="M 160 158 Q 165 160, 162 165" fill="none" stroke="#eab308" stroke-width="1.5" opacity="0.3" />
-
-                    <!-- Kepala & Wajah -->
-                    <circle cx="210" cy="155" r="48" fill="#ffe4d6" />
-                    
-                    <!-- Rambut Hitam Bertekstur -->
-                    <path d="M 150 145 C 150 90, 260 90, 260 145 Z" fill="#1e293b" />
-                    <path d="M 145 140 Q 165 110, 190 120 Q 210 130, 220 120 Q 240 100, 265 140 Q 245 125, 230 135 Q 210 145, 190 135 Q 165 125, 145 140 Z" fill="#334155" />
-                    <path d="M 160 115 Q 180 95, 205 105 Q 225 90, 250 115 Z" fill="#475569" opacity="0.4"/>
-
-                    <!-- Detail Wajah (Mata besar, pipi merah, senyum, alis) -->
-                    <path d="M 185 140 Q 195 135, 205 142" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-                    <path d="M 220 142 Q 230 135, 240 140" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-                    <circle cx="195" cy="155" r="8" fill="#3e2723" />
-                    <circle cx="192" cy="152" r="3" fill="#ffffff" />
-                    <circle cx="197" cy="158" r="1.5" fill="#ffffff" />
-                    <circle cx="230" cy="155" r="8" fill="#3e2723" />
-                    <circle cx="227" cy="152" r="3" fill="#ffffff" />
-                    <circle cx="232" cy="158" r="1.5" fill="#ffffff" />
-                    <ellipse cx="182" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
-                    <ellipse cx="242" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
-                    <path d="M 212 162 Q 215 166, 218 162" fill="none" stroke="#e2b8a5" stroke-width="2.5" stroke-linecap="round" />
-                    <path d="M 205 175 Q 212 182, 220 175" fill="none" stroke="#3e2723" stroke-width="2.5" stroke-linecap="round" />
-
-                    <!-- Lengan Kanan (Memegang Troli) -->
-                    <path d="M 235 220 Q 280 260, 310 315" stroke="#ffffff" stroke-width="16" stroke-linecap="round" fill="none" />
-                    <circle cx="315" cy="320" r="8" fill="#ffe4d6" />
-                    <path d="M 310 315 L 325 320" stroke="#e2b8a5" stroke-width="2" stroke-linecap="round" />
-
-                    <!-- Troli Belanja (Gaya Premium) -->
-                    <polygon points="295,325 435,325 420,435 315,435" fill="#f8fafc" opacity="0.8" />
-                    
-                    <!-- Barang-barang Imut di Troli -->
-                    <rect x="325" y="350" width="40" height="85" rx="4" fill="#ffffff" />
-                    <rect x="325" y="380" width="40" height="30" fill="#0ea5e9" />
-                    <path d="M 335 350 L 345 335 L 355 350 Z" fill="#ffffff" />
-                    <rect x="375" y="380" width="45" height="55" rx="5" fill="#f59e0b" />
-                    <rect x="380" y="390" width="35" height="20" rx="2" fill="#fcd34d" />
-                    
-                    <!-- Rangka Troli -->
-                    <polygon points="295,325 435,325 420,435 315,435" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linejoin="round" />
-                    <line x1="302" y1="360" x2="428" y2="360" stroke="#94a3b8" stroke-width="4" />
-                    <line x1="308" y1="395" x2="423" y2="395" stroke="#94a3b8" stroke-width="4" />
-                    <line x1="335" y1="325" x2="340" y2="435" stroke="#94a3b8" stroke-width="4" />
-                    <line x1="375" y1="325" x2="375" y2="435" stroke="#94a3b8" stroke-width="4" />
-                    <line x1="415" y1="325" x2="405" y2="435" stroke="#94a3b8" stroke-width="4" />
-                    
-                    <!-- Roda -->
-                    <circle cx="325" cy="455" r="14" fill="#334155" />
-                    <circle cx="325" cy="455" r="4" fill="#94a3b8" />
-                    <circle cx="405" cy="455" r="14" fill="#334155" />
-                    <circle cx="405" cy="455" r="4" fill="#94a3b8" />
-                </g>
-
-                <!-- Grup Interaktif: Kasir & Meja (Gaya Animasi 2D Profesional) -->
-                <g id="grup-kasir" class="svg-interactive">
-                    <!-- Meja Kasir Latar -->
-                    <rect x="495" y="375" width="305" height="225" fill="#78350f" />
-                    <rect x="485" y="345" width="315" height="30" rx="6" fill="#b45309" />
-                    
-                    <!-- Karakter Kasir -->
-                    <path d="M 640 200 Q 680 200, 720 200 L 730 345 L 630 345 Z" fill="#ef4444" />
-                    <path d="M 660 200 L 680 230 L 700 200 Z" fill="#ffe4d6" />
-                    <polygon points="655,200 680,235 705,200 680,225" fill="#dc2626" />
-                    
-                    <circle cx="680" cy="145" r="45" fill="#ffe4d6" />
-                    <circle cx="735" cy="125" r="22" fill="#1f2937" />
-                    <circle cx="735" cy="125" r="16" fill="#374151" />
-                    <path d="M 635 145 C 630 80, 730 80, 725 145 Z" fill="#1f2937" />
-                    <path d="M 635 135 Q 660 115, 680 125 Q 700 105, 725 125 Q 710 95, 680 95 Q 650 95, 635 135 Z" fill="#374151" />
-                    
-                    <ellipse cx="648" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
-                    <ellipse cx="712" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
-                    <circle cx="660" cy="145" r="7" fill="#4a2c11" />
-                    <circle cx="662" cy="142" r="2.5" fill="#ffffff" />
-                    <circle cx="700" cy="145" r="7" fill="#4a2c11" />
-                    <circle cx="702" cy="142" r="2.5" fill="#ffffff" />
-                    <path d="M 670 165 Q 680 175, 690 165" fill="none" stroke="#4a2c11" stroke-width="2.5" stroke-linecap="round" />
-                    
-                    <rect x="643" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
-                    <rect x="683" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626" stroke-width="4" />
-                    <line x1="675" y1="142" x2="685" y2="142" stroke="#dc2626" stroke-width="4" />
-                    
-                    <path d="M 640 230 Q 600 260, 595 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
-                    <circle cx="595" cy="315" r="10" fill="#ffe4d6" />
-                    <path d="M 720 230 Q 750 260, 740 305" stroke="#ef4444" stroke-width="18" stroke-linecap="round" fill="none" />
-                    
-                    <!-- Komputer Kasir & Scanner (Tumpang tindih di atas karakter) -->
-                    <rect x="490" y="355" width="20" height="40" rx="3" fill="#ef4444" />
-                    <rect x="495" y="360" width="10" height="30" rx="2" fill="#7f1d1d" />
-                    
-                    <rect x="560" y="325" width="20" height="25" fill="#475569" />
-                    <rect x="545" y="345" width="50" height="12" rx="3" fill="#334155" />
-                    <rect x="520" y="260" width="100" height="75" rx="8" fill="#1e293b" />
-                    <rect x="530" y="270" width="80" height="55" rx="4" fill="#0ea5e9" />
-                    <rect x="535" y="275" width="40" height="8" rx="2" fill="#38bdf8" />
-                    <rect x="535" y="288" width="70" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
-                    <rect x="535" y="298" width="50" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
-                    <rect x="535" y="308" width="60" height="6" rx="2" fill="#bae6fd" opacity="0.5"/>
-                </g>
-
-                <!-- Balon Percakapan -->
-                <!-- BAGIAN SVG BALON DIPERBESAR -->
-                <g id="calloutGrup" display="none" transform="translate(430, 20)">
-                <path d="M 0 0 h 340 v 160 h -250 l -40 40 v -40 h -50 z"
-                fill="#ffffff"
-                stroke="#94a3b8"
-                stroke-width="4"
-                filter="drop-shadow(3px 5px 8px rgba(0,0,0,0.2))"/>
-                <text id="calloutText"
-                x="25"
-                y="35"
-                font-family="'Segoe UI', Arial, sans-serif"
-                font-size="20"
-                font-weight="bold"
-                fill="#1e293b"></text>
-                </g>
-            </svg>
-
-            <div id="popup">
-                <div id="popup-text" style="line-height: 1.6;"></div>
-                <button id="popup-btn">OK, Paham!</button>
             </div>
-        </div>
-        
-        <div id="modul-percobaan">
-            <div class="stage-card active" id="stage1">
-                <div class="stage-title">Langkah 1: Inspeksi Awal</div>
-                <p class="stage-desc">Sebelum merakit program, <b>sentuh gambar pembeli & keranjangnya</b> di layar untuk mengecek data barang bawaan mereka!</p>
-            </div>
-            <div class="stage-card" id="stage2">
-                <div class="stage-title"><i class="fa-solid fa-pen" aria-hidden="true"></i> Langkah 2: Inisialisasi Data</div>
-                <p class="stage-desc">Keranjang terdeteksi kosong! Buka panel kanan. Isi kotak <b>harga</b>, <b>jumlah</b>, dan <b>uang_pembeli</b>. Sentuh "Verifikasi & Lanjut" jika sudah.</p>
-            </div>
-            <div class="stage-card" id="stage3">
-                <div class="stage-title"><i class="fa-solid fa-comments" aria-hidden="true"></i> Langkah 3: Tulis Sapaanmu!</div>
-                <p class="stage-desc">Sentuh dan tempel di workspace <br>1. <code> def</code>,<br>2.  <code>menyapa():</code>, dan <br> 3.<code>return</code> <br> untuk merakit fungsi. Lalu <b>ketik kalimat sapaan karyamu</b> di kotak hijau.</p>
-                <p class="stage-note">Catatan: <code>return</code> mengembalikan teks, namun agar tampil di konsol kita perlu memanggil fungsi dan menggunakan <code>print()</code>.</p>
-            </div>
-            <div class="stage-card" id="stage4">
-                <div class="stage-title"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Langkah 4: Cek Perubahan</div>
-                <p class="stage-desc">Hebat! Balon percakapan kasir kini muncul. Sekarang, <b>sentuh keranjang pembeli lagi</b> untuk melihat apakah data belanja yang kamu buat tersimpan.</p>
-            </div>
-            <div class="stage-card" id="stage5">
-                <div class="stage-title"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Langkah 5: Sintaks Total</div>
-                <p class="stage-desc">Susun rumus fungsi <code>total():</code>.<br>Pola rumus: <i>(jumlah_roti × harga_roti) + (jumlah_susu × harga_susu)</i>.</p>
-            </div>
-            <div class="stage-card" id="stage6">
-                <div class="stage-title"><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Langkah 6: Panggil Kasir</div>
-                <p class="stage-desc">Fungsi perhitungan selesai! <b>Sentuh karakter Kasir</b> di layar agar ia memproses total belanja menggunakan rumus buatanmu!</p>
-            </div>
-            <div class="stage-card" id="stage7">
-                <div class="stage-title"><i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i> Langkah 7: Fungsi Kembalian</div>
-                <p class="stage-desc">Rakit fungsi <code>kembalian(total_bayar)</code>. Gunakan variabel <code>uang_pembeli</code> dan kurangi dengan <code>total_bayar</code>.</p>
-            </div>
-            <div class="stage-card" id="stage8">
-                <div class="stage-title"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Langkah 8: Eksekusi Akhir</div>
-                <p class="stage-desc">Kode cerdasmu telah terangkai penuh! <b>Sentuh kembali karakter Kasir</b> untuk menjalankan skrip Python & mencetak struk di konsol!</p>
-                <p class="stage-note">Pastikan kamu tahu: fungsi <code>menyapa()</code> menggunakan <code>return</code>, dan hasilnya ditampilkan dengan <code>print(menyapa())</code>.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="right-panel">
-        <div id="toolbox">
-            <div class="tb-group">
-                <h4>Blok Perintah & Fungsi</h4>
-                <div class="clickable-var kw-btn" data-var="def">def</div>
-                <div class="clickable-var kw-btn" data-var="return">return</div>
-
-                <div class="clickable-var kw-btn" data-var="if">if</div>
-                <div class="clickable-var kw-btn" data-var="elif">elif</div>
-                <div class="clickable-var kw-btn" data-var="else:">else:</div>
-
-                <div class="clickable-var fn-btn" data-var="menyapa():">menyapa():</div>
-                <div class="clickable-var fn-btn" data-var="total():">total():</div>
-                <div class="clickable-var fn-btn" data-var="kembalian">kembalian</div>
-            </div>
-            <div class="tb-group">
-                <h4>Blok Variabel Data</h4>
-                <div class="clickable-var var-btn" data-var="harga_roti">harga_roti</div>
-                <div class="clickable-var var-btn" data-var="harga_susu">harga_susu</div>
-                <div class="clickable-var var-btn" data-var="jumlah_roti">jumlah_roti</div>
-                <div class="clickable-var var-btn" data-var="jumlah_susu">jumlah_susu</div>
-                <div class="clickable-var var-btn" data-var="uang_pembeli">uang_pembeli</div>
-                <div class="clickable-var var-btn" data-var="total_bayar">total_bayar</div>
-            </div>
-        </div>
-
-        <div id="editor-container">
-            <div id="interactiveCode">
-                <div class="code-section locked" id="sec-1">
-                    <div class="line comment"># --- ATUR DATA BELANJA ---</div>
-                    <div class="line"><span class="var">harga_roti</span> = <input type="number" class="input-val" id="val_hr" value="5000"></div>
-                    <div class="line"><span class="var">harga_susu</span> = <input type="number" class="input-val" id="val_hs" value="7000"></div>
-                    <div class="line"><span class="var">jumlah_roti</span> = <input type="number" class="input-val" id="val_jr" value="2"></div>
-                    <div class="line"><span class="var">jumlah_susu</span> = <input type="number" class="input-val" id="val_js" value="1"></div>
-                    <div class="line"><span class="var">uang_pembeli</span> = <input type="number" class="input-val" id="val_uang" value="20000"></div>
+            <div class="step-indicator">
+                <div class="dot-wrapper active" id="dw1">
+                    <div class="dot active"></div><span class="dot-label">1. Cek</span>
                 </div>
-                
-                <div class="code-section locked" id="sec-2">
-                    <div class="line comment"># --- FUNGSI SAPAAN KASIR ---</div>
-                    <div class="line"><span class="pastezone" id="dz_def0" data-val="">[perintah]</span> <span class="pastezone" id="dz_func0" data-val="">[nama fungsi]</span></div>
-                    <div class="line indent"><span class="pastezone" id="dz_ret0" data-val="">[perintah]</span> <span class="string-val">"</span><input type="text" class="input-val" id="val_sapa" style="width: 180px; text-align: left; background: #2c313a; color: #98c379;" value="Halo, selamat datang!"> <span class="string-val">"</span></div>
+                <div class="dot-wrapper" id="dw2">
+                    <div class="dot"></div><span class="dot-label">2. Data</span>
                 </div>
-
-                <div class="code-section locked" id="sec-3">
-                    <div class="line comment"># --- FUNGSI TOTAL BELANJA ---</div>
-                    <div class="line"><span class="pastezone" id="dz_def1" data-val="">[perintah]</span> <span class="pastezone" id="dz_func1" data-val="">[nama fungsi]</span></div>
-                    <div class="line indent"><span class="pastezone" id="dz_ret1" data-val="">[perintah]</span> (<span class="pastezone" id="dz1" data-val="">[var]</span> * <span class="pastezone" id="dz2" data-val="">[var]</span>) + (<span class="pastezone" id="dz3" data-val="">[var]</span> * <span class="pastezone" id="dz4" data-val="">[var]</span>)</div>
+                <div class="dot-wrapper" id="dw3">
+                    <div class="dot"></div><span class="dot-label">3. Sapaan</span>
                 </div>
-
-                <div class="code-section locked" id="sec-4">
-                    <div class="line comment"># --- FUNGSI KEMBALIAN ---</div>
-
-                    <div class="line">
-                    <span class="pastezone" id="dz_def2"></span>
-                    <span class="pastezone" id="dz_func2"></span>(<span class="pastezone" id="dz_param"></span>):
-                    </div>
-
-                    <div class="line indent">
-                    <span class="pastezone" id="dz_if"></span> uang_pembeli > total_bayar:
-                    </div>
-
-                    <div class="line indent">
-                    <span class="pastezone" id="dz_ret2"></span> uang_pembeli - total_bayar
-                    </div>
-
-                    <div class="line indent">
-                    <span class="pastezone" id="dz_elif"></span> uang_pembeli < total_bayar:
-                    </div>
-
-                    <div class="line indent">
-                    return "Uang Anda kurang"
-                    </div>
-
-                    <div class="line indent">
-                    <span class="pastezone" id="dz_else"></span>
-                    </div>
-
-                    <div class="line indent">
-                    return "Uang Anda pas"
-                    </div>
+                <div class="dot-wrapper" id="dw4">
+                    <div class="dot"></div><span class="dot-label">4. Cek Isi</span>
+                </div>
+                <div class="dot-wrapper" id="dw5">
+                    <div class="dot"></div><span class="dot-label">5. F. Total</span>
+                </div>
+                <div class="dot-wrapper" id="dw6">
+                    <div class="dot"></div><span class="dot-label">6. Panggil</span>
+                </div>
+                <div class="dot-wrapper" id="dw7">
+                    <div class="dot"></div><span class="dot-label">7. Kembali</span>
+                </div>
+                <div class="dot-wrapper" id="dw8">
+                    <div class="dot"></div><span class="dot-label">8. Eksekusi</span>
                 </div>
             </div>
+        </header>
+
+        <div id="main-container">
+            <div id="left-panel">
+                <div id="svgContainer">
+                    <svg id="kasirSvg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+                        <!-- Background Wall -->
+                        <rect x="0" y="0" width="800" height="400" fill="#f2f4f6" />
+
+                        <!-- Floor -->
+                        <rect x="0" y="395" width="800" height="205" fill="#d0d4d9" />
+
+                        <!-- Rak Belanja (Kiri) -->
+                        <g id="shelf">
+                            <rect x="50" y="75" width="300" height="320" rx="10" fill="#e2e6eb" />
+                            <line x1="50" y1="155" x2="350" y2="155" stroke="#cbd5e1" stroke-width="6" />
+                            <line x1="50" y1="235" x2="350" y2="235" stroke="#cbd5e1" stroke-width="6" />
+                            <line x1="50" y1="315" x2="350" y2="315" stroke="#cbd5e1" stroke-width="6" />
+                            <rect x="70" y="105" width="30" height="50" rx="3" fill="#fa8e93" />
+                            <rect x="110" y="115" width="40" height="40" rx="3" fill="#fcd36c" />
+                            <rect x="250" y="185" width="20" height="50" rx="2" fill="#8cbdf7" />
+                            <rect x="90" y="265" width="60" height="50" rx="4" fill="#59d8a1" />
+                        </g>
+
+                        <!-- Grup Interaktif: Pembeli & Troli (Gaya Animasi 2D Profesional) -->
+                        <g id="grup-pembeli" class="svg-interactive">
+                            <!-- Kaki & Sepatu -->
+                            <ellipse cx="186" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                            <ellipse cx="218" cy="408" rx="14" ry="4" fill="#f8fafc" />
+                            <path d="M 172 408 C 172 395, 200 395, 200 408 Z" fill="#334155" />
+                            <path d="M 204 408 C 204 395, 232 395, 232 408 Z" fill="#334155" />
+
+                            <!-- Celana Biru -->
+                            <path d="M 175 305 L 205 305 L 200 400 L 175 400 Z" fill="#1d4ed8" />
+                            <path d="M 205 305 L 240 305 L 230 400 L 200 400 Z" fill="#2563eb" />
+
+                            <!-- Lengan Kiri (Istirahat di pinggang) -->
+                            <path d="M 175 220 C 145 250, 155 290, 180 295" stroke="#ffffff" stroke-width="16"
+                                stroke-linecap="round" fill="none" />
+                            <circle cx="180" cy="295" r="8" fill="#ffe4d6" />
+
+                            <!-- Badan (Kemeja Putih & Dasi Biru) -->
+                            <path d="M 170 215 C 170 215, 160 260, 175 305 L 245 305 C 255 260, 245 215, 245 215 Z"
+                                fill="#ffffff" />
+                            <path d="M 185 215 L 210 235 L 235 215 Z" fill="#f8fafc" stroke="#e2e8f0"
+                                stroke-width="2" />
+                            <polygon points="205,230 215,230 220,270 210,285 200,270" fill="#1d4ed8" />
+                            <polygon points="203,228 217,228 215,235 205,235" fill="#1e3a8a" />
+                            <rect x="225" y="245" width="12" height="15" rx="1" fill="#f1f5f9" stroke="#e2e8f0"
+                                stroke-width="1" />
+
+                            <!-- Sabuk Coklat & Gesper Emas -->
+                            <rect x="172" y="295" width="76" height="10" fill="#451a03" />
+                            <rect x="203" y="293" width="14" height="14" rx="2" fill="#fbbf24" />
+                            <rect x="205" y="295" width="10" height="10" rx="1" fill="#451a03" />
+                            <rect x="207" y="295" width="6" height="10" fill="#fbbf24" />
+
+                            <!-- Telinga -->
+                            <path d="M 165 155 C 150 150, 150 170, 165 170" fill="#ffe4d6" />
+                            <path d="M 160 158 Q 165 160, 162 165" fill="none" stroke="#eab308" stroke-width="1.5"
+                                opacity="0.3" />
+
+                            <!-- Kepala & Wajah -->
+                            <circle cx="210" cy="155" r="48" fill="#ffe4d6" />
+
+                            <!-- Rambut Hitam Bertekstur -->
+                            <path d="M 150 145 C 150 90, 260 90, 260 145 Z" fill="#1e293b" />
+                            <path
+                                d="M 145 140 Q 165 110, 190 120 Q 210 130, 220 120 Q 240 100, 265 140 Q 245 125, 230 135 Q 210 145, 190 135 Q 165 125, 145 140 Z"
+                                fill="#334155" />
+                            <path d="M 160 115 Q 180 95, 205 105 Q 225 90, 250 115 Z" fill="#475569" opacity="0.4" />
+
+                            <!-- Detail Wajah (Mata besar, pipi merah, senyum, alis) -->
+                            <path d="M 185 140 Q 195 135, 205 142" fill="none" stroke="#334155" stroke-width="4"
+                                stroke-linecap="round" />
+                            <path d="M 220 142 Q 230 135, 240 140" fill="none" stroke="#334155" stroke-width="4"
+                                stroke-linecap="round" />
+                            <circle cx="195" cy="155" r="8" fill="#3e2723" />
+                            <circle cx="192" cy="152" r="3" fill="#ffffff" />
+                            <circle cx="197" cy="158" r="1.5" fill="#ffffff" />
+                            <circle cx="230" cy="155" r="8" fill="#3e2723" />
+                            <circle cx="227" cy="152" r="3" fill="#ffffff" />
+                            <circle cx="232" cy="158" r="1.5" fill="#ffffff" />
+                            <ellipse cx="182" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                            <ellipse cx="242" cy="165" rx="9" ry="5" fill="#ff8fa3" opacity="0.6" />
+                            <path d="M 212 162 Q 215 166, 218 162" fill="none" stroke="#e2b8a5" stroke-width="2.5"
+                                stroke-linecap="round" />
+                            <path d="M 205 175 Q 212 182, 220 175" fill="none" stroke="#3e2723" stroke-width="2.5"
+                                stroke-linecap="round" />
+
+                            <!-- Lengan Kanan (Memegang Troli) -->
+                            <path d="M 235 220 Q 280 260, 310 315" stroke="#ffffff" stroke-width="16"
+                                stroke-linecap="round" fill="none" />
+                            <circle cx="315" cy="320" r="8" fill="#ffe4d6" />
+                            <path d="M 310 315 L 325 320" stroke="#e2b8a5" stroke-width="2" stroke-linecap="round" />
+
+                            <!-- Troli Belanja (Gaya Premium) -->
+                            <polygon points="295,325 435,325 420,435 315,435" fill="#f8fafc" opacity="0.8" />
+
+                            <!-- 1. KOTAK SUSU -->
+                            <g transform="translate(320, 305)">
+                                <!-- Bayangan bawah -->
+                                <ellipse cx="25" cy="115" rx="20" ry="5" fill="#9ca3af" opacity="0.5" />
+
+                                <!-- Badan Karton -->
+                                <rect x="5" y="45" width="40" height="70" fill="#ffffff" stroke="#94a3b8"
+                                    stroke-width="2" rx="2" />
+
+                                <!-- Bagian atas miring -->
+                                <polygon points="5,45 15,25 35,25 45,45" fill="#f8fafc" stroke="#94a3b8"
+                                    stroke-width="2" />
+                                <polygon points="5,45 15,25 25,45" fill="#e2e8f0" opacity="0.5" />
+                                <!-- Efek dimensi/lipatan -->
+
+                                <!-- Segel atas -->
+                                <rect x="15" y="18" width="20" height="7" fill="#cbd5e1" stroke="#94a3b8"
+                                    stroke-width="1.5" rx="1" />
+
+                                <!-- Label Biru -->
+                                <rect x="5" y="75" width="40" height="40" fill="#3b82f6" rx="1" />
+                                <!-- Gelombang pada label -->
+                                <path d="M 5 75 Q 15 65 25 75 T 45 75 L 45 115 L 5 115 Z" fill="#2563eb" />
+
+                                <!-- Teks Susu -->
+                                <text x="25" y="95" font-family="Arial, sans-serif" font-size="10" font-weight="900"
+                                    fill="#ffffff" text-anchor="middle" letter-spacing="1">SUSU</text>
+
+                                <!-- Gambar Sapi Abstrak/Bercak -->
+                                <path d="M 12 55 Q 15 50 18 55 T 25 55 T 28 60 Q 25 65 18 65 T 12 55 Z"
+                                    fill="#1e293b" />
+                            </g>
+
+                            <!-- 2. BUNGKUS ROTI TAWAR -->
+                            <g transform="translate(350, 350)">
+                                <!-- Bayangan bawah -->
+                                <ellipse cx="30" cy="75" rx="25" ry="5" fill="#9ca3af" opacity="0.5" />
+
+                                <!-- Bentuk Dasar Plastik Roti -->
+                                <rect x="0" y="25" width="60" height="50" rx="12" fill="#fef3c7" stroke="#d97706"
+                                    stroke-width="2" />
+
+                                <!-- Garis-garis Roti (Irisan/Slices) -->
+                                <path
+                                    d="M 10 25 L 10 75 M 20 25 L 20 75 M 30 25 L 30 75 M 40 25 L 40 75 M 50 25 L 50 75"
+                                    stroke="#d97706" stroke-width="2" stroke-dasharray="3 3" opacity="0.6" />
+
+                                <!-- Ujung Plastik (Kuncup di atas) -->
+                                <path d="M 20 25 L 15 5 L 45 5 L 40 25 Z" fill="#fef9c3" stroke="#d97706"
+                                    stroke-width="2" opacity="0.9" />
+                                <!-- Kerutan plastik -->
+                                <line x1="25" y1="10" x2="30" y2="25" stroke="#d97706" stroke-width="1" opacity="0.5" />
+                                <line x1="35" y1="10" x2="30" y2="25" stroke="#d97706" stroke-width="1" opacity="0.5" />
+
+                                <!-- Penjepit Plastik (Klip Merah) -->
+                                <rect x="25" y="15" width="10" height="5" fill="#ef4444" rx="2" />
+
+                                <!-- Label Roti -->
+                                <rect x="12" y="40" width="36" height="20" fill="#ffffff" rx="4" stroke="#d97706"
+                                    stroke-width="1.5" />
+                                <text x="30" y="54" font-family="Arial, sans-serif" font-size="10" font-weight="bold"
+                                    fill="#b45309" text-anchor="middle">ROTI</text>
+                            </g>
+
+                            <!-- Rangka Troli -->
+                            <polygon points="295,325 435,325 420,435 315,435" fill="none" stroke="#94a3b8"
+                                stroke-width="6" stroke-linejoin="round" />
+                            <line x1="302" y1="360" x2="428" y2="360" stroke="#94a3b8" stroke-width="1" />
+                            <line x1="308" y1="395" x2="423" y2="395" stroke="#94a3b8" stroke-width="1" />
+                            <line x1="335" y1="325" x2="340" y2="435" stroke="#94a3b8" stroke-width="1" />
+                            <line x1="375" y1="325" x2="375" y2="435" stroke="#94a3b8" stroke-width="1" />
+                            <line x1="415" y1="325" x2="405" y2="435" stroke="#94a3b8" stroke-width="1" />
+
+                            <!-- Roda -->
+                            <circle cx="325" cy="455" r="14" fill="#334155" />
+                            <circle cx="325" cy="455" r="4" fill="#94a3b8" />
+                            <circle cx="405" cy="455" r="14" fill="#334155" />
+                            <circle cx="405" cy="455" r="4" fill="#94a3b8" />
+                        </g>
+
+                        <!-- Grup Interaktif: Kasir & Meja (Gaya Animasi 2D Profesional) -->
+                        <g id="grup-kasir" class="svg-interactive">
+                            <!-- Meja Kasir Latar -->
+                            <rect x="495" y="375" width="305" height="225" fill="#78350f" />
+                            <rect x="485" y="345" width="315" height="30" rx="6" fill="#b45309" />
+
+                            <!-- Karakter Kasir -->
+                            <path d="M 640 200 Q 680 200, 720 200 L 730 345 L 630 345 Z" fill="#ef4444" />
+                            <path d="M 660 200 L 680 230 L 700 200 Z" fill="#ffe4d6" />
+                            <polygon points="655,200 680,235 705,200 680,225" fill="#dc2626" />
+
+                            <circle cx="680" cy="145" r="45" fill="#ffe4d6" />
+                            <circle cx="735" cy="125" r="22" fill="#1f2937" />
+                            <circle cx="735" cy="125" r="16" fill="#374151" />
+                            <path d="M 635 145 C 630 80, 730 80, 725 145 Z" fill="#1f2937" />
+                            <path
+                                d="M 635 135 Q 660 115, 680 125 Q 700 105, 725 125 Q 710 95, 680 95 Q 650 95, 635 135 Z"
+                                fill="#374151" />
+
+                            <ellipse cx="648" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                            <ellipse cx="712" cy="160" rx="8" ry="5" fill="#ff8fa3" opacity="0.6" />
+                            <circle cx="660" cy="145" r="7" fill="#4a2c11" />
+                            <circle cx="662" cy="142" r="2.5" fill="#ffffff" />
+                            <circle cx="700" cy="145" r="7" fill="#4a2c11" />
+                            <circle cx="702" cy="142" r="2.5" fill="#ffffff" />
+                            <path d="M 670 165 Q 680 175, 690 165" fill="none" stroke="#4a2c11" stroke-width="2.5"
+                                stroke-linecap="round" />
+
+                            <rect x="643" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626"
+                                stroke-width="4" />
+                            <rect x="683" y="130" width="34" height="24" rx="10" fill="none" stroke="#dc2626"
+                                stroke-width="4" />
+                            <line x1="675" y1="142" x2="685" y2="142" stroke="#dc2626" stroke-width="4" />
+
+                            <path d="M 640 230 Q 600 260, 595 305" stroke="#ef4444" stroke-width="18"
+                                stroke-linecap="round" fill="none" />
+                            <circle cx="595" cy="315" r="10" fill="#ffe4d6" />
+                            <path d="M 720 230 Q 750 260, 740 305" stroke="#ef4444" stroke-width="18"
+                                stroke-linecap="round" fill="none" />
+
+                            <!-- Komputer Kasir & Scanner (Tumpang tindih di atas karakter) -->
+                            <rect x="490" y="355" width="20" height="40" rx="3" fill="#ef4444" />
+                            <rect x="495" y="360" width="10" height="30" rx="2" fill="#7f1d1d" />
+
+                            <rect x="560" y="325" width="20" height="25" fill="#475569" />
+                            <rect x="545" y="345" width="50" height="12" rx="3" fill="#334155" />
+                            <rect x="520" y="260" width="100" height="75" rx="8" fill="#1e293b" />
+                            <rect x="530" y="270" width="80" height="55" rx="4" fill="#0ea5e9" />
+                            <rect x="535" y="275" width="40" height="8" rx="2" fill="#38bdf8" />
+                            <rect x="535" y="288" width="70" height="6" rx="2" fill="#bae6fd" opacity="0.5" />
+                            <rect x="535" y="298" width="50" height="6" rx="2" fill="#bae6fd" opacity="0.5" />
+                            <rect x="535" y="308" width="60" height="6" rx="2" fill="#bae6fd" opacity="0.5" />
+                        </g>
+
+                        <!-- Balon Percakapan -->
+                        <!-- BAGIAN SVG BALON DIPERBESAR -->
+                        <g id="calloutGrup" display="none" transform="translate(430, 20)">
+                            <path d="M -150 0 h 340 v 200 h -50 v 40 l -40 -40 h -250 z" fill="rgba(255,255,255,0.5)" stroke="#94a3b8"
+                                stroke-width="4" filter="drop-shadow(3px 5px 8px rgba(0,0,0,0.2))" />
+                            <text id="calloutText" x="-120" y="35" font-family="'Segoe UI', Arial, sans-serif"
+                                 font-size="16" font-weight="bold" fill="#1e293b"></text>
+                        </g>
+                    </svg>
+
+                    <div id="popup">
+                        <div id="popup-text" style="line-height: 1.6;"></div>
+                        <button id="popup-btn">OK, Paham!</button>
+                    </div>
+                </div>
+
+                <div id="modul-percobaan">
+                    <div class="stage-card active" id="stage1">
+                        <div class="stage-title">Langkah 1: Inspeksi Awal</div>
+                        <p class="stage-desc">Sebelum merakit program, <b>sentuh gambar pembeli & keranjangnya</b> di
+                            layar
+                            untuk mengecek data barang bawaan mereka!</p>
+                    </div>
+                    <div class="stage-card" id="stage2">
+                        <div class="stage-title"><i class="fa-solid fa-pen" aria-hidden="true"></i> Langkah 2:
+                            Inisialisasi
+                            Data</div>
+                        <p class="stage-desc">Sistem Belum diprogram! Lihat panel kanan. Isi kotak <b>harga</b>,
+                            <b>jumlah</b>, dan <b>uang_pembeli</b>. Sentuh "Verifikasi & Lanjut" jika sudah.
+                        </p>
+                    </div>
+                    <div class="stage-card" id="stage3">
+                        <div class="stage-title"><i class="fa-solid fa-comments" aria-hidden="true"></i> Langkah 3:
+                            Tulis
+                            Sapaanmu!</div>
+                        <p class="stage-desc">Sentuh dan tempel di workspace <br>1. <code> def</code>,<br>2.
+                            <code>menyapa():</code>, dan <br> 3.<code>return</code> <br> untuk merakit fungsi. Lalu
+                            <b>ketik
+                                kalimat sapaan karyamu</b> di kotak hijau.
+                        </p>
+                        <p class="stage-note">Catatan: <code>return</code> mengembalikan teks, namun agar tampil di
+                            konsol
+                            kita perlu memanggil fungsi dan menggunakan <code>print()</code>.</p>
+                    </div>
+                    <div class="stage-card" id="stage4">
+                        <div class="stage-title"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Langkah 4:
+                            Cek
+                            Perubahan</div>
+                        <p class="stage-desc">Hebat! Balon percakapan kasir kini muncul. Sekarang, <b>sentuh keranjang
+                                pembeli lagi</b> untuk melihat apakah data belanja yang kamu buat tersimpan.</p>
+                    </div>
+                    <div class="stage-card" id="stage5">
+                        <div class="stage-title"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Langkah 5:
+                            Sintaks Total</div>
+                        <p class="stage-desc">Susun rumus fungsi <code>total():</code>.<br>Pola rumus: <i>(jumlah_roti ×
+                                harga_roti) + (jumlah_susu × harga_susu)</i>.</p>
+                    </div>
+                    <div class="stage-card" id="stage6">
+                        <div class="stage-title"><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Langkah 6:
+                            Panggil
+                            Kasir</div>
+                        <p class="stage-desc">Fungsi perhitungan selesai! <b>Sentuh karakter Kasir</b> di layar agar ia
+                            memproses total belanja menggunakan rumus buatanmu!</p>
+                    </div>
+                    <div class="stage-card" id="stage7">
+                        <div class="stage-title"><i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i> Langkah
+                            7:
+                            Fungsi Kembalian</div>
+                        <p class="stage-desc">Rakit fungsi <code>kembalian(total_bayar)</code>. Gunakan variabel
+                            <code>uang_pembeli</code> dan kurangi dengan <code>total_bayar</code>.
+                        </p>
+                    </div>
+                    <div class="stage-card" id="stage8">
+                        <div class="stage-title"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Langkah 8:
+                            Eksekusi
+                            Akhir</div>
+                        <p class="stage-desc">Kodemu telah terangkai penuh! <b>Sentuh kembali karakter Kasir</b>
+                            untuk menjalankan skrip Python & mencetak struk di konsol!</p>
+                        <p class="stage-note">Pastikan kamu tahu: fungsi <code>menyapa()</code> menggunakan
+                            <code>return</code>, dan hasilnya ditampilkan dengan <code>print(menyapa())</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right-panel">
+                <div id="toolbox">
+                    <div class="tb-group">
+                        <h4>Blok Perintah & Fungsi</h4>
+                        <div class="clickable-var kw-btn" data-var="def">def</div>
+                        <div class="clickable-var kw-btn" data-var="return">return</div>
+
+                        <div class="clickable-var kw-btn" data-var="if">if</div>
+                        <div class="clickable-var kw-btn" data-var="elif">elif</div>
+                        <div class="clickable-var kw-btn" data-var="else:">else:</div>
+
+                        <div class="clickable-var fn-btn" data-var="menyapa():">menyapa():</div>
+                        <div class="clickable-var fn-btn" data-var="total():">total():</div>
+                        <div class="clickable-var fn-btn" data-var="kembalian">kembalian</div>
+                    </div>
+                    <div class="tb-group">
+                        <h4>Blok Variabel Data</h4>
+                        <div class="clickable-var var-btn" data-var="harga_roti">harga_roti</div>
+                        <div class="clickable-var var-btn" data-var="harga_susu">harga_susu</div>
+                        <div class="clickable-var var-btn" data-var="jumlah_roti">jumlah_roti</div>
+                        <div class="clickable-var var-btn" data-var="jumlah_susu">jumlah_susu</div>
+                        <div class="clickable-var var-btn" data-var="uang_pembeli">uang_pembeli</div>
+                        <div class="clickable-var var-btn" data-var="total_bayar">total_bayar</div>
+                    </div>
+                </div>
+                <div class="btn-control"> 
+                    <div class="btn-group">
+                        <button id="resetCode">Reset Workspace</button>
+                        <button id="btnAction">Sentuh Layar di Kiri</button>
+                        <button id="btnNext" style="display:none;">Verifikasi & Lanjut</button>
+                        <button id="runCodeBtn" style="display:none;">Eksekusi</button>
+                    </div>
+                </div>
+                <div id="editor-container">
+                    <div id="interactiveCode">
+                        <div class="code-section locked" id="sec-1">
+                            <div class="line comment"># --- ATUR DATA BELANJA ---</div>
+                            <div class="line"><span class="var">harga_roti</span> = <input type="number"
+                                    class="input-val" id="val_hr" value="5000"></div>
+                            <div class="line"><span class="var">harga_susu</span> = <input type="number"
+                                    class="input-val" id="val_hs" value="7000"></div>
+                            <div class="line"><span class="var">jumlah_roti</span> = <input type="number"
+                                    class="input-val" id="val_jr" value="2"></div>
+                            <div class="line"><span class="var">jumlah_susu</span> = <input type="number"
+                                    class="input-val" id="val_js" value="1"></div>
+                            <div class="line"><span class="var">uang_pembeli</span> = <input type="number"
+                                    class="input-val" id="val_uang" value="20000"></div>
+                        </div>
+
+                        <div class="code-section locked" id="sec-2">
+                            <div class="line comment"># --- FUNGSI SAPAAN KASIR ---</div>
+                            <div class="line"><span class="pastezone" id="dz_def0" data-val="">[perintah]</span> <span
+                                    class="pastezone" id="dz_func0" data-val="">[nama fungsi]</span></div>
+                            <div class="line indent"><span class="pastezone" id="dz_ret0" data-val="">[perintah]</span>
+                                <span class="string-val">"</span><input type="text" class="input-val" id="val_sapa"
+                                    style="width: 300px; text-align: left; background: #ffffff; color: #3a3939;"
+                                    value="Halo, selamat datang!"> <span class="string-val">"</span>
+                            </div>
+                        </div>
+
+                        <div class="code-section locked" id="sec-3">
+                            <div class="line comment"># --- FUNGSI TOTAL BELANJA ---</div>
+                            <div class="line"><span class="pastezone" id="dz_def1" data-val="">[perintah]</span> <span
+                                    class="pastezone" id="dz_func1" data-val="">[nama fungsi]</span></div>
+                            <div class="line indent"><span class="pastezone" id="dz_ret1" data-val="">[perintah]</span>
+                                (<span class="pastezone" id="dz1" data-val="">[var]</span> * <span class="pastezone"
+                                    id="dz2" data-val="">[var]</span>) + (<span class="pastezone" id="dz3"
+                                    data-val="">[var]</span> * <span class="pastezone" id="dz4"
+                                    data-val="">[var]</span>)
+                            </div>
+                        </div>
+
+                        <div class="code-section locked" id="sec-4">
+                            <div class="line comment"># --- FUNGSI KEMBALIAN ---</div>
+
+                            <div class="line">
+                                <span class="pastezone" id="dz_def2"></span>
+                                <span class="pastezone" id="dz_func2"></span>(<span class="pastezone"
+                                    id="dz_param"></span>):
+                            </div>
+
+                            <div class="line indent">
+                                <span class="pastezone" id="dz_if"></span> uang_pembeli > total_bayar:
+                            </div>
+
+                            <div class="line indent2">
+                                <span class="pastezone" id="dz_ret2"></span> uang_pembeli - total_bayar
+                            </div>
+
+                            <div class="line indent">
+                                <span class="pastezone" id="dz_elif"></span> uang_pembeli < total_bayar: </div>
+
+                                    <div class="line indent2">
+                                        return "Uang Anda kurang"
+                                    </div>
+
+                                    <div class="line indent">
+                                        <span class="pastezone" id="dz_else"></span>
+                                    </div>
+
+                                    <div class="line indent2">
+                                        return "Uang Anda pas"
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bottom-panel">
+                <div class="control-bar">
+                    <span style="color: white; font-weight: bold; font-size: 15px;"><i class="fa-solid fa-terminal"
+                            aria-hidden="true"></i> Python Console Output</span>
+                    
+                </div>
+                <pre id="output">Sistem siap... Silakan ikuti instruksi pada Langkah 1.</pre>
+            </div>
+
+            <textarea id="hiddenPythonCode" style="display:none;"></textarea>
+
+            <script type="text/python" src="assets/src/script-lab.py"></script>
+            <script type="text/javascript" src="assets/src/script-lab.js"></script>
         </div>
     </div>
-</div>
-
-<div id="bottom-panel">
-    <div class="control-bar">
-        <span style="color: white; font-weight: bold; font-size: 15px;"><i class="fa-solid fa-terminal" aria-hidden="true"></i> Python Console Output</span>
-        <div class="btn-group">
-            <button id="resetCode">Reset Workspace</button>
-            <button id="btnAction">Sentuh Layar di Kiri...</button>
-            <button id="btnNext" style="display:none;">Verifikasi & Lanjut</button>
-            <button id="runCodeBtn" style="display:none;">Eksekusi Python</button>
-        </div>
-    </div>
-    <pre id="output">Sistem siap... Silakan ikuti instruksi pada Langkah 1.</pre>
-</div>
-
-<textarea id="hiddenPythonCode" style="display:none;"></textarea>
-
-<script type="text/python" src="assets/src/script-lab.py"></script>
-<script type="text/javascript" src="assets/src/script-lab.js"></script>
+    <br>
 </body>
+
 </html>

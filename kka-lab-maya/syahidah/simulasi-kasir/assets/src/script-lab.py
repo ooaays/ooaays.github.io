@@ -5,7 +5,7 @@ class MyOutput:
     def write(self, data):
         if data and data.strip():
             out = document["output"]
-            out.innerHTML += "\n<i class='fa-solid fa-circle-check' aria-hidden='true'></i> [PYTHON OUTPUT] " + data.strip()
+            out.innerHTML += "\n<i class='fa-solid fa-circle-chec  ' aria-hidden='true'></i> [PYTHON OUTPUT] " + data.strip()
             out.scrollTop = out.scrollHeight
 
 sys.stdout = MyOutput()

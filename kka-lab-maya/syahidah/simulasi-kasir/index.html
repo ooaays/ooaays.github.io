@@ -2,10 +2,10 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1024, initial-scale=1.0">
+<meta name="viewport" content="width=1200">
 <style>
 html, body {
-    min-width: 1024px;
+    min-width: 1200px;
     min-height: 100vh;
 }
 body {
@@ -230,7 +230,7 @@ body {
                 </svg>
             </div>
             <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2">
-                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan</span>
+                <div class="menu-btn-label">Tujuan<span id="check-tujuan" class="read-check">✓</span></div>
             </div>
         </button>
 
@@ -241,7 +241,7 @@ body {
                 </svg>
             </div>
             <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2">
-                <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+                <div class="menu-btn-label">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></div>
             </div>
         </button>
 
@@ -277,36 +277,31 @@ body {
     <div class="bg-white rounded-[2rem] p-8 max-w-3xl w-full shadow-2xl relative">
         
         <h2 class="text-3xl md:text-4xl font-bold text-blue-700 text-center mb-8">
-            Capaian Pembelajaran
+            Tujuan Praktikum
         </h2>
 
         <!-- KUNCI PERBAIKAN: Tambahkan 'flex flex-col gap-4' atau 'space-y-4' di sini -->
         <div class="flex flex-col gap-4 mb-8">
-            
-            <!-- Kotak 1: Elemen -->
+             
+            <!-- Kotak 1: Elemen 
             <div class="bg-slate-50 border-l-[6px] border-blue-500 rounded-2xl p-6 shadow-sm">
                 <h3 class="text-xl font-bold text-blue-900 mb-2">Elemen</h3>
                 <p class="text-slate-800 text-lg">Berpikir Komputasional</p>
             </div>
 
-            <!-- Kotak 2: Capaian Pembelajaran -->
+             Kotak 2: Capaian Pembelajaran 
             <div class="bg-[#faf5ff] border-l-[6px] border-purple-500 rounded-2xl p-6 shadow-sm">
                 <h3 class="text-xl font-bold text-purple-900 mb-2">Tujuan Pembelajaran</h3>
                 <p class="text-slate-800 text-lg leading-relaxed">
                     Menuliskan Instruksi Menggunakan Teknologi atau Pemrograman Dasar.
                 </p>
-            </div>
+            </div> -->
 
             <!-- Kotak 3: Tujuan Pembelajaran -->
             <div class="bg-[#f0fdf4] border-l-[6px] border-emerald-500 rounded-2xl p-6 shadow-sm">
-                <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3>
+                <!-- <h3 class="text-xl font-bold text-emerald-900 mb-2">Tujuan Praktikum</h3> -->
                 <p class="text-slate-800 text-lg leading-relaxed">
-                    Sebelum melakukan praktikum, murid sudah mendapatkan materi tentang:
-                    <ol class="list-decimal ml-6 text-slate-800 space-y-1">
-                        <li>Variabel dan Tipe Data Numerik</li>
-                        <li>Operator Aritmatika Dasar</li>
-                        <li>Perintah Input dan Output (I/O)</li>
-                    </ol>
+                    
                    Praktikum bertujuan agar murid dapat menuliskan instruksi menggunakan teknologi atau pemrograman dasar untuk memodelkan proses transaksi kasir sederhana, termasuk mengatur variabel, menghitung total harga, dan menentukan kembalian secara interaktif..
                 </p>
             </div>
@@ -521,9 +516,9 @@ body {
 
                 </ul>
 
-                <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl mt-6">
+                <!-- <div class="bg-orange-600 p-4 rounded-xl text-center text-white font-black text-2xl mt-6">
                 Selamat mencoba Program Kasir! <i class="fa-solid fa-rocket" aria-hidden="true"></i>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -531,8 +526,8 @@ body {
     </div>
 
     <div class="shrink-0 mt-4 pt-4 border-t-2 border-orange-50 flex items-center justify-between gap-4">
-            <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
-            <button onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
+            <button id="prevBtn" onclick="changeSlide(-1)" style="visibility: hidden;" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+            <button id="closeBtn" onclick="closeCaraModal()" class="flex-1 max-w-[200px] bg-[#ff5722] hover:bg-[#e64a19] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#d84315] active:shadow-[0_0px_0_#d84315] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
             <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff9800] hover:bg-[#f57c00] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e65100] active:shadow-[0_0px_0_#e65100] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
         </div>
     </div>
@@ -598,7 +593,7 @@ body {
         </div>
 
         <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-50 gap-4">
-            <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#94a3b8] active:shadow-[0_0px_0_#94a3b8] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
+            <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility: hidden;" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all">&larr; <span class="hidden md:inline">Sebelumnya</span></button>
             <button onclick="closeBioModal()" class="flex-1 max-w-[200px] bg-[#8bc34a] hover:bg-[#7cb342] text-white text-xl font-bold py-3 px-4 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all mx-auto text-center">Tutup</button>
             <button id="bioNextBtn" onclick="changeBioSlide(1)" class="bg-[#8bc34a] hover:bg-[#7cb342] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#558b2f] active:shadow-[0_0px_0_#558b2f] active:translate-y-[4px] transition-all"><span class="hidden md:inline">Selanjutnya</span> &rarr;</button>
         </div>
