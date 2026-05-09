@@ -136,7 +136,7 @@ const state = {
   gridRows: 10,
   gridCols: 13,
   grid: [],
-  lastAction: 'Belum ada perubahan.',
+  lastAction: 'Belum ada aksi pada grid.',
   lastPosition: '-',
   shiftCount: 0,
   manualEditsStage5: 0,
@@ -312,7 +312,7 @@ function changeStage(stageNo){
 }
 
 function setupStage(stageNo, preserveCurrent = false){
-  state.lastAction = 'Belum ada perubahan.';
+  state.lastAction = 'Belum ada aksi pada grid.';
   state.lastPosition = '-';
   state.shiftCount = 0;
   if (stageNo === 5) {
@@ -435,43 +435,7 @@ function clearGrid(){
 function resetCurrentStage(){
   setupStage(state.currentStage, false);
   renderAll();
-  document.getElementById('stageFeedback').innerHTML = 'Tahap direset. Susun kembali pola sesuai misi saat ini.';
-}
-
-function applyPreset(type){
-  const midRow = Math.floor(state.gridRows / 2);
-  const midCol = Math.floor(state.gridCols / 2);
-  if (type === 'single') {
-    createEmptyGrid();
-    state.grid[midRow][midCol] = 1;
-    state.lastAction = 'Pola cepat satu piksel diterapkan.';
-    state.lastPosition = `Baris ${midRow+1}, kolom ${midCol+1}`;
-  }
-  if (type === 'line') {
-    createEmptyGrid();
-    for (let i=midCol-2;i<=midCol+2;i++) state.grid[midRow][i] = 1;
-    state.lastAction = 'Pola cepat garis 5 piksel diterapkan.';
-    state.lastPosition = `Baris ${midRow+1}, kolom ${midCol-1}–${midCol+3}`;
-  }
-  if (type === 'plus') {
-    applyPlusPattern(true);
-    return;
-  }
-  if (type === 'frame') {
-    createEmptyGrid();
-    for (let col=0;col<state.gridCols;col++) {
-      state.grid[0][col] = 1;
-      state.grid[state.gridRows-1][col] = 1;
-    }
-    for (let row=0;row<state.gridRows;row++) {
-      state.grid[row][0] = 1;
-      state.grid[row][state.gridCols-1] = 1;
-    }
-    state.lastAction = 'Pola cepat bingkai diterapkan.';
-    state.lastPosition = 'Baris dan kolom tepi';
-  }
-  renderBoard();
-  renderOutputs();
+  document.getElementById('stageFeedback').innerHTML = 'Tahap direset. Susun kembali piksel sesuai misi.';
 }
 
 function applyPlusPattern(withMessage = true){
@@ -552,9 +516,7 @@ function renderOutputs(customExplain){
   document.getElementById('matrixOutput').textContent = matrixText;
   const active = countActive();
   document.getElementById('activeCountSummary').textContent = `Jumlah piksel aktif: ${active}`;
-  const tc = getTopRowCol();
   document.getElementById('changeSummary').textContent = state.lastAction;
-  document.getElementById('changePanel').innerHTML = `<p><strong>Aksi terakhir:</strong> ${state.lastAction}</p><p><strong>Posisi terakhir:</strong> ${state.lastPosition}</p><p><strong>Baris paling aktif:</strong> ${tc.topRow}</p><p><strong>Kolom paling aktif:</strong> ${tc.topCol}</p>`;
   document.getElementById('explainBox').textContent = customExplain || 'Setiap piksel direpresentasikan dengan bilangan biner: 1 berarti piksel aktif dan 0 berarti piksel tidak aktif. Komputer membaca susunan 0 dan 1 inilah sebagai gambar.';
 }
 

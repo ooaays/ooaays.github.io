@@ -1502,23 +1502,6 @@ body {
   text-align:center;
   min-height:290px;
 }
-.change-panel{
-  margin-top:8px;
-  border-radius:14px;
-  padding:14px 18px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  color:#e2e8f0;
-  line-height:1.5;
-  font-size:12px;
-  text-align:center;
-  min-height:150px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:6px;
-}
-.change-panel p{ margin:0; }
 .target-inline{
   display:grid;
   grid-template-columns:repeat(10, 14px);
