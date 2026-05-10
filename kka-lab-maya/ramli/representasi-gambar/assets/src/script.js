@@ -131,6 +131,7 @@ const state = {
   caraRead: false,
   currentCara: 0,
   currentBio: 0,
+  currentQuiz: 0,
   currentStage: 1,
   completed: {},
   gridRows: 10,
@@ -697,8 +698,27 @@ function handleQuiz(button){
 }
 
 function openQuizModal(){
+  state.currentQuiz = 0;
   renderQuizSummary();
+  syncQuizSlides();
   openModal('quizModal');
+}
+
+function changeQuizSlide(direction){
+  const slides = document.querySelectorAll('#quizModal [data-quiz-slide]');
+  state.currentQuiz += direction;
+  if (state.currentQuiz < 0) state.currentQuiz = 0;
+  if (state.currentQuiz > slides.length - 1) state.currentQuiz = slides.length - 1;
+  syncQuizSlides();
+}
+
+function syncQuizSlides(){
+  const slides = document.querySelectorAll('#quizModal [data-quiz-slide]');
+  slides.forEach((slide, index) => slide.classList.toggle('hidden', index !== state.currentQuiz));
+  const prevBtn = document.getElementById('quizPrevBtn');
+  const nextBtn = document.getElementById('quizNextBtn');
+  if (prevBtn) prevBtn.style.visibility = state.currentQuiz === 0 ? 'hidden' : 'visible';
+  if (nextBtn) nextBtn.style.visibility = state.currentQuiz === slides.length - 1 ? 'hidden' : 'visible';
 }
 
 function renderQuizSummary(){
@@ -812,6 +832,10 @@ function loadTebakPuzzle() {
   if (res) res.innerHTML = '';
   const btn = document.getElementById('tebakCheckBtn');
   if (btn) btn.disabled = false;
+  const prevBtn = document.getElementById('tebakPrevBtn');
+  const nextBtn = document.getElementById('tebakNextBtn');
+  if (prevBtn) prevBtn.style.visibility = tebakIndex === 0 ? 'hidden' : 'visible';
+  if (nextBtn) nextBtn.style.visibility = tebakIndex === TEBAK_PUZZLES.length - 1 ? 'hidden' : 'visible';
   renderTebakGrid();
 }
 
@@ -867,13 +891,15 @@ function checkTebak() {
 }
 
 function nextTebakPuzzle() {
-  if (tebakIndex < TEBAK_PUZZLES.length - 1) {
-    tebakIndex++;
-    loadTebakPuzzle();
-  } else {
-    tebakIndex = 0;
-    loadTebakPuzzle();
-  }
+  if (tebakIndex >= TEBAK_PUZZLES.length - 1) return;
+  tebakIndex++;
+  loadTebakPuzzle();
+}
+
+function prevTebakPuzzle() {
+  if (tebakIndex <= 0) return;
+  tebakIndex--;
+  loadTebakPuzzle();
 }
 
 /* ============================================================
@@ -936,6 +962,10 @@ function loadDetektifPuzzle() {
   if (lbl) lbl.textContent = p.label;
   const res = document.getElementById('detektifResult');
   if (res) res.innerHTML = '';
+  const prevBtn = document.getElementById('detektifPrevBtn');
+  const nextBtn = document.getElementById('detektifNextBtn');
+  if (prevBtn) prevBtn.style.visibility = detektifIndex === 0 ? 'hidden' : 'visible';
+  if (nextBtn) nextBtn.style.visibility = detektifIndex === DETEKTIF_PUZZLES.length - 1 ? 'hidden' : 'visible';
   renderReadonlyDetektifGrid('detektifTargetGrid', p.target);
   renderBuggyGrid(p);
 }
@@ -1019,11 +1049,14 @@ function checkDetektif() {
 }
 
 function nextDetektif() {
-  if (detektifIndex < DETEKTIF_PUZZLES.length - 1) {
-    detektifIndex++;
-  } else {
-    detektifIndex = 0;
-  }
+  if (detektifIndex >= DETEKTIF_PUZZLES.length - 1) return;
+  detektifIndex++;
+  loadDetektifPuzzle();
+}
+
+function prevDetektif() {
+  if (detektifIndex <= 0) return;
+  detektifIndex--;
   loadDetektifPuzzle();
 }
 
@@ -1069,6 +1102,10 @@ function renderJumlahSama() {
   renderStaticGrid('jumlahGridB', pair.gridB, pair.labelB);
   const confirm = document.getElementById('jumlahSamaConfirm');
   if (confirm) confirm.textContent = `Pola A: ${countA} piksel aktif  |  Pola B: ${countB} piksel aktif`;
+  const prevBtn = document.getElementById('jumlahSamaPrevBtn');
+  const nextBtn = document.getElementById('jumlahSamaNextBtn');
+  if (prevBtn) prevBtn.style.visibility = jumlahSamaIndex === 0 ? 'hidden' : 'visible';
+  if (nextBtn) nextBtn.style.visibility = jumlahSamaIndex === JUMLAH_SAMA_PAIRS.length - 1 ? 'hidden' : 'visible';
 }
 
 function renderStaticGrid(id, matrix, label) {
@@ -1097,11 +1134,14 @@ function renderStaticGrid(id, matrix, label) {
 }
 
 function nextJumlahSama() {
-  if (jumlahSamaIndex < JUMLAH_SAMA_PAIRS.length - 1) {
-    jumlahSamaIndex++;
-  } else {
-    jumlahSamaIndex = 0;
-  }
+  if (jumlahSamaIndex >= JUMLAH_SAMA_PAIRS.length - 1) return;
+  jumlahSamaIndex++;
+  renderJumlahSama();
+}
+
+function prevJumlahSama() {
+  if (jumlahSamaIndex <= 0) return;
+  jumlahSamaIndex--;
   renderJumlahSama();
 }
 

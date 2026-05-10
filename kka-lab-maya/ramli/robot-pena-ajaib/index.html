@@ -108,6 +108,65 @@
       margin-bottom:28px;
     }
 
+    .hero-menu-btn{
+      display:flex;
+      width:100%;
+      min-height:90px;
+      border:none;
+      border-radius:20px;
+      padding:0;
+      text-align:left;
+      cursor:pointer;
+      transition:all .15s ease;
+      box-shadow:0 8px 0 rgba(0,0,0,0.2);
+    }
+    .hero-menu-btn:active{
+      box-shadow:0 0 0 rgba(0,0,0,0.2);
+      transform:translateY(7px);
+    }
+    .hero-menu-btn.is-disabled{
+      opacity:.5;
+    }
+    .hero-menu-icon{
+      width:90px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:20px 0 0 20px;
+      color:white;
+    }
+    .hero-menu-icon svg{
+      width:44px;
+      height:44px;
+    }
+    .hero-menu-label{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 12px;
+      border-radius:0 20px 20px 0;
+      position:relative;
+    }
+    .hero-menu-label span{
+      color:white;
+      font-size:clamp(18px,2vw,20px);
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      text-align:center;
+      line-height:1.15;
+    }
+    .hero-menu-icon.violet{ background:#7e22ce; }
+    .hero-menu-icon.orange{ background:#c2410c; }
+    .hero-menu-icon.cyan{ background:#0f766e; }
+    .hero-menu-icon.lime{ background:#4d7c0f; }
+    .hero-menu-label.violet{ background:#a855f7; }
+    .hero-menu-label.orange{ background:#f97316; }
+    .hero-menu-label.cyan{ background:#06b6d4; }
+    .hero-menu-label.lime{ background:#84cc16; }
+
     .hero-visual{
       position:relative;
       display:flex;
@@ -308,6 +367,85 @@
       border:1px solid #c7d2fe;
       margin-bottom:10px;
     }
+    .challenge-btn.active{
+      background:linear-gradient(135deg,#4338ca,#6366f1);
+      color:white;
+      border-color:#3730a3;
+      box-shadow:0 10px 18px rgba(79,70,229,0.28);
+    }
+    .challenge-btn.completed,
+    .challenge-btn:disabled{
+      background:#ecfdf5;
+      color:#166534;
+      border-color:#86efac;
+      box-shadow:none;
+      cursor:not-allowed;
+      opacity:1;
+    }
+    .challenge-status-box{
+      background:#eef2ff;
+      border:1px solid #c7d2fe;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:13px;
+      color:#3730a3;
+      line-height:1.6;
+    }
+    .challenge-status-box.success{
+      background:#ecfdf5;
+      border-color:#86efac;
+      color:#166534;
+    }
+    .challenge-status-box.error{
+      background:#fef2f2;
+      border-color:#fca5a5;
+      color:#991b1b;
+    }
+    .challenge-status-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+    .challenge-status-title{
+      font-size:14px;
+      font-weight:900;
+    }
+    .challenge-status-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.02em;
+      background:#c7d2fe;
+      color:#3730a3;
+    }
+    .challenge-status-box.success .challenge-status-badge{
+      background:#bbf7d0;
+      color:#166534;
+    }
+    .challenge-status-box.error .challenge-status-badge{
+      background:#fecaca;
+      color:#991b1b;
+    }
+    .challenge-checklist{
+      margin-top:8px;
+      display:grid;
+      gap:4px;
+      font-size:12px;
+    }
+    .challenge-check{
+      opacity:.78;
+    }
+    .challenge-check.ok{
+      opacity:1;
+      font-weight:800;
+    }
 
     .script-list{
       display:grid;
@@ -383,6 +521,18 @@
       color:#0f172a;
       background:white;
     }
+    .value-stack{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:82px;
+    }
+    .value-meta{
+      font-size:11px;
+      line-height:1.3;
+      color:rgba(255,255,255,.92);
+      font-weight:800;
+    }
 
     .stage-wrap{
       background:linear-gradient(135deg,#0f172a,#142b4d);
@@ -429,6 +579,38 @@
       background:rgba(255,255,255,.16);
     }
 
+    .toolbar-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .toolbar-btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      color:white;
+      font-weight:800;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 8px 16px rgba(15,23,42,.12);
+      transition:transform .15s ease, filter .15s ease, box-shadow .15s ease;
+    }
+    .toolbar-btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.04);
+      box-shadow:0 10px 20px rgba(15,23,42,.16);
+    }
+    .toolbar-btn.violet{ background:linear-gradient(135deg,#7c3aed,#6d28d9); }
+    .toolbar-btn.teal{ background:linear-gradient(135deg,#0d9488,#0f766e); }
+    .toolbar-btn.sky{ background:linear-gradient(135deg,#0284c7,#0369a1); }
+    .toolbar-btn.amber{ background:linear-gradient(135deg,#d97706,#b45309); }
+    .toolbar-btn.rose{ background:linear-gradient(135deg,#e11d48,#be123c); }
+    .toolbar-btn.indigo{ background:linear-gradient(135deg,#4f46e5,#4338ca); }
+    .toolbar-btn.emerald{ background:linear-gradient(135deg,#059669,#047857); }
+    .toolbar-btn.cyan{ background:linear-gradient(135deg,#0891b2,#0e7490); }
+
     .canvas-viewport{
       width:100%;
       height:560px;
@@ -464,10 +646,28 @@
       height:calc(100vh - 220px);
     }
 
+    .fullscreen-controls{
+      display:none;
+      margin:0 0 12px;
+      padding:12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .stage-wrap.stage-fullscreen .fullscreen-controls{
+      display:flex;
+    }
+    .fullscreen-controls .toolbar-btn{
+      flex:1 1 160px;
+      justify-content:center;
+    }
+
     .status-card{
       margin-top:14px;
       display:grid;
-      grid-template-columns:repeat(5,1fr);
+      grid-template-columns:repeat(6,1fr);
       gap:10px;
     }
 
@@ -819,52 +1019,52 @@
 
         <div class="hero-buttons">
           <!-- 1. Tujuan Praktikum -->
-          <button onclick="openTujuanModal()" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
+          <button onclick="openTujuanModal()" class="hero-menu-btn">
+            <div class="hero-menu-icon violet">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#a855f7] flex items-center justify-center px-3 rounded-r-[20px] relative">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
+            <div class="hero-menu-label violet">
+              <span>Tujuan Praktikum</span>
               <span id="check-tujuan" class="read-check">✓</span>
             </div>
           </button>
 
           <!-- 2. Cara Penggunaan -->
-          <button onclick="openCaraModal()" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
+          <button onclick="openCaraModal()" class="hero-menu-btn">
+            <div class="hero-menu-icon orange">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#f97316] flex items-center justify-center px-3 rounded-r-[20px] relative">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
+            <div class="hero-menu-label orange">
+              <span>Cara Penggunaan</span>
               <span id="check-cara" class="read-check">✓</span>
             </div>
           </button>
 
           <!-- 3. Mulai Percobaan (terkunci sampai baca Tujuan + Cara) -->
-          <button id="mulaiBtn" onclick="tryOpenLabPage()" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left opacity-50">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
+          <button id="mulaiBtn" onclick="tryOpenLabPage()" class="hero-menu-btn is-disabled">
+            <div class="hero-menu-icon cyan">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#06b6d4] flex items-center justify-center px-3 rounded-r-[20px]">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase">Mulai Percobaan</span>
+            <div class="hero-menu-label cyan">
+              <span>Mulai Percobaan</span>
             </div>
           </button>
 
           <!-- 4. Biodata Pengembang -->
-          <button onclick="openBioModal()" class="flex w-full min-h-[90px] rounded-[20px] shadow-[0_8px_0_rgba(0,0,0,0.2)] active:shadow-[0_0px_0_rgba(0,0,0,0.2)] active:translate-y-[7px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
-            <div class="w-[90px] bg-[#3f3f46] flex items-center justify-center shrink-0 rounded-l-[20px]">
+          <button onclick="openBioModal()" class="hero-menu-btn">
+            <div class="hero-menu-icon lime">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-white">
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="flex-1 bg-[#84cc16] flex items-center justify-center px-3 rounded-r-[20px]">
-              <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Biodata Pengembang</span>
+            <div class="hero-menu-label lime">
+              <span>Biodata Pengembang</span>
             </div>
           </button>
         </div>
@@ -916,34 +1116,34 @@
           <p class="text-slate-500">Susun blok instruksi, jalankan, dan lihat jejak gambar di panggung</p>
         </div>
 
-        <div class="flex gap-3 flex-wrap">
-          <button onclick="openMateriSingkatModal()" class="bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 py-3 rounded-xl flex items-center gap-2">
+        <div class="toolbar-actions">
+          <button onclick="openMateriSingkatModal()" class="toolbar-btn violet">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M10.75 16.82A7.462 7.462 0 0115 15.5c.71 0 1.396.098 2.046.282A.75.75 0 0018 15.06v-11a.75.75 0 00-.546-.721A9.006 9.006 0 0015 3a8.963 8.963 0 00-4.25 1.065V16.82zM9.25 4.065A8.963 8.963 0 005 3c-.85 0-1.673.118-2.454.339A.75.75 0 002 4.06v11a.75.75 0 00.954.721A7.506 7.506 0 015 15.5c1.579 0 3.042.487 4.25 1.32V4.065z"/></svg>
             Materi Singkat
           </button>
-          <button onclick="openIstilahModal()" class="bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-3 rounded-xl flex items-center gap-2">
+          <button onclick="openIstilahModal()" class="toolbar-btn teal">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
             Istilah Penting
           </button>
-          <button onclick="runScript()" id="runBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2">
+          <button onclick="runScript()" id="runBtn" class="toolbar-btn sky">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm6.39-2.908a.75.75 0 01.766.027l3.5 2.25a.75.75 0 010 1.262l-3.5 2.25A.75.75 0 018 12.25v-4.5a.75.75 0 01.39-.658z" clip-rule="evenodd"/></svg>
             Jalankan
           </button>
-          <button onclick="runStepByStep()" id="stepBtn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2">
+          <button onclick="runStepByStep()" id="stepBtn" class="toolbar-btn amber">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm4.75-4.5a.75.75 0 00-.75.75v7.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75v-7.5a.75.75 0 00-.75-.75h-1.5zm5.25 0a.75.75 0 00-.75.75v7.5c0 .414.336.75.75.75H13a.75.75 0 00.75-.75v-7.5a.75.75 0 00-.75-.75h-.75z" clip-rule="evenodd"/></svg>
             Langkah per Langkah
           </button>
-          <button onclick="resetAll()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl">
+          <button onclick="resetWorkspace()" class="toolbar-btn rose">
             Reset
           </button>
-          <button onclick="openRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl">
+          <button onclick="openRefleksiModal()" class="toolbar-btn indigo">
             Refleksi
           </button>
-          <button onclick="openKuisModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2">
+          <button onclick="openKuisModal()" class="toolbar-btn emerald">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
             Kuis Singkat
           </button>
-          <button onclick="showPage('homePage')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold px-5 py-3 rounded-xl">
+          <button onclick="showPage('homePage')" class="toolbar-btn cyan">
             Kembali
           </button>
         </div>
@@ -962,15 +1162,16 @@
           </button>
 
           <div class="mt-6 pt-4 border-t border-slate-200">
-            <div class="font-black text-slate-800 mb-3">Tantangan Cepat</div>
-            <button class="challenge-btn" onclick="loadChallenge('line')">Muat Tantangan Garis</button>
-            <button class="challenge-btn" onclick="loadChallenge('corner')">Muat Tantangan Sudut</button>
-            <button class="challenge-btn" onclick="loadChallenge('square')">Muat Tantangan Persegi</button>
-            <button class="challenge-btn" onclick="loadChallenge('triangle')">Muat Tantangan Segitiga</button>
-            <button class="challenge-btn" onclick="loadChallenge('rectangle')">Muat Tantangan Persegi Panjang</button>
-            <button class="challenge-btn" onclick="loadChallenge('stairs')">Muat Tantangan Tangga</button>
-            <button class="challenge-btn" onclick="loadChallenge('house')">Muat Tantangan Rumah</button>
-            <button class="challenge-btn" onclick="loadChallenge('star')">Muat Tantangan Bintang</button>
+            <div class="font-black text-slate-800 mb-1">Awalan Tantangan</div>
+            <p class="text-xs text-slate-500 mb-3">Bagian ini hanya memberi beberapa blok awal. Lanjutkan sendiri sampai bentuknya selesai.</p>
+            <button class="challenge-btn" data-challenge="line" onclick="loadChallenge('line')">Awali Garis</button>
+            <button class="challenge-btn" data-challenge="corner" onclick="loadChallenge('corner')">Awali Sudut</button>
+            <button class="challenge-btn" data-challenge="square" onclick="loadChallenge('square')">Awali Persegi</button>
+            <button class="challenge-btn" data-challenge="triangle" onclick="loadChallenge('triangle')">Awali Segitiga</button>
+            <button class="challenge-btn" data-challenge="rectangle" onclick="loadChallenge('rectangle')">Awali Persegi Panjang</button>
+            <button class="challenge-btn" data-challenge="stairs" onclick="loadChallenge('stairs')">Awali Tangga</button>
+            <button class="challenge-btn" data-challenge="house" onclick="loadChallenge('house')">Awali Rumah</button>
+            <button class="challenge-btn" data-challenge="star" onclick="loadChallenge('star')">Awali Bintang</button>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-200">
@@ -985,12 +1186,42 @@
             <div class="font-black text-slate-800 mb-2">Petunjuk Singkat</div>
             <p>Susun blok dari atas ke bawah. Robot akan menjalankan instruksi sesuai urutan. Salah urutan sedikit saja, hasil gambar bisa berbeda.</p>
           </div>
+
+          <div class="mt-4 rounded-[18px] border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950 leading-relaxed">
+            <div class="font-black text-emerald-900 mb-2">Dalam Kehidupan Sehari-hari</div>
+            <div class="space-y-2">
+              <p><b>Memberi petunjuk jalan:</b> kalau urutannya salah, orang bisa salah belok atau tersesat.</p>
+              <p><b>Mengikuti resep masakan:</b> langkah yang tertukar bisa membuat hasil masakan berbeda.</p>
+              <p><b>Merakit barang:</b> satu langkah kecil yang keliru bisa membuat bentuk akhir tidak pas.</p>
+              <p><b>Memperbaiki kesalahan:</b> saat hasil belum sesuai, kita cek langkah mana yang salah lalu memperbaikinya. Itulah <i>debugging</i>.</p>
+            </div>
+          </div>
         </div>
 
         <div class="panel">
           <div class="flex justify-between items-center mb-4">
             <div class="panel-title mb-0">Area Skrip</div>
-            <button onclick="clearBlocks()" class="text-sm font-bold text-rose-600">Hapus Semua</button>
+          </div>
+
+          <div id="predictionCard" class="mb-4 rounded-[20px] border border-amber-200 bg-amber-50 px-4 py-4">
+            <div class="flex items-start gap-3">
+              <div class="shrink-0 w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-lg">?</div>
+              <div class="min-w-0">
+                <div class="font-black text-amber-900 text-lg mb-1">Prediksi Dulu</div>
+                <p id="predictionText" class="text-sm text-amber-900 leading-relaxed mb-2">
+                  Sebelum menekan <b>Jalankan</b>, coba tebak dulu apa yang akan dilakukan robot.
+                </p>
+                <div id="predictionChecklist" class="text-sm text-amber-800 leading-7">
+                  1. Robot akan berhenti di posisi mana?<br>
+                  2. Apakah robot perlu belok, atau hanya maju lurus?<br>
+                  3. Bentuknya akan tertutup atau masih terbuka?
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="challengeStatusBox" class="challenge-status-box mb-4">
+            Belum ada tantangan aktif. Pilih salah satu tombol awalan, lalu lanjutkan blokmu sampai bentuk selesai.
           </div>
 
           <div id="scriptList" class="script-list"></div>
@@ -1004,7 +1235,7 @@
           <div class="stage-header flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
               <div class="stage-title">Area Eksperimen</div>
-              <div class="stage-sub">Robot akan menjalankan instruksi satu per satu dan meninggalkan jejak gambar.</div>
+              <div class="stage-sub">Robot akan menjalankan instruksi satu per satu dan meninggalkan jejak gambar. 1 kotak grid = 40 px.</div>
             </div>
 
             <div class="stage-tools">
@@ -1014,6 +1245,13 @@
               <button class="stage-tool-btn" onclick="centerStageView()">Pusatkan</button>
               <button id="fullscreenBtn" class="stage-tool-btn" onclick="toggleStageFullscreen()">Panel Penuh</button>
             </div>
+          </div>
+
+          <div class="fullscreen-controls">
+            <button onclick="runScript()" id="runBtnFs" class="toolbar-btn sky">Jalankan</button>
+            <button onclick="runStepByStep()" id="stepBtnFs" class="toolbar-btn amber">Langkah per Langkah</button>
+            <button onclick="resetWorkspace()" class="toolbar-btn rose">Reset</button>
+            <button onclick="showPage('homePage')" class="toolbar-btn cyan">Kembali</button>
           </div>
 
           <div id="canvasViewport" class="canvas-viewport">
@@ -1032,17 +1270,21 @@
 
           <div id="stepInfoBar" class="hidden mt-3 bg-amber-500/20 border border-amber-400/40 rounded-2xl px-4 py-2 text-amber-200 text-sm font-bold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 shrink-0 text-amber-400"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
-            <span id="stepInfoText">Mode Langkah per Langkah — klik tombol untuk menjalankan satu instruksi</span>
+            <span id="stepInfoText">Mode Langkah per Langkah — 1 kotak grid = 40 px, klik tombol untuk menjalankan satu instruksi</span>
           </div>
 
           <div class="status-card">
             <div class="status-item">
-              <small>X</small>
-              <strong id="xStat">1100</strong>
+              <small>X (px)</small>
+              <strong id="xStat">1120</strong>
             </div>
             <div class="status-item">
-              <small>Y</small>
-              <strong id="yStat">900</strong>
+              <small>Y (px)</small>
+              <strong id="yStat">880</strong>
+            </div>
+            <div class="status-item">
+              <small>Grid</small>
+              <strong id="gridStat">0,0</strong>
             </div>
             <div class="status-item">
               <small>Arah</small>
@@ -1169,8 +1411,8 @@
 
         <div class="cara-slide hidden-slide">
           <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500">
-            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">4. Tantangan Cepat</h3>
-            <p class="text-lg text-slate-700">Gunakan tombol tantangan untuk memuat contoh instruksi otomatis, seperti:</p>
+            <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">4. Awalan Tantangan</h3>
+            <p class="text-lg text-slate-700">Gunakan tombol awalan untuk memuat beberapa blok pertama, lalu lanjutkan sendiri sampai gambar selesai, seperti:</p>
             <ul class="list-disc ml-6 text-lg text-slate-800 space-y-2 mt-4">
               <li>Garis lurus</li>
               <li>Sudut</li>
@@ -1347,7 +1589,7 @@
       <!-- Navigasi Slide Bio -->
       <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-100 gap-4">
         <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility:hidden;"
-                class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
+                class="bg-cyan-500 hover:bg-cyan-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
           &larr; Sebelumnya
         </button>
         <button onclick="closeBioModal()"
@@ -1379,7 +1621,7 @@
               <div class="bg-violet-500 text-white rounded-xl w-10 h-10 flex items-center justify-center font-black text-lg shrink-0">1</div>
               <h3 class="font-black text-violet-800 text-lg">Instruksi</h3>
             </div>
-            <p class="text-slate-700 text-sm leading-relaxed">Perintah tunggal yang diberikan kepada robot. Contoh: <b>MAJU(80)</b> artinya robot bergerak maju sejauh 80 satuan.</p>
+            <p class="text-slate-700 text-sm leading-relaxed">Perintah tunggal yang diberikan kepada robot. Contoh: <b>MAJU(80)</b> artinya robot bergerak maju sejauh 2 kotak grid.</p>
           </div>
           <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5">
             <div class="flex items-center gap-3 mb-3">
@@ -1494,7 +1736,7 @@
         </div>
       </div>
       <div class="shrink-0 pt-4 flex justify-center border-t-2 border-slate-100 mt-4">
-        <button onclick="closeIstilahModal()" class="bg-slate-700 hover:bg-slate-800 text-white text-xl font-bold py-3 px-12 rounded-[20px] shadow-[0_4px_0_#1e293b] active:shadow-[0_0px_0_#1e293b] active:translate-y-[4px] transition-all">
+        <button onclick="closeIstilahModal()" class="bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold py-3 px-12 rounded-[20px] shadow-[0_4px_0_#115e59] active:shadow-[0_0px_0_#115e59] active:translate-y-[4px] transition-all">
           Tutup
         </button>
       </div>
@@ -1523,7 +1765,7 @@
         </div>
       </div>
       <div class="shrink-0 pt-4 flex gap-3 border-t-2 border-sky-50 mt-2">
-        <button onclick="closeRefleksiModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-base font-bold py-3 px-4 rounded-xl">
+        <button onclick="closeRefleksiModal()" class="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white text-base font-bold py-3 px-4 rounded-xl">
           Tutup
         </button>
         <button id="simpanRefleksiBtn" onclick="simpanRefleksi()" class="flex-1 bg-sky-600 hover:bg-sky-700 text-white text-base font-bold py-3 px-4 rounded-xl">
@@ -1557,7 +1799,7 @@
     function checkUnlock() {
       const btn = document.getElementById('mulaiBtn');
       if (tujuanRead && caraRead) {
-        btn.classList.remove('opacity-50');
+        btn.classList.remove('is-disabled');
       }
     }
 
@@ -1749,8 +1991,13 @@
 
     const STAGE_WIDTH = 2400;
     const STAGE_HEIGHT = 1600;
-    const START_X = 1100;
-    const START_Y = 900;
+    const GRID_SIZE = 40;
+    const START_X = 1120;
+    const START_Y = 880;
+    const PAPER_X = 140;
+    const PAPER_Y = 120;
+    const PAPER_WIDTH = STAGE_WIDTH - (PAPER_X * 2);
+    const PAPER_HEIGHT = STAGE_HEIGHT - (PAPER_Y * 2);
 
     canvas.width = STAGE_WIDTH;
     canvas.height = STAGE_HEIGHT;
@@ -1864,6 +2111,55 @@
       return type;
     }
 
+    function describeBlockValue(type, value) {
+      const num = Number(value) || 0;
+
+      if (type === 'FORWARD') {
+        const grids = num / GRID_SIZE;
+        const rounded = Math.round(grids * 100) / 100;
+        if (num === 113) return 'diagonal 2 kotak';
+        if (Number.isInteger(rounded)) {
+          return `${rounded} kotak grid`;
+        }
+        return `${rounded.toFixed(2)} kotak grid`;
+      }
+
+      if (type === 'RIGHT' || type === 'LEFT') {
+        if (num === 90) return 'seperempat putaran';
+        if (num === 120) return 'sudut segitiga';
+        if (num === 144) return 'sudut bintang';
+        if (num === 45) return 'diagonal';
+        return `${num} derajat`;
+      }
+
+      return '';
+    }
+
+    function updatePredictionBox(mode = 'pre') {
+      const text = document.getElementById('predictionText');
+      const checklist = document.getElementById('predictionChecklist');
+      const card = document.getElementById('predictionCard');
+      if (!text || !checklist || !card) return;
+
+      if (mode === 'post') {
+        card.style.background = '#ecfeff';
+        card.style.borderColor = '#a5f3fc';
+        text.innerHTML = 'Robot sudah dijalankan. Sekarang <b>bandingkan hasilnya</b> dengan prediksimu tadi.';
+        checklist.innerHTML = '1. Prediksimu sesuai atau belum?<br>2. Blok mana yang paling memengaruhi hasil?<br>3. Jika belum tepat, masalahnya ada di urutan, jarak, atau sudut?';
+        return;
+      }
+
+      card.style.background = '#fffbeb';
+      card.style.borderColor = '#fde68a';
+      if (scriptBlocks.length === 0) {
+        text.innerHTML = 'Sebelum menekan <b>Jalankan</b>, susun dulu blokmu lalu tebak apa yang akan dilakukan robot.';
+        checklist.innerHTML = '1. Blok apa yang harus dipasang lebih dulu?<br>2. Kapan robot mulai meninggalkan jejak?<br>3. Apa yang terjadi jika urutannya belum tepat?';
+      } else {
+        text.innerHTML = 'Sebelum menekan <b>Jalankan</b>, coba tebak dulu apa yang akan dilakukan robot.';
+        checklist.innerHTML = '1. Robot akan berhenti di posisi mana?<br>2. Apakah robot perlu belok, atau hanya maju lurus?<br>3. Bentuknya akan tertutup atau masih terbuka?';
+      }
+    }
+
     function addBlock(type) {
       if (isRunning) return;
       if (type === 'FORWARD') scriptBlocks.push({ type, value: 80 });
@@ -1871,12 +2167,20 @@
       else scriptBlocks.push({ type });
       renderScriptList();
       updateStatus();
+      updatePredictionBox('pre');
     }
 
-    function updateBlockValue(index, val) {
+    function updateBlockValue(index, val, inputEl = null) {
       const num = Number(val);
       scriptBlocks[index].value = isNaN(num) ? 0 : num;
+      if (inputEl) {
+        const meta = inputEl.parentElement?.querySelector('.value-meta');
+        if (meta) {
+          meta.textContent = describeBlockValue(scriptBlocks[index].type, scriptBlocks[index].value);
+        }
+      }
       updateStatus();
+      updatePredictionBox('pre');
     }
 
     function moveBlock(index, delta) {
@@ -1894,6 +2198,7 @@
       scriptBlocks.splice(index, 1);
       renderScriptList();
       updateStatus();
+      updatePredictionBox('pre');
     }
 
     function clearBlocks() {
@@ -1901,82 +2206,67 @@
       scriptBlocks = [];
       renderScriptList();
       updateStatus();
+      updatePredictionBox('pre');
+      updateChallengeStatus();
+    }
+
+    function resetWorkspace() {
+      if (isRunning) return;
+      clearBlocks();
+      resetAll();
     }
 
     function loadChallenge(type) {
       if (isRunning) return;
+      if (completedChallenges.has(type)) return;
       activeChallengeKey = type;
       activeBugKey = null;
+      syncChallengeButtons();
 
       if (type === 'line') {
         scriptBlocks = [
-          { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 220 }
+          { type: 'PEN_DOWN' }
         ];
       }
 
       if (type === 'corner') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 180 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 }
+          { type: 'FORWARD', value: 160 }
         ];
       }
 
       if (type === 'square') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 140 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 }
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 }
         ];
       }
 
       if (type === 'triangle') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 180 },
-          { type: 'RIGHT', value: 120 },
-          { type: 'FORWARD', value: 180 },
-          { type: 'RIGHT', value: 120 },
-          { type: 'FORWARD', value: 180 }
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 120 }
         ];
       }
 
       if (type === 'rectangle') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 220 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 120 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 220 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 120 }
+          { type: 'FORWARD', value: 240 },
+          { type: 'RIGHT', value: 90 }
         ];
       }
 
       if (type === 'stairs') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 70 },
+          { type: 'FORWARD', value: 80 },
           { type: 'LEFT', value: 90 },
-          { type: 'FORWARD', value: 70 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 70 },
-          { type: 'LEFT', value: 90 },
-          { type: 'FORWARD', value: 70 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 70 },
-          { type: 'LEFT', value: 90 },
-          { type: 'FORWARD', value: 70 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 70 }
+          { type: 'FORWARD', value: 80 },
+          { type: 'RIGHT', value: 90 }
         ];
       }
 
@@ -1985,38 +2275,27 @@
           { type: 'PEN_DOWN' },
           { type: 'FORWARD', value: 160 },
           { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 120 },
-          { type: 'RIGHT', value: 90 },
           { type: 'FORWARD', value: 160 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 120 },
-          { type: 'PEN_UP' },
-          { type: 'FORWARD', value: 120 },
-          { type: 'PEN_DOWN' },
-          { type: 'RIGHT', value: 45 },
-          { type: 'FORWARD', value: 113 },
-          { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 113 }
+          { type: 'RIGHT', value: 90 }
         ];
       }
 
       if (type === 'star') {
         scriptBlocks = [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 170 },
-          { type: 'RIGHT', value: 144 },
-          { type: 'FORWARD', value: 170 },
-          { type: 'RIGHT', value: 144 },
-          { type: 'FORWARD', value: 170 },
-          { type: 'RIGHT', value: 144 },
-          { type: 'FORWARD', value: 170 },
-          { type: 'RIGHT', value: 144 },
-          { type: 'FORWARD', value: 170 }
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 144 }
         ];
       }
 
       renderScriptList();
       resetAll();
+      updatePredictionBox('pre');
+      updateChallengeStatus();
+      setTimeout(() => {
+        const label = challengeStarterLabels[type] || 'bentuk';
+        showInfoToast(`🧩 Ini baru <b>awalan ${label}</b>.<br>Blok awal sudah dimuat, tetapi gambarnya belum selesai. Lanjutkan dengan menambah atau mengubah blokmu sendiri ya.`, 5200);
+      }, 250);
     }
 
     function renderScriptList() {
@@ -2042,7 +2321,7 @@
             <div class="script-left">
               <div class="script-num">${index + 1}</div>
               <div class="script-label">${labelForType(block.type)}</div>
-              ${hasValue ? `<input class="value-input" type="number" value="${block.value}" onchange="updateBlockValue(${index}, this.value)" />` : ``}
+              ${hasValue ? `<div class="value-stack"><input class="value-input" type="number" value="${block.value}" oninput="updateBlockValue(${index}, this.value, this)" onchange="updateBlockValue(${index}, this.value, this)" /><div class="value-meta">${describeBlockValue(block.type, block.value)}</div></div>` : ``}
             </div>
             <div class="script-actions">
               <button class="mini-btn" onclick="moveBlock(${index}, -1)">↑</button>
@@ -2059,23 +2338,75 @@
       return deg * Math.PI / 180;
     }
 
+    function normalizeAngle(deg) {
+      return ((deg % 360) + 360) % 360;
+    }
+
+    function formatGridValue(value) {
+      const rounded = Math.round(value * 100) / 100;
+      if (Number.isInteger(rounded)) return String(rounded);
+      if (Math.abs(rounded * 10 - Math.round(rounded * 10)) < 0.0001) {
+        return rounded.toFixed(1);
+      }
+      return rounded.toFixed(2);
+    }
+
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    function drawPaper() {
+      ctx.save();
+
+      ctx.shadowColor = 'rgba(15,23,42,0.18)';
+      ctx.shadowBlur = 28;
+      ctx.shadowOffsetY = 18;
+      ctx.fillStyle = '#fffef7';
+      ctx.strokeStyle = '#d6d3d1';
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.roundRect(PAPER_X, PAPER_Y, PAPER_WIDTH, PAPER_HEIGHT, 28);
+      ctx.fill();
+      ctx.stroke();
+
+      // Lipatan kecil di pojok agar terasa seperti lembar kerja.
+      ctx.shadowColor = 'transparent';
+      ctx.beginPath();
+      ctx.moveTo(PAPER_X + PAPER_WIDTH - 88, PAPER_Y);
+      ctx.lineTo(PAPER_X + PAPER_WIDTH, PAPER_Y);
+      ctx.lineTo(PAPER_X + PAPER_WIDTH, PAPER_Y + 88);
+      ctx.closePath();
+      ctx.fillStyle = '#f5f5f4';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(PAPER_X + PAPER_WIDTH - 88, PAPER_Y);
+      ctx.lineTo(PAPER_X + PAPER_WIDTH - 88, PAPER_Y + 88);
+      ctx.lineTo(PAPER_X + PAPER_WIDTH, PAPER_Y + 88);
+      ctx.strokeStyle = '#e7e5e4';
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
     function drawGrid() {
       ctx.save();
-      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.roundRect(PAPER_X, PAPER_Y, PAPER_WIDTH, PAPER_HEIGHT, 28);
+      ctx.clip();
+
+      ctx.strokeStyle = 'rgba(148,163,184,0.28)';
       ctx.lineWidth = 1;
 
-      for (let x = 0; x <= canvas.width; x += 40) {
+      for (let x = 0; x <= canvas.width; x += GRID_SIZE) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
       }
 
-      for (let y = 0; y <= canvas.height; y += 40) {
+      for (let y = 0; y <= canvas.height; y += GRID_SIZE) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
@@ -2114,24 +2445,59 @@
       ctx.translate(turtle.x, turtle.y);
       ctx.rotate(degToRad(turtle.angle));
 
+      const penReach = turtle.pen ? 14 : 6;
+      const penOpacity = turtle.pen ? 1 : 0.45;
+      const penYOffset = turtle.pen ? 0 : -10;
+
+      // Koordinat turtle mewakili titik pena di kertas, jadi ujung garis selalu tepat
+      // berada di perpotongan grid yang sama dengan posisi robot saat ini.
+      ctx.strokeStyle = turtle.pen ? '#0f172a' : 'rgba(15,23,42,0.45)';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0, penYOffset);
+      ctx.lineTo(12, penYOffset);
+      ctx.stroke();
+
+      ctx.fillStyle = turtle.pen ? '#ef4444' : 'rgba(239,68,68,0.45)';
+      ctx.globalAlpha = penOpacity;
+      ctx.beginPath();
+      ctx.arc(0, penYOffset, turtle.pen ? 3.6 : 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
       ctx.fillStyle = '#f59e0b';
       ctx.beginPath();
-      ctx.moveTo(16, 0);
-      ctx.lineTo(-10, -8);
-      ctx.lineTo(-10, 8);
+      ctx.moveTo(34, 0);
+      ctx.lineTo(8, -8);
+      ctx.lineTo(8, 8);
       ctx.closePath();
       ctx.fill();
 
       ctx.fillStyle = '#fff7ed';
       ctx.beginPath();
-      ctx.arc(2, 0, 3, 0, Math.PI * 2);
+      ctx.arc(20, 0, 3, 0, Math.PI * 2);
       ctx.fill();
+
+      if (!turtle.pen) {
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(6, -28, 46, 16, 8);
+        ctx.fill();
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '900 8px Segoe UI';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('PEN UP', 29, -20);
+      }
 
       ctx.restore();
     }
 
     function renderStage() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPaper();
       drawGrid();
       drawStartPoint();
       drawSegments();
@@ -2141,7 +2507,10 @@
     function updateStatus() {
       document.getElementById('xStat').textContent = Math.round(turtle.x);
       document.getElementById('yStat').textContent = Math.round(turtle.y);
-      document.getElementById('angleStat').textContent = `${((turtle.angle % 360) + 360) % 360}°`;
+      const gridX = (turtle.x - START_X) / GRID_SIZE;
+      const gridY = (START_Y - turtle.y) / GRID_SIZE;
+      document.getElementById('gridStat').textContent = `${formatGridValue(gridX)}, ${formatGridValue(gridY)}`;
+      document.getElementById('angleStat').textContent = `${normalizeAngle(turtle.angle)}°`;
       document.getElementById('penStat').textContent = turtle.pen ? 'Turun' : 'Naik';
       document.getElementById('countStat').textContent = scriptBlocks.length;
     }
@@ -2170,6 +2539,9 @@
         if (i % 3 === 0) centerViewportOn(turtle.x, turtle.y);
         await sleep(20);
       }
+
+      renderStage();
+      updateStatus();
     }
 
     async function executeBlock(block) {
@@ -2264,6 +2636,9 @@
       if (activeChallengeKey && challengeOptimal[activeChallengeKey]) {
         showEfisiensiToast(scriptBlocks.length, challengeOptimal[activeChallengeKey]);
       }
+      finalizeActiveChallengeFeedback();
+      finalizeActiveBugFeedback();
+      updatePredictionBox('post');
       if (!refleksiAutoTriggered) {
         refleksiAutoTriggered = true;
         setTimeout(() => openRefleksiModal(), 1200);
@@ -2294,6 +2669,7 @@
         clearHighlight();
         hideStepBar();
         document.getElementById('stepBtn').innerHTML = stepBtnBaseHTML();
+        updatePredictionBox('pre');
         return;
       }
       if (stepIndex === 0) {
@@ -2317,6 +2693,9 @@
         clearHighlight();
         hideStepBar();
         document.getElementById('stepBtn').textContent = 'Ulangi dari Awal';
+        finalizeActiveChallengeFeedback();
+        finalizeActiveBugFeedback();
+        updatePredictionBox('post');
       }
     }
 
@@ -2336,6 +2715,8 @@
       renderStage();
       updateStatus();
       applyZoom(true);
+      updatePredictionBox('pre');
+      updateChallengeStatus();
     }
 
     resetStageState();
@@ -2343,6 +2724,7 @@
     renderStage();
     updateStatus();
     applyZoom(true);
+    updatePredictionBox('pre');
     animateHeroSpeech();
     // Restore read flags from sessionStorage
     try {
@@ -2399,21 +2781,364 @@
       line: 2, corner: 4, square: 8, triangle: 6,
       rectangle: 8, stairs: 13, house: 14, star: 9
     };
+    const challengeStarterLabels = {
+      line: 'garis',
+      corner: 'sudut',
+      square: 'persegi',
+      triangle: 'segitiga',
+      rectangle: 'persegi panjang',
+      stairs: 'tangga',
+      house: 'rumah',
+      star: 'bintang'
+    };
+    const challengeTargets = {
+      line: {
+        title: 'Garis',
+        goal: 'Buat satu garis lurus dengan PENA_TURUN lalu MAJU 240.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 240 }
+        ]
+      },
+      corner: {
+        title: 'Sudut',
+        goal: 'Buat dua ruas yang membentuk sudut siku-siku.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      square: {
+        title: 'Persegi',
+        goal: 'Lengkapi 4 sisi sama panjang dengan setiap sudut 90 derajat.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      triangle: {
+        title: 'Segitiga',
+        goal: 'Lengkapi 3 sisi dengan sudut luar 120 derajat.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      rectangle: {
+        title: 'Persegi Panjang',
+        goal: 'Lengkapi pasangan sisi panjang dan pendek secara tepat.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 240 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 240 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      stairs: {
+        title: 'Tangga',
+        goal: 'Lanjutkan pola naik-maju secara berulang sampai tangga selesai.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 80 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 80 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 80 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 80 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 80 },
+          { type: 'LEFT', value: 90 },
+          { type: 'FORWARD', value: 80 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 80 }
+        ]
+      },
+      house: {
+        title: 'Rumah',
+        goal: 'Selesaikan badan rumah lalu tambahkan atap dengan urutan yang tepat.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'PEN_UP' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'PEN_DOWN' },
+          { type: 'RIGHT', value: 45 },
+          { type: 'FORWARD', value: 113 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 113 }
+        ]
+      },
+      star: {
+        title: 'Bintang',
+        goal: 'Lengkapi 5 ruas dengan sudut 144 derajat agar bintang tertutup.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 144 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      }
+    };
     let activeChallengeKey = null;
     let activeBugKey = null;
+    let infoToastTimer = null;
+    const completedChallenges = new Set();
 
-    function showEfisiensiToast(used, optimal) {
+    function loadCompletedChallenges() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('robotPenaCompletedChallenges') || '[]');
+        if (Array.isArray(saved)) {
+          saved.forEach(key => completedChallenges.add(key));
+        }
+      } catch (error) {}
+    }
+
+    function saveCompletedChallenges() {
+      try {
+        localStorage.setItem('robotPenaCompletedChallenges', JSON.stringify(Array.from(completedChallenges)));
+      } catch (error) {}
+    }
+
+    function markChallengeCompleted(key) {
+      if (!key) return;
+      completedChallenges.add(key);
+      saveCompletedChallenges();
+      syncChallengeButtons();
+    }
+
+    function syncChallengeButtons() {
+      document.querySelectorAll('.challenge-btn[data-challenge]').forEach(btn => {
+        const key = btn.dataset.challenge;
+        const baseLabel = btn.dataset.baseLabel || btn.textContent.trim().replace(/^✓\s*/, '');
+        const completed = completedChallenges.has(key);
+
+        btn.dataset.baseLabel = baseLabel;
+        btn.disabled = completed;
+        btn.classList.toggle('active', key === activeChallengeKey && !completed);
+        btn.classList.toggle('completed', completed);
+        btn.textContent = completed ? `✓ ${baseLabel}` : baseLabel;
+      });
+    }
+
+    function renderChallengeChecks(checks) {
+      return `<div class="challenge-checklist">${checks.map(check => `<div class="challenge-check ${check.ok ? 'ok' : ''}">${check.ok ? '✓' : '•'} ${check.label}</div>`).join('')}</div>`;
+    }
+
+    function challengeGuidance(key, issue) {
+      const guides = {
+        line: {
+          count: 'Untuk garis, cukup satu PENA_TURUN lalu satu MAJU dengan panjang yang sesuai.',
+          type: 'Untuk garis, tidak perlu belok. Fokus pada jejak lurus dari titik awal.',
+          value: 'Untuk garis, periksa lagi panjang MAJU agar garis mencapai target penuh.'
+        },
+        corner: {
+          count: 'Sudut perlu dua ruas garis. Setelah maju pertama, masih harus ada belokan dan maju lagi.',
+          type: 'Untuk sudut, urutannya harus lurus dulu, lalu belok, lalu lanjut satu ruas lagi.',
+          value: 'Untuk sudut, periksa panjang ruas dan pastikan belokannya siku-siku.'
+        },
+        square: {
+          count: 'Persegi harus punya 4 sisi. Jika blokmu kurang, biasanya masih ada sisi atau sudut yang belum ditutup.',
+          type: 'Persegi terbentuk dari pola berulang: MAJU lalu PUTAR_KANAN 90. Coba cek pola itu sudah konsisten belum.',
+          value: 'Untuk persegi, semua sisi harus sama panjang dan semua sudut harus 90 derajat.'
+        },
+        triangle: {
+          count: 'Segitiga perlu 3 sisi. Jika belum lengkap, masih ada satu sisi atau satu putaran yang kurang.',
+          type: 'Segitiga terbentuk dari 3 kali pola MAJU lalu PUTAR_KANAN. Cek apakah polanya sudah berulang dengan benar.',
+          value: 'Untuk segitiga sama sisi, panjang sisinya sama dan sudut luarnya 120 derajat.'
+        },
+        rectangle: {
+          count: 'Persegi panjang perlu 4 sisi. Biasanya masih ada satu sisi panjang atau pendek yang belum lengkap.',
+          type: 'Persegi panjang memakai pola sisi panjang, sisi pendek, lalu diulang lagi. Cek urutannya.',
+          value: 'Untuk persegi panjang, pasangan sisi panjang harus sama dan pasangan sisi pendek juga harus sama.'
+        },
+        stairs: {
+          count: 'Tangga selesai jika pola naik-maju berulang beberapa kali sampai semua anak tangga terbentuk.',
+          type: 'Untuk tangga, pola belok kiri dan kanan harus bergantian dengan ruas pendek yang konsisten.',
+          value: 'Untuk tangga, tinggi dan lebar setiap anak tangga harus sama agar bentuknya rapi.'
+        },
+        house: {
+          count: 'Rumah terdiri dari badan dan atap. Jika blok kurang, biasanya badan belum tertutup atau atap belum terbentuk.',
+          type: 'Untuk rumah, selesaikan badan persegi dulu, lalu pindahkan pena untuk menggambar atap.',
+          value: 'Untuk rumah, periksa panjang sisi badan dan sudut atapnya agar bentuk rumah terlihat jelas.'
+        },
+        star: {
+          count: 'Bintang perlu 5 ruas. Jika kurang, bentuknya biasanya masih terbuka dan belum kembali menyilang.',
+          type: 'Bintang terbentuk dari pola MAJU lalu PUTAR_KANAN yang sama berulang lima kali.',
+          value: 'Untuk bintang, panjang setiap ruas harus sama dan sudut putarnya 144 derajat.'
+        }
+      };
+      return guides[key]?.[issue] || 'Coba bandingkan lagi blokmu dengan target tantangan yang sedang aktif.';
+    }
+
+    function updateChallengeStatus(state = 'idle', message = '') {
+      const box = document.getElementById('challengeStatusBox');
+      if (!box) return;
+      box.classList.remove('success', 'error');
+
+      if (activeBugKey) {
+        const bug = bugSolutions[activeBugKey];
+        if (!bug) return;
+        const baseChecks = bugMatches(activeBugKey).checks;
+
+        if (state === 'success') {
+          box.classList.add('success');
+          box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Mode bug aktif: ${bug.title}</div><div class="challenge-status-badge">BUG TERATASI</div></div><div>${message}</div>${renderChallengeChecks(baseChecks)}`;
+          return;
+        }
+
+        if (state === 'error') {
+          box.classList.add('error');
+          box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Mode bug aktif: ${bug.title}</div><div class="challenge-status-badge">MASIH BUG</div></div><div>${message}</div>${renderChallengeChecks(baseChecks)}`;
+          return;
+        }
+
+        box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Mode bug aktif: ${bug.title}</div><div class="challenge-status-badge">DEBUG</div></div><div>${bug.goal}</div>${renderChallengeChecks(baseChecks)}`;
+        return;
+      }
+
+      if (!activeChallengeKey) {
+        box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Belum ada tantangan aktif</div><div class="challenge-status-badge">MENUNGGU</div></div><div>Pilih salah satu tombol awalan, lalu lanjutkan blokmu sampai bentuk selesai.</div>`;
+        return;
+      }
+
+      const target = challengeTargets[activeChallengeKey];
+      if (!target) return;
+      const baseChecks = challengeMatches(activeChallengeKey).checks;
+
+      if (state === 'success') {
+        box.classList.add('success');
+        box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Tantangan aktif: ${target.title}</div><div class="challenge-status-badge">BERHASIL</div></div><div>${message}</div>${renderChallengeChecks(baseChecks)}`;
+        return;
+      }
+
+      if (state === 'error') {
+        box.classList.add('error');
+        box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Tantangan aktif: ${target.title}</div><div class="challenge-status-badge">PERLU REVISI</div></div><div>${message}</div>${renderChallengeChecks(baseChecks)}`;
+        return;
+      }
+
+      box.innerHTML = `<div class="challenge-status-head"><div class="challenge-status-title">Tantangan aktif: ${target.title}</div><div class="challenge-status-badge">AKTIF</div></div><div>${target.goal}</div>${renderChallengeChecks(baseChecks)}`;
+    }
+
+    function challengeMatches(key) {
+      const target = challengeTargets[key];
+      if (!target) return { ok: false, message: 'Target tantangan tidak ditemukan.', checks: [] };
+
+      const countOk = scriptBlocks.length === target.blocks.length;
+      let typeMatches = 0;
+      let valueMatches = 0;
+
+      for (let i = 0; i < Math.min(scriptBlocks.length, target.blocks.length); i++) {
+        const expected = target.blocks[i];
+        const actual = scriptBlocks[i];
+        if (actual && actual.type === expected.type) {
+          typeMatches++;
+          if (expected.value === undefined || Number(actual.value) === Number(expected.value)) {
+            valueMatches++;
+          }
+        }
+      }
+
+      const checks = [
+        { ok: countOk, label: `Jumlah blok sesuai target (${scriptBlocks.length}/${target.blocks.length})` },
+        { ok: typeMatches === target.blocks.length, label: `Urutan jenis blok sesuai (${typeMatches}/${target.blocks.length})` },
+        { ok: valueMatches === target.blocks.length, label: `Nilai jarak/sudut sesuai (${valueMatches}/${target.blocks.length})` }
+      ];
+
+      if (!countOk) {
+        return {
+          ok: false,
+          message: `Jumlah blokmu masih ${scriptBlocks.length}. Tantangan ini selesai jika tersusun ${target.blocks.length} blok yang tepat. ${challengeGuidance(key, 'count')}`,
+          checks
+        };
+      }
+      for (let i = 0; i < target.blocks.length; i++) {
+        const expected = target.blocks[i];
+        const actual = scriptBlocks[i];
+        if (!actual || actual.type !== expected.type) {
+          return {
+            ok: false,
+            message: `Blok ke-${i + 1} belum tepat. Seharusnya ${labelForType(expected.type)}${expected.value !== undefined ? `(${expected.value})` : ''}. ${challengeGuidance(key, 'type')}`,
+            checks
+          };
+        }
+        if (expected.value !== undefined && Number(actual.value) !== Number(expected.value)) {
+          return {
+            ok: false,
+            message: `Nilai pada blok ke-${i + 1} belum tepat. Coba periksa ${labelForType(expected.type)}(${expected.value}). ${challengeGuidance(key, 'value')}`,
+            checks
+          };
+        }
+      }
+      return {
+        ok: true,
+        message: `Tantangan ${target.title.toLowerCase()} berhasil diselesaikan. Urutan blok dan nilainya sudah tepat.`,
+        checks
+      };
+    }
+
+    function finalizeActiveChallengeFeedback() {
+      if (!activeChallengeKey) return;
+      const result = challengeMatches(activeChallengeKey);
+      if (result.ok) {
+        markChallengeCompleted(activeChallengeKey);
+      }
+      updateChallengeStatus(result.ok ? 'success' : 'error', result.message);
+      showInfoToast(result.ok ? `✅ ${result.message}` : `🛠️ ${result.message}`, result.ok ? 5200 : 6500);
+    }
+
+    loadCompletedChallenges();
+    syncChallengeButtons();
+    updateChallengeStatus();
+
+    function showInfoToast(message, duration = 5500) {
       const toast = document.getElementById('efisiensiToast');
       const content = document.getElementById('efisiensiContent');
       if (!toast || !content) return;
+      content.innerHTML = message;
+      toast.classList.add('visible');
+      if (infoToastTimer) clearTimeout(infoToastTimer);
+      infoToastTimer = setTimeout(() => {
+        toast.classList.remove('visible');
+      }, duration);
+    }
+
+    function showEfisiensiToast(used, optimal) {
       if (used <= optimal) {
-        content.innerHTML = `🏆 <span style="color:#22d3ee">Efisiensi Sempurna!</span> Kamu menggunakan <b>${used} blok</b> — sama dengan solusi optimal!`;
+        showInfoToast(`🏆 <span style="color:#22d3ee">Efisiensi Sempurna!</span> Kamu menggunakan <b>${used} blok</b> — sama dengan solusi optimal!`);
       } else {
         const diff = used - optimal;
-        content.innerHTML = `📊 Kamu menggunakan <b>${used} blok</b>. Solusi optimal butuh <b>${optimal} blok</b>.<br><span style="color:#fbbf24">Bisakah kamu kurangi ${diff} blok lagi?</span>`;
+        showInfoToast(`📊 Kamu menggunakan <b>${used} blok</b>. Solusi optimal butuh <b>${optimal} blok</b>.<br><span style="color:#fbbf24">Bisakah kamu kurangi ${diff} blok lagi?</span>`);
       }
-      toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 5500);
     }
 
     // ============ DETEKTIF BUG ============
@@ -2422,22 +3147,22 @@
         hint: '🐛 Persegi harus memiliki 4 sudut 90° sama persis. Perhatikan baik-baik nilai sudut di setiap blok PUTAR!',
         blocks: [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 140 },
-          { type: 'RIGHT', value: 91 },
-          { type: 'FORWARD', value: 140 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 100 },
+          { type: 'FORWARD', value: 160 },
           { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 },
+          { type: 'FORWARD', value: 160 },
           { type: 'RIGHT', value: 90 },
-          { type: 'FORWARD', value: 140 }
+          { type: 'FORWARD', value: 160 }
         ]
       },
       bug_triangle: {
         hint: '🐛 Segitiga sama sisi butuh 3 sisi dan 3 sudut. Apakah semua instruksi MAJU sudah ada?',
         blocks: [
           { type: 'PEN_DOWN' },
-          { type: 'FORWARD', value: 180 },
+          { type: 'FORWARD', value: 160 },
           { type: 'RIGHT', value: 120 },
-          { type: 'FORWARD', value: 180 },
+          { type: 'FORWARD', value: 160 },
           { type: 'RIGHT', value: 120 }
         ]
       },
@@ -2455,6 +3180,127 @@
         ]
       }
     };
+    const bugSolutions = {
+      bug_square: {
+        title: 'Persegi yang Miring',
+        goal: 'Perbaiki sudut yang salah sampai semua belokan persegi kembali 90 derajat.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      bug_triangle: {
+        title: 'Segitiga Belum Selesai',
+        goal: 'Lengkapi instruksi yang kurang agar segitiga tertutup dengan 3 sisi.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 120 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      },
+      bug_noink: {
+        title: 'Robot Tak Meninggalkan Jejak',
+        goal: 'Perbaiki instruksi pena agar robot bergerak sambil menggambar.',
+        blocks: [
+          { type: 'PEN_DOWN' },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 },
+          { type: 'RIGHT', value: 90 },
+          { type: 'FORWARD', value: 160 }
+        ]
+      }
+    };
+
+    function bugGuidance(key, issue) {
+      const guides = {
+        bug_square: {
+          count: 'Program persegi ini tidak perlu ditambah banyak. Fokus pada blok putarnya sampai semua sudut sama.',
+          type: 'Untuk kasus ini, jenis bloknya hampir semua sudah benar. Periksa apakah ada blok yang seharusnya PUTAR atau MAJU.',
+          value: 'Periksa nilai sudut pada blok PUTAR. Persegi yang rapi butuh semua sudut 90 derajat.'
+        },
+        bug_triangle: {
+          count: 'Segitiga ini belum selesai karena masih kurang satu ruas. Coba cek apakah perlu menambah blok di bagian akhir.',
+          type: 'Urutan segitiga harus tetap MAJU lalu PUTAR berulang. Lihat apakah ada jenis blok yang kurang di ujung program.',
+          value: 'Periksa panjang sisi dan sudut segitiga. Untuk segitiga sama sisi, sisi-sisinya sama dan putarnya 120 derajat.'
+        },
+        bug_noink: {
+          count: 'Jumlah bloknya sudah hampir cukup. Fokus dulu pada instruksi pena di awal program.',
+          type: 'Masalah utama tantangan ini ada pada jenis blok pena. Cek apakah robot mulai dengan PENA_TURUN atau PENA_NAIK.',
+          value: 'Jika robot bergerak tanpa jejak, biasanya masalahnya bukan pada jarak, tetapi pada status pena.'
+        }
+      };
+      return guides[key]?.[issue] || 'Coba cek lagi blok yang salah, lalu bandingkan dengan bentuk yang seharusnya.';
+    }
+
+    function bugMatches(key) {
+      const target = bugSolutions[key];
+      if (!target) return { ok: false, message: 'Solusi bug tidak ditemukan.', checks: [] };
+
+      const countOk = scriptBlocks.length === target.blocks.length;
+      let typeMatches = 0;
+      let valueMatches = 0;
+
+      for (let i = 0; i < Math.min(scriptBlocks.length, target.blocks.length); i++) {
+        const expected = target.blocks[i];
+        const actual = scriptBlocks[i];
+        if (actual && actual.type === expected.type) {
+          typeMatches++;
+          if (expected.value === undefined || Number(actual.value) === Number(expected.value)) {
+            valueMatches++;
+          }
+        }
+      }
+
+      const checks = [
+        { ok: countOk, label: `Jumlah blok sesuai solusi (${scriptBlocks.length}/${target.blocks.length})` },
+        { ok: typeMatches === target.blocks.length, label: `Urutan blok sudah tepat (${typeMatches}/${target.blocks.length})` },
+        { ok: valueMatches === target.blocks.length, label: `Nilai jarak/sudut sudah benar (${valueMatches}/${target.blocks.length})` }
+      ];
+
+      if (!countOk) {
+        return {
+          ok: false,
+          message: `Program perbaikannya belum pas jumlah bloknya. ${bugGuidance(key, 'count')}`,
+          checks
+        };
+      }
+      for (let i = 0; i < target.blocks.length; i++) {
+        const expected = target.blocks[i];
+        const actual = scriptBlocks[i];
+        if (!actual || actual.type !== expected.type) {
+          return {
+            ok: false,
+            message: `Blok ke-${i + 1} masih belum tepat. Seharusnya ${labelForType(expected.type)}${expected.value !== undefined ? `(${expected.value})` : ''}. ${bugGuidance(key, 'type')}`,
+            checks
+          };
+        }
+        if (expected.value !== undefined && Number(actual.value) !== Number(expected.value)) {
+          return {
+            ok: false,
+            message: `Nilai pada blok ke-${i + 1} masih salah. Coba periksa ${labelForType(expected.type)}(${expected.value}). ${bugGuidance(key, 'value')}`,
+            checks
+          };
+        }
+      }
+
+      return {
+        ok: true,
+        message: `Bug ${target.title.toLowerCase()} berhasil diperbaiki. Programmu sekarang sudah benar.`,
+        checks
+      };
+    }
 
     function loadBugChallenge(key) {
       if (isRunning) return;
@@ -2462,18 +3308,22 @@
       if (!challenge) return;
       activeBugKey = key;
       activeChallengeKey = null;
+      syncChallengeButtons();
       scriptBlocks = challenge.blocks.map(b => ({ ...b }));
       renderScriptList();
       resetAll();
+      updatePredictionBox('pre');
+      updateChallengeStatus();
       setTimeout(() => {
-        const toast = document.getElementById('efisiensiToast');
-        const content = document.getElementById('efisiensiContent');
-        if (toast && content) {
-          content.innerHTML = challenge.hint;
-          toast.classList.add('visible');
-          setTimeout(() => toast.classList.remove('visible'), 7000);
-        }
+        showInfoToast(challenge.hint, 7000);
       }, 300);
+    }
+
+    function finalizeActiveBugFeedback() {
+      if (!activeBugKey) return;
+      const result = bugMatches(activeBugKey);
+      updateChallengeStatus(result.ok ? 'success' : 'error', result.message);
+      showInfoToast(result.ok ? `✅ ${result.message}` : `🛠️ ${result.message}`, result.ok ? 5200 : 6500);
     }
 
     // ============ KUIS SINGKAT ============
@@ -2498,13 +3348,11 @@
       }
     ];
     let kuisIndex = 0;
-    let kuisScore = 0;
     let kuisAnswered = [];
 
     function openKuisModal() {
       kuisIndex = 0;
-      kuisScore = 0;
-      kuisAnswered = [];
+      kuisAnswered = Array(kuisData.length).fill(null);
       renderKuisQuestion();
       document.getElementById('kuisModal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
@@ -2517,15 +3365,16 @@
       const progress = document.getElementById('kuisProgress');
       const content = document.getElementById('kuisContent');
       const nav = document.getElementById('kuisNavigation');
+      const score = kuisAnswered.filter((answer, index) => answer === kuisData[index].correct).length;
       if (kuisIndex >= kuisData.length) {
         progress.textContent = 'Hasil Kuis';
-        const pct = Math.round((kuisScore / kuisData.length) * 100);
+        const pct = Math.round((score / kuisData.length) * 100);
         const emoji = pct === 100 ? '🏆' : pct >= 67 ? '👍' : '💪';
         const msg = pct === 100 ? 'Sempurna! Kamu memahami semua konsep!' : pct >= 67 ? 'Bagus! Terus berlatih!' : 'Yuk coba lagi setelah bereksperimen lebih banyak!';
         content.innerHTML = `
           <div class="text-center py-4">
             <div class="text-6xl mb-3">${emoji}</div>
-            <div class="text-4xl font-black text-emerald-700 mb-2">${kuisScore}/${kuisData.length}</div>
+            <div class="text-4xl font-black text-emerald-700 mb-2">${score}/${kuisData.length}</div>
             <div class="text-slate-600 text-base mb-5">${msg}</div>
             <div class="space-y-3 text-left">
               ${kuisData.map((q, i) => {
@@ -2537,10 +3386,19 @@
               }).join('')}
             </div>
           </div>`;
-        nav.innerHTML = `<button onclick="closeKuisModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">Selesai</button>`;
+        nav.innerHTML = `
+          <div class="flex gap-3 flex-wrap items-center">
+            <button onclick="prevKuis()" class="flex-1 min-w-[150px] bg-cyan-500 hover:bg-cyan-600 text-white text-lg font-bold py-3 px-6 rounded-xl">
+              &larr; Sebelumnya
+            </button>
+            <button onclick="closeKuisModal()" class="flex-1 min-w-[150px] bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">
+              Tutup
+            </button>
+          </div>`;
         return;
       }
       const q = kuisData[kuisIndex];
+      const selectedAnswer = kuisAnswered[kuisIndex];
       progress.textContent = `Pertanyaan ${kuisIndex + 1} dari ${kuisData.length}`;
       content.innerHTML = `
         <div>
@@ -2552,25 +3410,51 @@
           </div>
           <div id="kuisExplain" class="hidden mt-3 bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-700 leading-relaxed"></div>
         </div>`;
-      nav.innerHTML = `<div id="kuisNextBtn" class="hidden w-full"><button onclick="nextKuis()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">${kuisIndex < kuisData.length - 1 ? 'Pertanyaan Berikutnya →' : 'Lihat Hasil'}</button></div>`;
+      nav.innerHTML = `
+        <div class="flex gap-3 flex-wrap items-center">
+          <button onclick="prevKuis()" ${kuisIndex === 0 ? 'style="visibility:hidden;"' : ''} class="flex-1 min-w-[150px] bg-cyan-500 hover:bg-cyan-600 text-white text-lg font-bold py-3 px-6 rounded-xl">
+            &larr; Sebelumnya
+          </button>
+          <button onclick="closeKuisModal()" class="flex-1 min-w-[150px] bg-slate-600 hover:bg-slate-700 text-white text-lg font-bold py-3 px-6 rounded-xl">
+            Tutup
+          </button>
+          <button id="kuisNextBtn" onclick="nextKuis()" ${selectedAnswer === null ? 'style="visibility:hidden;"' : ''} class="flex-1 min-w-[150px] bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-3 px-6 rounded-xl">
+            ${kuisIndex < kuisData.length - 1 ? 'Pertanyaan Berikutnya →' : 'Lihat Hasil'}
+          </button>
+        </div>`;
+      if (selectedAnswer !== null) {
+        applyAnsweredKuisState(q, selectedAnswer);
+      }
     }
-    function answerKuis(selected) {
-      const q = kuisData[kuisIndex];
-      kuisAnswered[kuisIndex] = selected;
-      if (selected === q.correct) kuisScore++;
+
+    function applyAnsweredKuisState(question, selectedAnswer) {
       document.querySelectorAll('.kuis-option').forEach((btn, i) => {
         btn.disabled = true;
-        if (i === q.correct) btn.classList.add('correct');
-        else if (i === selected && selected !== q.correct) btn.classList.add('wrong');
+        btn.classList.remove('correct', 'wrong');
+        if (i === question.correct) btn.classList.add('correct');
+        else if (i === selectedAnswer && selectedAnswer !== question.correct) btn.classList.add('wrong');
       });
       const explain = document.getElementById('kuisExplain');
       if (explain) {
         explain.classList.remove('hidden');
-        explain.innerHTML = `<b>${selected === q.correct ? '✅ Benar!' : '❌ Belum tepat.'}</b> ${q.explain}`;
+        explain.innerHTML = `<b>${selectedAnswer === question.correct ? '✅ Benar!' : '❌ Belum tepat.'}</b> ${question.explain}`;
       }
-      const nextBtn = document.getElementById('kuisNextBtn');
-      if (nextBtn) nextBtn.classList.remove('hidden');
     }
+
+    function answerKuis(selected) {
+      const q = kuisData[kuisIndex];
+      kuisAnswered[kuisIndex] = selected;
+      applyAnsweredKuisState(q, selected);
+      const nextBtn = document.getElementById('kuisNextBtn');
+      if (nextBtn) nextBtn.style.visibility = 'visible';
+    }
+
+    function prevKuis() {
+      if (kuisIndex <= 0) return;
+      kuisIndex--;
+      renderKuisQuestion();
+    }
+
     function nextKuis() {
       kuisIndex++;
       renderKuisQuestion();

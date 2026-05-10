@@ -414,8 +414,8 @@
         </div>
       </div>
       <div class="pt-4 flex gap-3 justify-center" style="border-top:2px solid #eef2ff;margin-top:8px;flex-shrink:0;">
-        <button onclick="closeModal('refleksiModal')" style="background:#e2e8f0;color:#334155;font-size:17px;font-weight:bold;padding:11px 28px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
-        <button id="simpanRefleksiBtn" onclick="simpanRefleksi()" style="background:#6366f1;color:white;font-size:17px;font-weight:bold;padding:11px 28px;border-radius:14px;border:none;cursor:pointer;">Simpan Refleksi</button>
+        <button onclick="closeModal('refleksiModal')" class="modal-btn modal-btn-cyan">Tutup</button>
+        <button id="simpanRefleksiBtn" onclick="simpanRefleksi()" class="modal-btn modal-btn-indigo">Simpan Refleksi</button>
       </div>
     </div>
   </div>
@@ -479,9 +479,9 @@
         </div>
       </div>
       <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-100 gap-4">
-        <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility:hidden;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">&larr; Sebelumnya</button>
-        <button onclick="closeModal('bioModal')" class="flex-1 max-w-[200px] bg-lime-600 hover:bg-lime-700 text-white text-xl font-black py-3 px-4 rounded-xl mx-auto text-center">Tutup</button>
-        <button id="bioNextBtn" onclick="changeBioSlide(1)" class="bg-lime-500 hover:bg-lime-600 text-white text-lg font-bold py-3 px-5 rounded-xl">Selanjutnya &rarr;</button>
+        <button id="bioPrevBtn" onclick="changeBioSlide(-1)" style="visibility:hidden;" class="modal-btn modal-btn-cyan modal-nav-btn">&larr; Sebelumnya</button>
+        <button onclick="closeModal('bioModal')" class="modal-btn modal-btn-lime flex-1 max-w-[200px] mx-auto text-center">Tutup</button>
+        <button id="bioNextBtn" onclick="changeBioSlide(1)" class="modal-btn modal-btn-lime modal-nav-btn">Selanjutnya &rarr;</button>
       </div>
     </div>
   </div>
@@ -525,7 +525,7 @@
         Jawab semua soal untuk melihat ringkasan pemahaman.
       </div>
       <div class="grid gap-4">
-        <div class="quiz-card">
+        <div class="quiz-card" data-quiz-slide="0">
           <div class="font-black text-slate-800">1. Pada lab ini, angka 1 menunjukkan bahwa...</div>
           <div class="quiz-options">
             <button class="quiz-option" data-quiz="q1" data-answer="false" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>gambar sudah selesai dibuat</span></button>
@@ -534,7 +534,7 @@
           </div>
           <div id="quizFeedback1" class="quiz-feedback" style="display:none;"></div>
         </div>
-        <div class="quiz-card">
+        <div class="quiz-card hidden" data-quiz-slide="1">
           <div class="font-black text-slate-800">2. Dua gambar bisa berbeda walaupun jumlah angka 1 sama karena...</div>
           <div class="quiz-options">
             <button class="quiz-option" data-quiz="q2" data-answer="true" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>posisi piksel aktif menentukan bentuk</span></button>
@@ -543,7 +543,7 @@
           </div>
           <div id="quizFeedback2" class="quiz-feedback" style="display:none;"></div>
         </div>
-        <div class="quiz-card">
+        <div class="quiz-card hidden" data-quiz-slide="2">
           <div class="font-black text-slate-800">3. Mengapa output data penting untuk diamati?</div>
           <div class="quiz-options">
             <button class="quiz-option" data-quiz="q3" data-answer="true" onclick="handleQuiz(this)"><span class="quiz-option-key">A</span><span>karena data menunjukkan bagaimana komputer membaca gambar</span></button>
@@ -553,8 +553,10 @@
           <div id="quizFeedback3" class="quiz-feedback" style="display:none;"></div>
         </div>
       </div>
-      <div class="pt-6 flex justify-center">
-        <button onclick="closeModal('quizModal')" class="bg-indigo-600 text-white text-2xl font-black py-3 px-12 rounded-2xl">Tutup</button>
+      <div class="pt-6 flex justify-between items-center gap-3 flex-wrap">
+        <button id="quizPrevBtn" onclick="changeQuizSlide(-1)" style="visibility:hidden;" class="modal-btn modal-btn-cyan modal-nav-btn">&larr; Sebelumnya</button>
+        <button onclick="closeModal('quizModal')" class="modal-btn modal-btn-indigo flex-1 max-w-[220px] mx-auto text-center">Tutup</button>
+        <button id="quizNextBtn" onclick="changeQuizSlide(1)" class="modal-btn modal-btn-indigo modal-nav-btn">Selanjutnya &rarr;</button>
       </div>
     </div>
   </div>
@@ -576,10 +578,11 @@
         </div>
       </div>
       <div id="tebakResult" style="margin-top:12px;font-size:14px;min-height:24px;padding:8px 0;"></div>
-      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #eef2ff;margin-top:4px;">
-        <button onclick="closeModal('tebakModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
-        <button id="tebakCheckBtn" onclick="checkTebak()" style="background:#6366f1;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Cek Jawaban</button>
-        <button onclick="nextTebakPuzzle()" style="background:#0ea5e9;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Puzzle Berikutnya →</button>
+      <div class="pt-4 flex gap-3 justify-between items-center flex-wrap" style="border-top:2px solid #eef2ff;margin-top:4px;">
+        <button id="tebakPrevBtn" onclick="prevTebakPuzzle()" style="visibility:hidden;" class="modal-btn modal-btn-cyan modal-nav-btn">&larr; Sebelumnya</button>
+        <button onclick="closeModal('tebakModal')" class="modal-btn modal-btn-cyan">Tutup</button>
+        <button id="tebakCheckBtn" onclick="checkTebak()" class="modal-btn modal-btn-indigo">Cek Jawaban</button>
+        <button id="tebakNextBtn" onclick="nextTebakPuzzle()" class="modal-btn modal-btn-sky">Puzzle Berikutnya →</button>
       </div>
     </div>
   </div>
@@ -601,10 +604,11 @@
         </div>
       </div>
       <div id="detektifResult" style="margin-top:12px;font-size:14px;min-height:24px;padding:8px 0;"></div>
-      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #fee2e2;margin-top:4px;">
-        <button onclick="closeModal('detektifModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
-        <button onclick="checkDetektif()" style="background:#dc2626;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Periksa Pilihanku</button>
-        <button onclick="nextDetektif()" style="background:#0ea5e9;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tantangan Berikutnya →</button>
+      <div class="pt-4 flex gap-3 justify-between items-center flex-wrap" style="border-top:2px solid #fee2e2;margin-top:4px;">
+        <button id="detektifPrevBtn" onclick="prevDetektif()" style="visibility:hidden;" class="modal-btn modal-btn-cyan modal-nav-btn">&larr; Sebelumnya</button>
+        <button onclick="closeModal('detektifModal')" class="modal-btn modal-btn-cyan">Tutup</button>
+        <button onclick="checkDetektif()" class="modal-btn modal-btn-red">Periksa Pilihanku</button>
+        <button id="detektifNextBtn" onclick="nextDetektif()" class="modal-btn modal-btn-sky">Tantangan Berikutnya →</button>
       </div>
     </div>
   </div>
@@ -622,9 +626,10 @@
       <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px;font-size:13px;color:#1e40af;line-height:1.6;">
         💡 <b>Kesimpulan:</b> Jumlah piksel aktif <i>tidak cukup</i> menentukan bentuk gambar. Yang menentukan adalah <b>posisi</b> piksel-piksel tersebut dalam grid.
       </div>
-      <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #fef3c7;margin-top:10px;">
-        <button onclick="closeModal('jumlahSamaModal')" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
-        <button onclick="nextJumlahSama()" style="background:#d97706;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Contoh Berikutnya →</button>
+      <div class="pt-4 flex gap-3 justify-between items-center flex-wrap" style="border-top:2px solid #fef3c7;margin-top:10px;">
+        <button id="jumlahSamaPrevBtn" onclick="prevJumlahSama()" style="visibility:hidden;" class="modal-btn modal-btn-cyan modal-nav-btn">&larr; Sebelumnya</button>
+        <button onclick="closeModal('jumlahSamaModal')" class="modal-btn modal-btn-cyan">Tutup</button>
+        <button id="jumlahSamaNextBtn" onclick="nextJumlahSama()" class="modal-btn modal-btn-amber">Contoh Berikutnya →</button>
       </div>
     </div>
   </div>
@@ -650,8 +655,8 @@
       </div>
       <div id="animLog" style="margin-top:14px;background:#f1f5f9;border-radius:12px;padding:12px;font-size:14px;color:#334155;min-height:50px;line-height:1.7;"></div>
       <div class="pt-4 flex gap-3 justify-center flex-wrap" style="border-top:2px solid #e0f2fe;margin-top:10px;">
-        <button onclick="closeAnimasiModal()" style="background:#e2e8f0;color:#334155;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">Tutup</button>
-        <button id="animStartBtn" onclick="startAnimasi()" style="background:#0284c7;color:white;font-weight:bold;padding:10px 22px;border-radius:14px;border:none;cursor:pointer;">▶ Mulai Animasi</button>
+        <button onclick="closeAnimasiModal()" class="modal-btn modal-btn-cyan">Tutup</button>
+        <button id="animStartBtn" onclick="startAnimasi()" class="modal-btn modal-btn-sky">▶ Mulai Animasi</button>
       </div>
     </div>
   </div>
