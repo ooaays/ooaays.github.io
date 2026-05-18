@@ -128,6 +128,9 @@ const appState = {
   logs: [],
   score: { total: 0, correct: 0, wrong: 0 },
   running: false,
+  stopRequested: false,
+  hasAddedRule: false,
+  hasRunSimulation: false,
   currentIndex: -1,
   banner: { tone: 'info', text: 'Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.' },
   activeChallengeId: null,
@@ -268,6 +271,10 @@ function updateBioSlideView() {
 }
 
 function openDebugModal() {
+  if (!(appState.hasAddedRule && appState.hasRunSimulation)) {
+    openModal('challengePrereqModal');
+    return;
+  }
   renderDebugCards();
   openModal('debugModal');
 }
@@ -352,9 +359,13 @@ function loadChallenge(id) {
 function clearActiveChallenge() {
   if (appState.running) return;
   appState.activeChallengeId = null;
+  appState.rules = [];
+  setBuilderFeedback('Tantangan dihentikan. Aturan tantangan dibersihkan, jadi kamu bisa mulai lagi dari simulasi bebas.', 'info');
+  resetSimulation(true);
+  renderRules();
   renderChallengeStatus();
   renderDebugCards();
-  setBanner('Mode tantangan dinonaktifkan. Kamu bisa kembali ke simulasi bebas.', 'info');
+  setBanner('Mode tantangan dinonaktifkan. Aturan dibersihkan dan simulasi di-reset untuk mode bebas.', 'info');
 }
 
 function setBuilderFeedback(text, tone = 'info') {
@@ -366,6 +377,66 @@ function setBuilderFeedback(text, tone = 'info') {
 function setBanner(text, tone = 'info') {
   appState.banner = { text, tone };
   renderBanner();
+}
+
+function getOrderWarnings() {
+  const warnings = [];
+
+  for (let earlierIndex = 0; earlierIndex < appState.rules.length; earlierIndex += 1) {
+    const earlierRule = appState.rules[earlierIndex];
+
+    for (let laterIndex = earlierIndex + 1; laterIndex < appState.rules.length; laterIndex += 1) {
+      const laterRule = appState.rules[laterIndex];
+      const overlappingItems = ITEMS.filter((item) => (
+        itemMatchesCondition(item, earlierRule.condition) &&
+        itemMatchesCondition(item, laterRule.condition)
+      ));
+
+      if (!overlappingItems.length) continue;
+
+      const earlierWins = overlappingItems.filter((item) => CORRECT_BIN[item.actualType] === earlierRule.action);
+      const laterWins = overlappingItems.filter((item) => CORRECT_BIN[item.actualType] === laterRule.action);
+
+      if (laterWins.length <= earlierWins.length) continue;
+
+      warnings.push({
+        earlierIndex,
+        laterIndex,
+        earlierRule,
+        laterRule,
+        affectedItems: laterWins.map((item) => item.label),
+        message: `Aturan ${earlierIndex + 1} (${CONDITION_LABEL[earlierRule.condition]}) berada di atas aturan ${laterIndex + 1} (${CONDITION_LABEL[laterRule.condition]}), sehingga ${laterWins.map((item) => item.label).join(', ')} bisa berhenti terlalu cepat di aturan yang lebih umum.`
+      });
+    }
+  }
+
+  return warnings;
+}
+
+function renderRuleWarnings() {
+  const box = qs('ruleWarnings');
+  if (!box) return;
+
+  if (!appState.rules.length) {
+    box.className = 'order-warning-box info';
+    box.innerHTML = 'Belum ada aturan untuk dianalisis. Tambahkan aturan, lalu periksa apakah ada konflik antara aturan umum dan aturan khusus.';
+    return;
+  }
+
+  const warnings = getOrderWarnings();
+  if (!warnings.length) {
+    box.className = 'order-warning-box success';
+    box.innerHTML = '<div class="order-warning-title">Urutan aturan tampak aman</div><div>Belum terlihat konflik besar antara aturan umum dan aturan khusus. Lanjutkan uji simulasi untuk memastikan hasilnya benar.</div>';
+    return;
+  }
+
+  box.className = 'order-warning-box warn';
+  box.innerHTML = `
+    <div class="order-warning-title">Perlu cek urutan aturan</div>
+    <ul class="order-warning-list">
+      ${warnings.map((warning) => `<li>${warning.message}</li>`).join('')}
+    </ul>
+  `;
 }
 
 function renderBanner() {
@@ -411,6 +482,7 @@ function addRule() {
     setBuilderFeedback('Aturan berhasil ditambahkan. Periksa lagi apakah urutannya sudah dari khusus ke umum.', 'success');
   }
 
+  appState.hasAddedRule = true;
   renderRules();
 }
 
@@ -432,33 +504,45 @@ function deleteRule(index) {
   renderRules();
 }
 
-function loadExampleRules() {
+function loadStarterRules() {
   if (appState.running) return;
   appState.rules = [
     { condition: 'berbahaya', action: 'merah' },
-    { condition: 'organik', action: 'hijau' },
-    { condition: 'residu', action: 'hitam' },
-    { condition: 'kertas', action: 'biru' },
-    { condition: 'recycle', action: 'kuning' }
+    { condition: 'organik', action: 'hijau' }
   ];
-  setBuilderFeedback('Aturan contoh berhasil dimuat. Perhatikan bahwa residu diletakkan di atas aturan kertas, dan kertas diletakkan di atas aturan daur ulang.', 'success');
+  setBuilderFeedback('Awalan aturan dimuat. Kamu masih perlu menambahkan aturan lain dan menyusun urutannya agar semua item masuk ke tong yang tepat.', 'success');
+  setBanner('Awalan aturan dimuat. Lanjutkan sendiri sampai sistemmu benar untuk semua item.', 'info');
   renderRules();
 }
 
 function renderRules() {
   const list = qs('rulesList');
+  const warnings = getOrderWarnings();
+  const riskNotes = new Map();
+
+  warnings.forEach((warning) => {
+    const earlierNote = `Bisa menutup ${warning.affectedItems.join(', ')} sebelum aturan yang lebih khusus diperiksa.`;
+    const laterNote = `Ada item seperti ${warning.affectedItems.join(', ')} yang baru aman jika aturan ini dipindah lebih ke atas.`;
+    riskNotes.set(warning.earlierIndex, earlierNote);
+    if (!riskNotes.has(warning.laterIndex)) {
+      riskNotes.set(warning.laterIndex, laterNote);
+    }
+  });
+
   if (!appState.rules.length) {
     list.innerHTML = '<div class="rule-card"><div class="rule-desc">Belum ada aturan. Tambahkan aturan pertama agar sistem memiliki dasar untuk mengambil keputusan.</div></div>';
+    renderRuleWarnings();
     return;
   }
 
   list.innerHTML = appState.rules.map((rule, index) => `
-    <div class="rule-card">
+    <div class="rule-card ${riskNotes.has(index) ? 'risk' : ''}">
       <div class="rule-row-top">
         <div>
           <div class="rule-tag">${index === 0 ? 'JIKA' : `ELSE IF ${index + 1}`}</div>
           <div class="rule-title">JIKA item ${CONDITION_LABEL[rule.condition].toLowerCase()}</div>
           <div class="rule-desc">MAKA masukkan ke ${BIN_INFO[rule.action].name} (${BIN_INFO[rule.action].label})</div>
+          ${riskNotes.has(index) ? `<div class="rule-risk-note">${riskNotes.get(index)}</div>` : ''}
         </div>
         <div class="rule-actions">
           <button class="mini-btn" onclick="moveRule(${index}, -1)">↑</button>
@@ -468,6 +552,8 @@ function renderRules() {
       </div>
     </div>
   `).join('');
+
+  renderRuleWarnings();
 }
 
 function shuffle(source) {
@@ -490,9 +576,23 @@ function resetSimulation(reseed = true) {
   appState.processedResults = new Array(appState.queue.length).fill(null);
   appState.logs = [];
   appState.currentIndex = -1;
+  appState.stopRequested = false;
   appState.score = { total: appState.queue.length, correct: 0, wrong: 0 };
   setBanner(appState.activeChallengeId ? 'Tantangan aktif. Uji dulu aturanmu dan lihat item mana yang masih salah.' : 'Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.', 'info');
   renderSimulation();
+}
+
+function resetWorkspace() {
+  if (appState.running) return;
+  appState.rules = [];
+  appState.activeChallengeId = null;
+  appState.stopRequested = false;
+  setBuilderFeedback('Semua aturan dibersihkan. Kamu bisa mulai lagi dari awal.', 'info');
+  resetSimulation(true);
+  renderRules();
+  renderChallengeStatus();
+  renderDebugCards();
+  setBanner('Semua aturan dan hasil simulasi sudah di-reset. Mulai lagi dari awal.', 'info');
 }
 
 function itemMatchesCondition(item, condition) {
@@ -547,10 +647,13 @@ function renderLog() {
 
 function renderSummary() {
   const { total, correct, wrong } = appState.score;
-  const accuracy = total ? Math.round((correct / total) * 100) : 0;
+  const processed = appState.processedResults.filter(Boolean).length;
+  const accuracy = processed ? Math.round((correct / processed) * 100) : 0;
   let note = 'Susun aturan lalu jalankan simulasi.';
-  if (correct + wrong > 0) {
-    if (accuracy === 100) {
+  if (processed > 0) {
+    if (appState.stopRequested && !appState.running) {
+      note = 'Simulasi dihentikan di tengah. Gunakan hasil sementara ini untuk mengecek aturan mana yang mulai bermasalah.';
+    } else if (accuracy === 100 && processed === total) {
       note = 'Semua item berhasil dipilah dengan benar. Artinya aturanmu sudah lengkap dan prioritasnya tepat.';
     } else if (accuracy >= 70) {
       note = 'Aturanmu sudah cukup baik, tetapi masih ada item yang salah tong. Cek apakah aturan khusus sudah berada di atas aturan umum.';
@@ -558,7 +661,108 @@ function renderSummary() {
       note = 'Aturanmu belum tepat. Periksa kembali kondisi, aksi, dan posisi tiap aturan.';
     }
   }
-  qs('summaryBox').innerHTML = `<strong>Hasil Simulasi</strong><br>Sampah diproses: ${total}<br>Benar: ${correct}<br>Salah: ${wrong}<br>Akurasi: ${accuracy}%<br><br><span style="color:#475569">${note}</span>`;
+  qs('summaryBox').innerHTML = `<strong>Hasil Simulasi</strong><br>Sampah diproses: ${processed}/${total}<br>Benar: ${correct}<br>Salah: ${wrong}<br>Akurasi sementara: ${accuracy}%<br><br><span style="color:#475569">${note}</span>`;
+}
+
+function renderResultFeedback() {
+  const box = qs('resultFeedbackBox');
+  if (!box) return;
+
+  const total = appState.score.total;
+  const processed = appState.processedResults.filter(Boolean).length;
+  const accuracy = processed ? Math.round((appState.score.correct / processed) * 100) : 0;
+
+  if (!processed) {
+    box.className = 'result-feedback-box info';
+    box.innerHTML = '<div class="result-feedback-title">Menunggu Hasil</div>Jalankan simulasi untuk melihat apakah aturanmu sudah benar atau masih perlu diperbaiki.';
+    return;
+  }
+
+  if (appState.stopRequested && !appState.running) {
+    box.className = 'result-feedback-box warn';
+    box.innerHTML = `<div class="result-feedback-title">Simulasi Dihentikan</div>Kamu menghentikan simulasi setelah <b>${processed}</b> dari <b>${total}</b> item diproses. Hasil sementara menunjukkan akurasi <b>${accuracy}%</b>.`;
+    return;
+  }
+
+  if (accuracy === 100 && processed === total) {
+    box.className = 'result-feedback-box success';
+    box.innerHTML = '<div class="result-feedback-title">Benar</div>Semua item berhasil masuk ke tong yang tepat. Aturanmu sudah lengkap dan urutannya sudah benar.';
+    return;
+  }
+
+  if (appState.score.wrong > 0) {
+    box.className = 'result-feedback-box error';
+    box.innerHTML = `<div class="result-feedback-title">Masih Salah</div>Masih ada <b>${appState.score.wrong}</b> item yang salah tong. Periksa urutan aturan, terutama aturan umum dan aturan khusus yang bertumpuk.`;
+    return;
+  }
+
+  box.className = 'result-feedback-box warn';
+  box.innerHTML = `<div class="result-feedback-title">Belum Selesai</div>Baru <b>${processed}</b> item yang diproses, tetapi sejauh ini semuanya benar.`;
+}
+
+function stopSimulation() {
+  if (!appState.running) {
+    setBanner('Simulasi belum berjalan. Jalankan dulu jika ingin mengujinya.', 'info');
+    return;
+  }
+  appState.stopRequested = true;
+  setBanner('Permintaan stop diterima. Simulasi akan dihentikan setelah langkah yang sedang diproses selesai.', 'warn');
+  logLine('⏸ Permintaan stop diterima. Sistem akan berhenti setelah pemeriksaan item saat ini selesai.');
+}
+
+function finalizeSimulationRun(stoppedEarly = false) {
+  appState.currentIndex = -1;
+  appState.running = false;
+  renderConveyor();
+
+  const processed = appState.processedResults.filter(Boolean).length;
+  const accuracy = processed ? Math.round((appState.score.correct / processed) * 100) : 0;
+
+  if (stoppedEarly) {
+    setBanner(`Simulasi dihentikan. ${processed} item sempat diproses dengan akurasi sementara ${accuracy}%.`, 'warn');
+  } else if (accuracy === 100) {
+    setBanner('Simulasi selesai. Semua item berhasil dipilah dengan benar.', 'success');
+  } else {
+    setBanner(`Simulasi selesai. Akurasimu ${accuracy}%. Periksa kembali aturan yang masih salah.`, 'warn');
+  }
+
+  renderSimulation();
+  if (!stoppedEarly) {
+    evaluateActiveChallenge(accuracy);
+  }
+}
+
+function renderDecisionReasons() {
+  const box = qs('decisionReasonList');
+  if (!box) return;
+
+  const results = appState.processedResults.filter(Boolean);
+  if (!results.length) {
+    box.textContent = 'Belum ada penjelasan keputusan. Jalankan simulasi agar setiap item menampilkan aturan tempat ia berhenti.';
+    return;
+  }
+
+  box.innerHTML = results.map((result) => {
+    const ruleText = result.usedFallback
+      ? 'Tidak ada aturan yang cocok, jadi sistem memakai SELAIN ITU.'
+      : `Berhenti di aturan ${result.matchedRuleIndex + 1}: JIKA item ${CONDITION_LABEL[result.matchedCondition].toLowerCase()}.`;
+
+    const noteText = result.correct
+      ? `${result.itemLabel} memang seharusnya masuk ke ${BIN_INFO[result.correctBin].name}.`
+      : `${result.itemLabel} seharusnya masuk ke ${BIN_INFO[result.correctBin].name}, jadi urutan atau aksi aturanmu masih perlu diperbaiki.`;
+
+    return `
+      <div class="decision-reason-card ${result.correct ? 'correct' : 'wrong'}">
+        <div class="decision-reason-head">
+          <div class="decision-reason-item">${escapeHtml(result.itemLabel)}</div>
+          <div class="decision-reason-badge">${result.correct ? 'BENAR' : 'PERLU CEK'}</div>
+        </div>
+        <div class="decision-reason-rule">${ruleText}</div>
+        <div>Keputusan sistem: ${BIN_INFO[result.chosen].name}.</div>
+        <div class="decision-reason-note">${noteText}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderSimulation() {
@@ -567,6 +771,8 @@ function renderSimulation() {
   renderBins();
   renderLog();
   renderSummary();
+  renderResultFeedback();
+  renderDecisionReasons();
 }
 
 function renderAll() {
@@ -609,12 +815,22 @@ async function runSimulation() {
     return;
   }
 
+  const orderWarnings = getOrderWarnings();
+  if (orderWarnings.length) {
+    setBuilderFeedback('Ada aturan umum yang masih menutupi aturan khusus. Simulasi tetap bisa dijalankan, tetapi cek panel peringatan urutan terlebih dahulu.', 'warn');
+  }
+
   resetSimulation(true);
   appState.running = true;
+  appState.stopRequested = false;
+  appState.hasRunSimulation = true;
   setBanner('Simulasi dimulai. Sistem akan membaca aturan dari atas ke bawah.', 'info');
   await sleep(450);
 
   for (let i = 0; i < appState.queue.length; i += 1) {
+    if (appState.stopRequested) {
+      break;
+    }
     appState.currentIndex = i;
     renderConveyor();
 
@@ -623,12 +839,16 @@ async function runSimulation() {
     await sleep(420);
 
     let chosenBin = null;
+    let matchedRuleIndex = -1;
+    let matchedCondition = null;
     for (let r = 0; r < appState.rules.length; r += 1) {
       const rule = appState.rules[r];
       logLine(`- Mengecek aturan ${r + 1}: JIKA ${CONDITION_LABEL[rule.condition].toLowerCase()} → ${BIN_INFO[rule.action].name}`);
       await sleep(320);
       if (itemMatchesCondition(item, rule.condition)) {
         chosenBin = rule.action;
+        matchedRuleIndex = r;
+        matchedCondition = rule.condition;
         logLine(`  ✓ Cocok dengan aturan ${r + 1}. Sistem berhenti di sini.`);
         break;
       }
@@ -644,7 +864,15 @@ async function runSimulation() {
 
     const correctBin = CORRECT_BIN[item.actualType];
     const isCorrect = chosenBin === correctBin;
-    appState.processedResults[i] = { chosen: chosenBin, correct: isCorrect };
+    appState.processedResults[i] = {
+      itemLabel: item.label,
+      chosen: chosenBin,
+      correct: isCorrect,
+      correctBin,
+      matchedRuleIndex,
+      matchedCondition,
+      usedFallback: matchedRuleIndex === -1
+    };
     appState.placedItems[chosenBin].push({ image: item.image, label: item.label, correct: isCorrect });
 
     if (isCorrect) {
@@ -661,17 +889,7 @@ async function runSimulation() {
     await sleep(760);
   }
 
-  appState.currentIndex = -1;
-  renderConveyor();
-  const accuracy = appState.score.total ? Math.round((appState.score.correct / appState.score.total) * 100) : 0;
-  if (accuracy === 100) {
-    setBanner('Simulasi selesai. Semua item berhasil dipilah dengan benar.', 'success');
-  } else {
-    setBanner(`Simulasi selesai. Akurasimu ${accuracy}%. Periksa kembali aturan yang masih salah.`, 'warn');
-  }
-
-  evaluateActiveChallenge(accuracy);
-  appState.running = false;
+  finalizeSimulationRun(appState.stopRequested);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -683,13 +901,24 @@ const REFLEKSI_LOGIKA_QS = [
   { q: 'Kapan kamu membutuhkan aturan SELAIN ITU (else) dalam kehidupan nyata?', ph: 'Contoh: "Jika hujan → bawa payung. Jika berawan → bawa jaket tipis. SELAIN ITU → pergi seperti biasa." Aturan SELAIN ITU memastikan sistem selalu punya jawaban. Coba buat contohmu sendiri!' },
   { q: 'Apa perbedaan antara aturan khusus dan aturan umum? Berikan contohnya!', ph: 'Khusus = hanya berlaku untuk kasus tertentu (misal: "baterai berbahaya → Tong Merah"). Umum = berlaku untuk banyak kasus (misal: "anorganik → Tong Kuning"). Mengapa aturan khusus harus lebih dulu?' },
 ];
+const REFLEKSI_LOGIKA_STORAGE_KEY = 'logikaPercabanganRefleksiJawaban';
+
+function getSavedRefleksiLogika() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(REFLEKSI_LOGIKA_STORAGE_KEY) || '[]');
+    return Array.isArray(saved) ? saved : [];
+  } catch (error) {
+    return [];
+  }
+}
 
 function openRefleksiInteraktifLogika() {
   const list = document.getElementById('refleksiLogikaList');
+  const savedAnswers = getSavedRefleksiLogika();
   list.innerHTML = REFLEKSI_LOGIKA_QS.map((item, i) => `
     <div>
       <label style="display:block; font-weight:700; color:#1e293b; margin-bottom:8px;">${i+1}. ${item.q}</label>
-      <textarea class="refleksi-textarea" id="rlq_${i}" placeholder="${item.ph}"></textarea>
+      <textarea class="refleksi-textarea" id="rlq_${i}" placeholder="${item.ph}">${savedAnswers[i] || ''}</textarea>
     </div>`).join('');
   const btn = document.getElementById('simpanRefleksiLogikaBtn');
   btn.textContent = 'Simpan Refleksi ✓';
@@ -699,9 +928,34 @@ function openRefleksiInteraktifLogika() {
 
 function simpanRefleksiLogika() {
   const btn = document.getElementById('simpanRefleksiLogikaBtn');
+  const answers = REFLEKSI_LOGIKA_QS.map((_, i) => {
+    const el = document.getElementById(`rlq_${i}`);
+    return el ? el.value.trim() : '';
+  });
+
+  const firstEmptyIndex = answers.findIndex((answer) => !answer);
+  if (firstEmptyIndex !== -1) {
+    btn.textContent = 'Isi semua jawaban dulu';
+    btn.style.background = '#f97316';
+    const emptyEl = document.getElementById(`rlq_${firstEmptyIndex}`);
+    if (emptyEl) emptyEl.focus();
+    setTimeout(() => {
+      btn.textContent = 'Simpan Refleksi ✓';
+      btn.style.background = '';
+    }, 1800);
+    return;
+  }
+
+  try {
+    localStorage.setItem(REFLEKSI_LOGIKA_STORAGE_KEY, JSON.stringify(answers));
+  } catch (error) {}
+
   btn.textContent = '✅ Tersimpan!';
   btn.style.background = '#16a34a';
-  setTimeout(() => { btn.textContent = 'Simpan Refleksi ✓'; btn.style.background = ''; }, 2000);
+  setTimeout(() => {
+    btn.textContent = 'Simpan Refleksi ✓';
+    btn.style.background = '';
+  }, 2000);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -943,7 +1197,7 @@ const KUIS_URUTAN_DATA = [
       { text: 'JIKA residu → Tong Hitam', correctPos: 1 },
       { text: 'JIKA kertas → Tong Biru', correctPos: 3 },
     ],
-    explain: 'Urutan benar: Berbahaya (1) → Residu (2) → Organik (3) → Kertas (4). Aturan paling khusus duluan!',
+    explain: 'Periksa lagi mana aturan yang paling berisiko jika terlambat diperiksa. Aturan khusus dan berbahaya harus muncul lebih dulu daripada aturan yang lebih umum.',
   },
   {
     desc: 'Tisu kotor bisa cocok "kertas" DAN "residu". Susun aturan agar tisu kotor masuk ke tong yang BENAR!',
@@ -952,7 +1206,7 @@ const KUIS_URUTAN_DATA = [
       { text: 'JIKA berbahaya → Tong Merah', correctPos: 0 },
       { text: 'JIKA residu → Tong Hitam', correctPos: 2 },
     ],
-    explain: 'Urutan benar: Berbahaya (1) → Kertas (2) → Residu (3). TAPI tunggu! Tisu kotor cocok "kertas" dulu → masuk Tong Biru (salah). Seharusnya "residu" lebih dulu dari "kertas"! Ingat: aturan lebih khusus = yang paling sempit cakupannya.',
+    explain: 'Fokus pada konflik antara "kertas" dan "residu". Tanyakan: aturan mana yang harus didahulukan agar tisu kotor tidak berhenti di kondisi yang terlalu umum?',
   },
   {
     desc: 'Susun aturan agar baterai bekas PASTI masuk Tong Merah, bukan Tong Kuning!',
@@ -961,7 +1215,7 @@ const KUIS_URUTAN_DATA = [
       { text: 'JIKA berbahaya → Tong Merah', correctPos: 0 },
       { text: 'JIKA anorganik → Tong Kuning', correctPos: 1 },
     ],
-    explain: 'Urutan benar: Berbahaya (1) → Anorganik (2) → Recycle (3). Baterai cocok dengan "berbahaya" dan "anorganik" — harus diperiksa "berbahaya" lebih dulu agar masuk Tong Merah yang tepat.',
+    explain: 'Cari aturan yang paling khusus untuk baterai bekas. Jika aturan umum muncul duluan, baterai bisa salah masuk ke tong lain sebelum sempat dicek sebagai bahan berbahaya.',
   },
 ];
 
@@ -1018,17 +1272,20 @@ function kuDrop(e, i) {
 function cekUrutan() {
   const d = KUIS_URUTAN_DATA[kuIdx];
   const fb = document.getElementById('kuisUrutanFeedback');
+  const nextBtn = document.getElementById('nextKuisUrutanBtn');
   const correct = kuItems.every((it, i) => it.correctPos === i);
   fb.style.display = 'block';
+  nextBtn.classList.add('hidden');
+  document.querySelectorAll('.urutan-item').forEach(el => el.classList.remove('correct-final'));
   if (correct) {
     fb.style.color = '#15803d';
-    fb.textContent = '✅ Urutan sudah benar! ' + d.explain;
+    fb.textContent = '✅ Urutan sudah benar! Kamu berhasil menempatkan aturan yang lebih khusus sebelum aturan yang lebih umum.';
     document.querySelectorAll('.urutan-item').forEach(el => el.classList.add('correct-final'));
+    if (kuIdx < KUIS_URUTAN_DATA.length - 1) nextBtn.classList.remove('hidden');
   } else {
     fb.style.color = '#dc2626';
-    fb.textContent = '❌ Belum tepat. ' + d.explain;
+    fb.textContent = `❌ Belum tepat. ${d.explain} Geser lagi urutannya lalu tekan Cek Urutan sekali lagi.`;
   }
-  if (kuIdx < KUIS_URUTAN_DATA.length - 1) document.getElementById('nextKuisUrutanBtn').classList.remove('hidden');
 }
 
 function nextKuisUrutan() {

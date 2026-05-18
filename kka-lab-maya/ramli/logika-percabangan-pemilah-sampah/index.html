@@ -290,18 +290,8 @@
           <p>Susun aturan <strong>If &rarr; Else If &rarr; Else</strong> agar sistem dapat memilah sampah secara otomatis, akurat, dan tetap benar ketika ada kondisi yang saling bertumpuk.</p>
         </div>
         <div class="lab-top-actions">
-          <button class="top-action indigo"  onclick="runSimulation()">Jalankan Simulasi</button>
-          <button class="top-action slate"   onclick="resetSimulation(true)">Reset</button>
-          <button class="top-action emerald" onclick="loadExampleRules()">Gunakan Aturan Contoh</button>
-          <button class="top-action rose"    onclick="openDebugModal()">Mode Tantangan Debug</button>
-          <button class="top-action dark"    onclick="openModal('exampleModal')">Contoh Aturan</button>
-          <button class="top-action dark"    onclick="openModal('istilahModal')">Istilah Penting</button>
-          <button class="top-action dark"    onclick="openRefleksiInteraktifLogika()">✍️ Refleksi</button>
-          <button class="top-action dark"    onclick="openPohonKeputusan()">🌳 Pohon Keputusan</button>
-          <button class="top-action dark"    onclick="openKasusTepi()">⚠️ Kasus Tepi</button>
-          <button class="top-action dark"    onclick="openDetektifLogika()">🐛 Detektif Logika</button>
-          <button class="top-action dark"    onclick="openKuisUrutan()">🔢 Kuis Urutan</button>
-          <button class="top-action gray"    onclick="showPage('homePage')">Kembali ke Beranda</button>
+          <button class="top-action indigo" onclick="openModal('menuBelajarModal')">Menu Belajar</button>
+          <button class="top-action sky" onclick="showPage('homePage')">Kembali ke Beranda</button>
         </div>
       </div>
 
@@ -344,6 +334,10 @@
             MAKA masuk ke Tong Hijau.
           </div>
 
+          <div id="ruleWarnings" class="order-warning-box info">
+            Belum ada aturan untuk dianalisis. Tambahkan aturan, lalu periksa apakah ada konflik antara aturan umum dan aturan khusus.
+          </div>
+
           <div id="rulesList" class="rules-list"></div>
 
           <div class="else-card">
@@ -363,7 +357,7 @@
             <div id="challengeObjective" class="challenge-objective">Fokus belajar: bedakan aturan khusus, aturan umum, dan aturan cadangan.</div>
             <div class="challenge-actions">
               <button class="pill-btn rose full"  onclick="openDebugModal()">Buka Mode Tantangan Debug</button>
-              <button class="pill-btn light full" onclick="clearActiveChallenge()">Hentikan Tantangan Aktif</button>
+              <button class="pill-btn sky full" onclick="clearActiveChallenge()">Hentikan Tantangan Aktif</button>
             </div>
           </div>
         </aside>
@@ -383,15 +377,12 @@
 
             <div class="sim-actions">
               <button class="sim-btn indigo"  onclick="runSimulation()">Jalankan Simulasi</button>
-              <button class="sim-btn slate"   onclick="resetSimulation(true)">Reset</button>
-              <button class="sim-btn emerald" onclick="loadExampleRules()">Gunakan Aturan Contoh</button>
+              <button class="sim-btn sky"   onclick="resetWorkspace()">Reset</button>
+              <button class="sim-btn emerald" onclick="loadStarterRules()">Muat Awalan Aturan</button>
+              <button class="sim-btn rose" onclick="stopSimulation()">Stop Simulasi</button>
             </div>
 
-            <div class="stack-two">
-              <div>
-                <div class="sub-label">Log Keputusan Sistem</div>
-                <div id="decisionLog" class="log-box">Belum ada simulasi. Jalankan sistem untuk melihat cara komputer memeriksa aturan.</div>
-              </div>
+            <div class="stack-two stack-two-simple">
               <div id="summaryBox" class="summary-box">
                 <strong>Hasil Simulasi</strong><br>
                 Sampah diproses: 0<br>
@@ -399,7 +390,22 @@
                 Salah: 0<br>
                 Akurasi: 0%
               </div>
+              <div id="resultFeedbackBox" class="result-feedback-box info">
+                Jalankan simulasi untuk melihat apakah aturanmu sudah benar atau masih perlu diperbaiki.
+              </div>
             </div>
+
+            <details class="insight-panel">
+              <summary>Lihat Log Keputusan Sistem</summary>
+              <div id="decisionLog" class="log-box">Belum ada simulasi. Jalankan sistem untuk melihat cara komputer memeriksa aturan.</div>
+            </details>
+
+            <details class="insight-panel">
+              <summary>Lihat Penjelasan Keputusan</summary>
+              <div id="decisionReasonList" class="decision-reason-list">
+                Belum ada penjelasan keputusan. Jalankan simulasi agar setiap item menampilkan aturan tempat ia berhenti.
+              </div>
+            </details>
           </div>
         </section>
 
@@ -430,6 +436,27 @@
       <div class="modal-actions center">
         <button class="pill-btn indigo" onclick="closeModal('introModal')">Mulai Belajar</button>
         <button class="pill-btn sky"    onclick="closeModal('introModal'); openModal('exampleModal');">Lihat Contoh Dulu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Belajar -->
+  <div id="menuBelajarModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:640px;">
+      <h2 class="modal-title indigo">Menu Belajar</h2>
+      <p style="color:#64748b; font-size:15px; line-height:1.7; margin-bottom:18px;">Pilih bantuan atau latihan tambahan yang ingin dibuka tanpa memenuhi tampilan utama.</p>
+      <div class="menu-belajar-grid">
+        <button class="pill-btn indigo" onclick="closeModal('menuBelajarModal'); openModal('exampleModal');">Contoh Aturan</button>
+        <button class="pill-btn sky" onclick="closeModal('menuBelajarModal'); openModal('istilahModal');">Istilah Penting</button>
+        <button class="pill-btn emerald" onclick="closeModal('menuBelajarModal'); openRefleksiInteraktifLogika();">✍️ Refleksi</button>
+        <button class="pill-btn amber" onclick="closeModal('menuBelajarModal'); openPohonKeputusan();">🌳 Pohon Keputusan</button>
+        <button class="pill-btn orange" onclick="closeModal('menuBelajarModal'); openKasusTepi();">⚠️ Kasus Tepi</button>
+        <button class="pill-btn rose" onclick="closeModal('menuBelajarModal'); openDetektifLogika();">🐛 Detektif Logika</button>
+        <button class="pill-btn lime" onclick="closeModal('menuBelajarModal'); openKuisUrutan();">🔢 Kuis Urutan</button>
+        <button class="pill-btn rose" onclick="closeModal('menuBelajarModal'); openDebugModal();">Mode Tantangan Debug</button>
+      </div>
+      <div class="modal-actions center">
+        <button class="pill-btn sky" onclick="closeModal('menuBelajarModal')">Tutup</button>
       </div>
     </div>
   </div>
@@ -562,7 +589,7 @@ masukkan ke Tong Hitam</div>
           <div class="cara-panel">
             <h3>7. Gunakan Tombol Pendukung</h3>
             <div class="cara-grid-2">
-              <div class="cara-box"><strong>Gunakan Aturan Contoh</strong><br>Memuat aturan awal yang benar sebagai referensi atau titik awal.</div>
+              <div class="cara-box"><strong>Muat Awalan Aturan</strong><br>Memuat beberapa aturan awal sebagai titik mulai, tetapi belum menjadi jawaban lengkap.</div>
               <div class="cara-box"><strong>Mode Tantangan Debug</strong><br>Memberi aturan yang sengaja salah — tugasmu memperbaikinya hingga akurasi 100%.</div>
               <div class="cara-box"><strong>Contoh Aturan</strong><br>Menunjukkan format logika percabangan yang lengkap.</div>
               <div class="cara-box"><strong>Refleksi</strong><br>Pertanyaan untuk memandu pemahamanmu lebih dalam tentang konsep yang dipelajari.</div>
@@ -609,7 +636,7 @@ masukkan ke Tong Hitam</div>
       <div id="refleksiLogikaList" class="space-y-5"></div>
       <div class="modal-actions" style="justify-content:flex-end; gap:10px;">
         <button onclick="simpanRefleksiLogika()" id="simpanRefleksiLogikaBtn" class="pill-btn indigo">Simpan Refleksi ✓</button>
-        <button onclick="closeModal('refleksiModal')" class="pill-btn light">Tutup</button>
+        <button onclick="closeModal('refleksiModal')" class="pill-btn sky">Tutup</button>
       </div>
     </div>
   </div>
@@ -643,7 +670,7 @@ masukkan ke Tong Hitam</div>
       <div style="margin-top:10px; font-size:13px; color:#94a3b8;" id="kasusTepiProg"></div>
       <div class="modal-actions center">
         <button onclick="nextKasusTepi()" id="nextKasusTepiBtn" class="pill-btn rose hidden">Kasus Berikutnya →</button>
-        <button class="pill-btn light" onclick="closeModal('kasusTepiModal')">Tutup</button>
+        <button class="pill-btn sky" onclick="closeModal('kasusTepiModal')">Tutup</button>
       </div>
     </div>
   </div>
@@ -659,7 +686,7 @@ masukkan ke Tong Hitam</div>
       <div style="margin-top:10px; font-size:13px; color:#94a3b8;" id="detektifLogikaProg"></div>
       <div class="modal-actions center">
         <button onclick="nextDetektifLogika()" id="nextDetektifLogikaBtn" class="pill-btn indigo hidden">Tantangan Berikutnya →</button>
-        <button class="pill-btn light" onclick="closeModal('detektifLogikaModal')">Tutup</button>
+        <button class="pill-btn sky" onclick="closeModal('detektifLogikaModal')">Tutup</button>
       </div>
     </div>
   </div>
@@ -678,7 +705,7 @@ masukkan ke Tong Hitam</div>
       <div class="modal-actions center">
         <button onclick="cekUrutan()" class="pill-btn indigo">Cek Urutan</button>
         <button onclick="nextKuisUrutan()" id="nextKuisUrutanBtn" class="pill-btn emerald hidden">Soal Berikutnya →</button>
-        <button class="pill-btn light" onclick="closeModal('kuisUrutanModal')">Tutup</button>
+        <button class="pill-btn sky" onclick="closeModal('kuisUrutanModal')">Tutup</button>
       </div>
     </div>
   </div>
@@ -758,7 +785,7 @@ masukkan ke Tong Hitam</div>
 
       </div>
       <div class="modal-footer-nav bio-footer">
-        <button id="bioPrevBtn" class="pill-btn light" style="visibility:hidden" onclick="changeBioSlide(-1)">&larr; Sebelumnya</button>
+        <button id="bioPrevBtn" class="pill-btn sky" style="visibility:hidden" onclick="changeBioSlide(-1)">&larr; Sebelumnya</button>
         <button class="pill-btn lime" onclick="closeModal('bioModal')">Tutup</button>
         <button id="bioNextBtn" class="pill-btn lime-alt" onclick="changeBioSlide(1)">Selanjutnya &rarr;</button>
       </div>
@@ -777,6 +804,23 @@ masukkan ke Tong Hitam</div>
       <p class="small-text">Silakan baca terlebih dahulu <strong>Tujuan Praktikum</strong> dan <strong>Cara Penggunaan</strong> sebelum memulai percobaan.</p>
       <div class="modal-actions center">
         <button class="pill-btn sky" onclick="closeModal('lockedModal')">Oke, Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="challengePrereqModal" class="modal-backdrop">
+    <div class="modal-card small-modal center-text">
+      <div class="lock-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="currentColor" class="lock-icon" aria-hidden="true">
+          <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5.5a.75.75 0 00-1.5 0v5.19c0 .199.079.39.22.53l3 3a.75.75 0 101.06-1.06l-2.78-2.78V7.5z"/>
+        </svg>
+      </div>
+      <h3 class="small-title">Siap Dulu Sebelum Tantangan</h3>
+      <p class="small-text">Sebelum masuk <strong>Mode Tantangan Debug</strong>, coba dulu percobaan dasar:</p>
+      <p class="small-text"><strong>1.</strong> Tambahkan minimal satu aturan.<br><strong>2.</strong> Jalankan simulasi minimal satu kali.</p>
+      <p class="small-text">Setelah itu, kamu akan lebih siap memahami kenapa aturan bisa salah urut atau salah tong.</p>
+      <div class="modal-actions center">
+        <button class="pill-btn sky" onclick="closeModal('challengePrereqModal')">Oke, Mengerti</button>
       </div>
     </div>
   </div>
