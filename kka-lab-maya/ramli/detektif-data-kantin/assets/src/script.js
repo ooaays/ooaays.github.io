@@ -43,6 +43,14 @@ const STAGES = {
     ],
     output: 'Data berhasil dipisah!\nDaftar produk: 5 item\nDaftar harga: 5 item',
     explanation: 'Python lebih mudah bekerja jika data rapi. Pada tahap ini, data mentah dipecah menjadi dua list: satu list nama produk dan satu list harga. Inilah fondasi untuk semua tahap berikutnya.',
+    hint: {
+      intro: 'Data kantin masih campur: nama barang dan angka harga ada dalam satu catatan panjang. Python butuh data yang rapi dan terpisah agar bisa bekerja dengan benar.',
+      clues: [
+        'Perhatikan dataset mentah — ada dua jenis data: teks nama barang dan angka harga. Keduanya harus dipisah ke dua list yang berbeda.',
+        'Sebuah list Python ditulis dengan tanda kurung siku [ ] dan setiap item dipisah koma. Contoh format: ["item1", "item2"] atau [angka1, angka2].',
+        'Slot pertama hanya untuk nama barang (teks dalam tanda kutip), slot kedua hanya untuk angka harga. Lihat dataset mentah — mana yang teks, mana yang angka?'
+      ]
+    },
     example: {
       intro:  'Contoh kecil: data mentah masih campur antara nama barang dan harga.',
       code:   'data_produk = ["Pensil", "Buku"]\nharga = [5000, 12000]\nprint("Data berhasil dipisah!")',
@@ -84,6 +92,14 @@ const STAGES = {
     options: ['max(harga)', 'min(harga)', 'sum(harga)', 'data_produk', 'print(harga)'],
     output: '150000',
     explanation: 'Fungsi max() mencari angka terbesar dari daftar harga. Hasilnya: 150000 (Sepatu). Python menyelesaikan ini dalam satu baris — bayangkan jika kamu harus membandingkan ratusan harga secara manual!',
+    hint: {
+      intro: 'Dari daftar harga yang sudah rapi, kamu ingin tahu produk mana yang paling mahal — tanpa harus mengecek satu per satu secara manual.',
+      clues: [
+        'Python punya fungsi bawaan yang dirancang khusus untuk mencari nilai terbesar dari sebuah list.',
+        'Nama fungsinya hanya tiga huruf dan merupakan singkatan dari kata "maksimum" dalam bahasa Inggris.',
+        'Fungsi tersebut perlu satu input: nama list yang ingin dicari nilai terbesarnya. List harga kita bernama apa?'
+      ]
+    },
     example: {
       intro:  'Tanpa Python, kita harus memeriksa satu per satu. Dengan max(), cukup satu perintah.',
       code:   'harga = [5000, 12000, 80000, 150000]\nprint(max(harga))',
@@ -123,6 +139,14 @@ const STAGES = {
     options: ['nilai > 50000', 'nilai < 50000', 'max(harga)', 'harga > 50000', 'nilai == 0'],
     output: '80000\n150000',
     explanation: 'Kondisi if menyaring data seperti saringan kopi — hanya nilai yang lolos syarat yang ditampilkan. Dari 5 harga, hanya 80000 dan 150000 yang lebih besar dari 50000.',
+    hint: {
+      intro: 'Tidak semua produk kantin perlu ditampilkan. Kamu hanya ingin melihat produk yang harganya melewati batas tertentu — inilah kerja sebuah kondisi.',
+      clues: [
+        'Di dalam perulangan for, variabel nilai mewakili satu angka harga pada setiap putaran — bukan seluruh list sekaligus.',
+        'Untuk membandingkan angka, Python pakai operator: > (lebih besar dari) atau < (lebih kecil dari). Misi ini meminta yang mana?',
+        'Yang diperiksa oleh if adalah nilai (satu angka per putaran), bukan harga (seluruh list). Berapa angka batas yang diminta misi?'
+      ]
+    },
     example: {
       intro:  'Saat data banyak, kita hanya ingin melihat data yang memenuhi syarat tertentu.',
       code:   'harga = [5000, 12000, 80000, 150000]\nfor nilai in harga:\n    if nilai > 50000:\n        print(nilai)',
@@ -161,6 +185,14 @@ const STAGES = {
     options: ['data_produk', 'max(data_produk)', 'produk', 'range(5)', 'harga'],
     output: 'Pensil\nBuku\nTas\nSepatu\nBotol Minum',
     explanation: 'for membaca setiap item di data_produk secara bergantian dan menampilkannya. Jika ada 1000 produk, kode ini tetap hanya 2 baris. Inilah kekuatan otomasi Python!',
+    hint: {
+      intro: 'Ada 5 nama produk yang harus ditampilkan. Kalau ditulis manual butuh 5 baris print(). Dengan perulangan, cukup 2 baris berapapun jumlah datanya.',
+      clues: [
+        'Perulangan for membutuhkan sumber data — dari sinilah Python mengambil item satu per satu secara otomatis.',
+        'Kamu sudah punya sebuah list berisi nama-nama produk kantin. Variabel itu sudah dibuat di Tahap 1, namanya apa?',
+        'Sintaksnya: for produk in [___]: — masukkan nama list sumber data di bagian kosong tersebut.'
+      ]
+    },
     example: {
       intro:  'Jika produk banyak, Python menampilkan semuanya satu per satu dengan perulangan.',
       code:   'data_produk = ["Pensil", "Buku", "Tas"]\nfor produk in data_produk:\n    print(produk)',
@@ -206,6 +238,14 @@ const STAGES = {
     ],
     output: 'Pensil - 5000\nBuku - 12000\nTas - 80000\nSepatu - 150000\nBotol Minum - 25000',
     explanation: 'zip() menggabungkan data_produk dan harga menjadi pasangan. Ini adalah puncak dari perjalanan kita: kita memisahkan data di Tahap 1 agar bisa memprosesnya di Tahap 2, 3, 4 — dan di sini kita menggabungkannya kembali menjadi informasi yang utuh dan bermakna.',
+    hint: {
+      intro: 'Kamu sudah punya dua list terpisah: nama produk dan harga. Sekarang keduanya perlu ditampilkan berpasangan — nama produk beserta harganya.',
+      clues: [
+        'Ada fungsi Python yang bekerja seperti risleting: menggabungkan dua list menjadi pasangan item secara berurutan.',
+        'Fungsi tersebut menerima dua list sebagai input, dipisah koma. Kedua list yang ingin dipasangkan itu namanya apa?',
+        'Perhatikan sintaks: for produk, hrg in [___]: — fungsi apa yang tepat untuk diisi di bagian kosong itu?'
+      ]
+    },
     example: {
       intro:  'zip() bekerja seperti risleting — menggabungkan dua list menjadi pasangan yang rapi.',
       code:   'produk = ["Pensil", "Buku"]\nharga  = [5000, 12000]\nfor p, h in zip(produk, harga):\n    print(p, "-", h)',
@@ -321,6 +361,7 @@ let logoClickTimer  = null;
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  document.body.classList.toggle('lab-active', id === 'labPage');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (id === 'labPage') {
     renderAll();
@@ -448,11 +489,15 @@ function updateBioSlideView() {
 /* ────────────────────────────────────────────────────────── */
 function openExampleModal() {
   const stage = STAGES[state.currentStage];
-  document.getElementById('exampleTitle').textContent  = stage.title + ' — Contoh';
-  document.getElementById('exampleIntro').textContent  = stage.example.intro;
-  document.getElementById('exampleCode').textContent   = stage.example.code;
-  document.getElementById('exampleOutput').textContent = stage.example.output;
-  document.getElementById('exampleWhy').textContent    = stage.example.why;
+  document.getElementById('exampleTitle').textContent = 'Petunjuk — ' + stage.shortLabel;
+  document.getElementById('exampleIntro').textContent = stage.hint.intro;
+  const cluesEl = document.getElementById('hintClues');
+  cluesEl.innerHTML = stage.hint.clues.map((clue, i) => `
+    <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+      <div class="font-black text-sky-800 mb-1">Petunjuk ${i + 1}</div>
+      <div class="text-slate-700 leading-7">${escapeHtml(clue)}</div>
+    </div>
+  `).join('');
   openModal('exampleModal');
 }
 
@@ -581,14 +626,10 @@ function renderMissionPanel() {
       <div class="font-black text-slate-800 mb-2">Dataset Mentah</div>
       <div class="dataset-box">${escapeHtml(stage.dataset)}</div>
     </div>
-    <div class="concept-box">
-      <div class="concept-box-label">Konsep Kunci</div>
-      ${stage.concept}
-    </div>
     <div class="info-box mt-3"><b>Petunjuk:</b><br>${stage.tips}</div>
     <div class="grid grid-cols-1 gap-3 mt-4">
-      <button onclick="openExampleModal()" class="bg-sky-600 text-white rounded-2xl px-4 py-3 font-black">Contoh Tahap Ini</button>
-      <button onclick="openModal('istilahModal')" class="bg-indigo-600 text-white rounded-2xl px-4 py-3 font-black">Istilah Penting</button>
+      <button onclick="openExampleModal()" class="bg-sky-600 text-white rounded-2xl px-4 py-3 font-black"><img src="assets/img/icons/icon-bulb.svg" class="btn-icon" alt=""> Petunjuk Misi</button>
+      <button onclick="openModal('istilahModal')" class="bg-violet-600 text-white rounded-2xl px-4 py-3 font-black"><img src="assets/img/icons/icon-book.svg" class="btn-icon" alt=""> Istilah Penting</button>
     </div>
   `;
 }
@@ -611,8 +652,7 @@ function renderOptions() {
   stage.options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.innerHTML = `<div class="option-chip">komponen kode</div><br>
-      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">${escapeHtml(opt)}</span>`;
+    btn.innerHTML = `<span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;">${escapeHtml(opt)}</span>`;
     btn.onclick = () => fillSlot(opt);
     grid.appendChild(btn);
   });
@@ -1012,15 +1052,15 @@ function openRefleksiInteraktif() {
       <label class="block text-slate-800 font-bold mb-2">${i+1}. ${item.q}</label>
       <textarea class="refleksi-textarea" id="rq_${i}" placeholder="${item.ph}"></textarea>
     </div>`).join('');
-  document.getElementById('simpanRefleksiBtn').textContent = 'Simpan Refleksi ✓';
+  document.getElementById('simpanRefleksiBtn').textContent = 'Simpan Refleksi';
   openModal('refleksiModal');
 }
 
 function simpanRefleksiDetektif() {
   const btn = document.getElementById('simpanRefleksiBtn');
-  btn.textContent = '✅ Tersimpan!';
+  btn.textContent = 'Tersimpan!';
   btn.style.background = '#16a34a';
-  setTimeout(() => { btn.textContent = 'Simpan Refleksi ✓'; btn.style.background = ''; }, 2000);
+  setTimeout(() => { btn.textContent = 'Simpan Refleksi'; btn.style.background = ''; }, 2000);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1091,12 +1131,12 @@ function checkDetektifLine(i) {
   const fb = document.getElementById('detektifKodeFeedback');
   if (i === d.bugLine) {
     lines[i].classList.add('correct-bug');
-    fb.textContent = '✅ Tepat! ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""> Tepat! ' + escapeHtml(d.explain);
     fb.className = 'mt-3 text-base font-semibold text-green-700';
   } else {
     lines[i].classList.add('wrong-bug');
     lines[d.bugLine].classList.add('correct-bug');
-    fb.textContent = '❌ Belum tepat. ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt=""> Belum tepat. ' + escapeHtml(d.explain);
     fb.className = 'mt-3 text-base font-semibold text-red-700';
   }
   if (dkIdx < DETEKTIF_KODE_DATA.length - 1) document.getElementById('nextDetektifKodeBtn').classList.remove('hidden');
@@ -1156,10 +1196,10 @@ function cekPrediksi() {
   res.style.display = 'block';
   if (jawaban === d.answer) {
     res.className = 'prediksi-result benar';
-    res.innerHTML = `✅ <strong>Tepat!</strong> Outputnya memang <code>${d.answer}</code>. ${d.hint}`;
+    res.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""> <strong>Tepat!</strong> Outputnya memang <code>${d.answer}</code>. ${d.hint}`;
   } else {
     res.className = 'prediksi-result salah';
-    res.innerHTML = `❌ <strong>Belum tepat.</strong> Output yang benar: <code>${d.answer}</code>. ${d.hint}`;
+    res.innerHTML = `<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt=""> <strong>Belum tepat.</strong> Output yang benar: <code>${d.answer}</code>. ${d.hint}`;
   }
   if (prIdx < PREDIKSI_DATA.length - 1) document.getElementById('nextPrediksiBtn').classList.remove('hidden');
 }
@@ -1225,11 +1265,11 @@ function answerKuisVar(i) {
   const btns = document.querySelectorAll('.kuis-var-option');
   btns[d.correct].classList.add('benar');
   if (i === d.correct) {
-    fb.textContent = '✅ Benar! ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""> Benar! ' + escapeHtml(d.explain);
     fb.className = 'mt-3 text-base font-semibold text-green-700';
   } else {
     btns[i].classList.add('salah');
-    fb.textContent = '❌ Belum tepat. ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt=""> Belum tepat. ' + escapeHtml(d.explain);
     fb.className = 'mt-3 text-base font-semibold text-red-700';
   }
   fb.classList.remove('hidden');
@@ -1284,7 +1324,7 @@ function startVisualisasi() {
   function tick() {
     if (step >= VIS_DATA.length) {
       renderVisBars(-1, curMaxIdx);
-      document.getElementById('visStatus').textContent = `✅ Nilai terbesar: ${curMax} (${VIS_LABELS[curMaxIdx]})`;
+      document.getElementById('visStatus').innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""> Nilai terbesar: ${curMax} (${VIS_LABELS[curMaxIdx]})`;
       return;
     }
     if (VIS_DATA[step] > curMax) { curMax = VIS_DATA[step]; curMaxIdx = step; }
@@ -1295,6 +1335,24 @@ function startVisualisasi() {
   }
   tick();
 }
+
+/* ── Fullscreen (IFP) ─────────────────────────────────────── */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  if (document.fullscreenElement) {
+    btn.innerHTML = '<img src="assets/img/icons/icon-compress.svg" class="btn-icon" alt=""> Keluar Penuh';
+  } else {
+    btn.innerHTML = '<img src="assets/img/icons/icon-expand.svg" class="btn-icon" alt=""> Layar Penuh';
+  }
+});
 
 /* ── Boot ─────────────────────────────────────────────────── */
 try {

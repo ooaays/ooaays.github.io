@@ -60,22 +60,22 @@
 
           <!-- 1. Tujuan Praktikum -->
           <button onclick="openTujuanModal()" class="menu-btn">
-            <div class="menu-btn-icon">
+            <div class="menu-btn-icon" style="background:#7c3aed;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#a855f7;">Tujuan Praktikum<span id="check-tujuan" class="read-check"><img src="assets/img/icons/icon-check.svg" alt=""></span></div>
           </button>
 
           <!-- 2. Cara Penggunaan -->
           <button onclick="openCaraModal()" class="menu-btn">
-            <div class="menu-btn-icon">
+            <div class="menu-btn-icon" style="background:#ea580c;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></div>
+            <div class="menu-btn-label" style="background:#f97316;">Cara Penggunaan<span id="check-cara" class="read-check"><img src="assets/img/icons/icon-check.svg" alt=""></span></div>
           </button>
 
           <!-- 3. Mulai Percobaan (terkunci sampai baca Tujuan + Cara) -->
@@ -84,7 +84,7 @@
                   aria-disabled="true"
                   title="Buka Tujuan dan Cara Penggunaan terlebih dahulu"
                   class="menu-btn disabled-style">
-            <div class="menu-btn-icon">
+            <div class="menu-btn-icon" style="background:#0891b2;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd"/>
               </svg>
@@ -94,7 +94,7 @@
 
           <!-- 4. Biodata Pengembang -->
           <button onclick="openBioModal()" class="menu-btn">
-            <div class="menu-btn-icon">
+            <div class="menu-btn-icon" style="background:#65a30d;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
@@ -195,42 +195,35 @@
           <div id="optionGrid" class="option-grid"></div>
           <div id="slotHelpBox" class="helper-box">Bantuan slot akan muncul di sini setelah kamu memilih salah satu kotak kosong.</div>
           <div class="action-row">
-            <button class="action-btn bg-slate-200 text-slate-700" onclick="clearActiveSlot()">Kosongkan Slot Aktif</button>
+            <button class="action-btn bg-amber-500 text-white" onclick="clearActiveSlot()">Kosongkan Slot Aktif</button>
             <button class="action-btn bg-rose-500 text-white" onclick="resetStage()">Reset Tahap</button>
           </div>
         </div>
 
         <!-- Panel Kanan: Editor -->
         <div class="dark-panel">
-          <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
-            <div>
-              <div class="text-3xl font-black text-sky-400">Area Kode</div>
-              <div class="text-slate-400 text-sm">Isi bagian yang kosong, lalu jalankan untuk melihat hasil.</div>
+          <!-- Baris 1: Judul + Tombol Utama + Navigasi -->
+          <div class="lab-row1">
+            <div class="lab-row1-title">
+              <div class="text-2xl font-black text-sky-400">Area Kode</div>
+              <div class="text-slate-400 text-xs">Isi kotak kosong, lalu jalankan.</div>
             </div>
-            <div class="flex gap-3 flex-wrap">
-              <button id="runBtn"
-                      class="px-5 py-3 rounded-2xl font-black bg-emerald-500 text-emerald-950"
-                      onclick="runCode()">Jalankan Kode &rarr;</button>
-              <button id="stageNextBtn"
-                      class="px-5 py-3 rounded-2xl font-black bg-indigo-500 text-white opacity-50 cursor-not-allowed"
-                      onclick="goNextStage()" disabled>Misi Berikutnya</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-sky-600 text-white"
-                      onclick="openExampleModal()">Contoh Tahap Ini</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-700 text-white"
-                      onclick="openModal('istilahModal')">Istilah Penting</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-indigo-600 text-white"
-                      onclick="openRefleksiInteraktif()">✍️ Refleksi</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#7c3aed;"
-                      onclick="openDetektifKode()">🐛 Detektif Kode</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#0369a1;"
-                      onclick="openPrediksiOutput()">🔮 Prediksi Output</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#b45309;"
-                      onclick="openKuisVariabel()">❓ Kuis Variabel</button>
-              <button class="px-5 py-3 rounded-2xl font-black text-white" style="background:#0f766e;"
-                      onclick="openVisualisasiMax()">📊 Visualisasi Max</button>
-              <button class="px-5 py-3 rounded-2xl font-black bg-slate-500 text-white"
-                      onclick="showPage('homePage')">Kembali ke Beranda</button>
+            <div class="lab-row1-actions">
+              <button id="runBtn" class="lab-run-btn" onclick="runCode()"><img src="assets/img/icons/icon-play.svg" alt=""> Jalankan</button>
+              <button id="stageNextBtn" class="lab-next-btn opacity-50 cursor-not-allowed" onclick="goNextStage()" disabled>Misi Berikutnya</button>
             </div>
+            <div class="lab-row1-nav">
+              <button id="fullscreenBtn" class="lab-nav-btn lab-nav-fullscreen" onclick="toggleFullscreen()"><img src="assets/img/icons/icon-expand.svg" alt=""> Layar Penuh</button>
+              <button class="lab-nav-btn lab-nav-home" onclick="showPage('homePage')"><img src="assets/img/icons/icon-home.svg" alt=""> Beranda</button>
+            </div>
+          </div>
+          <!-- Baris 2: 5 Tombol Alat (grid sama rata) -->
+          <div class="lab-tool-row">
+            <button class="lab-tool-btn" style="background:#4f46e5;" onclick="openRefleksiInteraktif()"><img src="assets/img/icons/icon-pencil.svg" alt="">Refleksi</button>
+            <button class="lab-tool-btn" style="background:#7c3aed;" onclick="openDetektifKode()"><img src="assets/img/icons/icon-magnify.svg" alt="">Detektif Kode</button>
+            <button class="lab-tool-btn" style="background:#0369a1;" onclick="openPrediksiOutput()"><img src="assets/img/icons/icon-eye.svg" alt="">Prediksi Output</button>
+            <button class="lab-tool-btn" style="background:#b45309;" onclick="openKuisVariabel()"><img src="assets/img/icons/icon-question.svg" alt="">Kuis Variabel</button>
+            <button class="lab-tool-btn" style="background:#0f766e;" onclick="openVisualisasiMax()"><img src="assets/img/icons/icon-chart.svg" alt="">Visualisasi Max</button>
           </div>
 
           <div class="editor-window">
@@ -245,7 +238,7 @@
             <div id="codeArea" class="code-area"></div>
           </div>
 
-          <button class="run-btn" onclick="runCode()">JALANKAN KODE</button>
+
 
           <div class="terminal">
             <div class="terminal-head">Python Terminal Output</div>
@@ -483,18 +476,23 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   ════════════════════════════════════════════════════════ -->
   <div id="introModal" class="modal-backdrop">
     <div class="modal-card">
-      <h2 class="text-4xl font-black text-sky-700 text-center mb-6">Sebelum Mulai</h2>
-      <div class="space-y-4 text-slate-700 text-lg leading-relaxed">
-        <p><b>1.</b> Data mentah biasanya masih campur dan sulit dibaca komputer.</p>
-        <p><b>2.</b> Python membantu kita <b>merapikan</b>, <b>mencari</b>, <b>menyaring</b>, dan <b>menampilkan</b> data.</p>
-        <p><b>3.</b> Di lab ini kamu tidak mengetik bebas. Kamu cukup menyusun komponen kode sesuai misi.</p>
-        <p><b>4.</b> Baca misi dulu, pilih slot yang kosong, lalu masukkan komponen yang paling tepat.</p>
+      <h2 class="text-4xl font-black text-sky-700 text-center mb-5">Sebelum Mulai</h2>
+      <div class="bg-amber-50 border-l-8 border-amber-400 rounded-2xl p-5 mb-5">
+        <div class="font-black text-amber-800 text-lg mb-2">Situasi Nyata</div>
+        <p class="text-slate-700 leading-8">Petugas kantin sekolah mencatat stok barang dan harga dalam satu catatan panjang yang masih campur-baur. Komputer tidak bisa langsung mengolah data seperti ini — nama barang dan angka harga perlu dipisah, dicari polanya, disaring, lalu ditampilkan secara otomatis.</p>
+        <p class="text-slate-700 mt-3 font-semibold leading-8">Tugasmu: bantu selesaikan masalah ini menggunakan Python, selangkah demi selangkah!</p>
       </div>
-      <div class="pt-8 flex justify-center gap-4 flex-wrap">
+      <div class="space-y-3 text-slate-700 text-lg leading-relaxed">
+        <p><b>1.</b> Di lab ini kamu tidak mengetik bebas — cukup pilih komponen kode yang paling tepat.</p>
+        <p><b>2.</b> Klik kotak kosong di area kode, lalu pilih komponen dari panel tengah.</p>
+        <p><b>3.</b> Jika bingung, gunakan tombol <b>Petunjuk Misi</b> di panel misi untuk mendapat arahan.</p>
+        <p><b>4.</b> Selesaikan semua tahap untuk mendapatkan sertifikat!</p>
+      </div>
+      <div class="pt-6 flex justify-center gap-4 flex-wrap">
         <button onclick="closeModal('introModal')"
                 class="bg-sky-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Mulai Belajar</button>
         <button onclick="closeModal('introModal'); openExampleModal();"
-                class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Lihat Contoh Dulu</button>
+                class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl"><img src="assets/img/icons/icon-bulb.svg" class="btn-icon" alt=""> Lihat Petunjuk</button>
       </div>
     </div>
   </div>
@@ -505,25 +503,12 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   ════════════════════════════════════════════════════════ -->
   <div id="exampleModal" class="modal-backdrop">
     <div class="modal-card">
-      <h2 id="exampleTitle" class="text-4xl font-black text-indigo-700 text-center mb-6">Contoh Tahap</h2>
-      <div id="exampleIntro" class="bg-indigo-50 border-l-8 border-indigo-500 p-5 rounded-2xl text-slate-800 text-lg leading-relaxed mb-5"></div>
-      <div class="mb-5">
-        <div class="font-black text-slate-800 mb-2">Contoh Kode</div>
-        <div id="exampleCode" class="example-code"></div>
-      </div>
-      <div class="grid gap-4">
-        <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
-          <div class="font-black text-sky-800 mb-2">Hasil</div>
-          <div id="exampleOutput" class="text-slate-700 whitespace-pre-wrap"></div>
-        </div>
-        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-          <div class="font-black text-emerald-800 mb-2">Kenapa Begitu?</div>
-          <div id="exampleWhy" class="text-slate-700 leading-relaxed"></div>
-        </div>
-      </div>
+      <h2 id="exampleTitle" class="text-4xl font-black text-sky-700 text-center mb-6">Petunjuk</h2>
+      <div id="exampleIntro" class="bg-sky-50 border-l-8 border-sky-500 p-5 rounded-2xl text-slate-800 text-lg leading-relaxed mb-5"></div>
+      <div class="grid gap-4" id="hintClues"></div>
       <div class="pt-6 flex justify-center gap-4 flex-wrap">
         <button onclick="closeModal('exampleModal')"
-                class="bg-indigo-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Saya Paham</button>
+                class="bg-sky-600 text-white text-xl font-black py-3 px-10 rounded-2xl">Oke, Siap Mencoba!</button>
       </div>
     </div>
   </div>
@@ -556,7 +541,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="refleksiModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:700px;">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-3xl font-black text-indigo-700">✍️ Refleksi Interaktif</h2>
+        <h2 class="text-3xl font-black text-indigo-700">Refleksi Interaktif</h2>
         <button onclick="closeModal('refleksiModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-500 text-sm mb-5">Tulis jawabanmu untuk memperkuat pemahamanmu. Tidak ada jawaban yang salah!</p>
@@ -564,10 +549,10 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="pt-5 flex gap-3 justify-end">
         <button onclick="simpanRefleksiDetektif()" id="simpanRefleksiBtn"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-black py-3 px-8 rounded-2xl">
-          Simpan Refleksi ✓
+          Simpan Refleksi
         </button>
         <button onclick="closeModal('refleksiModal')"
-                class="bg-slate-200 text-slate-700 text-lg font-bold py-3 px-6 rounded-2xl">Tutup</button>
+                class="bg-indigo-500 text-white text-lg font-bold py-3 px-6 rounded-2xl">Tutup</button>
       </div>
     </div>
   </div>
@@ -578,7 +563,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="detektifKodeModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:680px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-3xl font-black text-violet-700">🐛 Detektif Kode</h2>
+        <h2 class="text-3xl font-black text-violet-700">Detektif Kode</h2>
         <button onclick="closeModal('detektifKodeModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-600 mb-2" id="detektifKodeDesc">Klik baris kode yang kamu anggap mengandung bug!</p>
@@ -586,7 +571,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div id="detektifKodeFeedback" class="mt-3 text-base font-semibold hidden"></div>
       <div class="flex gap-3 mt-4 flex-wrap">
         <button onclick="nextDetektifKode()" id="nextDetektifKodeBtn" class="bg-violet-600 text-white font-bold py-2 px-6 rounded-xl hidden">Tantangan Berikutnya →</button>
-        <button onclick="closeModal('detektifKodeModal')" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">Tutup</button>
+        <button onclick="closeModal('detektifKodeModal')" class="bg-violet-500 text-white font-bold py-2 px-5 rounded-xl">Tutup</button>
       </div>
       <div class="text-slate-400 text-xs mt-3" id="detektifKodeProg"></div>
     </div>
@@ -598,7 +583,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="prediksiModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:640px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-3xl font-black text-sky-700">🔮 Prediksi Output</h2>
+        <h2 class="text-3xl font-black text-sky-700">Prediksi Output</h2>
         <button onclick="closeModal('prediksiModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-600 mb-3" id="prediksiDesc">Baca kode berikut, lalu tebak apa output yang akan muncul di terminal!</p>
@@ -609,7 +594,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="flex gap-3 mt-4 flex-wrap">
         <button onclick="cekPrediksi()" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-xl">Cek Prediksi</button>
         <button onclick="nextPrediksi()" id="nextPrediksiBtn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-xl hidden">Soal Berikutnya →</button>
-        <button onclick="closeModal('prediksiModal')" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">Tutup</button>
+        <button onclick="closeModal('prediksiModal')" class="bg-sky-500 text-white font-bold py-2 px-5 rounded-xl">Tutup</button>
       </div>
       <div class="text-slate-400 text-xs mt-3" id="prediksiProg"></div>
     </div>
@@ -621,13 +606,13 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="kuisVariabelModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:620px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-3xl font-black text-amber-700">❓ Kuis Nilai Variabel</h2>
+        <h2 class="text-3xl font-black text-amber-700">Kuis Nilai Variabel</h2>
         <button onclick="closeModal('kuisVariabelModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <div id="kuisVarBody"></div>
       <div class="flex gap-3 mt-4 flex-wrap">
         <button onclick="nextKuisVar()" id="nextKuisVarBtn" class="bg-amber-600 text-white font-bold py-2 px-6 rounded-xl hidden">Soal Berikutnya →</button>
-        <button onclick="closeModal('kuisVariabelModal')" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">Tutup</button>
+        <button onclick="closeModal('kuisVariabelModal')" class="bg-amber-500 text-white font-bold py-2 px-5 rounded-xl">Tutup</button>
       </div>
       <div class="text-slate-400 text-xs mt-3" id="kuisVarProg"></div>
     </div>
@@ -639,7 +624,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="visualisasiMaxModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:580px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-3xl font-black text-teal-700">📊 Visualisasi max()</h2>
+        <h2 class="text-3xl font-black text-teal-700">Visualisasi max()</h2>
         <button onclick="closeModal('visualisasiMaxModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-600 text-sm mb-4">Animasi ini menunjukkan bagaimana Python memeriksa setiap elemen untuk menemukan nilai terbesar (max).</p>
@@ -647,9 +632,9 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="flex gap-2 flex-wrap justify-center mb-4" id="visLabels"></div>
       <div id="visStatus" class="text-center font-bold text-lg text-teal-700 min-h-[28px] mb-3"></div>
       <div class="flex gap-3 justify-center flex-wrap">
-        <button onclick="startVisualisasi()" id="visStartBtn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-xl">▶ Mulai Animasi</button>
-        <button onclick="resetVisualisasi()" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">↺ Reset</button>
-        <button onclick="closeModal('visualisasiMaxModal')" class="bg-slate-200 text-slate-700 font-bold py-2 px-5 rounded-xl">Tutup</button>
+        <button onclick="startVisualisasi()" id="visStartBtn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-xl"><img src="assets/img/icons/icon-play.svg" class="btn-icon" alt=""> Mulai Animasi</button>
+        <button onclick="resetVisualisasi()" class="bg-teal-500 text-white font-bold py-2 px-5 rounded-xl">↺ Reset</button>
+        <button onclick="closeModal('visualisasiMaxModal')" class="bg-teal-500 text-white font-bold py-2 px-5 rounded-xl">Tutup</button>
       </div>
       <div class="mt-5 bg-teal-50 rounded-xl p-4 text-sm text-teal-800">
         <strong>Konsep:</strong> Python menyimpan nilai terbesar sementara dalam memori, lalu membandingkannya satu per satu dengan elemen berikutnya. Inilah cara <code>max()</code> bekerja di balik layar.
@@ -787,7 +772,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
       <div class="shrink-0 pt-6 flex justify-between items-center border-t-2 border-lime-100 gap-4">
         <button id="bioPrevBtn" onclick="changeBioSlide(-1)"
                 style="visibility:hidden;"
-                class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-5 rounded-xl">
+                class="bg-lime-500 hover:bg-lime-600 text-white text-lg font-bold py-3 px-5 rounded-xl">
           &larr; Sebelumnya
         </button>
         <button onclick="closeModal('bioModal')"
@@ -894,7 +879,7 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
             Cetak Sertifikat
           </button>
           <button onclick="closeModal('sertifikatModal'); showPage('homePage');"
-                  class="bg-slate-200 text-slate-700 font-black py-3 px-8 rounded-2xl text-lg">
+                  class="bg-sky-500 text-white font-black py-3 px-8 rounded-2xl text-lg">
             Kembali ke Beranda
           </button>
         </div>
