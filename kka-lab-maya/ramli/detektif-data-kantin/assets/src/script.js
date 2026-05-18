@@ -333,6 +333,7 @@ const state = {
   slotValues:   { 1:{}, 2:{}, 3:{}, 4:{}, 5:{} },
   activeSlot:   null,
   hasSeenIntro: false,
+  datasetOpen:  false,
   quizAnswers:  {},
   quizDone:     false
 };
@@ -407,7 +408,7 @@ function openModal(id) {
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('show');
-  document.body.style.overflow = 'auto';
+  document.body.style.overflow = '';
 }
 
 /* ────────────────────────────────────────────────────────── */
@@ -516,6 +517,7 @@ function changeStage(no) {
   if (no > highestUnlockedStage()) return;
   state.currentStage = no;
   state.activeSlot   = null;
+  state.datasetOpen  = false;
   resetFeedbackOnly();
   renderAll();
   openExampleModal();
@@ -526,6 +528,7 @@ function goNextStage() {
   if (!state.completed[state.currentStage]) return;
   state.currentStage += 1;
   state.activeSlot    = null;
+  state.datasetOpen   = false;
   resetFeedbackOnly();
   renderAll();
   openExampleModal();
@@ -613,6 +616,7 @@ function renderStageNav() {
 
 function renderMissionPanel() {
   const stage = STAGES[state.currentStage];
+  const datasetLines = escapeHtml(stage.dataset).replaceAll('\n', '<br>');
   document.getElementById('missionPanel').innerHTML = `
     <div class="mission-card">
       <div class="mission-tag">${stage.tag}</div>
@@ -622,9 +626,14 @@ function renderMissionPanel() {
         <b>Misi:</b> ${stage.mission}
       </div>
     </div>
-    <div class="mb-4">
-      <div class="font-black text-slate-800 mb-2">Dataset Mentah</div>
-      <div class="dataset-box">${escapeHtml(stage.dataset)}</div>
+    <div class="dataset-toggle-card mb-4">
+      <button class="dataset-toggle-btn" onclick="toggleDataset()">
+        <span>Dataset Mentah</span>
+        <span class="dataset-toggle-icon">${state.datasetOpen ? 'Tutup' : 'Lihat'}</span>
+      </button>
+      <div class="dataset-preview ${state.datasetOpen ? 'open' : ''}">
+        ${datasetLines}
+      </div>
     </div>
     <div class="info-box mt-3"><b>Petunjuk:</b><br>${stage.tips}</div>
     <div class="grid grid-cols-1 gap-3 mt-4">
@@ -634,6 +643,11 @@ function renderMissionPanel() {
   `;
 }
 
+function toggleDataset() {
+  state.datasetOpen = !state.datasetOpen;
+  renderMissionPanel();
+}
+
 function renderOptions() {
   const stage     = STAGES[state.currentStage];
   const activeBox = document.getElementById('activeSlotBox');
@@ -641,8 +655,13 @@ function renderOptions() {
   const grid      = document.getElementById('optionGrid');
 
   if (!state.activeSlot) {
-    activeBox.textContent = 'Klik kotak kosong pada area kode terlebih dahulu.';
-    helpBox.textContent   = 'Bantuan slot akan muncul di sini setelah kamu memilih salah satu kotak kosong.';
+    const allFilled = stage.slots.every(k => state.slotValues[state.currentStage][k]);
+    activeBox.textContent = allFilled
+      ? 'Semua slot sudah terisi. Tekan Jalankan untuk mengecek hasil.'
+      : 'Klik kotak kosong pada area kode terlebih dahulu.';
+    helpBox.textContent = allFilled
+      ? 'Kamu masih bisa klik slot tertentu jika ingin mengganti jawabannya.'
+      : 'Bantuan slot akan muncul di sini setelah kamu memilih salah satu kotak kosong.';
   } else {
     activeBox.innerHTML = `Slot aktif: <span class="ml-2 font-black">${state.activeSlot}</span>`;
     helpBox.textContent = stage.slotHelp[state.activeSlot] || 'Pilih komponen kode yang paling sesuai.';
@@ -709,7 +728,14 @@ function selectSlot(key) {
 
 function fillSlot(value) {
   if (!state.activeSlot) return;
-  state.slotValues[state.currentStage][state.activeSlot] = value;
+  const stage = STAGES[state.currentStage];
+  const filledSlot = state.activeSlot;
+  state.slotValues[state.currentStage][filledSlot] = value;
+  const filledIndex = stage.slots.indexOf(filledSlot);
+  const nextSlot = stage.slots
+    .slice(filledIndex + 1)
+    .find(k => !state.slotValues[state.currentStage][k]);
+  state.activeSlot = nextSlot || null;
   renderCodeArea();
   renderOptions();
 }
@@ -819,20 +845,20 @@ function renderQuizQuestion() {
 
   container.innerHTML = `
     <div class="quiz-progress-wrap">
-      <div class="quiz-progress-bar" style="width:${((currentQuizQ)/total)*100}%"></div>
+      <div class="quiz-progress-bar" style="width:${((currentQuizQ + 1)/total)*100}%"></div>
     </div>
     <div class="quiz-counter">Soal ${currentQuizQ+1} dari ${total}</div>
     <div class="quiz-question">${q.q}</div>
     <div class="quiz-options" id="quizOptions"></div>
-    <div id="quizFeedback" class="quiz-feedback hidden-el"></div>
+    <div id="quizNotice" class="quiz-notice hidden-el"></div>
     <div class="quiz-nav-row">
       <button id="quizPrevBtn" onclick="quizNav(-1)"
               class="quiz-nav-btn" style="visibility:${currentQuizQ===0?'hidden':'visible'}">
         &larr; Sebelumnya
       </button>
       <button id="quizNextBtn" onclick="quizNav(1)"
-              class="quiz-nav-btn quiz-nav-btn-next hidden-el">
-        ${currentQuizQ === total-1 ? 'Lihat Hasil' : 'Selanjutnya'} &rarr;
+              class="quiz-nav-btn quiz-nav-btn-next">
+        ${currentQuizQ === total-1 ? 'Selesai' : 'Selanjutnya'} &rarr;
       </button>
     </div>
   `;
@@ -843,52 +869,37 @@ function renderQuizQuestion() {
     btn.className = 'quiz-opt-btn';
     btn.innerHTML = `<span class="quiz-opt-letter">${String.fromCharCode(65+idx)}</span>${escapeHtml(opt)}`;
     btn.onclick   = () => selectQuizAnswer(idx);
-    /* Jika sudah dijawab sebelumnya, restore state */
-    if (state.quizAnswers[currentQuizQ] !== undefined) {
-      restoreQuizAnswer(btn, idx, q);
-    }
+    restoreQuizAnswer(btn, idx);
     opts.appendChild(btn);
   });
-
-  if (state.quizAnswers[currentQuizQ] !== undefined) showQuizFeedback(q, state.quizAnswers[currentQuizQ]);
 }
 
 function selectQuizAnswer(idx) {
-  if (state.quizAnswers[currentQuizQ] !== undefined) return; /* Tidak bisa ganti jawaban */
   state.quizAnswers[currentQuizQ] = idx;
-
-  const q    = QUIZ_QUESTIONS[currentQuizQ];
   const opts = document.querySelectorAll('.quiz-opt-btn');
-  opts.forEach((btn, i) => restoreQuizAnswer(btn, i, q));
-  showQuizFeedback(q, idx);
-
-  const nextBtn = document.getElementById('quizNextBtn');
-  if (nextBtn) nextBtn.classList.remove('hidden-el');
+  opts.forEach((btn, i) => restoreQuizAnswer(btn, i));
+  const notice = document.getElementById('quizNotice');
+  if (notice) notice.classList.add('hidden-el');
 }
 
-function restoreQuizAnswer(btn, idx, q) {
+function restoreQuizAnswer(btn, idx) {
   const chosen = state.quizAnswers[currentQuizQ];
-  if (chosen === undefined) return;
-  if (idx === q.correct) {
-    btn.classList.add('quiz-correct');
-  } else if (idx === chosen && idx !== q.correct) {
-    btn.classList.add('quiz-wrong');
-  }
-  btn.disabled = true;
+  btn.classList.toggle('quiz-selected', chosen === idx);
+  btn.setAttribute('aria-pressed', chosen === idx ? 'true' : 'false');
 }
 
-function showQuizFeedback(q, chosen) {
-  const fb = document.getElementById('quizFeedback');
-  if (!fb) return;
-  fb.classList.remove('hidden-el');
-  const isRight = chosen === q.correct;
-  fb.className  = 'quiz-feedback ' + (isRight ? 'quiz-fb-correct' : 'quiz-fb-wrong');
-  fb.innerHTML  = `<strong>${isRight ? 'Benar!' : 'Belum tepat.'}</strong> ${q.explain}`;
-  const nextBtn = document.getElementById('quizNextBtn');
-  if (nextBtn) nextBtn.classList.remove('hidden-el');
+function showQuizNotice(message) {
+  const notice = document.getElementById('quizNotice');
+  if (!notice) return;
+  notice.textContent = message;
+  notice.classList.remove('hidden-el');
 }
 
 function quizNav(dir) {
+  if (dir > 0 && state.quizAnswers[currentQuizQ] === undefined) {
+    showQuizNotice('Pilih satu jawaban dulu sebelum lanjut.');
+    return;
+  }
   const next = currentQuizQ + dir;
   if (next < 0) return;
   if (next >= QUIZ_QUESTIONS.length) {
@@ -897,6 +908,11 @@ function quizNav(dir) {
   }
   currentQuizQ = next;
   renderQuizQuestion();
+}
+
+function ulangiQuizRefleksi() {
+  closeModal('sertifikatModal');
+  openQuizModal();
 }
 
 function showQuizResult() {
@@ -1044,20 +1060,75 @@ const REFLEKSI_QS = [
   { q: 'Sebutkan satu contoh situasi di kehidupan nyata di mana kamu perlu memilah data!', ph: 'Contoh: di laporan nilai sekolah, nama siswa dan nilai angka disimpan terpisah agar mudah dihitung rata-rata. Kamu bisa cari contoh lain?' },
   { q: 'Fungsi Python mana yang paling berguna menurutmu, dan mengapa?', ph: 'Contoh: "for sangat berguna karena bisa memproses 100 data tanpa harus menulis 100 baris kode." — Pilihanmu: max(), if, for, atau zip()? Jelaskan!' },
 ];
+const REFLEKSI_STORAGE_KEY = 'detektif_refleksi_jawaban';
+
+function loadSavedRefleksi() {
+  try {
+    return JSON.parse(localStorage.getItem(REFLEKSI_STORAGE_KEY) || '[]');
+  } catch(e) {
+    return [];
+  }
+}
 
 function openRefleksiInteraktif() {
   const list = document.getElementById('refleksiQList');
+  const savedAnswers = loadSavedRefleksi();
   list.innerHTML = REFLEKSI_QS.map((item, i) => `
     <div>
       <label class="block text-slate-800 font-bold mb-2">${i+1}. ${item.q}</label>
-      <textarea class="refleksi-textarea" id="rq_${i}" placeholder="${item.ph}"></textarea>
+      <textarea class="refleksi-textarea" id="rq_${i}" placeholder="${item.ph}">${escapeHtml(savedAnswers[i] || '')}</textarea>
     </div>`).join('');
+  let status = document.getElementById('refleksiStatus');
+  if (!status) {
+    status = document.createElement('div');
+    status.id = 'refleksiStatus';
+    status.className = 'refleksi-status';
+    list.insertAdjacentElement('afterend', status);
+  }
+  status.textContent = savedAnswers.some(Boolean)
+    ? 'Jawaban refleksi terakhir sudah dimuat.'
+    : '';
+  status.className = 'refleksi-status';
   document.getElementById('simpanRefleksiBtn').textContent = 'Simpan Refleksi';
   openModal('refleksiModal');
 }
 
 function simpanRefleksiDetektif() {
   const btn = document.getElementById('simpanRefleksiBtn');
+  const status = document.getElementById('refleksiStatus');
+  const fields = REFLEKSI_QS.map((_, i) => document.getElementById(`rq_${i}`));
+  const answers = fields.map(field => field.value.trim());
+  const emptyFields = fields.filter((field, i) => !answers[i]);
+
+  fields.forEach(field => field.classList.remove('refleksi-empty'));
+
+  if (emptyFields.length > 0) {
+    emptyFields.forEach(field => field.classList.add('refleksi-empty'));
+    emptyFields[0].focus();
+    if (status) {
+      status.textContent = 'Lengkapi semua jawaban refleksi sebelum menyimpan.';
+      status.className = 'refleksi-status refleksi-status-warn';
+    }
+    btn.textContent = 'Belum Lengkap';
+    btn.style.background = '#dc2626';
+    setTimeout(() => { btn.textContent = 'Simpan Refleksi'; btn.style.background = ''; }, 1800);
+    return;
+  }
+
+  try {
+    localStorage.setItem(REFLEKSI_STORAGE_KEY, JSON.stringify(answers));
+  } catch(e) {
+    if (status) {
+      status.textContent = 'Browser tidak mengizinkan penyimpanan refleksi saat ini.';
+      status.className = 'refleksi-status refleksi-status-warn';
+    }
+    return;
+  }
+
+  if (status) {
+    status.textContent = 'Refleksi tersimpan di browser ini.';
+    status.className = 'refleksi-status refleksi-status-ok';
+  }
   btn.textContent = 'Tersimpan!';
   btn.style.background = '#16a34a';
   setTimeout(() => { btn.textContent = 'Simpan Refleksi'; btn.style.background = ''; }, 2000);
