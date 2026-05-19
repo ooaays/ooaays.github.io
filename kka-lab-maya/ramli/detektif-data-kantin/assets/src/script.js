@@ -356,6 +356,82 @@ let isGuruMode      = false;
 let logoClickCount  = 0;
 let logoClickTimer  = null;
 
+const PROGRESS_STORAGE_KEY = 'detektif_data_kantin_progress';
+
+function defaultSlotValues() {
+  return { 1:{}, 2:{}, 3:{}, 4:{}, 5:{} };
+}
+
+function saveLearningProgress() {
+  try {
+    localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify({
+      currentStage: state.currentStage,
+      completed: state.completed,
+      slotValues: state.slotValues,
+      hasSeenIntro: state.hasSeenIntro,
+      quizAnswers: state.quizAnswers,
+      quizDone: state.quizDone,
+      hasSeenTujuan,
+      hasSeenCara
+    }));
+  } catch(e) {}
+}
+
+function loadLearningProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY) || 'null');
+    if (!saved) return;
+
+    const stageNo = Number(saved.currentStage);
+    state.currentStage = Math.min(TOTAL_STAGES, Math.max(1, Number.isFinite(stageNo) ? stageNo : 1));
+    state.completed = saved.completed && typeof saved.completed === 'object' ? saved.completed : {};
+    state.slotValues = { ...defaultSlotValues(), ...(saved.slotValues || {}) };
+    state.activeSlot = null;
+    state.hasSeenIntro = !!saved.hasSeenIntro;
+    state.quizAnswers = saved.quizAnswers && typeof saved.quizAnswers === 'object' ? saved.quizAnswers : {};
+    state.quizDone = !!saved.quizDone;
+    hasSeenTujuan = !!saved.hasSeenTujuan;
+    hasSeenCara = !!saved.hasSeenCara;
+    if (state.currentStage > highestUnlockedStage()) {
+      state.currentStage = highestUnlockedStage();
+    }
+  } catch(e) {}
+}
+
+function resetLearningProgress() {
+  const ok = window.confirm('Mulai ulang belajar dari awal? Progres, jawaban kuis, dan refleksi di browser ini akan dihapus.');
+  if (!ok) return;
+
+  try {
+    localStorage.removeItem(PROGRESS_STORAGE_KEY);
+    localStorage.removeItem('detektif_refleksi_jawaban');
+    localStorage.removeItem('detektif_tujuanRead');
+    localStorage.removeItem('detektif_caraRead');
+    sessionStorage.removeItem('detektif_tujuanRead');
+    sessionStorage.removeItem('detektif_caraRead');
+  } catch(e) {}
+
+  state.currentStage = 1;
+  state.completed = {};
+  state.slotValues = defaultSlotValues();
+  state.activeSlot = null;
+  state.hasSeenIntro = false;
+  state.datasetOpen = false;
+  state.quizAnswers = {};
+  state.quizDone = false;
+  hasSeenTujuan = false;
+  hasSeenCara = false;
+  currentQuizQ = 0;
+
+  setCheckVisible('check-tujuan', false);
+  setCheckVisible('check-cara', false);
+  checkStartButtonState();
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('show'));
+  document.body.style.overflow = '';
+  showPage('homePage');
+  renderAll();
+}
+
 /* ────────────────────────────────────────────────────────── */
 /*  PAGE NAVIGATION                                           */
 /* ────────────────────────────────────────────────────────── */
@@ -368,6 +444,7 @@ function showPage(id) {
     renderAll();
     if (!state.hasSeenIntro) {
       state.hasSeenIntro = true;
+      saveLearningProgress();
       openModal('introModal');
     }
   }
@@ -422,8 +499,10 @@ function setCheckVisible(id, visible){
 function openTujuanModal() {
   hasSeenTujuan = true;
   try { sessionStorage.setItem('detektif_tujuanRead', 'true'); } catch(e){}
+  try { localStorage.setItem('detektif_tujuanRead', 'true'); } catch(e){}
   setCheckVisible('check-tujuan', true);
   checkStartButtonState();
+  saveLearningProgress();
   openModal('tujuanModal');
 }
 
@@ -433,8 +512,10 @@ function openTujuanModal() {
 function openCaraModal() {
   hasSeenCara = true;
   try { sessionStorage.setItem('detektif_caraRead', 'true'); } catch(e){}
+  try { localStorage.setItem('detektif_caraRead', 'true'); } catch(e){}
   setCheckVisible('check-cara', true);
   checkStartButtonState();
+  saveLearningProgress();
   currentCaraSlide = 0;
   updateCaraSlideView();
   openModal('caraModal');
@@ -520,6 +601,7 @@ function changeStage(no) {
   state.datasetOpen  = false;
   resetFeedbackOnly();
   renderAll();
+  saveLearningProgress();
   openExampleModal();
 }
 
@@ -531,6 +613,7 @@ function goNextStage() {
   state.datasetOpen   = false;
   resetFeedbackOnly();
   renderAll();
+  saveLearningProgress();
   openExampleModal();
 }
 
@@ -738,6 +821,7 @@ function fillSlot(value) {
   state.activeSlot = nextSlot || null;
   renderCodeArea();
   renderOptions();
+  saveLearningProgress();
 }
 
 function clearActiveSlot() {
@@ -745,6 +829,7 @@ function clearActiveSlot() {
   delete state.slotValues[state.currentStage][state.activeSlot];
   renderCodeArea();
   renderOptions();
+  saveLearningProgress();
 }
 
 function resetStage() {
@@ -757,6 +842,7 @@ function resetStage() {
   updateNextButton();
   renderCodeArea();
   renderOptions();
+  saveLearningProgress();
 }
 
 /* ────────────────────────────────────────────────────────── */
@@ -818,6 +904,7 @@ function runCode() {
     }
 
     renderProgressBar();
+    saveLearningProgress();
   } else {
     const wrongSlots = findWrongSlots();
     terminal.textContent = 'Program berjalan, tetapi hasilnya belum sesuai misi.\nPeriksa kembali slot: ' + wrongSlots.join(', ');
@@ -833,6 +920,8 @@ function runCode() {
 function openQuizModal() {
   currentQuizQ = 0;
   state.quizAnswers = {};
+  state.quizDone = false;
+  saveLearningProgress();
   renderQuizQuestion();
   openModal('quizModal');
 }
@@ -880,6 +969,7 @@ function selectQuizAnswer(idx) {
   opts.forEach((btn, i) => restoreQuizAnswer(btn, i));
   const notice = document.getElementById('quizNotice');
   if (notice) notice.classList.add('hidden-el');
+  saveLearningProgress();
 }
 
 function restoreQuizAnswer(btn, idx) {
@@ -940,6 +1030,7 @@ function showQuizResult() {
 
   openModal('sertifikatModal');
   renderProgressBar();
+  saveLearningProgress();
 }
 
 /* ────────────────────────────────────────────────────────── */
@@ -1426,9 +1517,16 @@ document.addEventListener('fullscreenchange', () => {
 });
 
 /* ── Boot ─────────────────────────────────────────────────── */
+loadLearningProgress();
 try {
-  if (sessionStorage.getItem('detektif_tujuanRead') === 'true') { hasSeenTujuan = true; setCheckVisible('check-tujuan', true); }
-  if (sessionStorage.getItem('detektif_caraRead') === 'true') { hasSeenCara = true; setCheckVisible('check-cara', true); }
+  if (sessionStorage.getItem('detektif_tujuanRead') === 'true' || localStorage.getItem('detektif_tujuanRead') === 'true') {
+    hasSeenTujuan = true;
+    setCheckVisible('check-tujuan', true);
+  }
+  if (sessionStorage.getItem('detektif_caraRead') === 'true' || localStorage.getItem('detektif_caraRead') === 'true') {
+    hasSeenCara = true;
+    setCheckVisible('check-cara', true);
+  }
   checkStartButtonState();
 } catch(e) {}
 renderAll();

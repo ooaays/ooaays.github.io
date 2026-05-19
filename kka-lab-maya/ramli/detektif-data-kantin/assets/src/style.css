@@ -417,13 +417,13 @@ body {
 }
 
 /* ── Lab Shell ───────────────────────────────────────────── */
-.lab-shell { max-width:1480px; margin:0 auto; padding:28px 20px 44px; }
-.lab-grid { display:grid; grid-template-columns:340px 340px 1fr; gap:18px; align-items:start; }
-.panel { background:white; border-radius:26px; border:1px solid #dbeafe; box-shadow:0 12px 28px rgba(15,23,42,.08); padding:18px; }
+.lab-shell { max-width:1480px; margin:0 auto; padding:28px 18px 44px; overflow-x:hidden; }
+.lab-grid { display:grid; grid-template-columns:minmax(270px, 310px) minmax(270px, 310px) minmax(0, 1fr); gap:16px; align-items:start; }
+.panel { background:white; border-radius:26px; border:1px solid #dbeafe; box-shadow:0 12px 28px rgba(15,23,42,.08); padding:16px; min-width:0; }
 .dark-panel {
   background:linear-gradient(160deg,#06152d,#08213f,#0b2444);
   color:white; border-radius:26px; border:1px solid rgba(255,255,255,.06);
-  box-shadow:0 14px 28px rgba(2,6,23,.16); padding:18px;
+  box-shadow:0 14px 28px rgba(2,6,23,.16); padding:18px; min-width:0;
 }
 .section-title { font-size:19px; font-weight:900; margin-bottom:10px; }
 
@@ -1176,46 +1176,62 @@ body {
   75% { transform: translateX(6px); }
 }
 
-/* Mode desktop-scroll untuk layar kecil: tampilan tetap seperti desktop, bisa digeser horizontal. */
+/* Layar kecil: susun vertikal, cukup scroll atas-bawah. */
 @media (max-width:1024px){
   html,
-  body,
+  body{
+    overflow-x:hidden !important;
+  }
   .page,
   .hero-wrap,
-  .lab-shell{
-    min-width:1200px !important;
-  }
-  html,
-  body{ overflow-x:auto !important; }
-  .lab-header-text,
-  .header-text{ display:block !important; }
-  .lab-header-logos,
-  .header-logos{ display:flex !important; }
-  .hero-wrap{
-    grid-template-columns:minmax(520px, 1fr) minmax(460px, 560px) !important;
-  }
-  .lab-grid{
-    grid-template-columns:340px 340px 1fr !important;
-  }
-  .hero-buttons,
-  .action-row,
-  .note-grid,
-  .term-grid,
-  .bio-grid,
-  .cara-grid-2{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .debug-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
-  .stack-two{ grid-template-columns:1fr 200px !important; }
-  .bins-grid{ grid-template-columns:repeat(5,1fr) !important; }
-  .conveyor{ grid-template-columns:repeat(8,minmax(0,1fr)) !important; }
-  .bin-items{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+  .lab-shell,
   .modal-backdrop{
-    min-width:1200px !important;
+    min-width:0 !important;
+    width:100% !important;
+  }
+  .hero-wrap,
+  .lab-grid{
+    grid-template-columns:1fr !important;
+  }
+  .lab-row1,
+  .lab-row1-actions,
+  .lab-row1-nav{
+    flex-wrap:wrap;
+  }
+  .lab-row1-nav{
+    border-left:0;
+    padding-left:0;
+  }
+  .lab-tool-row{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .hero-lab-grid{
+    grid-template-columns:1fr;
+  }
+  .modal-backdrop{
     align-items:flex-start !important;
-    overflow:auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
     padding-top:16px !important;
     padding-bottom:24px !important;
+  }
+}
+
+@media (max-width:560px){
+  .lab-tool-row{
+    grid-template-columns:1fr;
+  }
+  .lab-row1-actions,
+  .lab-row1-nav,
+  .lab-run-btn,
+  .lab-next-btn,
+  .lab-nav-btn{
+    width:100%;
+  }
+  .lab-run-btn,
+  .lab-next-btn,
+  .lab-nav-btn{
+    justify-content:center;
   }
 }
 
@@ -1225,12 +1241,12 @@ body {
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
-.lab-row1-title { flex: 1; min-width: 0; }
-.lab-row1-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.lab-row1-title { flex: 1 1 128px; min-width: 0; }
+.lab-row1-actions { display: flex; gap: 8px; flex: 1 1 260px; min-width:0; }
 .lab-row1-nav {
-  display: flex; gap: 8px; flex-shrink: 0;
+  display: flex; gap: 8px; flex: 1 1 320px; min-width:0;
   border-left: 1px solid rgba(255,255,255,.12); padding-left: 10px;
 }
 
@@ -1238,6 +1254,7 @@ body {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 18px; border-radius: 12px; font-weight: 900; font-size: 14px;
   background: #10b981; color: #022c22; border: none; cursor: pointer; white-space: nowrap;
+  flex: 1 1 auto; justify-content:center; min-width:0;
 }
 .lab-run-btn:hover { background: #059669; }
 .lab-run-btn img { width: 15px; height: 15px; flex-shrink: 0; }
@@ -1246,23 +1263,27 @@ body {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 18px; border-radius: 12px; font-weight: 900; font-size: 14px;
   background: #6366f1; color: white; border: none; cursor: pointer; white-space: nowrap;
+  flex: 1 1 auto; justify-content:center; min-width:0;
 }
 
 .lab-nav-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 14px; border-radius: 12px; font-weight: 900; font-size: 13px;
   border: none; cursor: pointer; color: white; white-space: nowrap;
+  flex: 1 1 auto; justify-content:center; min-width:0;
 }
 .lab-nav-btn img { width: 15px; height: 15px; flex-shrink: 0; }
 .lab-nav-fullscreen { background: #4338ca; }
 .lab-nav-fullscreen:hover { background: #3730a3; }
+.lab-nav-reset { background: #b45309; }
+.lab-nav-reset:hover { background: #92400e; }
 .lab-nav-home { background: #e11d48; }
 .lab-nav-home:hover { background: #be123c; }
 
 /* ── Lab Tool Row: 5 alat sama rata ─────────────────────────── */
 .lab-tool-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 7px;
   margin-bottom: 10px;
 }
@@ -1270,7 +1291,7 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 9px 6px; border-radius: 10px; font-weight: 900; font-size: 12px;
   border: none; cursor: pointer; color: white; text-align: center;
-  overflow: hidden;
+  overflow: hidden; min-width:0;
 }
 .lab-tool-btn img { width: 18px; height: 18px; flex-shrink: 0; }
 .lab-tool-btn:hover { filter: brightness(1.15); }
