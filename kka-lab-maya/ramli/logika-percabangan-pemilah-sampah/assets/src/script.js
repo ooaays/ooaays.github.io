@@ -134,6 +134,7 @@ const appState = {
   currentIndex: -1,
   banner: { tone: 'info', text: 'Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.' },
   activeChallengeId: null,
+  lastChallengeId: null,
   completedChallenges: {}
 };
 
@@ -283,17 +284,27 @@ function getChallengeById(id) {
   return CHALLENGES.find((challenge) => challenge.id === id) || null;
 }
 
+function isChallengeUnlocked(index) {
+  if (index <= 0) return true;
+  const prevChallenge = CHALLENGES[index - 1];
+  return Boolean(appState.completedChallenges[prevChallenge.id]);
+}
+
 function renderDebugCards() {
   const wrap = qs('debugCards');
   if (!wrap) return;
-  wrap.innerHTML = CHALLENGES.map((challenge) => {
+  wrap.innerHTML = CHALLENGES.map((challenge, index) => {
     const isActive = appState.activeChallengeId === challenge.id;
     const isDone = Boolean(appState.completedChallenges[challenge.id]);
-    const statusText = isDone ? 'Selesai' : isActive ? 'Aktif' : 'Belum Dicoba';
-    const statusClass = isDone ? 'done' : isActive ? 'active' : 'idle';
+    const isLocked = !isDone && !isActive && !isChallengeUnlocked(index);
+    const statusText = isDone ? 'Selesai' : isActive ? 'Aktif' : isLocked ? 'Terkunci' : 'Belum Dicoba';
+    const statusClass = isDone ? 'done' : isActive ? 'active' : isLocked ? 'locked' : 'idle';
     const starterRules = challenge.starterRules.map((rule) => (
       `<li>JIKA ${CONDITION_LABEL[rule.condition]} → ${BIN_INFO[rule.action].label}</li>`
     )).join('');
+    const actionButton = isLocked
+      ? `<button class="pill-btn indigo full" disabled title="Selesaikan level sebelumnya dengan akurasi 100% dulu">🔒 Selesaikan Level Sebelumnya Dulu</button>`
+      : `<button class="pill-btn indigo full" onclick="loadChallenge('${challenge.id}')">${isActive ? 'Muat Ulang Tantangan Ini' : 'Muat Tantangan Ini'}</button>`;
 
     return `
       <div class="debug-card ${statusClass}">
@@ -306,7 +317,7 @@ function renderDebugCards() {
           <ul>${starterRules}</ul>
         </div>
         <div class="debug-hint"><strong>Petunjuk:</strong> ${challenge.hint}</div>
-        <button class="pill-btn indigo full" onclick="loadChallenge('${challenge.id}')">${isActive ? 'Muat Ulang Tantangan Ini' : 'Muat Tantangan Ini'}</button>
+        ${actionButton}
       </div>
     `;
   }).join('');
@@ -318,31 +329,49 @@ function renderChallengeStatus() {
   const badges = qs('challengeBadges');
   if (!status || !objective || !badges) return;
 
-  badges.innerHTML = CHALLENGES.map((challenge) => {
+  badges.innerHTML = CHALLENGES.map((challenge, index) => {
     const done = appState.completedChallenges[challenge.id];
     const active = appState.activeChallengeId === challenge.id;
-    const cls = done ? 'done' : active ? 'active' : 'idle';
+    const locked = !done && !active && !isChallengeUnlocked(index);
+    const cls = done ? 'done' : active ? 'active' : locked ? 'locked' : 'idle';
     return `<span class="challenge-badge ${cls}">${challenge.title.split('—')[0].trim().replace('Level ', 'L')}</span>`;
   }).join('');
 
   const activeChallenge = getChallengeById(appState.activeChallengeId);
-  if (!activeChallenge) {
-    status.className = 'challenge-status info';
-    status.innerHTML = 'Belum ada tantangan aktif. Buka mode debug untuk mencoba aturan yang sengaja dibuat salah atau belum lengkap.';
-    objective.textContent = 'Fokus belajar: bedakan aturan khusus, aturan umum, dan aturan cadangan.';
+  if (activeChallenge) {
+    const completed = Boolean(appState.completedChallenges[activeChallenge.id]);
+    status.className = `challenge-status ${completed ? 'success' : 'warn'}`;
+    status.innerHTML = `<strong>${activeChallenge.title}</strong><br>${activeChallenge.focus}`;
+    objective.textContent = `${completed ? 'Selesai: ' : 'Target: '}${activeChallenge.objective}`;
     return;
   }
 
-  const completed = Boolean(appState.completedChallenges[activeChallenge.id]);
-  status.className = `challenge-status ${completed ? 'success' : 'warn'}`;
-  status.innerHTML = `<strong>${activeChallenge.title}</strong><br>${activeChallenge.focus}`;
-  objective.textContent = `${completed ? 'Selesai: ' : 'Target: '}${activeChallenge.objective}`;
+  const lastChallenge = getChallengeById(appState.lastChallengeId);
+  if (lastChallenge) {
+    status.className = 'challenge-status info';
+    status.innerHTML = `<strong>${lastChallenge.title}</strong> (dihentikan)<br>${lastChallenge.focus}`;
+    objective.textContent = 'Buka lagi Mode Tantangan Debug untuk melanjutkan tantangan ini atau memilih tantangan lain.';
+    return;
+  }
+
+  status.className = 'challenge-status info';
+  status.innerHTML = 'Belum ada tantangan aktif. Buka mode debug untuk mencoba aturan yang sengaja dibuat salah atau belum lengkap.';
+  objective.textContent = 'Fokus belajar: bedakan aturan khusus, aturan umum, dan aturan cadangan.';
 }
 
 function loadChallenge(id) {
   const challenge = getChallengeById(id);
   if (!challenge || appState.running) return;
+
+  const index = CHALLENGES.findIndex((c) => c.id === id);
+  if (!isChallengeUnlocked(index)) {
+    setBuilderFeedback('Selesaikan tantangan level sebelumnya dengan akurasi 100% dulu sebelum membuka level ini.', 'warn');
+    renderDebugCards();
+    return;
+  }
+
   appState.activeChallengeId = id;
+  appState.lastChallengeId = id;
   appState.rules = challenge.starterRules.map((rule) => ({ ...rule }));
   setBuilderFeedback(`Tantangan dimuat: ${challenge.title}. ${challenge.hint}`, 'warn');
   setBanner(`Tantangan aktif: ${challenge.title}. Perbaiki aturan sampai akurasi 100%.`, 'warn');
@@ -586,6 +615,7 @@ function resetWorkspace() {
   if (appState.running) return;
   appState.rules = [];
   appState.activeChallengeId = null;
+  appState.lastChallengeId = null;
   appState.stopRequested = false;
   setBuilderFeedback('Semua aturan dibersihkan. Kamu bisa mulai lagi dari awal.', 'info');
   resetSimulation(true);
