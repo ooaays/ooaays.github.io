@@ -87,12 +87,62 @@
         .app-title h2 { margin: 0 0 10px 0; }
         .app-title p { margin: 0; color: #7f8c8d; }
 
-        .factory-container { max-width: 1400px; margin: auto; display: grid; grid-template-columns: 500px 1fr; gap: 30px; padding: 0 20px 40px 20px; }
+        .btn-home {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--p); color: white;
+            border: 1px solid var(--p); text-decoration: none;
+            font-weight: 600; font-size: 13px; padding: 8px 16px;
+            border-radius: 20px; transition: 0.2s; white-space: nowrap;
+            min-height: 38px; box-sizing: border-box; cursor: pointer;
+        }
+        .btn-home:hover { background: #1b2836; border-color: #1b2836; }
+        .btn-home.accent { background: var(--a); border-color: var(--a); color: #1e272e; }
+        .btn-home.accent:hover { background: #e8890f; border-color: #e8890f; }
+        .home-row { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 16px 0 28px; }
+
+        /* Mode Kalimat */
+        .mode-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; }
+        .mode-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+        .mode-option {
+            padding: 10px 6px; font-size: 12px; font-weight: bold; text-align: center;
+            border: 2px solid var(--p); border-radius: 8px; background: var(--p); color: white; cursor: pointer;
+            min-height: 44px; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .mode-option:hover { background: #1b2836; }
+        .mode-option.active { border-color: var(--a); background: var(--a); color: #1e272e; }
+
+        /* Input teks sendiri */
+        .custom-text-box { display: none; margin-top: 12px; }
+        .custom-text-box.visible { display: block; }
+        .custom-text-box textarea { width: 100%; min-height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 13px; box-sizing: border-box; resize: vertical; }
+        .input-warning { font-size: 12px; color: #e17055; margin-top: 6px; display: none; font-weight: bold; }
+        .input-warning.visible { display: block; }
+
+        /* Modal Materi: Apa itu Markov Chain? */
+        .materi-analogi { background: #fff8ec; border: 1px solid #ffe4bd; border-left: 4px solid var(--a); border-radius: 8px; padding: 15px; margin-bottom: 18px; font-size: 14px; color: #7a5c1e; line-height: 1.7; }
+        .materi-terms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 18px; }
+        .materi-term-card { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid var(--p); border-radius: 8px; padding: 15px; }
+        .materi-term-card h4 { margin: 0 0 6px; color: var(--p); font-size: 14px; }
+        .materi-term-card p { margin: 0; font-size: 13px; color: #57606f; line-height: 1.6; }
+        .materi-contoh { background: var(--d); color: #f1f2f6; border-radius: 12px; padding: 15px 18px; font-size: 13px; line-height: 1.8; }
+        .materi-contoh b { color: var(--s); }
+
+        /* Section Perbedaan Mode Kalimat */
+        .mode-explain-section { max-width: 1400px; margin: 0 auto; padding: 0 20px 40px; }
+        .mode-explain-section .box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .mode-explain-section h3 { margin-top: 0; color: var(--p); }
+        .mode-explain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin: 15px 0; }
+        .mode-explain-card { background: #f8f9fa; border: 1px solid #eee; border-left: 4px solid var(--a); border-radius: 8px; padding: 15px; }
+        .mode-explain-card h4 { margin: 0 0 8px; color: var(--p); font-size: 14px; }
+        .mode-explain-card p { margin: 0; font-size: 13px; color: #57606f; line-height: 1.6; }
+        .mode-compare-list { font-size: 13px; color: #57606f; line-height: 1.8; padding-left: 18px; margin: 0; }
+
+        .factory-container { max-width: 1400px; margin: auto; display: grid; grid-template-columns: 500px 1fr; gap: 30px; padding: 10px 20px 40px 20px; }
 
         /* Rak Kartu */
         .gudang-section { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .view-dataset-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
-        .btn-view { background: #f1f2f6; border: 1px solid #dcdde1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .view-dataset-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
 
         .cards-shelf { display: flex; gap: 15px; justify-content: center; height: 160px; align-items: center; border-bottom: 2px solid #f1f2f6; margin-bottom: 20px; }
         .flash-card { 
@@ -100,7 +150,8 @@
             cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
         }
-        .flash-card i { font-size: 35px; margin-bottom: 8px; font-style: normal; }
+        .flash-card i { margin-bottom: 8px; font-style: normal; display: block; }
+        .flash-card i svg { width: 34px; height: 34px; color: var(--p); }
         .flash-card.in-wadah { transform: translateY(220px) scale(1.1); border-color: var(--a); box-shadow: 0 10px 20px rgba(255,159,67,0.3); z-index: 10; }
 
         /* Wadah Kosong */
@@ -114,8 +165,27 @@
         /* Kontrol */
         .step-area { margin-top: 30px; display: none; }
         .step-area.visible { display: block; animation: fadeInUp 0.5s; }
-        .btn-process { width: 100%; padding: 14px; background: var(--p); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+        .btn-process {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            min-height: 44px;
+            background: var(--p); color: white; border: none; font-weight: bold; cursor: pointer; margin-bottom: 12px; transition: 0.2s;
+            box-sizing: border-box;
+        }
         .btn-process:hover { opacity: 0.9; }
+        .btn-process:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-view {
+            padding: 8px 16px;
+            font-size: 13px;
+            min-height: 38px;
+            border-radius: 8px;
+            background: var(--s); border: 1px solid var(--s); color: #0a3d31; cursor: pointer; font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-view:hover { background: #17b98d; border-color: #17b98d; }
 
         /* Slider Kreativitas */
         .slider-box { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; }
@@ -169,22 +239,27 @@
 </div>
 
 <div class="app-title">
-    <h2>🏭 Miniatur KA Generatif dengan Eksplorasi Markov Chain</h2>
+    <h2><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.1em; margin-right:0.15em;"><path d="M2 20h20"></path><path d="M4 20V10l6-4v4l6-4v14"></path><path d="M16 20V6l4 3v11"></path><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line></svg>Miniatur KA Generatif dengan Eksplorasi Markov Chain</h2>
     <p>Gunakan dataset besar untuk melihat simulasi prediksi kata AI secara nyata!</p>
+</div>
+<div class="home-row">
+    <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-home">&larr; Kembali ke Beranda</a>
+    <button class="btn-home accent" onclick="document.getElementById('materiModal').style.display='block'"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Apa itu Markov Chain?</button>
 </div>
 
 <div class="factory-container">
     <div class="gudang-section">
         <div class="view-dataset-bar">
-            <button class="btn-view" onclick="inspect('pendidikan')">🔍 Data Edukasi</button>
-            <button class="btn-view" onclick="inspect('kesehatan')">🔍 Data Kesehatan</button>
-            <button class="btn-view" onclick="inspect('otomotif')">🔍 Data Otomotif</button>
+            <button class="btn-view" onclick="inspect('pendidikan')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Data Edukasi</button>
+            <button class="btn-view" onclick="inspect('kesehatan')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Data Kesehatan</button>
+            <button class="btn-view" onclick="inspect('otomotif')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Data Otomotif</button>
         </div>
 
         <div class="cards-shelf">
-            <div class="flash-card" id="card-pendidikan" onclick="selectCard('pendidikan')"><i>🎓</i><b>Edukasi</b></div>
-            <div class="flash-card" id="card-kesehatan" onclick="selectCard('kesehatan')"><i>🏥</i><b>Kesehatan</b></div>
-            <div class="flash-card" id="card-otomotif" onclick="selectCard('otomotif')"><i>🏎️</i><b>Otomotif</b></div>
+            <div class="flash-card" id="card-pendidikan" onclick="selectCard('pendidikan')"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"></path></svg></i><b>Edukasi</b></div>
+            <div class="flash-card" id="card-kesehatan" onclick="selectCard('kesehatan')"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></i><b>Kesehatan</b></div>
+            <div class="flash-card" id="card-otomotif" onclick="selectCard('otomotif')"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM19 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path><path d="M3 17v-4l2-5h10l4 5v4"></path></svg></i><b>Otomotif</b></div>
+            <div class="flash-card" id="card-custom" onclick="selectCard('custom')"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg></i><b>Teks Sendiri</b></div>
         </div>
 
         <div class="wadah-latihan" id="wadahTarget">
@@ -192,25 +267,36 @@
             <span id="placeholderText" style="color:#7f8c8d; font-style: italic;">Pilih kategori dataset di atas...</span>
         </div>
 
+        <div class="custom-text-box" id="customTextBox">
+            <label style="font-size:12px; font-weight:bold;">Masukkan teks sumbermu sendiri (satu kalimat per baris):</label>
+            <textarea id="customTextArea" placeholder="Contoh:&#10;siswa belajar matematika di kelas pagi&#10;guru mengajar sejarah di kelas siang" oninput="validateCustomText()"></textarea>
+            <div class="input-warning" id="customTextWarning"></div>
+        </div>
+
         <div class="step-area" id="controls">
-            <button class="btn-process" onclick="doTokenize()">1. Mulai Tokenisasi (Potong Data)</button>
-            
+            <div class="mode-box">
+                <label style="font-size:12px; font-weight:bold;">Pilih Mode Kalimat:</label>
+                <div class="mode-options">
+                    <div class="mode-option active" id="modeBtn-formal" onclick="setMode('formal')">Formal</div>
+                    <div class="mode-option" id="modeBtn-nonformal" onclick="setMode('nonformal')">Nonformal</div>
+                    <div class="mode-option" id="modeBtn-kreatif" onclick="setMode('kreatif')">Kreatif</div>
+                </div>
+            </div>
+
             <div style="margin: 15px 0;">
                 <label style="font-size:12px; font-weight:bold;">Memori Mesin (N-Gram):</label>
-                <select id="orde" style="width:100%; padding:10px; border-radius:8px; margin-top:5px; border: 1px solid #ccc;">
+                <select id="orde" style="width:100%; padding:10px; border-radius:8px; margin-top:5px; border: 1px solid #ccc; min-height:44px; box-sizing:border-box;">
                     <option value="1">Orde 1 (Memori 1 Kata - Lebih Acak)</option>
                     <option value="2" selected>Orde 2 (Memori 2 Kata - Lebih Logis)</option>
                 </select>
             </div>
-            
-            <button class="btn-process" onclick="doAnalyze()">2. Analisis Peta Probabilitas</button>
-            
-            <div class="slider-box">
+
+            <div class="slider-box" id="tempBox" style="display:none;">
                 <label style="font-size:12px; font-weight:bold; display:flex; justify-content:space-between;">
                     <span>Suhu Kreativitas (Temperature):</span>
-                    <span id="tempVal" style="color:var(--a); font-size:14px;">1.0</span>
+                    <span id="tempVal" style="color:var(--a); font-size:14px;">1.3</span>
                 </label>
-                <input type="range" id="temp" min="0.1" max="2.0" step="0.1" value="1.0" style="width:100%; margin-top:10px;" oninput="document.getElementById('tempVal').innerText = this.value">
+                <input type="range" id="temp" min="0.1" max="2.0" step="0.1" value="1.3" style="width:100%; margin-top:10px;" oninput="document.getElementById('tempVal').innerText = this.value">
                 <div class="slider-labels">
                     <span>Kaku (0.1)</span>
                     <span>Normal (1.0)</span>
@@ -218,7 +304,9 @@
                 </div>
             </div>
 
-            <button class="btn-process" style="background:var(--s); color:#1e272e; font-size: 16px;" onclick="doGenerate()">3. Cetak Kalimat Prediksi</button>
+            <div class="input-warning" id="genWarning"></div>
+
+            <button class="btn-process" style="background:var(--s); color:#1e272e;" onclick="doMulaiPercobaan(this)">Mulai Percobaan</button>
         </div>
     </div>
 
@@ -228,11 +316,70 @@
     </div>
 </div>
 
+<div class="mode-explain-section">
+    <div class="box">
+        <h3>Perbedaan Mode Kalimat</h3>
+        <div class="mode-explain-grid">
+            <div class="mode-explain-card">
+                <h4>Mode Formal</h4>
+                <p>Mode formal menghasilkan kalimat yang lebih teratur dan mengikuti pilihan kata dengan probabilitas tertinggi. Mode ini cocok untuk membuat kalimat yang lebih rapi dan mudah dipahami.</p>
+            </div>
+            <div class="mode-explain-card">
+                <h4>Mode Nonformal</h4>
+                <p>Mode nonformal menghasilkan kalimat yang lebih santai. Pilihan katanya boleh lebih sederhana dan tidak terlalu kaku, tetapi tetap harus mengikuti hubungan kata dari data sumber.</p>
+            </div>
+            <div class="mode-explain-card">
+                <h4>Mode Kreatif</h4>
+                <p>Mode kreatif menghasilkan kalimat dengan variasi lebih besar. Sistem boleh memilih kata berikutnya secara acak berbobot, sehingga hasilnya lebih beragam, tetapi masih harus berdasarkan kemungkinan kata dalam Markov Chain.</p>
+            </div>
+        </div>
+        <ul class="mode-compare-list">
+            <li><b>Formal</b> = paling rapi dan terstruktur.</li>
+            <li><b>Nonformal</b> = lebih santai.</li>
+            <li><b>Kreatif</b> = lebih bervariasi, tetapi berisiko kurang stabil jika data sumber sedikit.</li>
+        </ul>
+    </div>
+</div>
+
 <div id="dataModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
     <div style="background:white; width:70%; margin:5% auto; padding:25px; border-radius:15px; max-height:80vh; overflow-y:auto; position:relative;">
         <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-weight:bold; color:red;" onclick="document.getElementById('dataModal').style.display='none'">[TUTUP]</span>
         <h3 id="modalTitle" style="margin-top:0;"></h3>
         <pre id="modalBody" style="font-size:12px; line-height:1.5; background:#f4f4f4; padding:15px; border-radius:8px; white-space: pre-wrap;"></pre>
+    </div>
+</div>
+
+<div id="materiModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
+    <div style="background:white; width:min(700px, 90%); margin:5% auto; padding:25px; border-radius:15px; max-height:85vh; overflow-y:auto; position:relative;">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-weight:bold; color:red;" onclick="document.getElementById('materiModal').style.display='none'">[TUTUP]</span>
+        <h3 style="margin-top:0; color:var(--p);">Apa itu Markov Chain?</h3>
+
+        <div class="materi-analogi">
+            Pernah perhatikan fitur <b>prediksi teks</b> di keyboard HP-mu? Saat kamu mengetik "Saya mau pergi ke...", HP akan menyarankan kata seperti "sekolah" atau "pasar". HP itu <b>tidak mengerti arti kalimatmu</b> — ia hanya menebak kata yang paling sering muncul setelah kata-kata sebelumnya, berdasarkan kebiasaan orang mengetik. Itulah ide dasar <b>Markov Chain</b>: menebak "apa selanjutnya?" hanya dari pola kata-kata sebelumnya.
+        </div>
+
+        <div class="materi-terms-grid">
+            <div class="materi-term-card">
+                <h4>Konteks (Kata Sebelumnya)</h4>
+                <p>Kata atau kumpulan kata yang dijadikan "patokan" oleh sistem untuk menebak kata berikutnya. Contoh: konteks "kelas pagi" dipakai untuk menebak kata setelahnya.</p>
+            </div>
+            <div class="materi-term-card">
+                <h4>Transisi</h4>
+                <p>Perpindahan dari satu kata (konteks) ke kata berikutnya. Setiap kali dua kata muncul berurutan di data sumber, itu dihitung sebagai satu transisi.</p>
+            </div>
+            <div class="materi-term-card">
+                <h4>Probabilitas</h4>
+                <p>Peluang suatu kata muncul setelah konteks tertentu, dihitung dari seberapa sering transisi itu terjadi di data sumber dibanding transisi lainnya.</p>
+            </div>
+            <div class="materi-term-card">
+                <h4>N-Gram / Orde (Memori)</h4>
+                <p>Berapa banyak kata sebelumnya yang "diingat" sistem sebagai konteks. Orde 1 hanya ingat 1 kata terakhir (lebih acak), Orde 2 ingat 2 kata terakhir (lebih logis).</p>
+            </div>
+        </div>
+
+        <div class="materi-contoh">
+            Contoh sederhana: jika di data sumber kata <b>"hujan"</b> paling sering diikuti oleh <b>"deras"</b>, kadang diikuti <b>"turun"</b>, dan hampir tidak pernah diikuti <b>"matahari"</b> &mdash; maka sistem akan lebih sering menebak "deras" setelah kata "hujan". Nah, tabel probabilitas yang muncul nanti di simulasi menunjukkan persis perhitungan seperti ini untuk data yang kamu pilih!
+        </div>
     </div>
 </div>
 
@@ -257,6 +404,33 @@ const dataSet = {
 
 let activeCat = "";
 let brainMap = {};
+let startKeys = [];
+let currentMode = 'formal';
+const MIN_WORDS_HARD = 10;   // di bawah ini, percobaan diblokir
+const MIN_WORDS_SOFT = 20;   // di bawah ini, tampilkan peringatan variasi terbatas
+const MAX_SENTENCE_WORDS = 18; // batas wajar panjang kalimat hasil generate
+
+// --- Preprocessing teks: bersihkan tanda baca sebelum membangun Markov Chain ---
+function preprocessLine(line) {
+    return line
+        .toLowerCase()
+        .replace(/[.,!?;:"'()]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .filter(w => w.length > 0);
+}
+
+function getSourceLines() {
+    const raw = activeCat === 'custom'
+        ? document.getElementById('customTextArea').value
+        : (dataSet[activeCat] || "");
+    return raw.split('\n').map(l => l.trim()).filter(l => l !== "");
+}
+
+function countTotalWords(lines) {
+    return lines.reduce((total, line) => total + preprocessLine(line).length, 0);
+}
 
 function inspect(cat) {
     document.getElementById('modalTitle').innerText = "Dataset: " + cat.toUpperCase();
@@ -271,100 +445,213 @@ function selectCard(cat) {
         activeCat = cat;
         document.getElementById('placeholderText').style.display = 'none';
         document.getElementById('controls').classList.add('visible');
+
+        const customBox = document.getElementById('customTextBox');
+        if (cat === 'custom') {
+            customBox.classList.add('visible');
+            validateCustomText();
+        } else {
+            customBox.classList.remove('visible');
+            document.getElementById('genWarning').classList.remove('visible');
+        }
+
         document.getElementById('monTitle').innerText = "Bahan Baku: " + cat.toUpperCase();
         document.getElementById('monContent').innerHTML = "<p style='color:var(--s)'>[READY] Data berhasil dimuat ke memori sementara.</p>";
     }, 100);
+}
+
+// Validasi teks sendiri secara langsung saat murid mengetik
+function validateCustomText() {
+    const warn = document.getElementById('customTextWarning');
+    const lines = getSourceLines();
+    const total = countTotalWords(lines);
+
+    if (total === 0) {
+        warn.textContent = "";
+        warn.classList.remove('visible');
+    } else if (total < MIN_WORDS_HARD) {
+        warn.textContent = "Masukkan teks yang lebih panjang agar sistem dapat membuat hubungan antar-kata.";
+        warn.classList.add('visible');
+    } else if (total < MIN_WORDS_SOFT) {
+        warn.textContent = "Data teks masih terlalu sedikit, sehingga variasi kalimat terbatas.";
+        warn.classList.add('visible');
+    } else {
+        warn.textContent = "";
+        warn.classList.remove('visible');
+    }
+}
+
+// Pilihan mode kalimat: Formal / Nonformal / Kreatif - benar-benar memengaruhi cara sistem memilih kata
+function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-option').forEach(el => el.classList.remove('active'));
+    document.getElementById('modeBtn-' + mode).classList.add('active');
+    document.getElementById('tempBox').style.display = (mode === 'kreatif') ? 'block' : 'none';
 }
 
 async function doTokenize() {
     const mon = document.getElementById('monContent');
     mon.innerHTML = "<h4>Proses Tokenisasi Data...</h4><div id='pillBox'></div>";
     const box = document.getElementById('pillBox');
-    
-    let rawData = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
-    for(let line of rawData) {
-        let words = line.split(" ");
-        for(let w of words) {
+
+    let rawLines = getSourceLines();
+    for (let line of rawLines) {
+        let words = preprocessLine(line); // tanda baca sudah dibuang di sini
+        for (let w of words) {
             let p = document.createElement('span');
             p.className = 'token-pill';
             p.innerText = w;
             box.appendChild(p);
-            if(Math.random() > 0.9) await new Promise(r => setTimeout(r, 1)); // Visual speed
+            if (Math.random() > 0.9) await new Promise(r => setTimeout(r, 1)); // Visual speed
         }
     }
-    mon.innerHTML += "<p style='color:var(--s)'>[DONE] Tokenisasi selesai.</p>";
+    mon.innerHTML += "<p style='color:var(--s)'>[DONE] Tokenisasi selesai. Tanda baca sudah dibersihkan dari token.</p>";
     mon.parentElement.scrollTop = mon.parentElement.scrollHeight;
 }
 
 async function doAnalyze() {
     const mon = document.getElementById('monContent');
     const orde = parseInt(document.getElementById('orde').value);
-    mon.innerHTML = `<h4>Membangun N-Gram Orde ${orde}...</h4>`;
+    mon.innerHTML += `<h4>Membangun N-Gram Orde ${orde}...</h4>`;
     brainMap = {};
+    startKeys = [];
 
-    let lines = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
+    let lines = getSourceLines();
     lines.forEach(line => {
-        let words = line.split(" ").concat(".");
-        for(let j=0; j <= words.length - (orde + 1); j++) {
-            let key = words.slice(j, j+orde).join(" ");
-            let next = words[j+orde];
-            if(!brainMap[key]) brainMap[key] = {};
+        let words = preprocessLine(line).concat("."); // "." di sini hanya penanda akhir kalimat, bukan token kata
+        if (words.length <= orde) return; // baris terlalu pendek untuk orde ini, lewati
+
+        // Kata awal kalimat yang valid (bukan tanda baca/token kosong) dipakai sebagai titik mulai generate
+        startKeys.push(words.slice(0, orde).join(" "));
+
+        for (let j = 0; j <= words.length - (orde + 1); j++) {
+            let key = words.slice(j, j + orde).join(" ");
+            let next = words[j + orde];
+            if (!brainMap[key]) brainMap[key] = {};
             brainMap[key][next] = (brainMap[key][next] || 0) + 1;
         }
     });
-    
+
     mon.innerHTML += "<p style='color:var(--s)'>[DONE] Peta probabilitas terbentuk!</p>";
+}
+
+// Pilih kata berikutnya sesuai mode: formal = probabilitas tertinggi, nonformal = agak acak, kreatif = acak berbobot (suhu)
+function pickNextWord(candidates, mode, userTemp) {
+    const words = Object.keys(candidates);
+
+    if (mode === 'formal') {
+        let best = words[0];
+        for (const w of words) {
+            if (candidates[w] > candidates[best]) best = w;
+        }
+        return { nextWord: best, words, weights: words.map(w => candidates[w]) };
+    }
+
+    const effectiveTemp = (mode === 'nonformal') ? 0.6 : userTemp;
+    const weights = words.map(w => Math.pow(candidates[w], 1 / effectiveTemp));
+    const total = weights.reduce((a, b) => a + b, 0);
+
+    let r = Math.random() * total, nextWord = words[0], runSum = 0;
+    for (let j = 0; j < words.length; j++) {
+        runSum += weights[j];
+        if (r <= runSum) { nextWord = words[j]; break; }
+    }
+    return { nextWord, words, weights };
 }
 
 async function doGenerate() {
     const mon = document.getElementById('monContent');
     const temp = parseFloat(document.getElementById('temp').value);
     const orde = parseInt(document.getElementById('orde').value);
-    
-    if (Object.keys(brainMap).length === 0) { alert("Analisis data dulu!"); return; }
+    const mode = currentMode;
 
-    mon.innerHTML = `<h4 style="color:#feca57">Audit Probabilitas (Suhu: ${temp}):</h4><div id='logsArea' style='padding-bottom:100px;'></div><div class='current-sentence-box'>Output: <br><span id='dynSentence' style="color:white; font-weight:normal;"></span></div>`;    
-    
-    let keys = Object.keys(brainMap);
-    let current = keys[Math.floor(Math.random() * keys.length)];
-    let sentence = current;
-    document.getElementById('dynSentence').innerText = sentence;
+    if (startKeys.length === 0) {
+        mon.innerHTML += "<p style='color:#ff6b6b;'>[GAGAL] Tidak ada kalimat awal yang valid untuk memulai. Coba tambah data atau ganti orde N-Gram.</p>";
+        return;
+    }
 
-    for(let i=0; i<25; i++) {
-        if(!brainMap[current]) break;
-        
-        let candidates = brainMap[current];
-        let words = Object.keys(candidates);
-        
-        // --- Logika Temperature Sampling ---
-        let adjustedWeights = words.map(w => Math.pow(candidates[w], 1/temp));
-        let totalAdjusted = adjustedWeights.reduce((a,b) => a+b, 0);
-        
-        let r = Math.random() * totalAdjusted;
-        let nextWord = words[0], runSum = 0;
-        for(let j=0; j<words.length; j++) {
-            runSum += adjustedWeights[j];
-            if(r <= runSum) { nextWord = words[j]; break; }
-        }
-        
-        // Render Audit Log
+    const modeLabel = { formal: 'Formal (probabilitas tertinggi)', nonformal: 'Nonformal (agak acak)', kreatif: `Kreatif (suhu ${temp})` }[mode];
+    mon.innerHTML += `<h4 style="color:#feca57">Audit Probabilitas - Mode ${modeLabel}:</h4><div id='logsArea' style='padding-bottom:100px;'></div><div class='current-sentence-box'>Output: <br><span id='dynSentence' style="color:white; font-weight:normal;"></span></div>`;
+
+    // Mulai dari n-gram yang benar-benar merupakan awal kalimat pada data sumber, bukan potongan tengah kalimat
+    let current = startKeys[Math.floor(Math.random() * startKeys.length)];
+    let sentenceWords = current.split(" ");
+    document.getElementById('dynSentence').innerText = sentenceWords.join(" ");
+
+    for (let i = 0; i < MAX_SENTENCE_WORDS; i++) {
+        if (!brainMap[current]) break;
+
+        const candidates = brainMap[current];
+        const { nextWord, words, weights } = pickNextWord(candidates, mode, temp);
+        const total = weights.reduce((a, b) => a + b, 0);
+
+        // Render Audit Log - urutkan dari probabilitas tertinggi, dan "." diberi label jelas (bukan tanda titik lepas)
         let audit = document.createElement('div');
         audit.className = 'audit-box';
-        let html = `<div style="color:#aaa; font-size:11px;">Konteks: [${current}] &rarr; <b>${nextWord}</b></div>`;
-        words.forEach((w, idx) => {
-            let p = ((adjustedWeights[idx]/totalAdjusted)*100).toFixed(1);
-            html += `<div class="prob-row"><div style="width:70px;">${w}</div><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${p}%; background:${w===nextWord?'var(--a)':'var(--s)'}"></div></div><div>${p}%</div></div>`;
+        let html = `<div style="color:#aaa; font-size:11px;">Konteks: [${current}] &rarr; <b>${nextWord === '.' ? '(akhir kalimat)' : nextWord}</b></div>`;
+
+        const order = words.map((w, idx) => idx).sort((a, b) => weights[b] - weights[a]);
+        order.forEach(idx => {
+            const w = words[idx];
+            const label = (w === '.') ? '(akhir kalimat)' : w;
+            const pct = Math.round((weights[idx] / total) * 100);
+            html += `<div class="prob-row"><div style="width:90px;">${label}</div><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${pct}%; background:${w === nextWord ? 'var(--a)' : 'var(--s)'}"></div></div><div>${pct}%</div></div>`;
         });
         audit.innerHTML = html;
         document.getElementById('logsArea').appendChild(audit);
-        
-        if(nextWord === ".") break;
-        sentence += " " + nextWord;
-        document.getElementById('dynSentence').innerText = sentence;
-        current = sentence.split(" ").slice(-orde).join(" ");
+
+        if (nextWord === ".") break;
+
+        sentenceWords.push(nextWord);
+        document.getElementById('dynSentence').innerText = sentenceWords.join(" ");
+        current = sentenceWords.slice(-orde).join(" ");
         mon.parentElement.scrollTop = mon.parentElement.scrollHeight;
         await new Promise(r => setTimeout(r, 600));
     }
+
+    // Rapikan hasil akhir: huruf kapital di awal, titik di akhir jika belum ada
+    let finalSentence = sentenceWords.join(" ").trim();
+    finalSentence = finalSentence.charAt(0).toUpperCase() + finalSentence.slice(1);
+    if (!/[.!?]$/.test(finalSentence)) finalSentence += ".";
+    document.getElementById('dynSentence').innerText = finalSentence;
+}
+
+// Orkestrator tombol "Mulai Percobaan": validasi input, lalu jalankan tokenisasi -> analisis -> generate
+async function doMulaiPercobaan(btn) {
+    const genWarning = document.getElementById('genWarning');
+    genWarning.classList.remove('visible');
+
+    if (!activeCat) {
+        alert("Pilih bahan baku (dataset atau teks sendiri) terlebih dahulu!");
+        return;
+    }
+
+    const lines = getSourceLines();
+    const totalWords = countTotalWords(lines);
+
+    if (totalWords === 0) {
+        genWarning.textContent = "Teks sumber masih kosong. Masukkan teks terlebih dahulu sebelum menjalankan percobaan.";
+        genWarning.classList.add('visible');
+        return;
+    }
+    if (totalWords < MIN_WORDS_HARD) {
+        genWarning.textContent = "Masukkan teks yang lebih panjang agar sistem dapat membuat hubungan antar-kata.";
+        genWarning.classList.add('visible');
+        return;
+    }
+
+    if (btn) btn.disabled = true;
+    document.getElementById('monContent').innerHTML = "";
+
+    if (totalWords < MIN_WORDS_SOFT) {
+        document.getElementById('monContent').innerHTML += "<p style='color:#feca57;'>[PERHATIAN] Data teks masih terlalu sedikit, sehingga variasi kalimat terbatas.</p>";
+    }
+
+    await doTokenize();
+    await doAnalyze();
+    await doGenerate();
+
+    if (btn) btn.disabled = false;
 }
 </script>
 
