@@ -28,9 +28,128 @@
             margin: auto; 
         }
 
+        /* HEADER INSTITUSI */
+        .header-bg {
+            background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: -20px -20px 30px -20px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header-bg .institusi-text { font-size: 0.8rem; line-height: 1.25; font-weight: 600; }
+        .header-bg img { height: 3rem; }
+        .header-bg .logo-kanan { display: flex; align-items: center; gap: 1.25rem; }
+        @media (max-width: 640px) {
+            .header-bg .institusi-text, .header-bg .logo-kanan img:not(:last-child) { display: none; }
+        }
+
         header { text-align: center; margin-bottom: 30px; }
         h1 { color: #0f172a; margin-bottom: 8px; font-weight: 700; }
-        .subtitle { color: var(--secondary); font-size: 1.1rem; }
+        .subtitle { color: var(--secondary); font-size: 1.1rem; margin: 0 0 4px; }
+        .subtitle-secondary { color: #94a3b8; font-size: 0.95rem; margin: 0; }
+
+        /* Step badge untuk tiap section */
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .instruction-text { color: #475569; font-size: 0.95rem; margin-bottom: 18px; line-height: 1.6; }
+
+        .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+        .action-buttons button { flex: 1; min-width: 220px; margin-top: 0; }
+
+        .btn-checking {
+            background: #ffffff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-checking:hover { background: #eff6ff; }
+
+        .error-message {
+            display: none;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 100;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            position: relative;
+        }
+        .modal-title { font-size: 1.25rem; font-weight: 700; margin: 0 0 14px; color: #0f172a; }
+        .modal-summary { background: #f1f5f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.95rem; line-height: 1.7; }
+        .modal-summary b { color: #334155; }
+        .modal-question { font-weight: 600; margin-bottom: 16px; color: #1e293b; }
+        .modal-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-secondary {
+            flex: 1; min-width: 140px;
+            background: #e2e8f0; color: #334155;
+            border: none; padding: 12px 16px;
+            border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-secondary:hover { background: #cbd5e1; }
+        .btn-confirm {
+            flex: 1; min-width: 140px;
+            background: var(--primary); color: #fff;
+            border: none; padding: 12px 16px;
+            border-radius: 8px; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-confirm:hover { background: #1d4ed8; }
+        .modal-close-x {
+            position: absolute; top: 14px; right: 14px;
+            background: none; border: none;
+            font-size: 1.5rem; line-height: 1;
+            color: #94a3b8; cursor: pointer;
+        }
+        .modal-close-x:hover { color: #475569; }
+        .checking-steps { background: #f8fafc; border-radius: 10px; padding: 16px; margin-top: 4px; font-size: 0.92rem; line-height: 1.7; }
+        .checking-steps ol { margin: 0; padding-left: 20px; }
+        .checking-steps li { margin-bottom: 6px; }
 
         /* Card Style */
         .card {
@@ -168,14 +287,32 @@
 </head>
 <body>
 
+<div class="header-bg">
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kemdikbud">
+        <div class="institusi-text">
+            Direktorat Jenderal<br>
+            Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan<br>
+            Pendidikan Nonformal dan Informal
+        </div>
+    </div>
+    <div class="logo-kanan">
+        <img src="assets/img/pendidikanbermutu.webp" alt="Logo SMP">
+        <img src="assets/img/ramah.webp" alt="Logo Pendidikan Bermutu">
+        <img src="assets/img/sobatsmp.png" alt="Logo Sekolah Ramah Anak">
+    </div>
+</div>
+
 <div class="container">
     <header>
-        <h1>Prediksi Kemacetan Kota berdasarkan Analisis Data Lalu Lintas</h1>
-        <p class="subtitle">Siswa berperan sebagai AI Engineer untuk menganalisis dan memanipulasi prediksi lalu lintas harian.</p>
+        <h1>Prediksi Macet</h1>
+        <p class="subtitle">Gunakan data hari, waktu, dan cuaca untuk memperkirakan kondisi lalu lintas.</p>
+        <p class="subtitle-secondary">Kamu berperan sebagai AI Engineer yang menganalisis pola data lalu lintas harian.</p>
     </header>
 
     <div class="card">
-        <div class="card-title">📊 Data Jumlah Kendaraan (30 Hari Terakhir)</div>
+        <div class="card-title">📊 Data Referensi: Jumlah Kendaraan (30 Hari Terakhir)</div>
         <div class="tabel-wrapper">
             <table>
                 <thead id="head-tabel"></thead>
@@ -185,11 +322,12 @@
     </div>
 
     <div class="card">
-        <div class="card-title">🛠️ Manipulator Variabel & Algoritma</div>
+        <div class="card-title"><span class="step-badge">1</span> Pilih Hari/Waktu</div>
         <div class="control-grid">
             <div class="input-group">
                 <label>Pilih Hari:</label>
                 <select id="hari">
+                    <option value="" selected disabled>-- Pilih Hari --</option>
                     <option value="Senin">Senin</option>
                     <option value="Selasa">Selasa</option>
                     <option value="Rabu">Rabu</option>
@@ -202,6 +340,7 @@
             <div class="input-group">
                 <label>Pilih Jam:</label>
                 <select id="jam">
+                    <option value="" selected disabled>-- Pilih Jam --</option>
                     <script>
                         for(let i=0; i<=23; i++) {
                             document.write(`<option value="${i}">${i.toString().padStart(2, '0')}:00</option>`);
@@ -209,20 +348,42 @@
                     </script>
                 </select>
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="step-badge">2</span> Pilih Cuaca</div>
+        <div class="control-grid">
             <div class="input-group">
                 <label>Skenario Cuaca:</label>
                 <select id="cuaca">
+                    <option value="" selected disabled>-- Pilih Cuaca --</option>
                     <option value="1">Cerah (Normal)</option>
                     <option value="1.3">Hujan Lebat (+30% Volume)</option>
                     <option value="1.5">Banjir (+50% Volume)</option>
                 </select>
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="step-badge">3</span> Coba Sendiri</div>
+        <p class="instruction-text">Coba pilih kondisi hari, waktu, dan cuaca. Setelah itu, jalankan prediksi untuk melihat kemungkinan kondisi lalu lintas.</p>
+        <div class="control-grid">
             <div class="input-group">
-                <label>Ambang Batas Macet (> <span id="val-macet">180</span>):</label>
+                <label>Ambang Batas Macet (> <span id="val-macet">180</span> kendaraan/jam):</label>
                 <input type="range" id="threshold-macet" min="150" max="300" value="180" oninput="document.getElementById('val-macet').innerText=this.value">
             </div>
-            <button class="btn-primary" onclick="prosesAI()">Jalankan Prediksi Kemacetan Kota oleh AI</button>
         </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="step-badge">4</span> Jalankan Prediksi</div>
+        <div class="action-buttons">
+            <button class="btn-checking" onclick="openCheckingModal()">Checking (Lihat Proses Perhitungan)</button>
+            <button class="btn-primary" style="margin-top:0;" onclick="handleJalankanPrediksi()">Jalankan Prediksi</button>
+        </div>
+        <div id="error-validasi" class="error-message"></div>
 
         <div id="loader" class="loading-ring"></div>
 
@@ -230,6 +391,44 @@
             <div id="status-prediksi"></div>
             <div id="saran-ai"></div>
             <div class="logika-box" id="logika-ai"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL KONFIRMASI SEBELUM PREDIKSI -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal-box">
+        <button class="modal-close-x" onclick="closeConfirmModal()" aria-label="Tutup">&times;</button>
+        <h3 class="modal-title">Konfirmasi Pilihanmu</h3>
+        <div class="modal-summary" id="confirmSummary"></div>
+        <p class="modal-question">Apakah data yang kamu pilih sudah benar?</p>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeConfirmModal()">Kembali Edit</button>
+            <button class="btn-confirm" onclick="lanjutkanPrediksi()">Lanjutkan Prediksi</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CHECKING / PROSES PERHITUNGAN -->
+<div id="checkingModal" class="modal-overlay">
+    <div class="modal-box">
+        <button class="modal-close-x" onclick="closeCheckingModal()" aria-label="Tutup">&times;</button>
+        <h3 class="modal-title">Proses Perhitungan Prediksi</h3>
+        <div class="modal-summary" id="checkingInputSummary"></div>
+        <div class="checking-steps">
+            <b>Bagaimana sistem mengambil keputusan:</b>
+            <ol>
+                <li>Sistem membaca pilihan <b>Hari</b> dan <b>Jam</b> yang kamu pilih.</li>
+                <li>Sistem mengambil semua data kendaraan historis (30 hari terakhir) yang cocok dengan Hari &amp; Jam tersebut, lalu menghitung <b>rata-ratanya</b>.</li>
+                <li>Rata-rata itu dikalikan dengan pengaruh <b>cuaca</b> yang kamu pilih: Cerah (&times;1), Hujan Lebat (&times;1.3, +30%), Banjir (&times;1.5, +50%).</li>
+                <li>Hasilnya dibandingkan dengan <b>Ambang Batas Macet</b> yang kamu atur di bagian "Coba Sendiri".</li>
+                <li>Jika hasil <b>lebih besar</b> dari ambang batas &rarr; prediksi <b>"MACET PARAH"</b>.</li>
+                <li>Jika hasil di atas 100 tapi masih di bawah ambang batas &rarr; prediksi <b>"PADAT MERAYAP"</b>.</li>
+                <li>Jika hasil 100 ke bawah &rarr; prediksi <b>"LANCAR"</b>.</li>
+            </ol>
+        </div>
+        <div class="modal-actions" style="margin-top:16px;">
+            <button class="btn-secondary" onclick="closeCheckingModal()">Tutup</button>
         </div>
     </div>
 </div>
@@ -268,7 +467,75 @@
         bodyTabel.innerHTML += tr + "</tr>";
     }
 
-    // 3. LOGIKA PREDIKSI (EXPERIMENT MODE)
+    const cuacaLabel = { "1": "Cerah (Normal)", "1.3": "Hujan Lebat (+30% Volume)", "1.5": "Banjir (+50% Volume)" };
+
+    function getJamLabel(jamValue) {
+        return jamValue === "" ? "" : `${jamValue.toString().padStart(2, '0')}:00`;
+    }
+
+    // 3. VALIDASI INPUT
+    function validasiInput() {
+        const h = document.getElementById("hari").value;
+        const j = document.getElementById("jam").value;
+        const cuaca = document.getElementById("cuaca").value;
+        const errorEl = document.getElementById("error-validasi");
+
+        if (!h || !j || !cuaca) {
+            errorEl.textContent = "Lengkapi pilihan hari/waktu dan cuaca terlebih dahulu sebelum menjalankan prediksi.";
+            errorEl.style.display = "block";
+            return false;
+        }
+        errorEl.style.display = "none";
+        return true;
+    }
+
+    // 4. POP-UP KONFIRMASI SEBELUM PREDIKSI
+    function handleJalankanPrediksi() {
+        if (!validasiInput()) return;
+
+        const h = document.getElementById("hari").value;
+        const j = document.getElementById("jam").value;
+        const cuaca = document.getElementById("cuaca").value;
+        const limit = document.getElementById("threshold-macet").value;
+
+        document.getElementById("confirmSummary").innerHTML = `
+            <b>Hari/Waktu:</b> ${h}, jam ${getJamLabel(j)}<br>
+            <b>Cuaca:</b> ${cuacaLabel[cuaca]}<br>
+            <b>Ambang Batas Macet:</b> &gt; ${limit} kendaraan/jam
+        `;
+        document.getElementById("confirmModal").classList.add("show");
+    }
+
+    function closeConfirmModal() {
+        document.getElementById("confirmModal").classList.remove("show");
+    }
+
+    function lanjutkanPrediksi() {
+        closeConfirmModal();
+        prosesAI();
+    }
+
+    // 5. POP-UP CHECKING / PROSES PERHITUNGAN
+    function openCheckingModal() {
+        const h = document.getElementById("hari").value;
+        const j = document.getElementById("jam").value;
+        const cuaca = document.getElementById("cuaca").value;
+        const limit = document.getElementById("threshold-macet").value;
+
+        document.getElementById("checkingInputSummary").innerHTML = `
+            <b>Input yang kamu gunakan saat ini:</b><br>
+            Hari/Waktu: ${h ? `${h}, jam ${getJamLabel(j)}` : "belum dipilih"}<br>
+            Cuaca: ${cuaca ? cuacaLabel[cuaca] : "belum dipilih"}<br>
+            Ambang Batas Macet: &gt; ${limit} kendaraan/jam
+        `;
+        document.getElementById("checkingModal").classList.add("show");
+    }
+
+    function closeCheckingModal() {
+        document.getElementById("checkingModal").classList.remove("show");
+    }
+
+    // 6. LOGIKA PREDIKSI (EXPERIMENT MODE)
     function prosesAI() {
         const h = document.getElementById("hari").value;
         const j = parseInt(document.getElementById("jam").value);
