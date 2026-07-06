@@ -34,9 +34,14 @@
 
         .canvas-container { height: 350px; position: relative; margin-bottom: 20px; }
         #feedback { font-weight: bold; padding: 15px; margin-top: 15px; border-radius: 5px; display: none; line-height: 1.5; }
-        .feedback-correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .feedback-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .feedback-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .feedback-correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-left: 6px solid #2ecc71; }
+        .feedback-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-left: 6px solid #f5c518; }
+        .feedback-orange { background-color: #ffe8d1; color: #9a3d00; border: 1px solid #fdba8c; border-left: 6px solid #f97316; }
+        .feedback-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-left: 6px solid #dc2626; }
+        .feedback-icon { font-size: 20px; margin-right: 6px; }
+
+        .reason-box { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #bdc3c7; font-size: 14px; font-family: inherit; resize: vertical; box-sizing: border-box; }
+        .var-hint { font-size: 13px; color: #34495e; background: #ffffff; border: 1px dashed #b0c4de; border-radius: 5px; padding: 8px 10px; margin-top: 8px; }
 
         /* HEADER */
         .header-bg {
@@ -98,23 +103,23 @@
 
     <div class="header-bg flex justify-between items-center px-6 py-4">
         <div class="flex items-center gap-4">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+            <img src="assets/img/kemendikdasmen.webp" class="h-14" alt="Logo Kementerian Pendidikan Dasar dan Menengah">
             <div class="text-sm leading-tight font-semibold hidden md:block">
-                Direktorat Sekolah Menengah Pertama<br>
-                Direktorat Jendral Pendidikan Anak Usia Dini,<br>
-                Pendidikan Dasar, dan Pendidikan Menengah<br>
-                Kementerian Pendidikan Dasar dan Menengah
+                Direktorat Jenderal<br>
+                Pendidikan Anak Usia Dini,<br>
+                Pendidikan Dasar, dan<br>
+                Pendidikan Nonformal dan Informal
             </div>
         </div>
         <div class="flex items-center gap-6">
-            <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
-            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
-            <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+            <img src="assets/img/pendidikanbermutu.webp" class="h-12 hidden sm:block" alt="Logo Pendidikan Bermutu untuk Semua">
+            <img src="assets/img/ramah.webp" class="h-12" alt="Logo Ramah">
+            <img src="assets/img/sobatsmp.png" class="h-12 hidden sm:block" alt="Logo Sobat SMP">
         </div>
     </div>
 
 <div class="container">
-    <h1>📊 Misi Analisis Data & Visualisasi Grafik</h1>
+    <h1><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="#2c3e50" style="display: inline-block; vertical-align: -0.1em; margin-right: 0.2em;"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"></path></svg>Misi Analisis Data & Visualisasi Grafik</h1>
     <p class="subtitle">Baca tabel data dengan teliti, perhatikan misi yang diminta, lalu pilih dan rakit grafik yang paling tepat!</p>
 
     <div class="dashboard">
@@ -146,8 +151,11 @@
                 <canvas id="myChart"></canvas>
             </div>
 
-            <div class="panel-header">Alat Pengatur Nilai (Sesuai Misi)</div>
+            <div class="panel-header">4. Alat Pengatur Nilai (Sesuai Misi)</div>
             <div id="builderControls"></div>
+
+            <div class="panel-header">5. Alasan Pemilihan Grafik</div>
+            <textarea id="reasonText" class="reason-box" rows="3" placeholder="Tulis alasanmu di sini: mengapa jenis grafik ini paling cocok untuk misi di atas?"></textarea>
 
             <button id="checkBtn" onclick="checkAnswer()">Cek Grafik & Pilihan Saya!</button>
             <div id="feedback"></div>
@@ -169,7 +177,9 @@
             ],
             labels: ["Januari", "Februari", "Maret", "April"],
             targetData: [15, 22, 30, 28], // Kunci jawaban: Kolom Jeruk
-            mission: "🎯 <b>Misi Kamu:</b> Bos toko ingin melihat perbandingan khusus untuk <b>penjualan Jeruk</b>. Silakan buat grafik yang membandingkan penjualan Jeruk dari bulan ke bulan.",
+            missionContext: "Bos toko ingin melihat perbandingan <b>penjualan Jeruk</b> setiap bulannya.",
+            varX: "Bulan (waktu penjualan)",
+            varY: "Jumlah penjualan Jeruk (kg)",
             max: 35,
             idealChart: "bar",
             explanation: "<b>Diagram Batang</b> sangat cocok untuk membandingkan jumlah yang jelas antar kategori/bulan secara langsung."
@@ -185,7 +195,9 @@
             ],
             labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
             targetData: [3, 8, 15, 22], // Kunci jawaban: Kolom Cabai
-            mission: "🎯 <b>Misi Kamu:</b> Seorang peneliti ingin melihat tren seberapa cepat pertumbuhan tanaman <b>Cabai</b>. Buatkan grafik yang menunjukkan tren perkembangannya.",
+            missionContext: "Seorang peneliti ingin melihat tren pertumbuhan tanaman <b>Cabai</b> dari minggu ke minggu.",
+            varX: "Minggu (waktu pengukuran)",
+            varY: "Tinggi tanaman Cabai (cm)",
             max: 30,
             idealChart: "line",
             explanation: "<b>Diagram Garis</b> adalah pilihan terbaik untuk melihat tren, perkembangan, atau pergerakan naik-turun dari waktu ke waktu."
@@ -200,11 +212,20 @@
             ],
             labels: ["Ditabung", "Jajan", "Transport"],
             targetData: [40, 35, 25], // Kunci jawaban: Kolom Siti
-            mission: "🎯 <b>Misi Kamu:</b> Kita ingin melihat persentase utuh ke mana saja perginya uang saku milik <b>Siti</b>. Buatkan grafik yang merepresentasikan hal tersebut.",
+            missionContext: "Kita ingin melihat ke mana saja perginya uang saku milik <b>Siti</b>, dari seluruh uang yang dimilikinya.",
+            varX: "Kategori pengeluaran (Ditabung, Jajan, Transport)",
+            varY: "Persentase uang Siti (%) pada tiap kategori",
             max: 100,
             idealChart: "pie",
             explanation: "<b>Diagram Lingkaran</b> paling tepat untuk menunjukkan proporsi atau bagian-bagian dari suatu total keseluruhan (100%)."
         }
+    };
+
+    // Info tujuan & alasan tiap jenis grafik, dipakai untuk umpan balik otomatis
+    const chartInfo = {
+        bar: { name: "Diagram Batang", purpose: "membandingkan jumlah antar-kategori", reason: "perbedaan nilai antar kategori dapat terlihat lebih jelas" },
+        line: { name: "Diagram Garis", purpose: "menunjukkan tren atau perubahan dari waktu ke waktu", reason: "garis dapat memperlihatkan naik-turunnya nilai dengan jelas" },
+        pie: { name: "Diagram Lingkaran", purpose: "menunjukkan proporsi atau bagian dari keseluruhan", reason: "besar kecilnya tiap bagian dapat dibandingkan sebagai persentase dari keseluruhan" }
     };
 
     const chartColors = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(231, 76, 60, 0.7)'];
@@ -214,13 +235,22 @@
     let chartInstance = null;
     let studentData = [];
 
+    function buildMissionHTML(ds) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="1.5" style="display: inline-block; vertical-align: -0.15em; margin-right: 0.2em;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5.5"></circle><circle cx="12" cy="12" r="2" fill="#3498db"></circle></svg><b>Misi Kamu:</b> ${ds.missionContext} Analisislah tabel data di sebelah kiri dengan teliti, temukan informasi penting, lalu pilih data yang sesuai dengan misi ini. Tentukan <b>variabel X</b> dan <b>variabel Y</b>-nya, lalu sajikan dalam bentuk grafik yang paling tepat. Setelah grafik selesai dibuat, jelaskan mengapa jenis grafik tersebut sesuai dengan tujuan analisis ini (tulis di kotak "Alasan Pemilihan Grafik").
+        <div class="var-hint">
+            <b>Variabel X</b> = kategori atau waktu yang dibandingkan → <i>${ds.varX}</i><br>
+            <b>Variabel Y</b> = nilai atau jumlah yang dianalisis → <i>${ds.varY}</i>
+        </div>`;
+    }
+
     function loadDataset() {
         currentDataset = document.getElementById('datasetSelect').value;
         const ds = datasets[currentDataset];
-        
+
         studentData = new Array(ds.targetData.length).fill(0);
-        document.getElementById('missionText').innerHTML = ds.mission;
-        
+        document.getElementById('missionText').innerHTML = buildMissionHTML(ds);
+        document.getElementById('reasonText').value = '';
+
         renderTable(ds);
         renderBuilders(ds);
         initChart();
@@ -319,17 +349,23 @@
 
         if (isDataCorrect && isChartCorrect) {
             feedbackEl.className = 'feedback-correct';
-            feedbackEl.innerHTML = `🎉 <b>Sempurna!</b> Kamu berhasil memfilter data yang benar dari tabel, DAN kamu memilih grafik yang tepat.<br><br>💡 <i>${ds.explanation}</i>`;
+            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg></span><b>Sempurna!</b> Kamu berhasil memilih data yang benar dari tabel, DAN kamu memilih grafik yang tepat.<br><br><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-3px;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path></svg> <i>${ds.explanation}</i>`;
             document.getElementById('checkBtn').classList.add('success');
-        } 
+        }
         else if (isDataCorrect && !isChartCorrect) {
+            const ideal = chartInfo[ds.idealChart];
             feedbackEl.className = 'feedback-warning';
-            feedbackEl.innerHTML = `⚠️ <b>Data Benar, Tapi...</b> Angkamu sudah sesuai tabel, namun jenis grafik ini kurang pas untuk menjawab misimu. Coba ganti jenis grafiknya!`;
+            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><path d="M12 3 1 21h22L12 3z"></path><line x1="12" y1="9" x2="12" y2="14"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span><b>Hampir Tepat!</b> Data yang kamu masukkan sudah benar, tetapi jenis grafik belum paling tepat. Untuk ${ideal.purpose}, <b>${ideal.name}</b> lebih sesuai karena ${ideal.reason}.`;
+            document.getElementById('checkBtn').classList.remove('success');
+        }
+        else if (!isDataCorrect && isChartCorrect) {
+            feedbackEl.className = 'feedback-orange';
+            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span><b>Grafik Sudah Tepat, Tapi...</b> Jenis grafik yang kamu pilih sudah benar, namun angka untuk <b>${errors.join(', ')}</b> belum sesuai dengan tabel. Periksa kembali data pada tabel, lalu perbaiki nilainya sesuai misi.`;
             document.getElementById('checkBtn').classList.remove('success');
         }
         else {
             feedbackEl.className = 'feedback-error';
-            feedbackEl.innerHTML = `🤔 <b>Data Belum Tepat.</b> Nilai untuk <b>${errors.join(', ')}</b> belum sesuai. Coba cek lagi tabelnya. Yakin sudah melihat kolom yang diminta di misi?`;
+            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></span><b>Data dan grafik masih salah.</b> Periksa kembali angka pada tabel, pastikan data yang dipilih sesuai dengan misi, lalu pilih jenis grafik yang tepat berdasarkan tujuan analisis.`;
             document.getElementById('checkBtn').classList.remove('success');
         }
     }
