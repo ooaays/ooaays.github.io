@@ -67,15 +67,39 @@
         .info-box h4 { margin: 0 0 8px 0; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
         .info-box p { margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6; }
 
+        /* Disclaimer di bawah Hasil Rangkuman */
+        .summary-disclaimer {
+            background: #fffbeb; border: 1px solid #fde68a; color: #92400e;
+            padding: 10px 14px; border-radius: 8px; font-size: 13px;
+            margin-top: 12px; display: flex; gap: 8px; align-items: flex-start; line-height: 1.5;
+        }
+
         /* =========================================================
            TAMBAHAN CSS HEADER
            ========================================================= */
-        .header-bg { 
-            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1); 
-            color: white; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+        .header-bg {
+            background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             margin: -20px -20px 30px -20px;
-        } 
+        }
+
+        /* Stroke/outline tipis pada logo agar tetap terlihat jelas di atas gradient */
+        .header-bg img {
+            filter: drop-shadow(0 0 1px rgba(0,0,0,0.55)) drop-shadow(0 0 1px rgba(0,0,0,0.55));
+        }
+
+        /* Judul halaman + tombol Kembali ke Home */
+        .page-title-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; position: relative; }
+        .btn-home {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--primary-light); color: var(--primary);
+            border: 1px solid var(--primary); text-decoration: none;
+            font-weight: 600; font-size: 13px; padding: 8px 16px;
+            border-radius: 20px; transition: 0.2s; white-space: nowrap;
+        }
+        .btn-home:hover { background: var(--primary); color: white; }
+        @media (max-width: 640px) { .page-title-row { flex-direction: column; } }
 
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
@@ -120,52 +144,68 @@
 </head>
 <body>
 
-<div class="header-bg flex justify-between items-center px-6 py-4"> 
-    <div class="flex items-center gap-4"> 
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14"> 
-        <div class="text-sm leading-tight font-semibold hidden md:block"> 
-            Direktorat Sekolah Menengah Pertama<br> 
-            Direktorat Jendral Pendidikan Anak Usia Dini,<br> 
-            Pendidikan Dasar, dan Pendidikan Menengah<br> 
-            Kementerian Pendidikan Dasar dan Menengah 
-        </div> 
-    </div> 
-    <div class="flex items-center gap-6"> 
-        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block"> 
-        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12"> 
-        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block"> 
-    </div> 
+<div class="header-bg flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-4">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kementerian Pendidikan Dasar dan Menengah" class="h-14">
+        <div class="text-sm leading-tight font-semibold hidden md:block">
+            Direktorat Jenderal<br>
+            Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan<br>
+            Pendidikan Nonformal dan Informal
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <img src="assets/img/pendidikanbermutu.webp" alt="Logo Pendidikan Bermutu untuk Semua" class="h-12 hidden sm:block">
+        <img src="assets/img/ramah.webp" alt="Logo Ramah" class="h-12">
+        <img src="assets/img/sobatsmp.png" alt="Logo Sobat SMP" class="h-12 hidden sm:block">
+    </div>
 </div>
 
 <div class="container">
-    <h1>🔬 Percobaan Ringkasan Teks dengan Eksperimen NLP</h1>
+    <div class="page-title-row">
+        <h1 style="margin-bottom:0;"><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.05em; margin-right:0.15em;"><path d="M9 3h6M10 3v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.5V3"></path><path d="M7.5 15h9"></path></svg>Percobaan Ringkasan Teks dengan Eksperimen NLP</h1>
+    </div>
+    <div style="text-align:center; margin-bottom:16px;">
+        <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-home">&larr; Kembali ke Beranda</a>
+    </div>
     <p class="sub">Jadilah peneliti AI. Ikuti proses mesin memahami bahasa manusia tahap demi tahap.</p>
 
-    <div class="article-selector">
-        <button class="btn-select" onclick="loadArticle(1)">Artikel 1: AI di Sekolah</button>
-        <button class="btn-select" onclick="loadArticle(2)">Artikel 2: Pemanasan Global</button>
+    <div class="info-box" style="margin-bottom:20px;">
+        <h4><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> Apa itu NLP (Natural Language Processing)?</h4>
+        <p>NLP adalah cara komputer belajar memahami bahasa manusia — mulai dari membaca teks, memecahnya menjadi kata-kata, mencari kata penting, sampai membuat rangkuman secara otomatis. Yuk, coba sendiri prosesnya tahap demi tahap menggunakan artikel jurnal di bawah ini!</p>
     </div>
+
+    <div class="article-selector">
+        <button class="btn-select" style="background: var(--primary); color: white; font-size: 15px; padding: 12px 24px;" onclick="generateArtikelJurnal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="8.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="8.5" cy="15.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="15.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.25" fill="currentColor" stroke="none"></circle></svg>Generate Artikel Jurnal</button>
+    </div>
+    <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:-10px; margin-bottom:20px;">Artikel awal berisi sekitar 100 kata agar proses tokenisasi dapat diamati dengan lebih jelas.</p>
 
     <!-- Badge Disclaimer AI (Baru ditambahkan) -->
     <div id="ai-disclaimer" class="ai-disclaimer">
-        🤖 <i><strong>Disclaimer:</strong> Artikel yang ditampilkan di bawah ini dibuat secara otomatis (generated) oleh AI untuk keperluan eksperimen ini.</i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M9 8V6a3 3 0 0 1 6 0v2"></path><line x1="9" y1="13" x2="9" y2="14"></line><line x1="15" y1="13" x2="15" y2="14"></line><line x1="12" y1="4" x2="12" y2="2"></line></svg> <i><strong>Disclaimer:</strong> Artikel jurnal yang ditampilkan di bawah ini dibuat secara otomatis (generated) untuk keperluan eksperimen NLP ini.</i>
     </div>
 
-    <textarea id="teks-awal" readonly placeholder="Pilih artikel di atas untuk memulai eksperimen..."></textarea>
+    <div id="artikel-judul" style="font-weight:700; color:var(--primary); text-align:center; margin-bottom:8px; display:none;"></div>
+
+    <div style="text-align:center; margin-bottom:15px;">
+        <button id="btn-lihat-sumber" class="btn-select" style="display:none; font-size:13px; padding:6px 14px;" onclick="bukaSumberModal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.2em;"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>Lihat Lampiran Sumber</button>
+    </div>
+
+    <textarea id="teks-awal" readonly placeholder="Klik &quot;Generate Artikel Jurnal&quot; di atas untuk memulai eksperimen..."></textarea>
     
     <!-- Tombol Tahap 1: Mengonfirmasi Bacaan -->
-    <button id="btn-selesai-baca" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px; background-color: #10b981;" onclick="bukaModal()">👁️ Saya Sudah Selesai Membaca</button>
+    <button id="btn-selesai-baca" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px; background-color: #10b981;" onclick="bukaModal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>Saya Sudah Selesai Membaca</button>
     
     <!-- Tombol Tahap 2: Mulai Eksperimen (Muncul setelah konfirmasi) -->
-    <button id="btn-mulai" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px;" onclick="mulaiEksperimen()">Mulai Eksperimen NLP 🚀</button>
+    <button id="btn-mulai" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px;" onclick="mulaiEksperimen()">Mulai Eksperimen NLP <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-left:0.2em;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg></button>
 
     <div id="jalur-eksperimen" class="step-container">
         
         <div id="step-1" class="step-box">
             <span class="step-title">Tahap 1: Normalisasi Teks</span>
-            <p style="font-size: 14px; color: #475569;">Mesin menghapus semua tanda baca dan mengubah huruf menjadi kecil agar seragam.</p>
+            <p style="font-size: 14px; color: #475569;">Mesin menghapus semua tanda baca dan mengubah huruf menjadi kecil agar seragam. Tanda hubung (-) juga diubah menjadi spasi, misalnya kata <strong>"real-time"</strong> menjadi <strong>"real time"</strong>.</p>
             <div id="out-normalisasi" class="kalimat-box" style="font-family: monospace; color: #64748b; max-height: 150px; overflow-y: auto;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(2)">Lanjut ke Tokenisasi & Stopwords ➔</button>
+            <button class="btn-lanjut" onclick="lanjutKe(2)">Lanjut ke Tokenisasi & Stopwords <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-2" class="step-box">
@@ -174,28 +214,28 @@
             
             <div id="workspace-token" class="token-workspace"></div>
             
-            <button class="btn-lanjut" onclick="lanjutKe(3)">Selesai Memilih, Lanjut Hitung Kata Kunci ➔</button>
+            <button class="btn-lanjut" onclick="lanjutKe(3)">Selesai Memilih, Lanjut Hitung Kata Kunci <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-3" class="step-box">
             <span class="step-title">Tahap 3: Hitung Frekuensi (Kata Kunci Utama)</span>
             <p style="font-size: 14px; color: #475569;">Berdasarkan sisa kata yang tidak Anda coret, mesin menghitung kata apa yang paling sering muncul.</p>
             <div id="out-frekuensi" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(4)">Lanjut ke Pembobotan Kalimat ➔</button>
+            <button class="btn-lanjut" onclick="lanjutKe(4)">Lanjut ke Pembobotan Kalimat <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-4" class="step-box">
             <span class="step-title">Tahap 4: Pembobotan Kalimat</span>
             <p style="font-size: 14px; color: #475569;">Mesin membaca ulang teks awal dan memberikan skor pada tiap kalimat berdasarkan jumlah kata kunci di dalamnya.</p>
             <div id="out-pembobotan" style="max-height: 250px; overflow-y: auto;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(5)">Lanjut ke Tahap Rangkuman ➔</button>
+            <button class="btn-lanjut" onclick="lanjutKe(5)">Lanjut ke Tahap Rangkuman <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-5" class="step-box">
             <span class="step-title">Tahap Akhir: Ekstraksi Rangkuman</span>
 
             <div class="info-box">
-                <h4>💡 Tahukah Kamu? Mengapa Stopwords (dan, di, yang) muncul lagi di sini?</h4>
+                <h4><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path></svg> Tahukah Kamu? Mengapa Stopwords (dan, di, yang) muncul lagi di sini?</h4>
                 <p>Di tahap sebelumnya (dapur mesin), AI membuang kata-kata tersebut hanya untuk memudahkan perhitungan matematika skor kalimat. Namun, setelah AI menemukan kalimat "pemenang" dengan skor tertinggi, AI akan <strong>mengekstrak (mengambil) kalimat aslinya secara utuh</strong> dari teks awal. Metode ini disebut <strong>Rangkuman Ekstraktif</strong>, agar hasil akhirnya tetap enak dibaca oleh manusia, bukan terdengar seperti bahasa robot yang kaku!</p>
             </div>
             
@@ -206,6 +246,10 @@
             </div>
 
             <div id="hasil-akhir" class="hasil-box"></div>
+            <div class="summary-disclaimer">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+                <span><strong>Disclaimer:</strong> Hasil rangkuman dibuat secara otomatis berdasarkan teks yang tersedia. Rangkuman ini dapat membantu memahami isi utama, tetapi tetap perlu diperiksa kembali karena mungkin ada informasi penting yang terlewat.</span>
+            </div>
         </div>
 
     </div>
@@ -216,10 +260,10 @@
      ========================================== -->
 <div id="read-modal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-icon">🧠</div>
+        <div class="modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg></div>
         <h2 style="color: var(--primary); margin-top: 0;">Kerja Bagus!</h2>
         <p style="color: #475569; font-size: 15px;">Sebagai peneliti, kita harus mengerti isi teksnya terlebih dahulu sebelum mengajarkan mesin (AI) untuk memahaminya.</p>
-        <p style="font-weight: bold; margin-bottom: 25px;">Apakah kamu sudah paham inti dari artikel ini?</p>
+        <p style="font-weight: bold; margin-bottom: 25px;">Apakah kamu sudah paham inti dari artikel jurnal ini?</p>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
             <button class="btn-lanjut btn-outline" style="margin-top: 0;" onclick="tutupModal()">Belum, mau baca lagi</button>
@@ -228,12 +272,65 @@
     </div>
 </div>
 
+<!-- ==========================================
+     MODAL POP-UP LAMPIRAN SUMBER
+     ========================================== -->
+<div id="sumber-modal" class="modal-overlay">
+    <div class="modal-content" style="text-align: left;">
+        <div class="modal-icon" style="text-align: center;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></div>
+        <h2 style="color: var(--primary); margin-top: 0; text-align: center;">Lampiran Sumber</h2>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px; color: #334155; line-height: 1.7;">
+            <p style="margin: 0 0 6px 0;"><strong>Judul:</strong> <span id="sumber-judul"></span></p>
+            <p style="margin: 0 0 6px 0;"><strong>Disusun oleh:</strong> <span id="sumber-penulis"></span></p>
+            <p style="margin: 0 0 6px 0;"><strong>Instansi:</strong> <span id="sumber-instansi"></span></p>
+            <p style="margin: 0;"><strong>Tahun:</strong> <span id="sumber-tahun"></span></p>
+        </div>
+
+        <div class="ai-disclaimer" style="display: block; margin-top: 14px; margin-bottom: 0; text-align: left;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <i>Catatan: Artikel dan lampiran sumber ini bersifat <strong>simulasi/ilustrasi</strong> yang dibuat khusus untuk latihan eksperimen NLP, bukan artikel penelitian sungguhan yang boleh dikutip untuk tugas sekolah.</i>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <button class="btn-lanjut" style="margin-top: 0;" onclick="tutupSumberModal()">Tutup</button>
+        </div>
+    </div>
+</div>
+
 <script>
-const dummyArticles = {
-    1: `Kecerdasan buatan atau AI kini mulai masuk secara masif ke ruang kelas di berbagai sekolah dasar hingga perguruan tinggi. Guru menggunakan teknologi cerdas ini untuk membantu membuat materi pelajaran yang lebih interaktif dan menarik bagi murid. Platform pembelajaran berbasis AI mampu menyesuaikan tingkat kesulitan soal dengan kemampuan masing-masing siswa secara real-time. Hal ini menciptakan pengalaman belajar yang sangat personal, di mana siswa yang lambat bisa dibimbing perlahan, sementara yang cepat bisa langsung melaju ke materi berikutnya.\n\nSiswa juga merasa sangat terbantu karena aplikasi AI dapat menjawab pertanyaan mereka secara cepat dan akurat kapan saja, bahkan di luar jam sekolah. Tugas-tugas yang membosankan seperti mengoreksi ujian pilihan ganda kini bisa diambil alih oleh sistem. Efisiensi ini memberikan waktu ekstra bagi para guru untuk lebih fokus pada perencanaan strategi mengajar. Namun, kemudahan akses informasi ini juga memunculkan tantangan baru terkait plagiarisme dan penurunan daya analisis kritis siswa jika terlalu bergantung pada AI.\n\nOleh karena itu, penggunaan teknologi cerdas ini harus selalu diawasi dengan ketat agar murid tidak menjadi malas berpikir. Sekolah perlu merumuskan kebijakan yang jelas tentang batasan penggunaan AI dalam pengerjaan tugas akademik harian. Manusia tetap menjadi faktor penentu utama dalam pendidikan moral, etika, dan karakter. Sentuhan empati dari seorang pendidik sejati adalah hal krusial yang selamanya tidak akan pernah bisa digantikan oleh mesin canggih apapun.`,
-    
-    2: `Pemanasan global adalah ancaman nyata yang sedang dihadapi oleh seluruh makhluk hidup di penduduk bumi saat ini. Suhu rata-rata atmosfer dan lautan terus mengalami peningkatan secara drastis setiap tahunnya karena efek gas rumah kaca. Aktivitas industri berskala besar dan pembakaran bahan bakar fosil menjadi penyumbang utama emisi karbon yang merusak lapisan ozon. Jika tren suhu ekstrem ini tidak segera dihentikan, para ilmuwan memprediksi banyak wilayah daratan akan tenggelam dalam beberapa dekade mendatang.\n\nDampak langsung dari fenomena ini sudah sangat terlihat jelas di berbagai belahan benua. Es di kutub utara mencair dengan sangat cepat sehingga mengancam habitat alami satwa seperti beruang kutub dan anjing laut. Banjir rob mulai sering terjadi secara mengerikan di berbagai kawasan pesisir akibat naiknya permukaan air laut secara global. Selain itu, pola cuaca menjadi sangat tidak menentu, memicu badai hebat, kekeringan panjang, dan gagal panen yang mengancam ketahanan pangan dunia.\n\nUntuk mengatasi krisis iklim ini, pemerintah dan warga dunia harus segera mengambil langkah konkret untuk mengurangi jejak emisi karbon. Peralihan dari energi batu bara menuju sumber energi terbarukan seperti panel surya dan kincir angin harus dipercepat secara masif. Penanaman kembali hutan yang gundul juga sangat penting untuk menyerap kembali gas karbon dioksida dari udara bebas. Pada akhirnya, kesadaran kolektif untuk menjaga kelestarian lingkungan adalah kunci utama agar bumi tetap aman untuk ditinggali oleh generasi penerus.`
-};
+// Artikel jurnal sederhana (~100 kata tiap artikel), dipilih acak tiap kali tombol "Generate Artikel Jurnal" ditekan
+const dummyArticles = [
+    {
+        topik: "AI dalam Pembelajaran",
+        judul: "Pemanfaatan Kecerdasan Buatan dalam Pembelajaran Siswa SMP",
+        isi: `Penelitian ini membahas pemanfaatan kecerdasan buatan dalam membantu siswa memahami materi pelajaran di sekolah menengah pertama. Teknologi ini dapat digunakan untuk mencari informasi, menyusun rangkuman, dan memberikan latihan soal secara otomatis. Sistem pembelajaran berbasis kecerdasan buatan mampu menyesuaikan tingkat kesulitan soal dengan kemampuan setiap siswa secara real-time, sehingga proses belajar terasa lebih personal. Hasil pengamatan menunjukkan penggunaan teknologi secara terarah dapat meningkatkan keterlibatan siswa dalam proses belajar sehari-hari. Meskipun demikian, penggunaan teknologi tetap memerlukan bimbingan guru agar siswa tidak sekadar menyalin jawaban, melainkan benar-benar memahami konsep yang sedang dipelajari. Dengan pengawasan yang tepat, kecerdasan buatan dapat menjadi alat bantu belajar yang bermanfaat.`,
+        sumber: { penulis: "Tim Riset Pendidikan Digital (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+    },
+    {
+        topik: "Literasi Digital Siswa",
+        judul: "Kebiasaan Membaca dan Literasi Digital di Kalangan Siswa",
+        isi: `Penelitian ini mengamati kebiasaan membaca siswa sekolah menengah pertama di tengah perkembangan teknologi digital yang semakin pesat. Sebagian besar siswa kini lebih sering membaca informasi singkat melalui gawai dibandingkan membaca buku secara utuh dari awal hingga akhir. Kebiasaan ini memengaruhi kemampuan siswa dalam memahami teks panjang dan menyimpulkan gagasan utama sebuah bacaan secara menyeluruh. Hasil pengamatan menunjukkan siswa yang rutin membaca buku cenderung lebih mudah memahami instruksi tertulis dan soal cerita pada mata pelajaran lain. Oleh karena itu, sekolah perlu mendorong kebiasaan membaca melalui kegiatan literasi rutin, baik dalam bentuk cetak maupun digital. Pembiasaan ini diharapkan meningkatkan kemampuan siswa mengolah informasi secara kritis.`,
+        sumber: { penulis: "Tim Riset Literasi Digital (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+    },
+    {
+        topik: "Transportasi dan Keterlambatan Sekolah",
+        judul: "Pengaruh Transportasi Umum terhadap Keterlambatan Siswa ke Sekolah",
+        isi: `Penelitian ini membahas pengaruh penggunaan transportasi umum terhadap tingkat keterlambatan siswa dalam menghadiri kegiatan belajar di sekolah. Sebagian siswa yang tinggal jauh dari sekolah bergantung pada angkutan umum seperti angkot, bus sekolah, atau ojek daring setiap pagi. Keterlambatan jadwal transportasi dan kepadatan lalu lintas pada jam sibuk sering menjadi penyebab utama siswa terlambat masuk kelas. Hasil pengamatan menunjukkan siswa yang berangkat lebih awal memiliki risiko keterlambatan yang jauh lebih rendah dibandingkan siswa yang berangkat mendekati jam masuk sekolah. Oleh karena itu, perencanaan waktu keberangkatan yang lebih matang perlu dibiasakan sejak dini. Kerja sama antara orang tua dan sekolah penting untuk mengurangi angka keterlambatan.`,
+        sumber: { penulis: "Tim Riset Transportasi Sekolah (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+    },
+    {
+        topik: "Cuaca dan Aktivitas Harian",
+        judul: "Pengaruh Cuaca terhadap Aktivitas Belajar dan Bermain Siswa",
+        isi: `Penelitian ini mengamati pengaruh perubahan cuaca terhadap aktivitas harian siswa di lingkungan sekolah maupun di rumah. Cuaca panas yang menyengat maupun hujan deras sering membuat siswa enggan melakukan aktivitas fisik seperti olahraga di luar ruangan. Kondisi cuaca yang tidak menentu juga dapat memengaruhi konsentrasi siswa selama mengikuti pelajaran di dalam kelas setiap hari. Hasil pengamatan menunjukkan siswa cenderung lebih aktif bergerak saat cuaca cerah dibandingkan saat cuaca ekstrem seperti hujan lebat atau panas berlebihan. Oleh karena itu, sekolah perlu menyiapkan kegiatan alternatif di dalam ruangan agar siswa tetap aktif bergerak meskipun cuaca sedang tidak mendukung. Perhatian ini penting agar kegiatan belajar tetap nyaman dan aman.`,
+        sumber: { penulis: "Tim Riset Cuaca dan Aktivitas Siswa (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+    },
+    {
+        topik: "Kebiasaan Membaca Siswa",
+        judul: "Kebiasaan Membaca dan Kemampuan Memahami Teks",
+        isi: `Penelitian ini membahas hubungan antara kebiasaan membaca dan kemampuan siswa dalam memahami suatu teks bacaan sederhana. Siswa yang memiliki kebiasaan membaca secara rutin umumnya lebih mudah menemukan gagasan utama dan informasi penting dalam sebuah paragraf. Sebaliknya, siswa yang jarang membaca sering kesulitan memahami maksud kalimat panjang atau istilah yang belum familiar baginya. Hasil pengamatan menunjukkan kegiatan membaca selama lima belas menit setiap hari dapat membantu meningkatkan kemampuan memahami teks secara bertahap dan berkelanjutan. Kegiatan ini dapat dilakukan melalui buku cerita, artikel sederhana, maupun bahan bacaan lain yang sesuai minat siswa. Oleh karena itu, pembiasaan membaca perlu didukung oleh keluarga dan sekolah secara konsisten.`,
+        sumber: { penulis: "Tim Riset Kebiasaan Membaca (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+    }
+];
 
 // Variabel Global untuk menyimpan data antar tahap
 let teksRaw = "";
@@ -242,18 +339,36 @@ let tokensUnik = [];
 let userStopwords = new Set();
 let frekuensiKata = {};
 let skorKalimatData = [];
+let indexArtikelTerakhir = -1;
 
-function loadArticle(id) { 
-    teksRaw = dummyArticles[id];
-    document.getElementById('teks-awal').value = teksRaw; 
-    
+function generateArtikelJurnal() {
+    // Pilih artikel jurnal secara acak, hindari mengulang artikel yang sama persis dua kali berturut-turut
+    let idx = Math.floor(Math.random() * dummyArticles.length);
+    if (dummyArticles.length > 1) {
+        while (idx === indexArtikelTerakhir) {
+            idx = Math.floor(Math.random() * dummyArticles.length);
+        }
+    }
+    indexArtikelTerakhir = idx;
+
+    const artikel = dummyArticles[idx];
+    teksRaw = artikel.isi;
+    document.getElementById('teks-awal').value = teksRaw;
+
+    const judulEl = document.getElementById('artikel-judul');
+    judulEl.textContent = artikel.judul;
+    judulEl.style.display = 'block';
+
     // Tampilkan label/badge disclaimer AI
     document.getElementById('ai-disclaimer').style.display = 'block';
-    
+
+    // Tampilkan tombol Lampiran Sumber
+    document.getElementById('btn-lihat-sumber').style.display = 'inline-block';
+
     // Reset logika tombol
     document.getElementById('btn-selesai-baca').style.display = 'block';
     document.getElementById('btn-mulai').style.display = 'none';
-    
+
     // Reset View
     document.getElementById('jalur-eksperimen').style.display = 'none';
     for(let i=1; i<=5; i++) { document.getElementById('step-'+i).style.display = 'none'; }
@@ -284,6 +399,29 @@ function konfirmasiLanjut() {
 }
 
 /* ==========================================
+   LOGIKA MODAL LAMPIRAN SUMBER
+   ========================================== */
+const sumberModal = document.getElementById('sumber-modal');
+
+function bukaSumberModal() {
+    const artikel = dummyArticles[indexArtikelTerakhir];
+    if (!artikel) return;
+
+    document.getElementById('sumber-judul').textContent = artikel.judul;
+    document.getElementById('sumber-penulis').textContent = artikel.sumber.penulis;
+    document.getElementById('sumber-instansi').textContent = artikel.sumber.instansi;
+    document.getElementById('sumber-tahun').textContent = artikel.sumber.tahun;
+
+    sumberModal.style.display = 'flex';
+    setTimeout(() => { sumberModal.classList.add('show'); }, 10);
+}
+
+function tutupSumberModal() {
+    sumberModal.classList.remove('show');
+    setTimeout(() => { sumberModal.style.display = 'none'; }, 300);
+}
+
+/* ==========================================
    LOGIKA EKSPERIMEN NLP
    ========================================== */
 function mulaiEksperimen() {
@@ -292,7 +430,15 @@ function mulaiEksperimen() {
     document.getElementById('step-1').style.display = 'block';
     
     // Eksekusi Logika Tahap 1
-    teksNormal = teksRaw.toLowerCase().replace(/[.,!?'"]/g,"").replace(/\n+/g, " ");
+    // Normalisasi: huruf kecil semua, tanda hubung (-) jadi spasi (real-time -> real time),
+    // hapus tanda baca, lalu rapikan spasi ganda
+    teksNormal = teksRaw
+        .toLowerCase()
+        .replace(/-/g, " ")
+        .replace(/[.,!?'"]/g, "")
+        .replace(/\n+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
     document.getElementById('out-normalisasi').innerText = teksNormal;
 }
 
@@ -308,7 +454,10 @@ function lanjutKe(step) {
     }
     
     // Scroll otomatis ke tahap baru
-    document.getElementById('step-'+step).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const stepEl = document.getElementById('step-'+step);
+    if (typeof stepEl.scrollIntoView === 'function') {
+        stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
 function siapkanTahap2() {
@@ -402,7 +551,7 @@ function tampilkanHasil() {
     // Kembalikan ke urutan paragraf asli agar enak dibaca
     topKalimat.sort((a,b) => a.idAsli - b.idAsli);
 
-    hasilAkhirBox.innerHTML = "<h3 style='margin-top:0; color:#166534;'>📑 Hasil Rangkuman:</h3>";
+    hasilAkhirBox.innerHTML = "<h3 style='margin-top:0; color:#166534;'><svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block; vertical-align:-0.15em;'><path d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'></path><path d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'></path></svg> Hasil Rangkuman:</h3>";
     hasilAkhirBox.innerHTML += "<p style='font-size:16px; line-height:1.8; color:#064e3b; font-weight:500;'>" + topKalimat.map(h => h.teks + ".").join(" ") + "</p>";
 }
 </script>
