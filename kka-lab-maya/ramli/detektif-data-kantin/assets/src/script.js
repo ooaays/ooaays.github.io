@@ -1320,10 +1320,10 @@ const PREDIKSI_DATA = [
     hint: 'max() mengembalikan nilai terbesar dari list.',
   },
   {
-    desc: 'Apa yang akan tercetak jika kode ini dijalankan?',
-    code: 'produk = ["Pensil", "Buku", "Tas"]\nprint(len(produk))',
+    desc: 'Berapa baris output yang muncul jika kode ini dijalankan?',
+    code: 'produk = ["Pensil", "Buku", "Tas"]\nharga = [5000, 12000, 80000]\nfor p, h in zip(produk, harga):\n    print(p, h)',
     answer: '3',
-    hint: 'len() mengembalikan jumlah elemen dalam list.',
+    hint: 'zip() memasangkan setiap item produk dengan harga yang sejajar. Ada 3 pasangan, jadi for mencetak 3 baris.',
   },
   {
     desc: 'Berapa baris output yang muncul?',
@@ -1359,11 +1359,11 @@ function cekPrediksi() {
   if (jawaban === d.answer) {
     res.className = 'prediksi-result benar';
     res.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""> <strong>Tepat!</strong> Outputnya memang <code>${d.answer}</code>. ${d.hint}`;
+    if (prIdx < PREDIKSI_DATA.length - 1) document.getElementById('nextPrediksiBtn').classList.remove('hidden');
   } else {
     res.className = 'prediksi-result salah';
-    res.innerHTML = `<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt=""> <strong>Belum tepat.</strong> Output yang benar: <code>${d.answer}</code>. ${d.hint}`;
+    res.innerHTML = `<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt=""> <strong>Belum tepat.</strong> Coba baca lagi kode di atas, lalu perbaiki prediksimu. ${d.hint}`;
   }
-  if (prIdx < PREDIKSI_DATA.length - 1) document.getElementById('nextPrediksiBtn').classList.remove('hidden');
 }
 
 function nextPrediksi() {
@@ -1383,11 +1383,11 @@ const KUIS_VAR_DATA = [
     explain: 'max([5000, 12000, 80000]) mengembalikan 80000.',
   },
   {
-    code: 'produk = ["Pensil", "Buku", "Tas"]\njumlah = len(produk)',
-    q: 'Nilai variabel <code>jumlah</code> adalah…',
-    opts: ['1', '2', '3', '4'],
-    correct: 2,
-    explain: 'List produk punya 3 elemen, jadi len() = 3.',
+    code: 'nilai = 80000\nhasil = nilai > 50000',
+    q: 'Nilai variabel <code>hasil</code> setelah kode ini dijalankan adalah…',
+    opts: ['True', 'False', '80000', '50000'],
+    correct: 0,
+    explain: 'nilai (80000) dibandingkan dengan 50000 memakai operator ">". Karena 80000 lebih besar, hasilnya True — sama seperti kondisi if yang kamu pakai di Tahap 3.',
   },
   {
     code: 'x = 10\ny = x * 2 + 5',
