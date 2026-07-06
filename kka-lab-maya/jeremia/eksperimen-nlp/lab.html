@@ -67,12 +67,25 @@
         .info-box h4 { margin: 0 0 8px 0; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
         .info-box p { margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6; }
 
+        /* Info batas kalimat pada slider rangkuman */
+        .slider-limit-note {
+            background: #fffbeb; border: 1px solid #fde68a; color: #92400e;
+            padding: 8px 12px; border-radius: 8px; font-size: 12px;
+            margin-top: 10px; line-height: 1.5;
+        }
+
         /* Disclaimer di bawah Hasil Rangkuman */
         .summary-disclaimer {
             background: #fffbeb; border: 1px solid #fde68a; color: #92400e;
             padding: 10px 14px; border-radius: 8px; font-size: 13px;
             margin-top: 12px; display: flex; gap: 8px; align-items: flex-start; line-height: 1.5;
         }
+
+        /* Feedback pilihan stopword murid di Tahap 3 */
+        .stopword-feedback { padding: 12px 15px; border-radius: 8px; font-size: 13px; line-height: 1.6; margin-bottom: 4px; }
+        .stopword-feedback p { margin: 0; }
+        .stopword-feedback.ok   { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .stopword-feedback.warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
 
         /* =========================================================
            TAMBAHAN CSS HEADER
@@ -220,6 +233,7 @@
         <div id="step-3" class="step-box">
             <span class="step-title">Tahap 3: Hitung Frekuensi (Kata Kunci Utama)</span>
             <p style="font-size: 14px; color: #475569;">Berdasarkan sisa kata yang tidak Anda coret, mesin menghitung kata apa yang paling sering muncul.</p>
+            <div id="stopword-feedback" class="stopword-feedback"></div>
             <div id="out-frekuensi" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
             <button class="btn-lanjut" onclick="lanjutKe(4)">Lanjut ke Pembobotan Kalimat <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
@@ -241,6 +255,7 @@
             
             <div class="slider-container">
                 <label style="font-weight:bold; color:#92400e;">Mau ambil berapa kalimat terbaik untuk dirangkum?</label>
+                <div id="slider-max-note" style="font-size: 12px; color: #92400e; margin-top: 4px;"></div>
                 <div style="font-size: 24px; font-weight: 800; color: #b45309; text-align: center; margin-top: 10px;" id="val-kalimat">3 Kalimat</div>
                 <input type="range" id="input-slider" min="1" max="7" value="3" oninput="updateSlider(this.value)" onchange="tampilkanHasil()">
             </div>
@@ -281,14 +296,14 @@
         <h2 style="color: var(--primary); margin-top: 0; text-align: center;">Lampiran Sumber</h2>
 
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px; color: #334155; line-height: 1.7;">
-            <p style="margin: 0 0 6px 0;"><strong>Judul:</strong> <span id="sumber-judul"></span></p>
-            <p style="margin: 0 0 6px 0;"><strong>Disusun oleh:</strong> <span id="sumber-penulis"></span></p>
-            <p style="margin: 0 0 6px 0;"><strong>Instansi:</strong> <span id="sumber-instansi"></span></p>
-            <p style="margin: 0;"><strong>Tahun:</strong> <span id="sumber-tahun"></span></p>
+            <p style="margin: 0 0 6px 0;"><strong>Judul Sumber:</strong> <span id="sumber-judul"></span></p>
+            <p style="margin: 0 0 6px 0;"><strong>Penulis/Instansi:</strong> <span id="sumber-penulis"></span></p>
+            <p style="margin: 0 0 6px 0;"><strong>Diterbitkan di:</strong> <span id="sumber-instansi"></span></p>
+            <p id="sumber-tautan-row" style="margin: 0;"><strong>Tautan:</strong> <a id="sumber-tautan" href="#" target="_blank" rel="noopener" style="color: var(--primary); word-break: break-all;"></a></p>
         </div>
 
         <div class="ai-disclaimer" style="display: block; margin-top: 14px; margin-bottom: 0; text-align: left;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <i>Catatan: Artikel dan lampiran sumber ini bersifat <strong>simulasi/ilustrasi</strong> yang dibuat khusus untuk latihan eksperimen NLP, bukan artikel penelitian sungguhan yang boleh dikutip untuk tugas sekolah.</i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <i>Catatan: Sumber di atas adalah publikasi/kajian yang <strong>benar-benar ada</strong>. Namun, isi artikel di halaman ini adalah <strong>ringkasan sederhana</strong> yang ditulis ulang untuk latihan eksperimen NLP, bukan kutipan langsung. Untuk mengutip di tugas sekolah, selalu periksa dan rujuk sumber aslinya melalui tautan di atas.</i>
         </div>
 
         <div style="display: flex; justify-content: center; margin-top: 20px;">
@@ -303,32 +318,57 @@ const dummyArticles = [
     {
         topik: "AI dalam Pembelajaran",
         judul: "Pemanfaatan Kecerdasan Buatan dalam Pembelajaran Siswa SMP",
-        isi: `Penelitian ini membahas pemanfaatan kecerdasan buatan dalam membantu siswa memahami materi pelajaran di sekolah menengah pertama. Teknologi ini dapat digunakan untuk mencari informasi, menyusun rangkuman, dan memberikan latihan soal secara otomatis. Sistem pembelajaran berbasis kecerdasan buatan mampu menyesuaikan tingkat kesulitan soal dengan kemampuan setiap siswa secara real-time, sehingga proses belajar terasa lebih personal. Hasil pengamatan menunjukkan penggunaan teknologi secara terarah dapat meningkatkan keterlibatan siswa dalam proses belajar sehari-hari. Meskipun demikian, penggunaan teknologi tetap memerlukan bimbingan guru agar siswa tidak sekadar menyalin jawaban, melainkan benar-benar memahami konsep yang sedang dipelajari. Dengan pengawasan yang tepat, kecerdasan buatan dapat menjadi alat bantu belajar yang bermanfaat.`,
-        sumber: { penulis: "Tim Riset Pendidikan Digital (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+        isi: `Penelitian ini membahas pemanfaatan teknologi kecerdasan buatan generatif dalam dunia pendidikan di Indonesia. Sebuah studi percontohan di Telkom University menerapkan teknologi ini pada lima mata kuliah selama satu semester. Peneliti ingin mengetahui apakah teknologi ini dapat meringankan beban pengajar dan meningkatkan kualitas pembelajaran. Hasil pengamatan menunjukkan teknologi ini berpotensi memberi manfaat langsung, seperti motivasi belajar yang meningkat secara real-time, maupun manfaat tidak langsung, seperti waktu tambahan bagi pengajar untuk mendampingi siswa. Meskipun penelitian dilakukan di tingkat perguruan tinggi, temuannya relevan untuk sekolah menengah karena tantangan penggunaan kecerdasan buatan juga dihadapi siswa SMP. Pengawasan guru penting agar teknologi ini membantu belajar, bukan menggantikan proses berpikir siswa.`,
+        sumber: {
+            judul: "Advancing Global South University Education with Large Language Models",
+            penulis: "Tim peneliti internasional (studi kasus Telkom University, Indonesia)",
+            instansi: "arXiv preprint, 2024",
+            tautan: "https://arxiv.org/abs/2410.07139"
+        }
     },
     {
         topik: "Literasi Digital Siswa",
         judul: "Kebiasaan Membaca dan Literasi Digital di Kalangan Siswa",
-        isi: `Penelitian ini mengamati kebiasaan membaca siswa sekolah menengah pertama di tengah perkembangan teknologi digital yang semakin pesat. Sebagian besar siswa kini lebih sering membaca informasi singkat melalui gawai dibandingkan membaca buku secara utuh dari awal hingga akhir. Kebiasaan ini memengaruhi kemampuan siswa dalam memahami teks panjang dan menyimpulkan gagasan utama sebuah bacaan secara menyeluruh. Hasil pengamatan menunjukkan siswa yang rutin membaca buku cenderung lebih mudah memahami instruksi tertulis dan soal cerita pada mata pelajaran lain. Oleh karena itu, sekolah perlu mendorong kebiasaan membaca melalui kegiatan literasi rutin, baik dalam bentuk cetak maupun digital. Pembiasaan ini diharapkan meningkatkan kemampuan siswa mengolah informasi secara kritis.`,
-        sumber: { penulis: "Tim Riset Literasi Digital (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+        isi: `Penelitian ini membahas tingkat pemahaman literasi data pada siswa sekolah menengah di Indonesia. Sekelompok akademisi dari Monash University, Universitas Brawijaya, dan Universitas Binawan mengadakan pelatihan singkat literasi data bagi siswa di beberapa kota. Pelatihan ini bertujuan meningkatkan kesadaran siswa akan pentingnya kemampuan mengolah data untuk kebutuhan belajar maupun pekerjaan di masa depan. Hasil pengamatan menunjukkan siswa merasa lebih sadar akan manfaat literasi data setelah mengikuti pelatihan tersebut. Materi yang paling dirasakan bermanfaat adalah konsep statistik dasar yang dipraktikkan langsung menggunakan program pengolah angka sederhana. Temuan ini menunjukkan literasi digital perlu mulai diperkenalkan sejak jenjang sekolah menengah agar siswa siap menghadapi tantangan di era digital.`,
+        sumber: {
+            judul: "Exploring Data Literacy Self-Perception among Indonesian High School Students",
+            penulis: "Tim peneliti Monash University, Universitas Brawijaya, dan Universitas Binawan",
+            instansi: "PMC (National Center for Biotechnology Information), 2025",
+            tautan: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11698427/"
+        }
     },
     {
         topik: "Transportasi dan Keterlambatan Sekolah",
-        judul: "Pengaruh Transportasi Umum terhadap Keterlambatan Siswa ke Sekolah",
-        isi: `Penelitian ini membahas pengaruh penggunaan transportasi umum terhadap tingkat keterlambatan siswa dalam menghadiri kegiatan belajar di sekolah. Sebagian siswa yang tinggal jauh dari sekolah bergantung pada angkutan umum seperti angkot, bus sekolah, atau ojek daring setiap pagi. Keterlambatan jadwal transportasi dan kepadatan lalu lintas pada jam sibuk sering menjadi penyebab utama siswa terlambat masuk kelas. Hasil pengamatan menunjukkan siswa yang berangkat lebih awal memiliki risiko keterlambatan yang jauh lebih rendah dibandingkan siswa yang berangkat mendekati jam masuk sekolah. Oleh karena itu, perencanaan waktu keberangkatan yang lebih matang perlu dibiasakan sejak dini. Kerja sama antara orang tua dan sekolah penting untuk mengurangi angka keterlambatan.`,
-        sumber: { penulis: "Tim Riset Transportasi Sekolah (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+        judul: "Identifikasi Penyebab Siswa Terlambat Datang Setiap Pagi ke Sekolah",
+        isi: `Penelitian ini membahas penyebab siswa sering terlambat datang ke sekolah setiap pagi. Berdasarkan kajian pustaka, penyebab keterlambatan dibagi menjadi faktor internal dan eksternal. Faktor internal berasal dari kebiasaan siswa sendiri, misalnya bangun kesiangan karena kurang disiplin, terlalu lama menggunakan gawai pada malam hari, atau menunda mengerjakan tugas hingga larut malam. Faktor eksternal berkaitan dengan tanggung jawab di rumah, seperti membantu pekerjaan rumah tangga atau mengantar adik ke sekolah sebelum berangkat sendiri. Peneliti merekomendasikan bimbingan konseling, penerapan aturan disiplin, dan keterlibatan orang tua untuk membantu siswa membangun tanggung jawab terhadap waktu. Dengan memahami akar penyebabnya, sekolah dan keluarga dapat bekerja sama mengurangi angka keterlambatan siswa.`,
+        sumber: {
+            judul: "Identifikasi Penyebab Siswa Terlambat Datang Setiap Pagi ke Sekolah",
+            penulis: "Diana Situmeang, Elfrida Situmeang, Meleakhi Sijabat, Sari Murni Zalukhu, Ferdinan Simanjuntak, Hiskya Ignatius Sitepu",
+            instansi: "Innovative: Journal of Social Science Research, Vol. 4 No. 3, 2024",
+            tautan: "https://j-innovative.org/index.php/Innovative/article/view/11375"
+        }
     },
     {
         topik: "Cuaca dan Aktivitas Harian",
         judul: "Pengaruh Cuaca terhadap Aktivitas Belajar dan Bermain Siswa",
-        isi: `Penelitian ini mengamati pengaruh perubahan cuaca terhadap aktivitas harian siswa di lingkungan sekolah maupun di rumah. Cuaca panas yang menyengat maupun hujan deras sering membuat siswa enggan melakukan aktivitas fisik seperti olahraga di luar ruangan. Kondisi cuaca yang tidak menentu juga dapat memengaruhi konsentrasi siswa selama mengikuti pelajaran di dalam kelas setiap hari. Hasil pengamatan menunjukkan siswa cenderung lebih aktif bergerak saat cuaca cerah dibandingkan saat cuaca ekstrem seperti hujan lebat atau panas berlebihan. Oleh karena itu, sekolah perlu menyiapkan kegiatan alternatif di dalam ruangan agar siswa tetap aktif bergerak meskipun cuaca sedang tidak mendukung. Perhatian ini penting agar kegiatan belajar tetap nyaman dan aman.`,
-        sumber: { penulis: "Tim Riset Cuaca dan Aktivitas Siswa (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+        isi: `Penelitian ini membahas data perubahan suhu di Indonesia berdasarkan catatan Badan Meteorologi, Klimatologi, dan Geofisika (BMKG). Data BMKG menunjukkan suhu rata-rata di Indonesia meningkat sekitar 0,8 derajat Celsius sejak tahun 1981, dengan rekor suhu tertinggi tercatat pada tahun 2024. Tren peningkatan suhu ini berpotensi memengaruhi kenyamanan aktivitas harian, termasuk aktivitas belajar dan bermain siswa di sekolah maupun di rumah. Cuaca yang semakin panas dapat membuat siswa cepat lelah atau kurang bersemangat mengikuti kegiatan di luar ruangan seperti olahraga. Oleh karena itu, sekolah perlu mempertimbangkan penjadwalan kegiatan luar ruangan pada waktu lebih sejuk serta menyediakan alternatif kegiatan di dalam ruangan agar belajar tetap nyaman.`,
+        sumber: {
+            judul: "Data Pengamatan Tren Suhu Rata-Rata Tahunan Indonesia",
+            penulis: "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)",
+            instansi: "Laporan iklim dan data historis suhu BMKG, 2024",
+            tautan: "https://www.bmkg.go.id/"
+        }
     },
     {
         topik: "Kebiasaan Membaca Siswa",
         judul: "Kebiasaan Membaca dan Kemampuan Memahami Teks",
-        isi: `Penelitian ini membahas hubungan antara kebiasaan membaca dan kemampuan siswa dalam memahami suatu teks bacaan sederhana. Siswa yang memiliki kebiasaan membaca secara rutin umumnya lebih mudah menemukan gagasan utama dan informasi penting dalam sebuah paragraf. Sebaliknya, siswa yang jarang membaca sering kesulitan memahami maksud kalimat panjang atau istilah yang belum familiar baginya. Hasil pengamatan menunjukkan kegiatan membaca selama lima belas menit setiap hari dapat membantu meningkatkan kemampuan memahami teks secara bertahap dan berkelanjutan. Kegiatan ini dapat dilakukan melalui buku cerita, artikel sederhana, maupun bahan bacaan lain yang sesuai minat siswa. Oleh karena itu, pembiasaan membaca perlu didukung oleh keluarga dan sekolah secara konsisten.`,
-        sumber: { penulis: "Tim Riset Kebiasaan Membaca (contoh)", instansi: "Simulasi Lab Eksperimen NLP", tahun: "2024" }
+        isi: `Penelitian ini membahas kebiasaan membaca siswa dikaitkan dengan program pemerintah bernama Gerakan Tujuh Kebiasaan Anak Indonesia Hebat yang disusun oleh Kementerian Pendidikan Dasar dan Menengah. Salah satu kebiasaan yang dianjurkan adalah membaca buku non pelajaran selama lebih kurang lima belas menit sebelum kegiatan belajar dimulai di sekolah. Kajian akademik lain juga menunjukkan adanya hubungan antara kebiasaan membaca dan kemampuan siswa memahami suatu bacaan secara menyeluruh. Siswa yang terbiasa membaca rutin cenderung lebih mudah menemukan gagasan utama dalam sebuah teks. Oleh karena itu, pembiasaan membaca setiap hari perlu terus didukung oleh sekolah maupun keluarga agar kemampuan literasi siswa meningkat.`,
+        sumber: {
+            judul: "Panduan Penerapan Gerakan Tujuh Kebiasaan Anak Indonesia Hebat (7KAIH) Jenjang SMP",
+            penulis: "Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen)",
+            instansi: "Direktorat Cerdas Berkarakter, Kemendikdasmen, 2025",
+            tautan: "https://cerdasberkarakter.kemendikdasmen.go.id/wp-content/uploads/2025/04/BUKU-PANDUAN-PENERAPAN-GERAKAN-7KAIH-JENJANG-SMP.pdf"
+        }
     }
 ];
 
@@ -340,6 +380,17 @@ let userStopwords = new Set();
 let frekuensiKata = {};
 let skorKalimatData = [];
 let indexArtikelTerakhir = -1;
+
+// Daftar rujukan stopword umum Bahasa Indonesia, dipakai untuk menilai pilihan coretan murid di Tahap 2
+const STANDARD_STOPWORDS = new Set([
+    "dan","di","ke","dari","yang","untuk","dengan","ini","itu","atau","juga",
+    "akan","adalah","pada","dalam","secara","karena","agar","dapat","tidak",
+    "sudah","telah","oleh","para","seperti","bagi","saat","jika","maka","serta",
+    "namun","tersebut","sehingga","hal","bahwa","hingga","antara","lebih",
+    "sangat","masih","kini","saja","pun","tanpa","tetap","tentang","semua",
+    "setiap","satu","dua","suatu","begitu","bisa","sebagai","kita","mereka",
+    "kami","saya","kamu","nya","yaitu","meskipun","demikian"
+]);
 
 function generateArtikelJurnal() {
     // Pilih artikel jurnal secara acak, hindari mengulang artikel yang sama persis dua kali berturut-turut
@@ -407,10 +458,19 @@ function bukaSumberModal() {
     const artikel = dummyArticles[indexArtikelTerakhir];
     if (!artikel) return;
 
-    document.getElementById('sumber-judul').textContent = artikel.judul;
+    document.getElementById('sumber-judul').textContent = artikel.sumber.judul;
     document.getElementById('sumber-penulis').textContent = artikel.sumber.penulis;
     document.getElementById('sumber-instansi').textContent = artikel.sumber.instansi;
-    document.getElementById('sumber-tahun').textContent = artikel.sumber.tahun;
+
+    const tautanRow = document.getElementById('sumber-tautan-row');
+    const tautanEl = document.getElementById('sumber-tautan');
+    if (artikel.sumber.tautan) {
+        tautanEl.href = artikel.sumber.tautan;
+        tautanEl.textContent = artikel.sumber.tautan;
+        tautanRow.style.display = 'block';
+    } else {
+        tautanRow.style.display = 'none';
+    }
 
     sumberModal.style.display = 'flex';
     setTimeout(() => { sumberModal.classList.add('show'); }, 10);
@@ -489,6 +549,36 @@ function siapkanTahap2() {
     });
 }
 
+// Bandingkan coretan stopword murid dengan daftar rujukan, beri umpan balik yang mudah dipahami
+function evaluasiPilihanStopword() {
+    const box = document.getElementById('stopword-feedback');
+    if (!box) return;
+
+    const dicoret = [...userStopwords];
+
+    if (dicoret.length === 0) {
+        box.className = 'stopword-feedback warn';
+        box.innerHTML = `<p>Kamu belum mencoret kata apa pun di Tahap 2. Coba kembali dan coret kata hubung/imbuhan yang tidak penting (misalnya "dan", "di", "yang", "untuk") agar kata kunci yang dihitung lebih akurat.</p>`;
+        return;
+    }
+
+    const stopwordUmum = dicoret.filter(k => STANDARD_STOPWORDS.has(k));
+    const kataKontenTercoret = dicoret.filter(k => !STANDARD_STOPWORDS.has(k));
+
+    let html = `<p><strong>${stopwordUmum.length}</strong> dari <strong>${dicoret.length}</strong> kata yang kamu coret memang termasuk stopword umum (kata hubung/imbuhan) dalam Bahasa Indonesia`;
+    html += stopwordUmum.length ? `, misalnya: ${stopwordUmum.slice(0, 6).map(k => `"${k}"`).join(', ')}.</p>` : `.</p>`;
+
+    if (kataKontenTercoret.length > 0) {
+        html += `<p style="margin-top:8px;">Namun, kamu juga mencoret <strong>${kataKontenTercoret.length}</strong> kata yang sepertinya bukan stopword, contohnya: ${kataKontenTercoret.slice(0, 6).map(k => `"${k}"`).join(', ')}. Jika kata ini sebenarnya penting, hasil hitung kata kunci di bawah bisa jadi kurang akurat.</p>`;
+        box.className = 'stopword-feedback warn';
+    } else {
+        html += `<p style="margin-top:8px;">Semua pilihanmu tepat — tidak ada kata penting yang ikut tercoret.</p>`;
+        box.className = 'stopword-feedback ok';
+    }
+
+    box.innerHTML = html;
+}
+
 function siapkanTahap3() {
     let semuaTokens = teksNormal.split(/\s+/);
     frekuensiKata = {};
@@ -499,6 +589,8 @@ function siapkanTahap3() {
             frekuensiKata[kata] = (frekuensiKata[kata] || 0) + 1;
         }
     });
+
+    evaluasiPilihanStopword();
 
     let outFreq = document.getElementById('out-frekuensi');
     outFreq.innerHTML = "";
@@ -537,6 +629,21 @@ function siapkanTahap4() {
             </div>
         </div>`;
     });
+
+    // Batasi slider sesuai jumlah kalimat yang sebenarnya tersedia di teks,
+    // supaya murid tidak bisa memilih lebih banyak kalimat daripada yang ada
+    const totalKalimat = skorKalimatData.length;
+    const slider = document.getElementById('input-slider');
+    slider.max = totalKalimat;
+    if (parseInt(slider.value) > totalKalimat) {
+        slider.value = totalKalimat;
+    }
+    updateSlider(slider.value);
+
+    const maxNote = document.getElementById('slider-max-note');
+    if (maxNote) {
+        maxNote.textContent = `Teks ini memiliki ${totalKalimat} kalimat, jadi kamu bisa memilih 1 sampai ${totalKalimat} kalimat.`;
+    }
 }
 
 function updateSlider(val) { document.getElementById('val-kalimat').innerText = val + " Kalimat"; }
@@ -544,15 +651,24 @@ function updateSlider(val) { document.getElementById('val-kalimat').innerText = 
 function tampilkanHasil() {
     let target = parseInt(document.getElementById('input-slider').value);
     let hasilAkhirBox = document.getElementById('hasil-akhir');
-    
+    let totalKalimat = skorKalimatData.length;
+
     // Sortir berdasarkan skor tertinggi, lalu potong sesuai target slider
     let topKalimat = [...skorKalimatData].sort((a,b) => b.skor - a.skor).slice(0, target);
-    
+
     // Kembalikan ke urutan paragraf asli agar enak dibaca
     topKalimat.sort((a,b) => a.idAsli - b.idAsli);
 
     hasilAkhirBox.innerHTML = "<h3 style='margin-top:0; color:#166534;'><svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block; vertical-align:-0.15em;'><path d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'></path><path d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'></path></svg> Hasil Rangkuman:</h3>";
     hasilAkhirBox.innerHTML += "<p style='font-size:16px; line-height:1.8; color:#064e3b; font-weight:500;'>" + topKalimat.map(h => h.teks + ".").join(" ") + "</p>";
+
+    // Pengaman: kalau target ternyata masih melebihi jumlah kalimat yang ada, jelaskan kenapa hasilnya lebih pendek
+    if (target > totalKalimat) {
+        hasilAkhirBox.innerHTML += `<div class="slider-limit-note">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Kamu memilih ${target} kalimat, tetapi teks aslinya hanya memiliki ${totalKalimat} kalimat. Rangkuman di atas sudah menampilkan seluruh ${totalKalimat} kalimat yang tersedia.
+        </div>`;
+    }
 }
 </script>
 
