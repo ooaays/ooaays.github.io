@@ -185,6 +185,7 @@ let currentLevel = 1;
 let trainingAccuracy = {}; 
 let globalCardId = 0;
 let noiseMistakes = 0;
+let predictionCache = {};
 window.predictionInterval = null;
 
 // === FUNGSI UTAMA ===
@@ -233,6 +234,7 @@ function resetLevelState() {
     trainingAccuracy = {};
     selectedCard = null;
     noiseMistakes = 0;
+    predictionCache = {};
     if(window.predictionInterval) clearInterval(window.predictionInterval);
     
     document.getElementById('fase-training').style.display = 'block';
@@ -399,6 +401,7 @@ function processTrainingLogic(){
     let placedCounts = {};
     let categoryTotals = {};
     noiseMistakes = 0;
+    predictionCache = {};
 
     cards.forEach(c => {
         let t = c.dataset.type; 
@@ -427,24 +430,162 @@ function processTrainingLogic(){
 
     const testContainer = document.getElementById('testCards');
     testContainer.innerHTML = '';
+    let testCardIndex = 0;
+    const addTestCard = (svgMarkup, actualType) => {
+        const testId = `test-${currentLevel}-${actualType}-${testCardIndex++}`;
+        const card = document.createElement('div');
+        card.className = 'animal-card';
+        card.dataset.testId = testId;
+        card.innerHTML = svgMarkup;
+        card.addEventListener('click', () => startPrediction(card, actualType));
+        testContainer.appendChild(card);
+    };
     
     // Generate data testing 
     if (currentLevel === 1) {
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[5], 5)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 2)">${getDogSVG(colorsAnjing[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getRabbitSVG()}</div>`;
+        addTestCard(getCatSVG(colorsKucing[4], 4), 1);
+        addTestCard(getCatSVG(colorsKucing[5], 5), 1);
+        addTestCard(getDogSVG(colorsAnjing[4], 4), 2);
+        addTestCard(getRabbitSVG(), 'Anomali');
     } else if (currentLevel === 2) {
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 3)">${getHorseSVG(colorsKuda[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 4)">${getLionSVG(colorsSinga[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 4)">${getLionSVG(colorsSinga[5], 5)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getCowSVG()}</div>`;
+        addTestCard(getHorseSVG(colorsKuda[4], 4), 3);
+        addTestCard(getLionSVG(colorsSinga[4], 4), 4);
+        addTestCard(getLionSVG(colorsSinga[5], 5), 4);
+        addTestCard(getCowSVG(), 'Anomali');
     } else {
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 1)">${getCatSVG(colorsKucing[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 2)">${getDogSVG(colorsAnjing[5], 5)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 3)">${getHorseSVG(colorsKuda[4], 4)}</div>`;
-        testContainer.innerHTML += `<div class="animal-card" onclick="startPrediction(this, 'Anomali')">${getDuckSVG()}</div>`;
+        addTestCard(getCatSVG(colorsKucing[4], 4), 1);
+        addTestCard(getDogSVG(colorsAnjing[5], 5), 2);
+        addTestCard(getHorseSVG(colorsKuda[4], 4), 3);
+        addTestCard(getDuckSVG(), 'Anomali');
     }
+}
+
+function createPredictionKey(cardEl, actualType) {
+    return `${currentLevel}-${actualType}-${cardEl.dataset.testId || cardEl.innerHTML.length}`;
+}
+
+function createSeededRandom(seed) {
+    let state = seed % 2147483647;
+    if (state <= 0) state += 2147483646;
+    return () => {
+        state = (state * 16807) % 2147483647;
+        return (state - 1) / 2147483646;
+    };
+}
+
+function buildPredictionData(actualType, currentCats, cardEl) {
+    const seed = createPredictionKey(cardEl, actualType).split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    const rand = createSeededRandom(seed);
+    let isRealAnomaly = (actualType === 'Anomali');
+    let probabilities = {};
+    let baseConfidence = 75 + Math.floor(rand() * 15);
+
+    if (isRealAnomaly) {
+        let closestCat = currentCats[Math.floor(rand() * currentCats.length)];
+        let anomalyConfidence = 45 + Math.floor(rand() * 20);
+        probabilities[closestCat.id] = anomalyConfidence;
+        let remaining = 100 - anomalyConfidence;
+        let otherCats = currentCats.filter(c => c.id !== closestCat.id);
+        otherCats.forEach((c, idx) => {
+            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
+            else {
+                let maxShare = remaining * 0.7;
+                let val = Math.max(1, Math.floor(rand() * maxShare));
+                probabilities[c.id] = val;
+                remaining -= val;
+            }
+        });
+    } else {
+        let multiplier = 0.3 + (0.7 * (trainingAccuracy[actualType] || 0));
+        let finalMainPct = Math.floor(baseConfidence * multiplier);
+        if (finalMainPct > 100) finalMainPct = 100;
+        probabilities[actualType] = finalMainPct;
+        let remaining = 100 - finalMainPct;
+
+        let otherCats = currentCats.filter(c => c.id !== actualType);
+        otherCats.forEach((c, idx) => {
+            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
+            else {
+                let maxShare = remaining * 0.7;
+                let val = Math.max(1, Math.floor(rand() * maxShare));
+                probabilities[c.id] = val;
+                remaining -= val;
+            }
+        });
+    }
+
+    let maxPct = -1;
+    let maxCatId = null;
+    currentCats.forEach(c => {
+        let pct = probabilities[c.id];
+        if (pct > maxPct) {
+            maxPct = pct;
+            maxCatId = c.id;
+        }
+    });
+
+    let winningCat = currentCats.find(c => c.id === maxCatId);
+    let sisaPersen = 100 - maxPct;
+    let alasan = "";
+
+    if (noiseMistakes > 0) {
+        alasan = `Akurasi KA dipengaruhi oleh <b>${noiseMistakes} data tidak relevan </b> yang dimasukkan ke kotak hewan di tahap latih. KA mendeteksi pola dari benda tersebut sebagai ciri-ciri hewan, yang menyebabkan hasil prediksi menjadi tidak akurat.`;
+    } else if (isRealAnomaly) {
+        alasan = `Gambar ini adalah <b>Data Baru</b> yang belum pernah diajarkan. KA memecah gambar dan mencari pola <b>garis, warna, dan bentuk</b>. Karena pola pada gambar ini tidak memiliki kecocokan yang kuat dengan data latih, KA mendeteksi kemiripan terdekat dengan <b>${winningCat.name}</b> sebesar ${maxPct}%.`;
+    } else {
+        alasan = `KA mendeteksi gambar ini sebagai <b>${winningCat.name}</b> dengan tingkat kecocokan <b>${maxPct}%</b>. KA membandingkan komposisi <b>pola garis, warna, dan bentuk</b> pada gambar ini dengan data latih yang kamu berikan. Sisa ${sisaPersen}% didistribusikan ke kategori lain karena adanya kemiripan sebagian kecil pola warna atau garis dengan hewan lain.`;
+    }
+
+    return { probabilities, maxPct, maxCatId, winningCat, alasan, isRealAnomaly };
+}
+
+function renderPredictionResult(predictionData, actualType) {
+    const currentCats = levels[currentLevel].cats;
+    document.getElementById('ai-thinking-box').classList.add('hidden');
+    document.getElementById('prediction-results').classList.remove('hidden');
+    setStepper(4);
+
+    currentCats.forEach(c => {
+        let pct = predictionData.probabilities[c.id];
+        document.getElementById(`bar${c.id}`).style.width = pct + "%";
+        document.getElementById(`pct${c.id}Text`).innerText = pct + "%";
+    });
+
+    const finalDecisionEl = document.getElementById('final-decision');
+    finalDecisionEl.innerHTML = `<span class='${predictionData.winningCat.theme.textTitle}'>${predictionData.winningCat.name.toUpperCase()}</span>`;
+
+    const explainBox = document.getElementById('explanation-box');
+    const explainText = document.getElementById('explanation-text');
+    explainText.innerHTML = predictionData.alasan;
+    explainBox.classList.remove('hidden');
+
+    document.getElementById('action-buttons-eval').classList.remove('hidden');
+
+    const btnNext = document.getElementById('btn-next-level');
+    btnNext.classList.remove('hidden');
+
+    if (currentLevel < 3) {
+        btnNext.innerHTML = `Lanjut ke Level ${currentLevel + 1}`;
+        btnNext.onclick = () => goToLevel(currentLevel + 1);
+    } else {
+        btnNext.innerHTML = `Selesai & Lihat Refleksi`;
+        btnNext.onclick = () => showReflection();
+    }
+
+    const laporanBox = document.getElementById('laporanAI');
+    laporanBox.classList.remove('hidden');
+
+    const accuracyHtml = currentCats.map(c => {
+        let acc = Math.round((trainingAccuracy[c.id] || 0) * 100);
+        return `
+            <div class="${c.theme.bg} p-4 rounded-2xl border ${c.theme.border} text-center">
+                <p class="text-xs ${c.theme.textCount} font-semibold mb-1">Akurasi Latihan ${c.name}</p>
+                <p class="text-3xl font-black ${c.theme.textTitle}">${acc}%</p>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('accuracy-report').innerHTML = accuracyHtml;
 }
 
 function startPrediction(cardEl, actualType) {
@@ -472,6 +613,12 @@ function startPrediction(cardEl, actualType) {
             el.classList.remove('bg-indigo-100', 'ring-2', 'ring-indigo-400', 'shadow-md', 'scale-110');
         }
     });
+
+    const predictionKey = createPredictionKey(cardEl, actualType);
+    if (predictionCache[predictionKey]) {
+        renderPredictionResult(predictionCache[predictionKey], actualType);
+        return;
+    }
     
     if(window.predictionInterval) clearInterval(window.predictionInterval);
     let stepIndex = 0;
@@ -493,115 +640,11 @@ function startPrediction(cardEl, actualType) {
             stepIndex++;
         } else {
             clearInterval(window.predictionInterval);
-            showResult(actualType); 
+            const predictionData = buildPredictionData(actualType, currentCats, cardEl);
+            predictionCache[predictionKey] = predictionData;
+            renderPredictionResult(predictionData, actualType);
         }
     }, 700); 
-}
-
-function showResult(actualType) {
-    document.getElementById('ai-thinking-box').classList.add('hidden');
-    document.getElementById('prediction-results').classList.remove('hidden');
-    setStepper(4); 
-
-    const currentCats = levels[currentLevel].cats;
-    let probabilities = {};
-
-    let isRealAnomaly = (actualType === 'Anomali');
-    let baseConfidence = Math.floor(Math.random() * 15) + 75;
-    
-    if (isRealAnomaly) {
-        let closestCat = currentCats[Math.floor(Math.random() * currentCats.length)];
-        let anomalyConfidence = Math.floor(Math.random() * 20) + 45; 
-        probabilities[closestCat.id] = anomalyConfidence;
-        let remaining = 100 - anomalyConfidence;
-        let otherCats = currentCats.filter(c => c.id !== closestCat.id);
-        otherCats.forEach((c, idx) => {
-            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
-            else {
-                let val = Math.floor(Math.random() * remaining * 0.7);
-                probabilities[c.id] = val;
-                remaining -= val;
-            }
-        });
-    } else {
-        let multiplier = 0.3 + (0.7 * (trainingAccuracy[actualType] || 0)); 
-        let finalMainPct = Math.floor(baseConfidence * multiplier);
-        probabilities[actualType] = finalMainPct;
-        let remaining = 100 - finalMainPct;
-
-        let otherCats = currentCats.filter(c => c.id !== actualType);
-        otherCats.forEach((c, idx) => {
-            if (idx === otherCats.length - 1) probabilities[c.id] = remaining;
-            else {
-                let val = Math.floor(Math.random() * remaining);
-                probabilities[c.id] = val;
-                remaining -= val;
-            }
-        });
-    }
-
-    let maxPct = -1;
-    let maxCatId = null;
-
-    setTimeout(() => {
-        currentCats.forEach(c => {
-            let pct = probabilities[c.id];
-            document.getElementById(`bar${c.id}`).style.width = pct + "%";
-            document.getElementById(`pct${c.id}Text`).innerText = pct + "%";
-            if(pct > maxPct) { maxPct = pct; maxCatId = c.id; }
-        });
-        
-        const finalDecisionEl = document.getElementById('final-decision');
-        let winningCat = currentCats.find(c => c.id === maxCatId);
-        
-        finalDecisionEl.innerHTML = `<span class='${winningCat.theme.textTitle}'>${winningCat.name.toUpperCase()}</span>`;
-
-        const explainBox = document.getElementById('explanation-box');
-        const explainText = document.getElementById('explanation-text');
-        
-        let alasan = "";
-        let sisaPersen = 100 - maxPct;
-
-        if (noiseMistakes > 0) {
-            alasan = `Akurasi KA dipengaruhi oleh <b>${noiseMistakes} data tidak relevan </b> yang dimasukkan ke kotak hewan di tahap latih. KA mendeteksi pola dari benda tersebut sebagai ciri-ciri hewan, yang menyebabkan hasil prediksi menjadi tidak akurat.`;
-        } else if (isRealAnomaly) {
-            alasan = `Gambar ini adalah <b>Data Baru</b> yang belum pernah diajarkan. KA memecah gambar dan mencari pola <b>garis, warna, dan bentuk</b>. Karena pola pada gambar ini tidak memiliki kecocokan yang kuat dengan data latih, KA mendeteksi kemiripan terdekat dengan <b>${winningCat.name}</b> sebesar ${maxPct}%.`;
-        } else {
-            alasan = `KA mendeteksi gambar ini sebagai <b>${winningCat.name}</b> dengan tingkat kecocokan <b>${maxPct}%</b>. KA membandingkan komposisi <b>pola garis, warna, dan bentuk</b> pada gambar ini dengan data latih yang kamu berikan. Sisa ${sisaPersen}% didistribusikan ke kategori lain karena adanya kemiripan sebagian kecil pola warna atau garis dengan hewan lain.`;
-        }
-        
-        explainText.innerHTML = alasan;
-        explainBox.classList.remove('hidden');
-
-        document.getElementById('action-buttons-eval').classList.remove('hidden');
-        
-        const btnNext = document.getElementById('btn-next-level');
-        btnNext.classList.remove('hidden');
-        
-        if (currentLevel < 3) {
-            btnNext.innerHTML = `Lanjut ke Level ${currentLevel + 1}`;
-            btnNext.onclick = () => goToLevel(currentLevel + 1);
-        } else {
-            btnNext.innerHTML = `Selesai & Lihat Refleksi`;
-            btnNext.onclick = () => showReflection();
-        }
-
-    }, 100);
-
-    const laporanBox = document.getElementById('laporanAI');
-    laporanBox.classList.remove('hidden');
-    
-    const accuracyHtml = currentCats.map(c => {
-        let acc = Math.round((trainingAccuracy[c.id] || 0) * 100);
-        return `
-            <div class="${c.theme.bg} p-4 rounded-2xl border ${c.theme.border} text-center">
-                <p class="text-xs ${c.theme.textCount} font-semibold mb-1">Akurasi Latihan ${c.name}</p>
-                <p class="text-3xl font-black ${c.theme.textTitle}">${acc}%</p>
-            </div>
-        `;
-    }).join('');
-    
-    document.getElementById('accuracy-report').innerHTML = accuracyHtml;
 }
 
 function resetLevel(){
