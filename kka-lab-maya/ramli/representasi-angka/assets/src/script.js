@@ -356,26 +356,6 @@ document.addEventListener('DOMContentLoaded', function(){
     updateOutput();
   }
 
-  // =========================
-  // KEYBOARD SHORTCUTS
-  // 1..8 toggle bits (left-to-right 128..1), R reset, M open Tujuan, C open Cara
-  // =========================
-  document.addEventListener('keydown', function(e){
-    const activeTag = document.activeElement && document.activeElement.tagName;
-    if(activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-    const k = e.key.toLowerCase();
-    if(k >= '1' && k <= '8'){
-      const idx = parseInt(k,10) - 1;
-      // toggle mapped bit
-      toggleBit(idx);
-      e.preventDefault();
-      return;
-    }
-    if(k === 'r') { resetBits(); e.preventDefault(); return; }
-    if(k === 'm') { openTujuanModal(); e.preventDefault(); return; }
-    if(k === 'c') { openCaraModal(); e.preventDefault(); return; }
-  });
-
   function renderHeroPreview(){
     const demoBits = [0,1,0,0,0,0,0,1]; // 65 = A
     const demoWeights = [128,64,32,16,8,4,2,1];

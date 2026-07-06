@@ -200,8 +200,12 @@ body{
 .lab-tool-blue{ background:#2563eb; }
 .lab-layout{ display:grid; grid-template-columns:330px 1fr; gap:24px; align-items:start; }
 .lab-right{ display:grid; gap:18px; }
-.ascii-table-wrap{ max-height:620px; overflow:auto; border-radius:18px; border:1px solid #e2e8f0; }
-.ascii-table-wrap table{ min-width:420px; }
+.ascii-table-wrap{ max-height:620px; overflow-y:auto; overflow-x:hidden; border-radius:18px; border:1px solid #e2e8f0; }
+.ascii-table-wrap table{ width:100%; table-layout:fixed; }
+.ascii-table-wrap th:nth-child(1), .ascii-table-wrap td:nth-child(1){ width:34%; }
+.ascii-table-wrap th:nth-child(2), .ascii-table-wrap td:nth-child(2){ width:38%; }
+.ascii-table-wrap th:nth-child(3), .ascii-table-wrap td:nth-child(3){ width:28%; }
+.ascii-table-wrap td{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .ascii-row.active{ background:#dbeafe !important; }
 .ascii-row{ cursor:pointer; }
 .ascii-row:hover{ background:#eff6ff; }
