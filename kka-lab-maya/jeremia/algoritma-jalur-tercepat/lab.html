@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Virtual: Analisis Algoritma Jalur Tercepat</title>
+    <title>Jalur Tercepat | KKA Lab Maya</title>
     
     <!-- Tambahan CDN Tailwind khusus Header (preflight di-false agar tidak merubah layout utama) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,19 +26,17 @@
         html { scroll-behavior: smooth; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; }
         
-        /* Layout per Level */
+        /* Layout per Level - hanya satu level aktif yang tampil */
         .level-section {
-            min-height: 100vh;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
-            border-bottom: 4px dashed #bdc3c7;
             position: relative;
         }
-        .level-section:last-child {
-            border-bottom: none;
+        .level-section.active {
+            display: flex;
         }
 
         /* Typography */
@@ -96,6 +94,21 @@
         .path-highlight { position: relative; }
         .path-highlight::after { content: ""; width: 15px; height: 15px; background: var(--accent); border-radius: 50%; position: absolute; box-shadow: 0 0 10px var(--accent); animation: popIn 0.3s forwards;}
 
+        /* Jejak eksplorasi algoritma - menunjukkan urutan sel yang diperiksa sebelum rute final ditemukan */
+        .cell.explored { box-shadow: inset 0 0 0 3px rgba(52, 152, 219, 0.55); }
+
+        /* Jalur tebakan murid sendiri, sebelum dibandingkan dengan AI */
+        .cell.guess-path { box-shadow: inset 0 0 0 3px #16a085; }
+        .end { pointer-events: auto !important; cursor: cell; }
+
+        /* Mode: Gambar Peta / Tebak Jalur Kamu */
+        .mode-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
+        .mode-btn { flex: 1; margin-top: 0; padding: 10px; border-radius: 8px; font-weight: bold; background: #ecf0f1; color: #34495e; border: 2px solid transparent; cursor: pointer; }
+        .mode-btn.active { background: var(--primary); color: white; }
+        .guess-instruction { font-size: 0.9em; color: #555; line-height: 1.5; background: #eef2f7; padding: 12px; border-radius: 8px; margin-bottom: 14px; }
+        .guess-estimate { font-weight: bold; color: var(--primary); margin-bottom: 10px; padding: 10px; background: #f4f7fb; border-radius: 8px; text-align: center; }
+        .guess-message { color: #e74c3c; font-size: 0.85em; min-height: 1.2em; margin-bottom: 10px; font-weight: 600; }
+
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.3); opacity: 1; }
@@ -103,7 +116,12 @@
         }
 
         /* Hasil Analisis */
-        .result-log { margin-top: 20px; width: 100%; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: monospace; box-sizing: border-box; min-height: 120px; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+        .result-log { margin-top: 20px; width: 100%; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: 'Segoe UI', Arial, sans-serif; box-sizing: border-box; min-height: 120px; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+        .result-feedback-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .result-feedback-head svg { width: 24px; height: 24px; flex-shrink: 0; }
+        .result-feedback-title { font-weight: bold; font-size: 1.1em; }
+        .result-feedback-detail { color: #ecf0f1; }
+        .result-feedback-note { color: #94a3b8; font-size: 0.85em; margin-top: 10px; display: block; }
 
         /* HEADER KEMDIKBUD */
         .header-bg {
@@ -115,6 +133,117 @@
             position: relative;
             z-index: 100;
         }
+
+        /* Stroke/outline tipis pada logo agar tetap terlihat jelas di background gradient */
+        .header-bg img {
+            filter: drop-shadow(0 0 1px rgba(0,0,0,0.55)) drop-shadow(0 0 1px rgba(0,0,0,0.55));
+        }
+
+        /* Judul halaman + tombol kembali ke home */
+        .page-title-bar {
+            width: 100%;
+            box-sizing: border-box;
+            background: white;
+            border-bottom: 1px solid #e1e8ed;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .page-title { margin: 0; font-size: 1.8em; color: var(--primary); }
+        .page-subtitle { margin: 4px 0 0; color: #555; font-size: 0.95em; }
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 0 #1f6691;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn-home:hover { background: #3498db; transform: translateY(2px); box-shadow: 0 2px 0 #1f6691; }
+
+        /* Pilihan Level - ditampilkan paling atas, sebelum area permainan */
+        .level-picker {
+            width: 100%;
+            box-sizing: border-box;
+            background: #eef2f7;
+            border-bottom: 1px solid #e1e8ed;
+            padding: 16px 24px;
+            text-align: center;
+        }
+        .level-picker-label { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.03em; }
+        .level-picker-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .level-picker-btn {
+            width: auto;
+            margin-top: 0;
+            padding: 12px 26px;
+            border-radius: 30px;
+            font-weight: bold;
+            background: white;
+            color: var(--primary);
+            border: 2px solid #cbd5e1;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .level-picker-btn:hover { border-color: var(--accent); }
+        .level-picker-btn.active {
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .level-picker-btn[data-level="1"].active { background: var(--accent); }
+        .level-picker-btn[data-level="2"].active { background: #8e44ad; }
+        .level-picker-btn[data-level="3"].active { background: #d35400; }
+        .level-picker-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .level-lock-icon { display: none; vertical-align: middle; margin-right: 6px; }
+        .level-lock-icon:not(:empty) { display: inline-flex; }
+        .level-lock-icon svg { width: 13px; height: 13px; display: block; }
+        .level-picker-now { margin-top: 10px; font-size: 0.85em; color: #64748b; font-weight: 600; }
+        .level-picker-notice { margin-top: 8px; font-size: 0.85em; color: #b45309; font-weight: 600; min-height: 1.2em; }
+
+        /* Instruksi aturan gerak - muncul sebelum area permainan */
+        .movement-instruction {
+            max-width: 700px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 24px auto 0;
+            background: #fffbea;
+            border: 1px solid #fde68a;
+            border-left: 5px solid #f1c40f;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 0.95em;
+            color: #7a5b00;
+            line-height: 1.6;
+        }
+        .movement-instruction-examples { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 8px; font-weight: 600; }
+        .movement-instruction-examples .ok  { color: #166534; }
+        .movement-instruction-examples .no  { color: #991b1b; }
+
+        /* Navigasi antar level di bawah tiap level */
+        .level-nav { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+
+        /* Refleksi: Algoritma di Kehidupan Nyata - tampil setelah Level 3 selesai */
+        .reflection-section { width: 100%; box-sizing: border-box; padding: 40px 20px; background: #eef2f7; border-top: 4px solid var(--accent); }
+        .reflection-inner { max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .reflection-title { color: var(--primary); text-align: center; margin-top: 0; }
+        .reflection-intro { color: #555; text-align: center; margin-bottom: 24px; }
+        .reflection-qlist { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+        .reflection-q label { display: block; font-weight: bold; margin-bottom: 8px; color: #34495e; }
+        .reflection-q textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 2px solid #ecf0f1; border-radius: 8px; font-family: inherit; font-size: 0.95em; resize: vertical; min-height: 70px; }
+        .reflection-q textarea:focus { outline: none; border-color: var(--accent); }
+        .reflection-save-btn { max-width: 240px; margin: 0 auto; display: block; }
+        .reflection-status { margin-top: 12px; font-weight: 600; font-size: 0.9em; min-height: 1.2em; text-align: center; }
+        .reflection-status.ok { color: #166534; }
+        .reflection-status.warn { color: #b45309; }
 
         /* SPEECH */
         .speech {
@@ -152,50 +281,95 @@
 <!-- HEADER KEMDIKBUD -->
 <div class="header-bg flex justify-between items-center px-6 py-4">
     <div class="flex items-center gap-4">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/250px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png" class="h-14">
+        <img src="assets/img/kemendikdasmen.webp" alt="Logo Kementerian Pendidikan Dasar dan Menengah" class="h-14">
         <div class="text-sm leading-tight font-semibold hidden md:block">
-            Direktorat Sekolah Menengah Pertama<br>
-            Direktorat Jendral Pendidikan Anak Usia Dini,<br>
-            Pendidikan Dasar, dan Pendidikan Menengah<br>
-            Kementerian Pendidikan Dasar dan Menengah
+            Direktorat Jenderal<br>
+            Pendidikan Anak Usia Dini,<br>
+            Pendidikan Dasar, dan<br>
+            Pendidikan Nonformal dan Informal
         </div>
     </div>
     <div class="flex items-center gap-6">
-        <img src="https://smpn1malingping.sch.id/public/img/linkterkait/1747568108_7676e2c1a9495762b9bd.png" class="h-12 hidden sm:block">
-        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-pendidikan-bermutu-untuk-semua.249c5e84.png&w=3840&q=75" class="h-12">
-        <img src="https://gurupaudpnf.kemendikdasmen.go.id/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-ramah.6adae708.png&w=3840&q=75" class="h-12 hidden sm:block">
+        <img src="assets/img/pendidikanbermutu.webp" alt="Logo Pendidikan Bermutu untuk Semua" class="h-12 hidden sm:block">
+        <img src="assets/img/ramah.webp" alt="Logo Ramah" class="h-12 hidden sm:block">
+        <img src="assets/img/sobatsmp.png" alt="Logo Sobat SMP" class="h-12 hidden sm:block">
+    </div>
+</div>
+
+<!-- JUDUL HALAMAN + KEMBALI KE HOME -->
+<div class="page-title-bar">
+    <div>
+        <h1 class="page-title">Jalur Tercepat</h1>
+        <p class="page-subtitle">Temukan rute paling efisien dengan aturan gerak vertikal dan horizontal.</p>
+    </div>
+    <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-home">&larr; Kembali ke Home</a>
+</div>
+
+<!-- PILIH LEVEL - di bagian paling atas, sebelum area permainan -->
+<div class="level-picker">
+    <div class="level-picker-label">Pilih Level</div>
+    <div class="level-picker-buttons">
+        <button type="button" class="level-picker-btn" data-level="1" onclick="showLevel(1)"><span class="level-lock-icon"></span>Level 1</button>
+        <button type="button" class="level-picker-btn" data-level="2" onclick="showLevel(2)"><span class="level-lock-icon"></span>Level 2</button>
+        <button type="button" class="level-picker-btn" data-level="3" onclick="showLevel(3)"><span class="level-lock-icon"></span>Level 3</button>
+    </div>
+    <div class="level-picker-now" id="levelPickerNow"></div>
+    <div class="level-picker-notice" id="levelPickerNotice"></div>
+</div>
+
+<!-- INSTRUKSI ATURAN GERAK - muncul sebelum murid mencoba jalur -->
+<div class="movement-instruction">
+    <div><strong>Aturan Gerak:</strong> Dalam misi ini, kamu hanya boleh bergerak secara <strong>vertikal dan horizontal</strong>. Gerakan diagonal tidak diperbolehkan.</div>
+    <div class="movement-instruction-examples">
+        <span class="ok">Boleh: atas, bawah, kiri, kanan</span>
+        <span class="no">Tidak boleh: serong/diagonal</span>
     </div>
 </div>
 
 <!-- LEVEL 1 -->
-<div id="level1" class="level-section">
+<div id="level1" class="level-section active">
     <span class="level-badge">Tahap 1 dari 3</span>
     <h1>Eksplorasi Waktu Tempuh</h1>
     <p class="subtitle">Di level ini, cobalah menggambar <strong>Jalan Lambat (Kuning)</strong>. Lihat bagaimana AI mencari jalan memutar demi menghindari kemacetan dan menghemat waktu.</p>
 
     <div class="container">
         <div class="panel">
-            <h3>1. Manipulasi Lingkungan</h3>
-            <div class="control-group">
-                <label class="brush-option">
-                    <input type="radio" name="brush1" value="0" checked>
-                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
-                </label>
-                <label class="brush-option">
-                    <input type="radio" name="brush1" value="1">
-                    <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
-                </label>
-                <!-- Rintangan disembunyikan di Level 1 -->
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level1.setMode('draw')">Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level1.setMode('guess')">Tebak Jalur Kamu</button>
             </div>
 
-            <h3>2. Manipulasi Parameter</h3>
-            <div class="control-group">
-                <label>Bobot Waktu Jalan Lambat (Menit)</label>
-                <input type="number" id="weight1" value="3" min="2" max="10">
+            <div id="drawUI1" class="mode-panel">
+                <h3>1. Manipulasi Lingkungan</h3>
+                <div class="control-group">
+                    <label class="brush-option">
+                        <input type="radio" name="brush1" value="0" checked>
+                        <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                    </label>
+                    <label class="brush-option">
+                        <input type="radio" name="brush1" value="1">
+                        <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
+                    </label>
+                    <!-- Rintangan disembunyikan di Level 1 -->
+                </div>
+
+                <h3>2. Manipulasi Parameter</h3>
+                <div class="control-group">
+                    <label>Bobot Waktu Jalan Lambat (Menit)</label>
+                    <input type="number" id="weight1" value="3" min="2" max="10">
+                </div>
+
+                <button class="btn-analyze" onclick="level1.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-reset" onclick="level1.resetEnvironment()">Reset Peta</button>
             </div>
 
-            <button class="btn-analyze" onclick="level1.runAlgorithm()">Eksekusi Algoritma Sistem</button>
-            <button class="btn-reset" onclick="level1.resetEnvironment()">Reset Peta</button>
+            <div id="guessUI1" class="mode-panel" style="display:none;">
+                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime1">0</strong> menit</div>
+                <div id="guessMsg1" class="guess-message"></div>
+                <button class="btn-analyze" id="compareBtn1" onclick="level1.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-reset" onclick="level1.resetGuess()">Hapus Jalur Tebakan</button>
+            </div>
         </div>
 
         <div class="workspace">
@@ -206,7 +380,9 @@
         </div>
     </div>
     
-    <button class="btn-next" onclick="scrollToElement('level2')">Selanjutnya ke Level 2 ↓</button>
+    <div class="level-nav">
+        <button class="btn-next" onclick="showLevel(2)">Level Berikutnya &rarr;</button>
+    </div>
 </div>
 
 <!-- LEVEL 2 -->
@@ -217,21 +393,36 @@
 
     <div class="container">
         <div class="panel">
-            <h3 style="border-color: #8e44ad; color: #8e44ad;">1. Manipulasi Lingkungan</h3>
-            <div class="control-group">
-                <label class="brush-option">
-                    <input type="radio" name="brush2" value="0" checked>
-                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
-                </label>
-                <label class="brush-option">
-                    <input type="radio" name="brush2" value="-1">
-                    <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
-                </label>
-                <!-- Jalan Lambat disembunyikan di Level 2 -->
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level2.setMode('draw')">Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level2.setMode('guess')">Tebak Jalur Kamu</button>
             </div>
 
-            <button class="btn-analyze" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="level2.runAlgorithm()">Eksekusi Algoritma Sistem</button>
-            <button class="btn-reset" onclick="level2.resetEnvironment()">Reset Peta</button>
+            <div id="drawUI2" class="mode-panel">
+                <h3 style="border-color: #8e44ad; color: #8e44ad;">1. Manipulasi Lingkungan</h3>
+                <div class="control-group">
+                    <label class="brush-option">
+                        <input type="radio" name="brush2" value="0" checked>
+                        <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                    </label>
+                    <label class="brush-option">
+                        <input type="radio" name="brush2" value="-1">
+                        <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
+                    </label>
+                    <!-- Jalan Lambat disembunyikan di Level 2 -->
+                </div>
+
+                <button class="btn-analyze" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="level2.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-reset" onclick="level2.resetEnvironment()">Reset Peta</button>
+            </div>
+
+            <div id="guessUI2" class="mode-panel" style="display:none;">
+                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime2">0</strong> menit</div>
+                <div id="guessMsg2" class="guess-message"></div>
+                <button class="btn-analyze" id="compareBtn2" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onclick="level2.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-reset" onclick="level2.resetGuess()">Hapus Jalur Tebakan</button>
+            </div>
         </div>
 
         <div class="workspace">
@@ -242,7 +433,10 @@
         </div>
     </div>
     
-    <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="scrollToElement('level3')">Selanjutnya ke Level 3 ↓</button>
+    <div class="level-nav">
+        <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="showLevel(1)">&larr; Level Sebelumnya</button>
+        <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="showLevel(3)">Level Berikutnya &rarr;</button>
+    </div>
 </div>
 
 <!-- LEVEL 3 -->
@@ -253,30 +447,45 @@
 
     <div class="container">
         <div class="panel">
-            <h3 style="border-color: #d35400; color: #d35400;">1. Manipulasi Lingkungan</h3>
-            <div class="control-group">
-                <label class="brush-option">
-                    <input type="radio" name="brush3" value="0" checked>
-                    <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
-                </label>
-                <label class="brush-option">
-                    <input type="radio" name="brush3" value="1">
-                    <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
-                </label>
-                <label class="brush-option">
-                    <input type="radio" name="brush3" value="-1">
-                    <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
-                </label>
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level3.setMode('draw')">Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level3.setMode('guess')">Tebak Jalur Kamu</button>
             </div>
 
-            <h3 style="border-color: #d35400; color: #d35400;">2. Manipulasi Parameter</h3>
-            <div class="control-group">
-                <label>Bobot Waktu Jalan Lambat (Menit)</label>
-                <input type="number" id="weight3" value="4" min="2" max="10">
+            <div id="drawUI3" class="mode-panel">
+                <h3 style="border-color: #d35400; color: #d35400;">1. Manipulasi Lingkungan</h3>
+                <div class="control-group">
+                    <label class="brush-option">
+                        <input type="radio" name="brush3" value="0" checked>
+                        <span class="color-box" style="background: white;"></span> Jalan Normal (1 Menit)
+                    </label>
+                    <label class="brush-option">
+                        <input type="radio" name="brush3" value="1">
+                        <span class="color-box" style="background: #f1c40f;"></span> Jalan Lambat
+                    </label>
+                    <label class="brush-option">
+                        <input type="radio" name="brush3" value="-1">
+                        <span class="color-box" style="background: #34495e;"></span> Rintangan (Buntu)
+                    </label>
+                </div>
+
+                <h3 style="border-color: #d35400; color: #d35400;">2. Manipulasi Parameter</h3>
+                <div class="control-group">
+                    <label>Bobot Waktu Jalan Lambat (Menit)</label>
+                    <input type="number" id="weight3" value="4" min="2" max="10">
+                </div>
+
+                <button class="btn-analyze" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="level3.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-reset" onclick="level3.resetEnvironment()">Reset Peta</button>
             </div>
 
-            <button class="btn-analyze" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="level3.runAlgorithm()">Eksekusi Algoritma Sistem</button>
-            <button class="btn-reset" onclick="level3.resetEnvironment()">Reset Peta</button>
+            <div id="guessUI3" class="mode-panel" style="display:none;">
+                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime3">0</strong> menit</div>
+                <div id="guessMsg3" class="guess-message"></div>
+                <button class="btn-analyze" id="compareBtn3" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onclick="level3.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-reset" onclick="level3.resetGuess()">Hapus Jalur Tebakan</button>
+            </div>
         </div>
 
         <div class="workspace">
@@ -287,31 +496,177 @@
         </div>
     </div>
     
-    <button class="btn-next" style="background-color: #2c3e50; box-shadow: 0 6px 0 #1a252f;" onmouseover="this.style.backgroundColor='#34495e'" onmouseout="this.style.backgroundColor='#2c3e50'" onclick="scrollToElement('level1')">↑ Kembali ke Awal</button>
+    <div class="level-nav">
+        <button class="btn-next" style="background-color: #d35400; box-shadow: 0 6px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="showLevel(2)">&larr; Level Sebelumnya</button>
+        <button class="btn-next" style="background-color: #2c3e50; box-shadow: 0 6px 0 #1a252f;" onmouseover="this.style.backgroundColor='#34495e'" onmouseout="this.style.backgroundColor='#2c3e50'" onclick="showLevel(1)">&#8635; Ulangi dari Level 1</button>
+    </div>
+</div>
+
+<!-- REFLEKSI: ALGORITMA DI KEHIDUPAN NYATA - muncul otomatis setelah Level 3 selesai -->
+<div id="reflectionSection" class="reflection-section" style="display:none;">
+    <div class="reflection-inner">
+        <h2 class="reflection-title">Refleksi: Algoritma di Kehidupan Nyata</h2>
+        <p class="reflection-intro">Kamu baru saja menyelesaikan ketiga level! Aplikasi seperti Google Maps atau Waze sebenarnya memakai prinsip yang mirip dengan yang baru kamu coba. Yuk, tuliskan pemikiranmu.</p>
+        <div id="reflectionQList" class="reflection-qlist"></div>
+        <button class="btn-analyze reflection-save-btn" onclick="saveReflection()">Simpan Refleksi</button>
+        <div id="reflectionStatus" class="reflection-status"></div>
+    </div>
 </div>
 
 <script>
-// Fungsi untuk menggulir halaman secara halus
-function scrollToElement(elementId) {
-    document.getElementById(elementId).scrollIntoView({ behavior: 'smooth' });
+const LEVEL_TITLES = { 1: 'Eksplorasi Waktu Tempuh', 2: 'Eksplorasi Rintangan', 3: 'Ujian Navigasi Kompleks' };
+
+// Ikon SVG (tanpa emoticon/emoji), dipakai untuk kunci level dan umpan balik hasil
+const ICON_LOCK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+const ICON_CHECK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg>';
+const ICON_WARNING = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="13"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+
+// Level dianggap "selesai" begitu murid berhasil menjalankan algoritma dan menemukan rute (bukan skor tertentu)
+const levelCompleted = { 1: false, 2: false, 3: false };
+
+function isLevelUnlocked(levelNumber) {
+    if (levelNumber <= 1) return true;
+    return Boolean(levelCompleted[levelNumber - 1]);
+}
+
+function markLevelCompleted(levelNumber) {
+    if (levelCompleted[levelNumber]) return;
+    levelCompleted[levelNumber] = true;
+    updateLevelLocks();
+    if (levelNumber === 3) showReflectionSection();
+}
+
+/* ══════════════════════════════════════════════════════════
+   REFLEKSI: ALGORITMA DI KEHIDUPAN NYATA
+   ══════════════════════════════════════════════════════════ */
+const REFLECTION_QUESTIONS = [
+    { q: 'Google Maps atau Waze bisa otomatis mencari jalan lain saat ada kemacetan. Menurutmu, bagian mana dari permainan ini yang mirip dengan cara kerja aplikasi peta itu?', ph: 'Tulis pendapatmu di sini...' },
+    { q: 'Di Level 2, AI harus mencari jalan memutar karena ada rintangan (jalan buntu). Kira-kira, apa yang terjadi kalau GPS di HP-mu tidak tahu ada jalan yang benar-benar ditutup?', ph: 'Tulis pendapatmu di sini...' },
+    { q: 'Kalau kamu jadi pembuat aplikasi peta, informasi apa lagi (selain jarak dan waktu) yang menurutmu penting untuk menentukan "rute tercepat"?', ph: 'Tulis pendapatmu di sini...' },
+    { q: 'Apa hal baru yang kamu pahami tentang cara komputer "berpikir" mencari jalur, setelah mencoba lab ini?', ph: 'Tulis pendapatmu di sini...' }
+];
+const REFLECTION_STORAGE_KEY = 'jalurTercepatRefleksiJawaban';
+
+function loadSavedReflection() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY) || '[]');
+        return Array.isArray(saved) ? saved : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function renderReflection() {
+    const list = document.getElementById('reflectionQList');
+    if (!list) return;
+    const saved = loadSavedReflection();
+    list.innerHTML = REFLECTION_QUESTIONS.map((item, i) => `
+        <div class="reflection-q">
+            <label>${i + 1}. ${item.q}</label>
+            <textarea id="reflectionAnswer${i}" placeholder="${item.ph}">${saved[i] || ''}</textarea>
+        </div>
+    `).join('');
+}
+
+function showReflectionSection() {
+    const section = document.getElementById('reflectionSection');
+    if (!section) return;
+    if (section.style.display === 'none') {
+        renderReflection();
+        section.style.display = 'block';
+        setTimeout(() => {
+            if (typeof section.scrollIntoView === 'function') {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 300);
+    }
+}
+
+function saveReflection() {
+    const answers = REFLECTION_QUESTIONS.map((_, i) => {
+        const el = document.getElementById(`reflectionAnswer${i}`);
+        return el ? el.value.trim() : '';
+    });
+
+    const statusEl = document.getElementById('reflectionStatus');
+    const emptyIndex = answers.findIndex((a) => !a);
+    if (emptyIndex !== -1) {
+        if (statusEl) {
+            statusEl.textContent = 'Lengkapi semua jawaban refleksi sebelum menyimpan.';
+            statusEl.className = 'reflection-status warn';
+        }
+        const emptyEl = document.getElementById(`reflectionAnswer${emptyIndex}`);
+        if (emptyEl) emptyEl.focus();
+        return;
+    }
+
+    try {
+        localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(answers));
+    } catch (e) {}
+
+    if (statusEl) {
+        statusEl.textContent = 'Refleksi tersimpan di browser ini.';
+        statusEl.className = 'reflection-status ok';
+    }
+}
+
+// Perbarui tampilan terkunci/terbuka pada tombol pemilih level
+function updateLevelLocks() {
+    for (let n = 2; n <= 3; n++) {
+        const btn = document.querySelector(`.level-picker-btn[data-level="${n}"]`);
+        if (!btn) continue;
+        const unlocked = isLevelUnlocked(n);
+        btn.disabled = !unlocked;
+        const lockIcon = btn.querySelector('.level-lock-icon');
+        if (lockIcon) lockIcon.innerHTML = unlocked ? '' : ICON_LOCK;
+    }
+}
+
+// Tampilkan hanya satu level aktif, sembunyikan sisanya, dan tandai level aktif di pemilih level
+function showLevel(levelNumber) {
+    const notice = document.getElementById('levelPickerNotice');
+
+    if (!isLevelUnlocked(levelNumber)) {
+        if (notice) notice.textContent = `Level ${levelNumber} masih terkunci. Selesaikan Level ${levelNumber - 1} dulu (jalankan algoritma sampai berhasil menemukan rute) untuk membukanya.`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+    if (notice) notice.textContent = '';
+
+    for (let n = 1; n <= 3; n++) {
+        const section = document.getElementById(`level${n}`);
+        if (section) section.classList.toggle('active', n === levelNumber);
+
+        const btn = document.querySelector(`.level-picker-btn[data-level="${n}"]`);
+        if (btn) btn.classList.toggle('active', n === levelNumber);
+    }
+
+    const now = document.getElementById('levelPickerNow');
+    if (now) now.textContent = `Sedang dimainkan: Level ${levelNumber} — ${LEVEL_TITLES[levelNumber]}`;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Class untuk mengisolasi logika setiap Level
 class PathFinderLevel {
-    constructor(gridId, logId, brushName, weightId) {
+    constructor(gridId, logId, brushName, weightId, levelNumber) {
         this.rows = 8;
         this.cols = 8;
         this.gridEl = document.getElementById(gridId);
         this.logEl = document.getElementById(logId);
         this.brushName = brushName;
         this.weightId = weightId; // Bisa null jika level tidak punya input bobot
-        
+        this.levelNumber = levelNumber;
+
         this.startPos = {r: 0, c: 0};
         this.endPos = {r: 7, c: 7};
-        
+
         this.gridData = [];
         this.cells = [];
-        
+
+        this.mode = 'draw'; // 'draw' = gambar peta, 'guess' = tebak jalur sendiri
+        this.guessPath = [];
+
         this.initGrid();
     }
 
@@ -324,16 +679,23 @@ class PathFinderLevel {
             for(let c=0; c<this.cols; c++) {
                 const cell = document.createElement("div");
                 cell.className = "cell type-normal";
-                
+
                 if(r === this.startPos.r && c === this.startPos.c) {
                     cell.classList.add("start"); cell.innerText = "S";
                 } else if(r === this.endPos.r && c === this.endPos.c) {
                     cell.classList.add("end"); cell.innerText = "T";
+                    // Titik tujuan tetap perlu bisa diklik saat mode "Tebak Jalur Kamu"
+                    cell.addEventListener("mousedown", () => {
+                        if (this.mode === 'guess') this.handleGuessClick(r, c);
+                    });
                 } else {
                     // Event listener digabung dengan arrow function agar 'this' merujuk ke class
-                    cell.addEventListener("mousedown", () => this.applyBrush(r, c));
+                    cell.addEventListener("mousedown", () => {
+                        if (this.mode === 'guess') this.handleGuessClick(r, c);
+                        else this.applyBrush(r, c);
+                    });
                     cell.addEventListener("mouseenter", (e) => {
-                        if(e.buttons === 1) this.applyBrush(r, c); 
+                        if (this.mode !== 'guess' && e.buttons === 1) this.applyBrush(r, c);
                     });
                 }
 
@@ -343,18 +705,40 @@ class PathFinderLevel {
         }
     }
 
+    // Ganti mode antara "Gambar Peta" dan "Tebak Jalur Kamu"
+    setMode(mode) {
+        this.mode = mode;
+
+        const drawUI = document.getElementById(`drawUI${this.levelNumber}`);
+        const guessUI = document.getElementById(`guessUI${this.levelNumber}`);
+        if (drawUI) drawUI.style.display = mode === 'draw' ? 'block' : 'none';
+        if (guessUI) guessUI.style.display = mode === 'guess' ? 'block' : 'none';
+
+        const panel = drawUI ? drawUI.closest('.panel') : null;
+        if (panel) {
+            panel.querySelectorAll('.mode-btn').forEach((btn) => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+        }
+
+        this.resetGuess();
+        this.clearPathHighlight();
+        this.clearExploration();
+    }
+
     applyBrush(r, c) {
         this.clearPathHighlight();
-        
+        this.clearExploration();
+
         // Ambil value dari radio button yang aktif pada group brush spesifik level ini
         const activeRadio = document.querySelector(`input[name="${this.brushName}"]:checked`);
         if(!activeRadio) return;
-        
+
         const brushValue = parseInt(activeRadio.value);
         this.gridData[r][c] = brushValue;
-        
+
         let cell = this.cells[r][c];
-        cell.className = "cell"; 
+        cell.className = "cell";
         if(brushValue === 0) cell.classList.add("type-normal");
         if(brushValue === 1) cell.classList.add("type-slow");
         if(brushValue === -1) cell.classList.add("type-wall");
@@ -368,20 +752,107 @@ class PathFinderLevel {
         }
     }
 
-    runAlgorithm() {
-        this.clearPathHighlight();
-        // Ambil nilai bobot jika ada inputnya, jika tidak default 1 (atau abaikan)
-        let slowWeight = 2;
-        if(this.weightId) {
-            slowWeight = parseInt(document.getElementById(this.weightId).value) || 2;
+    clearExploration() {
+        for(let r=0; r<this.rows; r++) {
+            for(let c=0; c<this.cols; c++) {
+                this.cells[r][c].classList.remove("explored");
+            }
         }
-        
+    }
+
+    // ── MODE: TEBAK JALUR KAMU ──────────────────────────────
+    setGuessMessage(msg) {
+        const msgEl = document.getElementById(`guessMsg${this.levelNumber}`);
+        if (msgEl) msgEl.textContent = msg;
+    }
+
+    handleGuessClick(r, c) {
+        if (r === this.startPos.r && c === this.startPos.c) return;
+
+        if (this.gridData[r][c] === -1) {
+            this.setGuessMessage('Kotak ini rintangan (buntu), tidak bisa dilewati.');
+            return;
+        }
+
+        // Klik kotak terakhir lagi untuk membatalkan langkah itu
+        if (this.guessPath.length) {
+            const last = this.guessPath[this.guessPath.length - 1];
+            if (last.r === r && last.c === c) {
+                this.guessPath.pop();
+                this.renderGuessPath();
+                return;
+            }
+        }
+
+        const alreadyUsed = this.guessPath.some((p) => p.r === r && p.c === c);
+        if (alreadyUsed) {
+            this.setGuessMessage('Kotak ini sudah kamu lewati. Klik kotak terakhir untuk membatalkan langkah, baru lanjutkan dari sana.');
+            return;
+        }
+
+        const last = this.guessPath.length ? this.guessPath[this.guessPath.length - 1] : this.startPos;
+        const isAdjacent = (Math.abs(last.r - r) + Math.abs(last.c - c)) === 1;
+        if (!isAdjacent) {
+            this.setGuessMessage('Kamu hanya boleh melangkah ke kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu. Tidak boleh diagonal.');
+            return;
+        }
+
+        this.guessPath.push({ r, c });
+        this.renderGuessPath();
+    }
+
+    renderGuessPath() {
+        for(let r=0; r<this.rows; r++) {
+            for(let c=0; c<this.cols; c++) {
+                this.cells[r][c].classList.remove("guess-path");
+            }
+        }
+        for (const p of this.guessPath) {
+            const cell = this.cells[p.r][p.c];
+            if (cell) cell.classList.add("guess-path");
+        }
+
+        const timeEl = document.getElementById(`guessTime${this.levelNumber}`);
+        if (timeEl) timeEl.textContent = this.calcGuessTime();
+
+        const reachedEnd = this.guessPath.length > 0 &&
+            this.guessPath[this.guessPath.length - 1].r === this.endPos.r &&
+            this.guessPath[this.guessPath.length - 1].c === this.endPos.c;
+
+        const compareBtn = document.getElementById(`compareBtn${this.levelNumber}`);
+        if (compareBtn) compareBtn.disabled = !reachedEnd;
+
+        this.setGuessMessage('');
+    }
+
+    resetGuess() {
+        this.guessPath = [];
+        this.renderGuessPath();
+    }
+
+    calcGuessTime() {
+        let slowWeight = 2;
+        if (this.weightId) {
+            const input = document.getElementById(this.weightId);
+            if (input) slowWeight = parseInt(input.value) || 2;
+        }
+        let total = 0;
+        for (const p of this.guessPath) {
+            total += (this.gridData[p.r][p.c] === 1) ? slowWeight : 1;
+        }
+        return total;
+    }
+
+    // ── ALGORITMA DIJKSTRA ──────────────────────────────────
+    // Menghitung rute tercepat, sekaligus mencatat urutan sel yang diperiksa (untuk divisualisasikan)
+    computeDijkstra(slowWeight) {
         let dist = Array(this.rows).fill().map(() => Array(this.cols).fill(Infinity));
         let prev = Array(this.rows).fill().map(() => Array(this.cols).fill(null));
         let visited = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
-        
+        let explorationOrder = [];
+
         dist[this.startPos.r][this.startPos.c] = 0;
-        
+
         for (let i = 0; i < this.rows * this.cols; i++) {
             let minDist = Infinity;
             let u = null;
@@ -393,20 +864,22 @@ class PathFinderLevel {
                     }
                 }
             }
-            
-            if (!u || minDist === Infinity) break; 
-            if (u.r === this.endPos.r && u.c === this.endPos.c) break; 
-            
+
+            if (!u || minDist === Infinity) break;
+
             visited[u.r][u.c] = true;
-            
+            explorationOrder.push(u);
+
+            if (u.r === this.endPos.r && u.c === this.endPos.c) break;
+
             let directions = [[0,1], [1,0], [0,-1], [-1,0]];
             for (let dir of directions) {
                 let nr = u.r + dir[0], nc = u.c + dir[1];
-                
+
                 if (nr >= 0 && nr < this.rows && nc >= 0 && nc < this.cols && this.gridData[nr][nc] !== -1 && !visited[nr][nc]) {
                     let weight = (this.gridData[nr][nc] === 1) ? slowWeight : 1;
                     let altDist = dist[u.r][u.c] + weight;
-                    
+
                     if (altDist < dist[nr][nc]) {
                         dist[nr][nc] = altDist;
                         prev[nr][nc] = u;
@@ -414,15 +887,49 @@ class PathFinderLevel {
                 }
             }
         }
-        
-        this.outputResult(dist[this.endPos.r][this.endPos.c], prev);
+
+        return { dist, prev, explorationOrder };
     }
 
-    outputResult(finalTime, prev) {
+    // compareMode: true jika dipanggil dari tombol "Bandingkan dengan AI" pada mode Tebak Jalur
+    runAlgorithm(compareMode = false) {
+        this.clearPathHighlight();
+        this.clearExploration();
+
+        let slowWeight = 2;
+        if(this.weightId) {
+            slowWeight = parseInt(document.getElementById(this.weightId).value) || 2;
+        }
+
+        const { dist, prev, explorationOrder } = this.computeDijkstra(slowWeight);
+
+        // Tahap 1: animasikan urutan sel yang "diperiksa" AI, sel demi sel
+        const EXPLORE_DELAY = 35;
+        explorationOrder.forEach((node, i) => {
+            setTimeout(() => {
+                const cell = this.cells[node.r][node.c];
+                if (cell) cell.classList.add("explored");
+            }, i * EXPLORE_DELAY);
+        });
+
+        const exploreDuration = explorationOrder.length * EXPLORE_DELAY + 150;
+
+        // Tahap 2: setelah eksplorasi selesai, tampilkan rute final + hasil
+        setTimeout(() => {
+            this.outputResult(dist[this.endPos.r][this.endPos.c], prev, compareMode);
+        }, exploreDuration);
+    }
+
+    outputResult(finalTime, prev, compareMode = false) {
         if (finalTime === Infinity) {
-            this.logEl.innerHTML = `<span style="color:#e74c3c;">> <strong>ERROR:</strong> Titik tujuan (T) tidak dapat diakses! Rute tertutup oleh rintangan.</span>`;
+            this.logEl.innerHTML = `
+                <div class="result-feedback-head">${ICON_WARNING}<span class="result-feedback-title" style="color:#e74c3c;">Tujuan Belum Bisa Dicapai</span></div>
+                <div class="result-feedback-detail">Rintangan yang kamu buat menutup semua jalan menuju titik tujuan (T). Coba hapus atau geser salah satu rintangan, lalu jalankan lagi.</div>
+            `;
             return;
         }
+
+        markLevelCompleted(this.levelNumber);
 
         let path = [];
         let curr = this.endPos;
@@ -430,14 +937,14 @@ class PathFinderLevel {
             path.push(curr);
             curr = prev[curr.r][curr.c];
         }
-        path.reverse(); 
-        
+        path.reverse();
+
         let normalCount = 0;
         let slowCount = 0;
 
         for (let i = 1; i < path.length - 1; i++) {
             let p = path[i];
-            
+
             // Tambahkan delay kecil untuk efek animasi menggambar titik
             setTimeout(() => {
                 this.cells[p.r][p.c].classList.add("path-highlight");
@@ -447,32 +954,61 @@ class PathFinderLevel {
             else normalCount++;
         }
 
-        this.logEl.innerHTML = `
-            <span style="color:#2ecc71;">> ANALISIS BERHASIL</span><br>
-            > <strong>Waktu Tempuh Minimum: ${finalTime} Menit</strong><br>
-            > Total Jarak: ${path.length - 1} Langkah<br>
-            > Detail Rute: ${normalCount} jalan normal, ${slowCount} jalan lambat.<br>
-            <span style="color:#bdc3c7; font-size:0.85em; margin-top:10px; display:block;">
-            *Catatan: Sistem (algoritma Dijkstra) telah mengevaluasi rute paling efisien berdasarkan bobot waktu.
-            </span>
-        `;
+        if (compareMode) {
+            const guessTime = this.calcGuessTime();
+            if (guessTime === finalTime) {
+                this.logEl.innerHTML = `
+                    <div class="result-feedback-head">${ICON_CHECK}<span class="result-feedback-title" style="color:#2ecc71;">Tebakanmu Sama Cepatnya dengan AI!</span></div>
+                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, persis sama dengan hasil AI (<strong>${finalTime} menit</strong>). Kamu berhasil menemukan rute yang paling efisien!</div>
+                `;
+            } else if (guessTime > finalTime) {
+                this.logEl.innerHTML = `
+                    <div class="result-feedback-head">${ICON_WARNING}<span class="result-feedback-title" style="color:#f39c12;">AI Menemukan Rute Lebih Cepat</span></div>
+                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, sedangkan AI menemukan rute <strong>${finalTime} menit</strong> (lebih cepat ${guessTime - finalTime} menit). Amati rute hijau di peta, lalu bandingkan dengan jalur tebakanmu (garis hijau kebiruan) — bagian mana yang bisa kamu perbaiki?</div>
+                `;
+            } else {
+                this.logEl.innerHTML = `
+                    <div class="result-feedback-head">${ICON_CHECK}<span class="result-feedback-title" style="color:#2ecc71;">Tebakanmu Lebih Cepat!</span></div>
+                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, lebih cepat dari perhitungan AI (<strong>${finalTime} menit</strong>). Coba jalankan sekali lagi untuk memastikan.</div>
+                `;
+            }
+        } else {
+            this.logEl.innerHTML = `
+                <div class="result-feedback-head">${ICON_CHECK}<span class="result-feedback-title" style="color:#2ecc71;">Rute Tercepat Ditemukan!</span></div>
+                <div class="result-feedback-detail">
+                    Butuh <strong>${finalTime} menit</strong> untuk sampai ke tujuan, lewat <strong>${path.length - 1} langkah</strong>
+                    (${normalCount} langkah di jalan normal, ${slowCount} langkah di jalan lambat).
+                </div>
+                <span class="result-feedback-note">Sistem memeriksa sel-sel yang ditandai biru (lihat animasi di peta), lalu memilih rute yang membutuhkan waktu paling sedikit.</span>
+            `;
+        }
     }
 
     resetEnvironment() {
         this.initGrid();
+        this.resetGuess();
         this.logEl.innerHTML = "> Lingkungan di-reset. Menunggu desain baru...";
     }
 }
 
 // Inisialisasi ketiga level secara independen
-const level1 = new PathFinderLevel('grid1', 'log1', 'brush1', 'weight1');
-const level2 = new PathFinderLevel('grid2', 'log2', 'brush2', null);
-const level3 = new PathFinderLevel('grid3', 'log3', 'brush3', 'weight3');
+const level1 = new PathFinderLevel('grid1', 'log1', 'brush1', 'weight1', 1);
+const level2 = new PathFinderLevel('grid2', 'log2', 'brush2', null, 2);
+const level3 = new PathFinderLevel('grid3', 'log3', 'brush3', 'weight3', 3);
 
 // Berikan sedikit rintangan bawaan di Level 2 sebagai contoh
-level2.applyBrush(3, 2); level2.applyBrush(3, 3); level2.applyBrush(3, 4); 
-level2.gridData[3][2] = -1; level2.gridData[3][3] = -1; level2.gridData[3][4] = -1;
-level2.initGrid(); // Refresh tampilan bawaan
+// (Catatan: memanggil initGrid() lagi akan mereset gridData ke kosong,
+// jadi rintangan langsung diterapkan ke data + tampilan sel tanpa initGrid ulang)
+[[3, 2], [3, 3], [3, 4]].forEach(([r, c]) => {
+    level2.gridData[r][c] = -1;
+    level2.cells[r][c].className = 'cell type-wall';
+});
+
+// Level 2 & 3 terkunci sampai level sebelumnya berhasil dijalankan
+updateLevelLocks();
+
+// Tampilkan Level 1 sebagai level aktif pertama kali halaman dibuka
+showLevel(1);
 
 </script>
 

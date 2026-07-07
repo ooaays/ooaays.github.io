@@ -134,6 +134,7 @@ const appState = {
   currentIndex: -1,
   banner: { tone: 'info', text: 'Sistem di-reset. Susun aturan jika perlu, lalu jalankan simulasi.' },
   activeChallengeId: null,
+  lastChallengeId: null,
   completedChallenges: {}
 };
 
@@ -283,17 +284,27 @@ function getChallengeById(id) {
   return CHALLENGES.find((challenge) => challenge.id === id) || null;
 }
 
+function isChallengeUnlocked(index) {
+  if (index <= 0) return true;
+  const prevChallenge = CHALLENGES[index - 1];
+  return Boolean(appState.completedChallenges[prevChallenge.id]);
+}
+
 function renderDebugCards() {
   const wrap = qs('debugCards');
   if (!wrap) return;
-  wrap.innerHTML = CHALLENGES.map((challenge) => {
+  wrap.innerHTML = CHALLENGES.map((challenge, index) => {
     const isActive = appState.activeChallengeId === challenge.id;
     const isDone = Boolean(appState.completedChallenges[challenge.id]);
-    const statusText = isDone ? 'Selesai' : isActive ? 'Aktif' : 'Belum Dicoba';
-    const statusClass = isDone ? 'done' : isActive ? 'active' : 'idle';
+    const isLocked = !isDone && !isActive && !isChallengeUnlocked(index);
+    const statusText = isDone ? 'Selesai' : isActive ? 'Aktif' : isLocked ? 'Terkunci' : 'Belum Dicoba';
+    const statusClass = isDone ? 'done' : isActive ? 'active' : isLocked ? 'locked' : 'idle';
     const starterRules = challenge.starterRules.map((rule) => (
       `<li>JIKA ${CONDITION_LABEL[rule.condition]} → ${BIN_INFO[rule.action].label}</li>`
     )).join('');
+    const actionButton = isLocked
+      ? `<button class="pill-btn indigo full" disabled title="Selesaikan level sebelumnya dengan akurasi 100% dulu"><img src="assets/img/icons/icon-lock-white.svg" class="btn-icon" alt="">Selesaikan Level Sebelumnya Dulu</button>`
+      : `<button class="pill-btn indigo full" onclick="loadChallenge('${challenge.id}')">${isActive ? 'Muat Ulang Tantangan Ini' : 'Muat Tantangan Ini'}</button>`;
 
     return `
       <div class="debug-card ${statusClass}">
@@ -306,7 +317,7 @@ function renderDebugCards() {
           <ul>${starterRules}</ul>
         </div>
         <div class="debug-hint"><strong>Petunjuk:</strong> ${challenge.hint}</div>
-        <button class="pill-btn indigo full" onclick="loadChallenge('${challenge.id}')">${isActive ? 'Muat Ulang Tantangan Ini' : 'Muat Tantangan Ini'}</button>
+        ${actionButton}
       </div>
     `;
   }).join('');
@@ -318,31 +329,49 @@ function renderChallengeStatus() {
   const badges = qs('challengeBadges');
   if (!status || !objective || !badges) return;
 
-  badges.innerHTML = CHALLENGES.map((challenge) => {
+  badges.innerHTML = CHALLENGES.map((challenge, index) => {
     const done = appState.completedChallenges[challenge.id];
     const active = appState.activeChallengeId === challenge.id;
-    const cls = done ? 'done' : active ? 'active' : 'idle';
+    const locked = !done && !active && !isChallengeUnlocked(index);
+    const cls = done ? 'done' : active ? 'active' : locked ? 'locked' : 'idle';
     return `<span class="challenge-badge ${cls}">${challenge.title.split('—')[0].trim().replace('Level ', 'L')}</span>`;
   }).join('');
 
   const activeChallenge = getChallengeById(appState.activeChallengeId);
-  if (!activeChallenge) {
-    status.className = 'challenge-status info';
-    status.innerHTML = 'Belum ada tantangan aktif. Buka mode debug untuk mencoba aturan yang sengaja dibuat salah atau belum lengkap.';
-    objective.textContent = 'Fokus belajar: bedakan aturan khusus, aturan umum, dan aturan cadangan.';
+  if (activeChallenge) {
+    const completed = Boolean(appState.completedChallenges[activeChallenge.id]);
+    status.className = `challenge-status ${completed ? 'success' : 'warn'}`;
+    status.innerHTML = `<strong>${activeChallenge.title}</strong><br>${activeChallenge.focus}`;
+    objective.textContent = `${completed ? 'Selesai: ' : 'Target: '}${activeChallenge.objective}`;
     return;
   }
 
-  const completed = Boolean(appState.completedChallenges[activeChallenge.id]);
-  status.className = `challenge-status ${completed ? 'success' : 'warn'}`;
-  status.innerHTML = `<strong>${activeChallenge.title}</strong><br>${activeChallenge.focus}`;
-  objective.textContent = `${completed ? 'Selesai: ' : 'Target: '}${activeChallenge.objective}`;
+  const lastChallenge = getChallengeById(appState.lastChallengeId);
+  if (lastChallenge) {
+    status.className = 'challenge-status info';
+    status.innerHTML = `<strong>${lastChallenge.title}</strong> (dihentikan)<br>${lastChallenge.focus}`;
+    objective.textContent = 'Buka lagi Mode Tantangan Debug untuk melanjutkan tantangan ini atau memilih tantangan lain.';
+    return;
+  }
+
+  status.className = 'challenge-status info';
+  status.innerHTML = 'Belum ada tantangan aktif. Buka mode debug untuk mencoba aturan yang sengaja dibuat salah atau belum lengkap.';
+  objective.textContent = 'Fokus belajar: bedakan aturan khusus, aturan umum, dan aturan cadangan.';
 }
 
 function loadChallenge(id) {
   const challenge = getChallengeById(id);
   if (!challenge || appState.running) return;
+
+  const index = CHALLENGES.findIndex((c) => c.id === id);
+  if (!isChallengeUnlocked(index)) {
+    setBuilderFeedback('Selesaikan tantangan level sebelumnya dengan akurasi 100% dulu sebelum membuka level ini.', 'warn');
+    renderDebugCards();
+    return;
+  }
+
   appState.activeChallengeId = id;
+  appState.lastChallengeId = id;
   appState.rules = challenge.starterRules.map((rule) => ({ ...rule }));
   setBuilderFeedback(`Tantangan dimuat: ${challenge.title}. ${challenge.hint}`, 'warn');
   setBanner(`Tantangan aktif: ${challenge.title}. Perbaiki aturan sampai akurasi 100%.`, 'warn');
@@ -547,7 +576,7 @@ function renderRules() {
         <div class="rule-actions">
           <button class="mini-btn" onclick="moveRule(${index}, -1)">↑</button>
           <button class="mini-btn" onclick="moveRule(${index}, 1)">↓</button>
-          <button class="mini-btn" onclick="deleteRule(${index})">✕</button>
+          <button class="mini-btn" onclick="deleteRule(${index})"><img src="assets/img/icons/icon-cross-dark.svg" style="width:13px;height:13px;" alt="Hapus"></button>
         </div>
       </div>
     </div>
@@ -586,6 +615,7 @@ function resetWorkspace() {
   if (appState.running) return;
   appState.rules = [];
   appState.activeChallengeId = null;
+  appState.lastChallengeId = null;
   appState.stopRequested = false;
   setBuilderFeedback('Semua aturan dibersihkan. Kamu bisa mulai lagi dari awal.', 'info');
   resetSimulation(true);
@@ -608,7 +638,7 @@ function renderConveyor() {
 
   box.innerHTML = appState.queue.map((item, index) => {
     const result = appState.processedResults[index];
-    const badge = result ? `<div class="item-badge" style="background:${result.correct ? '#22c55e' : '#ef4444'}">${result.correct ? '✓' : '✕'}</div>` : '';
+    const badge = result ? `<div class="item-badge" style="background:${result.correct ? '#22c55e' : '#ef4444'}"><img src="assets/img/icons/${result.correct ? 'icon-check-white' : 'icon-cross-white'}.svg" style="width:16px;height:16px;" alt=""></div>` : '';
     return `
       <div class="item-card ${index === appState.currentIndex ? 'current' : ''} ${result ? 'done' : ''}">
         ${badge}
@@ -849,10 +879,10 @@ async function runSimulation() {
         chosenBin = rule.action;
         matchedRuleIndex = r;
         matchedCondition = rule.condition;
-        logLine(`  ✓ Cocok dengan aturan ${r + 1}. Sistem berhenti di sini.`);
+        logLine(`  OK - Cocok dengan aturan ${r + 1}. Sistem berhenti di sini.`);
         break;
       }
-      logLine('  ✕ Tidak cocok. Lanjut ke aturan berikutnya.');
+      logLine('  Tidak cocok. Lanjut ke aturan berikutnya.');
       await sleep(200);
     }
 
@@ -877,11 +907,11 @@ async function runSimulation() {
 
     if (isCorrect) {
       appState.score.correct += 1;
-      logLine(`✓ Benar. ${item.label} masuk ke ${BIN_INFO[chosenBin].name}.`);
+      logLine(`Benar. ${item.label} masuk ke ${BIN_INFO[chosenBin].name}.`);
       setBanner(`Benar. ${item.label} dipilah ke ${BIN_INFO[chosenBin].name}.`, 'success');
     } else {
       appState.score.wrong += 1;
-      logLine(`✕ Salah. ${item.label} seharusnya masuk ke ${BIN_INFO[correctBin].name}, bukan ${BIN_INFO[chosenBin].name}.`);
+      logLine(`Salah. ${item.label} seharusnya masuk ke ${BIN_INFO[correctBin].name}, bukan ${BIN_INFO[chosenBin].name}.`);
       setBanner(`Masih keliru. ${item.label} seharusnya masuk ke ${BIN_INFO[correctBin].name}.`, 'warn');
     }
 
@@ -921,7 +951,7 @@ function openRefleksiInteraktifLogika() {
       <textarea class="refleksi-textarea" id="rlq_${i}" placeholder="${item.ph}">${savedAnswers[i] || ''}</textarea>
     </div>`).join('');
   const btn = document.getElementById('simpanRefleksiLogikaBtn');
-  btn.textContent = 'Simpan Refleksi ✓';
+  btn.textContent = 'Simpan Refleksi';
   btn.style.background = '';
   openModal('refleksiModal');
 }
@@ -940,7 +970,7 @@ function simpanRefleksiLogika() {
     const emptyEl = document.getElementById(`rlq_${firstEmptyIndex}`);
     if (emptyEl) emptyEl.focus();
     setTimeout(() => {
-      btn.textContent = 'Simpan Refleksi ✓';
+      btn.textContent = 'Simpan Refleksi';
       btn.style.background = '';
     }, 1800);
     return;
@@ -950,10 +980,10 @@ function simpanRefleksiLogika() {
     localStorage.setItem(REFLEKSI_LOGIKA_STORAGE_KEY, JSON.stringify(answers));
   } catch (error) {}
 
-  btn.textContent = '✅ Tersimpan!';
+  btn.textContent = 'Tersimpan!';
   btn.style.background = '#16a34a';
   setTimeout(() => {
-    btn.textContent = 'Simpan Refleksi ✓';
+    btn.textContent = 'Simpan Refleksi';
     btn.style.background = '';
   }, 2000);
 }
@@ -962,11 +992,11 @@ function simpanRefleksiLogika() {
    FITUR 2 – POHON KEPUTUSAN
    ══════════════════════════════════════════════════════════ */
 const POHON_ITEMS = [
-  { label: '🔋 Baterai', tags: ['berbahaya'], tong: 'Tong Merah — B3' },
-  { label: '🍌 Kulit Pisang', tags: ['organik'], tong: 'Tong Hijau — Organik' },
-  { label: '📰 Koran Bekas', tags: ['kertas', 'recycle'], tong: 'Tong Biru — Kertas' },
-  { label: '🧻 Tisu Kotor', tags: ['kertas', 'residu'], tong: 'Tong Hitam — Residu' },
-  { label: '🍶 Botol Plastik', tags: ['anorganik', 'recycle'], tong: 'Tong Kuning — Anorganik' },
+  { label: 'Baterai', icon: 'icon-battery', tags: ['berbahaya'], tong: 'Tong Merah — B3' },
+  { label: 'Kulit Pisang', icon: 'icon-banana', tags: ['organik'], tong: 'Tong Hijau — Organik' },
+  { label: 'Koran Bekas', icon: 'icon-newspaper', tags: ['kertas', 'recycle'], tong: 'Tong Biru — Kertas' },
+  { label: 'Tisu Kotor', icon: 'icon-tissue', tags: ['kertas', 'residu'], tong: 'Tong Hitam — Residu' },
+  { label: 'Botol Plastik', icon: 'icon-bottle', tags: ['anorganik', 'recycle'], tong: 'Tong Kuning — Anorganik' },
 ];
 
 const POHON_RULES = [
@@ -982,7 +1012,7 @@ let pohonTimerId = null;
 function openPohonKeputusan() {
   const wrap = document.getElementById('pohonItemBtns');
   wrap.innerHTML = POHON_ITEMS.map((it, i) =>
-    `<button onclick="animatePohon(${i})" style="background:#e0e7ff;border:2px solid #818cf8;border-radius:10px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;">${it.label}</button>`
+    `<button onclick="animatePohon(${i})" style="background:#e0e7ff;border:2px solid #818cf8;border-radius:10px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><img src="assets/img/icons/${it.icon}.svg" style="width:16px;height:16px;" alt="">${escapeHtml(it.label)}</button>`
   ).join('');
   document.getElementById('pohonTree').textContent = 'Pilih item di atas untuk memulai animasi.';
   document.getElementById('pohonResult').textContent = '';
@@ -1014,7 +1044,7 @@ function animatePohon(itemIdx) {
     if (step >= POHON_RULES.length) {
       const fallback = document.getElementById(`pl_${POHON_RULES.length}`);
       if (fallback) { fallback.classList.add('match-branch'); }
-      resultEl.textContent = `✅ ${item.label} → ${item.tong}`;
+      resultEl.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">${escapeHtml(item.label)} → ${escapeHtml(item.tong)}`;
       return;
     }
     const r = POHON_RULES[step];
@@ -1022,7 +1052,7 @@ function animatePohon(itemIdx) {
     const matches = item.tags.includes(r.kondisi);
     if (matches) {
       if (lineEl) lineEl.classList.add('match-branch');
-      resultEl.textContent = `✅ ${item.label} → ${r.tong}`;
+      resultEl.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">${escapeHtml(item.label)} → ${escapeHtml(r.tong)}`;
       for (let j = step+1; j <= POHON_RULES.length; j++) {
         const el = document.getElementById(`pl_${j}`);
         if (el) el.classList.add('skip-branch');
@@ -1041,7 +1071,7 @@ function animatePohon(itemIdx) {
    ══════════════════════════════════════════════════════════ */
 const KASUS_TEPI_DATA = [
   {
-    name: '🧻 Tisu Kotor Bekas Makanan',
+    name: '<img src="assets/img/icons/icon-tissue.svg" class="feedback-icon-sm" alt="">Tisu Kotor Bekas Makanan',
     tags: [{ label: 'Kertas', color: '#dbeafe', tc: '#1e3a8a' }, { label: 'Residu', color: '#f3e8ff', tc: '#581c87' }],
     desc: 'Tisu ini terbuat dari kertas tapi sudah kotor dan tidak bisa didaur ulang.',
     opts: ['Tong Biru — Kertas', 'Tong Hitam — Residu', 'Tong Kuning — Anorganik'],
@@ -1049,7 +1079,7 @@ const KASUS_TEPI_DATA = [
     explain: 'Meskipun berbahan kertas, tisu kotor masuk ke Residu karena tidak bisa didaur ulang lagi. Aturan "residu" harus lebih dulu dari "kertas"!',
   },
   {
-    name: '♻️ Botol Plastik Bekas',
+    name: '<img src="assets/img/icons/icon-recycle.svg" class="feedback-icon-sm" alt="">Botol Plastik Bekas',
     tags: [{ label: 'Anorganik', color: '#fef9c3', tc: '#713f12' }, { label: 'Dapat didaur ulang', color: '#dcfce7', tc: '#166534' }],
     desc: 'Botol ini plastik (anorganik) dan bisa didaur ulang.',
     opts: ['Tong Hijau — Organik', 'Tong Kuning — Anorganik', 'Tong Merah — B3'],
@@ -1057,7 +1087,7 @@ const KASUS_TEPI_DATA = [
     explain: 'Botol plastik masuk ke Tong Kuning (Anorganik). Meski bisa didaur ulang, kondisi "anorganik" adalah aturan yang lebih spesifik untuk plastik.',
   },
   {
-    name: '🔦 Baterai Alkaline Bekas',
+    name: '<img src="assets/img/icons/icon-battery.svg" class="feedback-icon-sm" alt="">Baterai Alkaline Bekas',
     tags: [{ label: 'Berbahaya', color: '#fee2e2', tc: '#991b1b' }, { label: 'Anorganik', color: '#fef9c3', tc: '#713f12' }],
     desc: 'Baterai alkaline adalah sampah anorganik yang juga mengandung bahan berbahaya.',
     opts: ['Tong Merah — B3', 'Tong Kuning — Anorganik', 'Tong Hitam — Residu'],
@@ -1099,11 +1129,11 @@ function checkKasusTepi(i) {
   fb.style.display = 'block';
   if (i === d.correct) {
     fb.style.color = '#15803d';
-    fb.textContent = '✅ Benar! ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Benar! ' + escapeHtml(d.explain);
   } else {
     document.getElementById(`kt_${i}`).classList.add('salah');
     fb.style.color = '#dc2626';
-    fb.textContent = '❌ ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">' + escapeHtml(d.explain);
   }
   if (ktIdx < KASUS_TEPI_DATA.length - 1) document.getElementById('nextKasusTepiBtn').classList.remove('hidden');
 }
@@ -1171,11 +1201,11 @@ function checkDetektifLogika(i) {
   fb.style.display = 'block';
   if (i === d.bugIdx) {
     fb.style.color = '#15803d';
-    fb.textContent = '✅ Tepat! ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Tepat! ' + escapeHtml(d.explain);
   } else {
     document.getElementById(`dl_${i}`).classList.add('salah');
     fb.style.color = '#dc2626';
-    fb.textContent = '❌ Bukan itu. ' + d.explain;
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Bukan itu. ' + escapeHtml(d.explain);
   }
   if (dlIdx < DETEKTIF_LOGIKA_DATA.length - 1) document.getElementById('nextDetektifLogikaBtn').classList.remove('hidden');
 }
@@ -1279,12 +1309,12 @@ function cekUrutan() {
   document.querySelectorAll('.urutan-item').forEach(el => el.classList.remove('correct-final'));
   if (correct) {
     fb.style.color = '#15803d';
-    fb.textContent = '✅ Urutan sudah benar! Kamu berhasil menempatkan aturan yang lebih khusus sebelum aturan yang lebih umum.';
+    fb.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Urutan sudah benar! Kamu berhasil menempatkan aturan yang lebih khusus sebelum aturan yang lebih umum.';
     document.querySelectorAll('.urutan-item').forEach(el => el.classList.add('correct-final'));
     if (kuIdx < KUIS_URUTAN_DATA.length - 1) nextBtn.classList.remove('hidden');
   } else {
     fb.style.color = '#dc2626';
-    fb.textContent = `❌ Belum tepat. ${d.explain} Geser lagi urutannya lalu tekan Cek Urutan sekali lagi.`;
+    fb.innerHTML = `<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Belum tepat. ${escapeHtml(d.explain)} Geser lagi urutannya lalu tekan Cek Urutan sekali lagi.`;
   }
 }
 

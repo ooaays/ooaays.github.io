@@ -20,6 +20,10 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+    .btn-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px; flex-shrink: 0; }
+    .title-icon { width: 26px; height: 26px; display: inline-block; vertical-align: -4px; margin-right: 6px; flex-shrink: 0; }
+    .feedback-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: text-bottom; margin-right: 3px; }
+
     .header-bg{
       background:linear-gradient(90deg,#4338ca,#4f46e5,#6366f1);
       color:white;
@@ -1027,7 +1031,7 @@
             </div>
             <div class="hero-menu-label violet">
               <span>Tujuan Praktikum</span>
-              <span id="check-tujuan" class="read-check">✓</span>
+              <span id="check-tujuan" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span>
             </div>
           </button>
 
@@ -1040,7 +1044,7 @@
             </div>
             <div class="hero-menu-label orange">
               <span>Cara Penggunaan</span>
-              <span id="check-cara" class="read-check">✓</span>
+              <span id="check-cara" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span>
             </div>
           </button>
 
@@ -1152,10 +1156,10 @@
       <div class="lab-grid">
         <div class="panel">
           <div class="panel-title">Blok Instruksi</div>
-          <button class="block-btn" style="background:#16a34a;" onclick="addBlock('FORWARD')">➜ MAJU(80)</button>
+          <button class="block-btn" style="background:#16a34a;" onclick="addBlock('FORWARD')"><img src="assets/img/icons/icon-arrow-white.svg" class="btn-icon" alt="">MAJU(80)</button>
           <button class="block-btn" style="background:#2563eb;" onclick="addBlock('RIGHT')">↻ PUTAR_KANAN(90)</button>
           <button class="block-btn" style="background:#9333ea;" onclick="addBlock('LEFT')">↺ PUTAR_KIRI(90)</button>
-          <button class="block-btn" style="background:#0ea5e9;" onclick="addBlock('PEN_DOWN')">✎ PENA_TURUN</button>
+          <button class="block-btn" style="background:#0ea5e9;" onclick="addBlock('PEN_DOWN')"><img src="assets/img/icons/icon-pencil-white.svg" class="btn-icon" alt="">PENA_TURUN</button>
           <button class="block-btn" style="background:#f97316;" onclick="addBlock('PEN_UP')">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;display:inline;vertical-align:middle;margin-right:4px;"><path fill-rule="evenodd" d="M9.315 7.584C12.195 3.883 16.695 1.5 21.75 1.5a.75.75 0 01.75.75c0 5.056-2.383 9.555-6.084 12.436A6.75 6.75 0 019.75 22.5a.75.75 0 01-.75-.75v-4.131A15.838 15.838 0 016.382 15H2.25a.75.75 0 01-.75-.75 6.75 6.75 0 017.815-6.666zM15 6.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" clip-rule="evenodd"/><path d="M5.26 17.242a.75.75 0 10-.897-1.203 5.243 5.243 0 00-2.05 5.022.75.75 0 00.625.627 5.243 5.243 0 005.022-2.051.75.75 0 10-1.202-.897 3.744 3.744 0 01-3.008 1.51c0-1.23.592-2.323 1.51-3.008z"/></svg>
             PENA_NAIK
@@ -1175,11 +1179,11 @@
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-200">
-            <div class="font-black text-slate-800 mb-1">Mode Detektif Bug 🐛</div>
+            <div class="font-black text-slate-800 mb-1"><img src="assets/img/icons/icon-bug-slate.svg" class="btn-icon" alt="">Mode Detektif Bug</div>
             <p class="text-xs text-slate-500 mb-3">Program berikut punya kesalahan. Temukan dan perbaiki!</p>
-            <button class="detektif-btn" onclick="loadBugChallenge('bug_square')">🐛 Persegi yang Miring</button>
-            <button class="detektif-btn" onclick="loadBugChallenge('bug_triangle')">🐛 Segitiga Belum Selesai</button>
-            <button class="detektif-btn" onclick="loadBugChallenge('bug_noink')">🐛 Robot Tak Meninggalkan Jejak</button>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_square')"><img src="assets/img/icons/icon-bug-white.svg" class="btn-icon" alt="">Persegi yang Miring</button>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_triangle')"><img src="assets/img/icons/icon-bug-white.svg" class="btn-icon" alt="">Segitiga Belum Selesai</button>
+            <button class="detektif-btn" onclick="loadBugChallenge('bug_noink')"><img src="assets/img/icons/icon-bug-white.svg" class="btn-icon" alt="">Robot Tak Meninggalkan Jejak</button>
           </div>
 
           <div class="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-600 leading-relaxed">
@@ -1251,7 +1255,6 @@
             <button onclick="runScript()" id="runBtnFs" class="toolbar-btn sky">Jalankan</button>
             <button onclick="runStepByStep()" id="stepBtnFs" class="toolbar-btn amber">Langkah per Langkah</button>
             <button onclick="resetWorkspace()" class="toolbar-btn rose">Reset</button>
-            <button onclick="showPage('homePage')" class="toolbar-btn cyan">Kembali</button>
           </div>
 
           <div id="canvasViewport" class="canvas-viewport">
@@ -1261,7 +1264,7 @@
           </div>
 
           <div id="logToggleBar" class="log-toggle-bar" onclick="toggleLogPanel()">
-            <span class="text-slate-400 text-xs font-bold">📋 Log Eksekusi</span>
+            <span class="text-slate-400 text-xs font-bold"><img src="assets/img/icons/icon-clipboard-slate.svg" class="btn-icon" alt="">Log Eksekusi</span>
             <span id="logToggleIcon" class="text-slate-400 text-xs font-bold">tampilkan ▼</span>
           </div>
           <div id="logPanel" class="log-panel">
@@ -1271,6 +1274,11 @@
           <div id="stepInfoBar" class="hidden mt-3 bg-amber-500/20 border border-amber-400/40 rounded-2xl px-4 py-2 text-amber-200 text-sm font-bold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 shrink-0 text-amber-400"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
             <span id="stepInfoText">Mode Langkah per Langkah — 1 kotak grid = 40 px, klik tombol untuk menjalankan satu instruksi</span>
+          </div>
+
+          <div id="boundsWarningBar" class="hidden mt-3 bg-rose-500/20 border border-rose-400/40 rounded-2xl px-4 py-2 text-rose-200 text-sm font-bold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 shrink-0 text-rose-400"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+            <span id="boundsWarningText"></span>
           </div>
 
           <div class="status-card">
@@ -1812,7 +1820,11 @@
         return;
       }
       showPage('labPage');
-      setTimeout(() => openIntroLabModal(), 400);
+      let introShown = false;
+      try { introShown = sessionStorage.getItem('robot_introLabShown') === 'true'; } catch(e){}
+      if (!introShown) {
+        setTimeout(() => openIntroLabModal(), 400);
+      }
     }
 
     function showPage(id){
@@ -1895,7 +1907,11 @@
 
     const introLabModal = document.getElementById('introLabModal');
     function openIntroLabModal(){ introLabModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    function closeIntroLabModal(){ introLabModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+    function closeIntroLabModal(){
+      introLabModal.classList.add('hidden');
+      document.body.style.overflow='auto';
+      try { sessionStorage.setItem('robot_introLabShown', 'true'); } catch(e){}
+    }
 
     const materiSingkatModal = document.getElementById('materiSingkatModal');
     function openMateriSingkatModal(){ materiSingkatModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
@@ -1994,10 +2010,12 @@
     const GRID_SIZE = 40;
     const START_X = 1120;
     const START_Y = 880;
-    const PAPER_X = 140;
+    const PAPER_X = 120;
     const PAPER_Y = 120;
     const PAPER_WIDTH = STAGE_WIDTH - (PAPER_X * 2);
     const PAPER_HEIGHT = STAGE_HEIGHT - (PAPER_Y * 2);
+    const PAPER_COLS = PAPER_WIDTH / GRID_SIZE;
+    const PAPER_ROWS = PAPER_HEIGHT / GRID_SIZE;
 
     canvas.width = STAGE_WIDTH;
     canvas.height = STAGE_HEIGHT;
@@ -2294,7 +2312,7 @@
       updateChallengeStatus();
       setTimeout(() => {
         const label = challengeStarterLabels[type] || 'bentuk';
-        showInfoToast(`🧩 Ini baru <b>awalan ${label}</b>.<br>Blok awal sudah dimuat, tetapi gambarnya belum selesai. Lanjutkan dengan menambah atau mengubah blokmu sendiri ya.`, 5200);
+        showInfoToast(`<img src="assets/img/icons/icon-puzzle-white.svg" class="feedback-icon-sm" alt="">Ini baru <b>awalan ${label}</b>.<br>Blok awal sudah dimuat, tetapi gambarnya belum selesai. Lanjutkan dengan menambah atau mengubah blokmu sendiri ya.`, 5200);
       }, 250);
     }
 
@@ -2326,7 +2344,7 @@
             <div class="script-actions">
               <button class="mini-btn" onclick="moveBlock(${index}, -1)">↑</button>
               <button class="mini-btn" onclick="moveBlock(${index}, 1)">↓</button>
-              <button class="mini-btn" onclick="deleteBlock(${index})">✕</button>
+              <button class="mini-btn" onclick="deleteBlock(${index})"><img src="assets/img/icons/icon-cross-white.svg" style="width:13px;height:13px;" alt="Hapus"></button>
             </div>
           </div>
         `;
@@ -2513,6 +2531,21 @@
       document.getElementById('angleStat').textContent = `${normalizeAngle(turtle.angle)}°`;
       document.getElementById('penStat').textContent = turtle.pen ? 'Turun' : 'Naik';
       document.getElementById('countStat').textContent = scriptBlocks.length;
+      updateBoundsWarning(gridX, gridY);
+    }
+
+    function updateBoundsWarning(gridX, gridY) {
+      const bar = document.getElementById('boundsWarningBar');
+      const text = document.getElementById('boundsWarningText');
+      if (!bar || !text) return;
+      const outOfBounds = turtle.x < PAPER_X || turtle.x > PAPER_X + PAPER_WIDTH
+        || turtle.y < PAPER_Y || turtle.y > PAPER_Y + PAPER_HEIGHT;
+      if (outOfBounds) {
+        text.textContent = `Robot sudah keluar dari area grid (${PAPER_COLS} × ${PAPER_ROWS} kotak). Posisi grid sekarang: kolom ${formatGridValue(gridX)}, baris ${formatGridValue(gridY)}.`;
+        bar.classList.remove('hidden');
+      } else {
+        bar.classList.add('hidden');
+      }
     }
 
     async function animateForward(distance) {
@@ -2639,10 +2672,6 @@
       finalizeActiveChallengeFeedback();
       finalizeActiveBugFeedback();
       updatePredictionBox('post');
-      if (!refleksiAutoTriggered) {
-        refleksiAutoTriggered = true;
-        setTimeout(() => openRefleksiModal(), 1200);
-      }
     }
 
     let stepIndex = 0;
@@ -2760,7 +2789,8 @@
       entry.className = `log-entry ${state}`;
       entry.id = `log-entry-${stepNum}`;
       const valStr = val !== undefined ? `(${val})` : '';
-      entry.innerHTML = `<span class="log-num">${stepNum}/${total}</span><span>${state === 'log-active' ? '→' : '✓'} ${label}${valStr}</span>`;
+      const stateGlyph = state === 'log-active' ? '→' : '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">';
+      entry.innerHTML = `<span class="log-num">${stepNum}/${total}</span><span><span class="log-state">${stateGlyph}</span> ${label}${valStr}</span>`;
       content.appendChild(entry);
       const panel = document.getElementById('logPanel');
       if (panel && panel.classList.contains('visible')) {
@@ -2772,8 +2802,8 @@
       if (!entry) return;
       entry.classList.remove('log-active');
       entry.classList.add('log-done');
-      const span = entry.querySelectorAll('span')[1];
-      if (span) span.textContent = span.textContent.replace('→', '✓');
+      const stateEl = entry.querySelector('.log-state');
+      if (stateEl) stateEl.innerHTML = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">';
     }
 
     // ============ EFISIENSI ============
@@ -2938,19 +2968,20 @@
     function syncChallengeButtons() {
       document.querySelectorAll('.challenge-btn[data-challenge]').forEach(btn => {
         const key = btn.dataset.challenge;
-        const baseLabel = btn.dataset.baseLabel || btn.textContent.trim().replace(/^✓\s*/, '');
+        const baseLabel = btn.dataset.baseLabel || btn.textContent.trim();
         const completed = completedChallenges.has(key);
 
         btn.dataset.baseLabel = baseLabel;
         btn.disabled = completed;
         btn.classList.toggle('active', key === activeChallengeKey && !completed);
         btn.classList.toggle('completed', completed);
-        btn.textContent = completed ? `✓ ${baseLabel}` : baseLabel;
+        btn.textContent = baseLabel;
       });
     }
 
     function renderChallengeChecks(checks) {
-      return `<div class="challenge-checklist">${checks.map(check => `<div class="challenge-check ${check.ok ? 'ok' : ''}">${check.ok ? '✓' : '•'} ${check.label}</div>`).join('')}</div>`;
+      const okIcon = '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">';
+      return `<div class="challenge-checklist">${checks.map(check => `<div class="challenge-check ${check.ok ? 'ok' : ''}">${check.ok ? okIcon : '•'} ${check.label}</div>`).join('')}</div>`;
     }
 
     function challengeGuidance(key, issue) {
@@ -3113,7 +3144,7 @@
         markChallengeCompleted(activeChallengeKey);
       }
       updateChallengeStatus(result.ok ? 'success' : 'error', result.message);
-      showInfoToast(result.ok ? `✅ ${result.message}` : `🛠️ ${result.message}`, result.ok ? 5200 : 6500);
+      showInfoToast(result.ok ? `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">${result.message}` : `<img src="assets/img/icons/icon-tools-white.svg" class="feedback-icon-sm" alt="">${result.message}`, result.ok ? 5200 : 6500);
     }
 
     loadCompletedChallenges();
@@ -3134,17 +3165,17 @@
 
     function showEfisiensiToast(used, optimal) {
       if (used <= optimal) {
-        showInfoToast(`🏆 <span style="color:#22d3ee">Efisiensi Sempurna!</span> Kamu menggunakan <b>${used} blok</b> — sama dengan solusi optimal!`);
+        showInfoToast(`<img src="assets/img/icons/icon-trophy-white.svg" class="feedback-icon-sm" alt=""><span style="color:#22d3ee">Efisiensi Sempurna!</span> Kamu menggunakan <b>${used} blok</b> — sama dengan solusi optimal!`);
       } else {
         const diff = used - optimal;
-        showInfoToast(`📊 Kamu menggunakan <b>${used} blok</b>. Solusi optimal butuh <b>${optimal} blok</b>.<br><span style="color:#fbbf24">Bisakah kamu kurangi ${diff} blok lagi?</span>`);
+        showInfoToast(`<img src="assets/img/icons/icon-chart-white.svg" class="feedback-icon-sm" alt="">Kamu menggunakan <b>${used} blok</b>. Solusi optimal butuh <b>${optimal} blok</b>.<br><span style="color:#fbbf24">Bisakah kamu kurangi ${diff} blok lagi?</span>`);
       }
     }
 
     // ============ DETEKTIF BUG ============
     const bugChallenges = {
       bug_square: {
-        hint: '🐛 Persegi harus memiliki 4 sudut 90° sama persis. Perhatikan baik-baik nilai sudut di setiap blok PUTAR!',
+        hint: '<img src="assets/img/icons/icon-bug-white.svg" class="feedback-icon-sm" alt="">Persegi harus memiliki 4 sudut 90° sama persis. Perhatikan baik-baik nilai sudut di setiap blok PUTAR!',
         blocks: [
           { type: 'PEN_DOWN' },
           { type: 'FORWARD', value: 160 },
@@ -3157,7 +3188,7 @@
         ]
       },
       bug_triangle: {
-        hint: '🐛 Segitiga sama sisi butuh 3 sisi dan 3 sudut. Apakah semua instruksi MAJU sudah ada?',
+        hint: '<img src="assets/img/icons/icon-bug-white.svg" class="feedback-icon-sm" alt="">Segitiga sama sisi butuh 3 sisi dan 3 sudut. Apakah semua instruksi MAJU sudah ada?',
         blocks: [
           { type: 'PEN_DOWN' },
           { type: 'FORWARD', value: 160 },
@@ -3167,7 +3198,7 @@
         ]
       },
       bug_noink: {
-        hint: '🐛 Robot bergerak tapi tidak meninggalkan jejak. Instruksi apa yang membuat pena menempel di kertas?',
+        hint: '<img src="assets/img/icons/icon-bug-white.svg" class="feedback-icon-sm" alt="">Robot bergerak tapi tidak meninggalkan jejak. Instruksi apa yang membuat pena menempel di kertas?',
         blocks: [
           { type: 'PEN_UP' },
           { type: 'FORWARD', value: 160 },
@@ -3323,7 +3354,7 @@
       if (!activeBugKey) return;
       const result = bugMatches(activeBugKey);
       updateChallengeStatus(result.ok ? 'success' : 'error', result.message);
-      showInfoToast(result.ok ? `✅ ${result.message}` : `🛠️ ${result.message}`, result.ok ? 5200 : 6500);
+      showInfoToast(result.ok ? `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">${result.message}` : `<img src="assets/img/icons/icon-tools-white.svg" class="feedback-icon-sm" alt="">${result.message}`, result.ok ? 5200 : 6500);
     }
 
     // ============ KUIS SINGKAT ============
@@ -3369,7 +3400,7 @@
       if (kuisIndex >= kuisData.length) {
         progress.textContent = 'Hasil Kuis';
         const pct = Math.round((score / kuisData.length) * 100);
-        const emoji = pct === 100 ? '🏆' : pct >= 67 ? '👍' : '💪';
+        const emoji = pct === 100 ? '<img src="assets/img/icons/icon-trophy-amber.svg" style="width:56px;height:56px;" alt="">' : pct >= 67 ? '<img src="assets/img/icons/icon-thumbsup-sky.svg" style="width:56px;height:56px;" alt="">' : '<img src="assets/img/icons/icon-muscle-orange.svg" style="width:56px;height:56px;" alt="">';
         const msg = pct === 100 ? 'Sempurna! Kamu memahami semua konsep!' : pct >= 67 ? 'Bagus! Terus berlatih!' : 'Yuk coba lagi setelah bereksperimen lebih banyak!';
         content.innerHTML = `
           <div class="text-center py-4">
@@ -3380,7 +3411,7 @@
               ${kuisData.map((q, i) => {
                 const ok = kuisAnswered[i] === q.correct;
                 return `<div class="flex items-start gap-2 p-3 rounded-xl border ${ok ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}">
-                  <span class="text-lg shrink-0">${ok ? '✅' : '❌'}</span>
+                  <span class="text-lg shrink-0">${ok ? '<img src="assets/img/icons/icon-check-ok.svg" style="width:20px;height:20px;" alt="">' : '<img src="assets/img/icons/icon-check-err.svg" style="width:20px;height:20px;" alt="">'}</span>
                   <div class="text-sm text-slate-700"><b>S${i+1}.</b> ${q.explain}</div>
                 </div>`;
               }).join('')}
@@ -3437,7 +3468,7 @@
       const explain = document.getElementById('kuisExplain');
       if (explain) {
         explain.classList.remove('hidden');
-        explain.innerHTML = `<b>${selectedAnswer === question.correct ? '✅ Benar!' : '❌ Belum tepat.'}</b> ${question.explain}`;
+        explain.innerHTML = `<b>${selectedAnswer === question.correct ? '<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Benar!' : '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Belum tepat.'}</b> ${question.explain}`;
       }
     }
 
@@ -3461,8 +3492,6 @@
     }
 
     // ============ REFLEKSI INTERAKTIF ============
-    let refleksiAutoTriggered = false;
-
     function simpanRefleksi() {
       const r1 = (document.getElementById('refleksi1') || {}).value || '';
       const r2 = (document.getElementById('refleksi2') || {}).value || '';
@@ -3473,7 +3502,7 @@
       }
       const btn = document.getElementById('simpanRefleksiBtn');
       if (btn) {
-        btn.textContent = '✅ Tersimpan!';
+        btn.textContent = 'Tersimpan!';
         btn.style.background = '#16a34a';
         setTimeout(() => {
           btn.textContent = 'Simpan Refleksi';

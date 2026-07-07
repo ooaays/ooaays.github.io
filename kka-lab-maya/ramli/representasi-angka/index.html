@@ -60,7 +60,7 @@
             </div>
             <div class="flex-1 bg-[#a855f7] flex items-center justify-center px-3 rounded-r-[20px] relative">
               <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
-              <span id="check-tujuan" class="read-check">✓</span>
+              <span id="check-tujuan" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span>
             </div>
           </button>
 
@@ -72,7 +72,7 @@
             </div>
             <div class="flex-1 bg-[#f97316] flex items-center justify-center px-3 rounded-r-[20px] relative">
               <span class="text-white text-lg md:text-xl font-black tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
-              <span id="check-cara" class="read-check">✓</span>
+              <span id="check-cara" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span>
             </div>
           </button>
 
@@ -179,19 +179,19 @@
             Istilah Penting
           </button>
           <button onclick="openRefleksiModal()" class="lab-tool-btn lab-tool-indigo">
-            ✍️ Refleksi
+            <img src="assets/img/icons/icon-pencil-white.svg" class="btn-icon" alt="">Refleksi
           </button>
           <button onclick="openInisialModal()" class="lab-tool-btn lab-tool-purple">
-            🔤 Inisialku
+            <img src="assets/img/icons/icon-letters-white.svg" class="btn-icon" alt="">Inisialku
           </button>
           <button onclick="openKalkulatorBitModal()" class="lab-tool-btn lab-tool-emerald">
-            🧮 Kalkulator Bit
+            <img src="assets/img/icons/icon-calculator-white.svg" class="btn-icon" alt="">Kalkulator Bit
           </button>
           <button onclick="openDetektif1BitModal()" class="lab-tool-btn lab-tool-rose">
-            🔎 Detektif 1-Bit
+            <img src="assets/img/icons/icon-magnify-white.svg" class="btn-icon" alt="">Detektif 1-Bit
           </button>
           <button onclick="openPerbandinganModal()" class="lab-tool-btn lab-tool-amber">
-            📊 3 Representasi
+            <img src="assets/img/icons/icon-chart-white.svg" class="btn-icon" alt="">3 Representasi
           </button>
           <button onclick="showPage('homePage')" class="lab-tool-btn lab-tool-blue">
             Kembali ke Beranda
@@ -406,7 +406,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
                 <p class="text-lg font-bold text-slate-800 mb-2">Tabel ASCII</p>
-                <p class="text-sm text-slate-700">Menampilkan desimal, biner, dan karakter sebagai referensi pembanding.</p>
+                <p class="text-sm text-slate-700">Menampilkan desimal, biner, dan karakter sebagai referensi pembanding. Klik salah satu baris untuk melihat penjelasan karakternya secara lebih lengkap.</p>
               </div>
               <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
                 <p class="text-lg font-bold text-slate-800 mb-2">8-bit Switch</p>
@@ -642,7 +642,7 @@
       <div class="flex-1 overflow-y-auto pr-1 refleksi-list" id="repangRefleksiList"></div>
       <div id="repangRefleksiStatus" class="refleksi-status hidden"></div>
       <div class="shrink-0 pt-4 flex flex-col sm:flex-row gap-3 justify-end border-t border-slate-100 mt-4">
-        <button onclick="simpanRefleksiRepang()" id="repangSimpanBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-black py-3 px-8 rounded-2xl shadow-[0_4px_0_#0369a1] active:shadow-none active:translate-y-1 transition-all">Simpan ✓</button>
+        <button onclick="simpanRefleksiRepang()" id="repangSimpanBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-black py-3 px-8 rounded-2xl shadow-[0_4px_0_#0369a1] active:shadow-none active:translate-y-1 transition-all">Simpan</button>
         <button onclick="closeRefleksiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-2xl">Tutup</button>
       </div>
     </div>
@@ -654,7 +654,7 @@
       <!-- Header — shrink-0 -->
       <div class="shrink-0">
         <div class="flex items-center justify-between mb-3">
-          <h2 class="text-2xl font-black text-violet-700">🔤 Tulis Inisialmu!</h2>
+          <h2 class="text-2xl font-black text-violet-700"><img src="assets/img/icons/icon-letters-violet.svg" class="title-icon" alt="">Tulis Inisialmu!</h2>
           <button onclick="closeInisialModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
         </div>
         <p class="text-slate-500 text-sm mb-4">Masukkan 1–4 huruf inisialmu dan lihat representasi binernya!</p>
@@ -677,7 +677,7 @@
   <div id="kalkulatorBitModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-4xl w-full shadow-2xl border-4 border-emerald-100">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black text-emerald-700">🧮 Kalkulator Nilai Bit</h2>
+        <h2 class="text-2xl font-black text-emerald-700"><img src="assets/img/icons/icon-calculator-emerald.svg" class="title-icon" alt="">Kalkulator Nilai Bit</h2>
         <button onclick="closeKalkulatorBitModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-500 text-sm mb-5">Klik bit untuk ON/OFF dan lihat kontribusi nilai masing-masing posisi secara real-time!</p>
@@ -697,7 +697,7 @@
   <div id="detektif1BitModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-3xl w-full shadow-2xl border-4 border-rose-100">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black text-rose-700">🔎 Detektif 1-Bit Error</h2>
+        <h2 class="text-2xl font-black text-rose-700"><img src="assets/img/icons/icon-magnify-rose.svg" class="title-icon" alt="">Detektif 1-Bit Error</h2>
         <button onclick="closeDetektif1BitModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-500 text-sm mb-5" id="d1bDesc">Bit apa yang tepat untuk diperbaiki agar hasilnya menjadi karakter <strong id="d1bChar">?</strong> dengan nilai desimal <strong id="d1bCode">?</strong>?</p>
@@ -717,7 +717,7 @@
   <div id="perbandinganModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-[30px] p-6 md:p-8 max-w-4xl w-full shadow-2xl border-4 border-amber-100 flex flex-col max-h-[90vh]">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black text-amber-700">📊 Perbandingan 3 Representasi</h2>
+        <h2 class="text-2xl font-black text-amber-700"><img src="assets/img/icons/icon-chart-amber.svg" class="title-icon" alt="">Perbandingan 3 Representasi</h2>
         <button onclick="closePerbandinganModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
       </div>
       <p class="text-slate-500 text-sm mb-4">Masukkan angka desimal (0–255) dan lihat representasi biner, oktal, dan heksadesimalnya!</p>

@@ -107,7 +107,7 @@ Sesudah digeser ke kanan:
     title: 'Tahap 5 — Ubah Pola Secara Mandiri',
     tag: 'Kreasi dan Interpretasi',
     focus: 'Mendorong siswa membuat pola sendiri sambil tetap membaca susunan data.',
-    mission: 'Setelah pola digeser, lakukan minimal 3 perubahan manual pada grid agar bentuknya berubah lagi.',
+    mission: 'Mulai dari grid kosong, buat polamu sendiri dengan minimal 3 perubahan manual hingga ada minimal 8 piksel aktif.',
     dataset: 'Tidak ada satu jawaban tunggal. Yang penting kamu bisa menjelaskan perubahan data dan hasil visualnya.',
     tips: 'Coba tambah atau kurangi piksel pada posisi tertentu, lalu amati data dan bentuknya.',
     reflection: 'Setelah mengubah pola, jelaskan perubahan data yang kamu buat dan bagaimana perubahan itu memengaruhi bentuk gambar.',
@@ -134,8 +134,8 @@ const state = {
   currentQuiz: 0,
   currentStage: 1,
   completed: {},
-  gridRows: 10,
-  gridCols: 13,
+  gridRows: 11,
+  gridCols: 11,
   grid: [],
   lastAction: 'Belum ada aksi pada grid.',
   lastPosition: '-',
@@ -306,31 +306,19 @@ function renderStageNav(){
 
 function changeStage(stageNo){
   if (stageNo > highestUnlockedStage()) return;
-  const preserve = state.currentStage === 4 && stageNo === 5;
   state.currentStage = stageNo;
-  setupStage(stageNo, preserve);
+  setupStage(stageNo);
   renderAll();
 }
 
-function setupStage(stageNo, preserveCurrent = false){
+function setupStage(stageNo){
   state.lastAction = 'Belum ada aksi pada grid.';
   state.lastPosition = '-';
   state.shiftCount = 0;
-  if (stageNo === 5) {
-    if (!preserveCurrent) {
-      applyPlusPattern(false);
-      shiftGrid('right', false);
-    }
-    state.manualEditsStage5 = 0;
-    state.enteredStage5 = true;
-  } else {
-    state.enteredStage5 = false;
-    state.manualEditsStage5 = 0;
-    if (!preserveCurrent) {
-      createEmptyGrid();
-      if (stageNo === 4) applyPlusPattern(false);
-    }
-  }
+  state.manualEditsStage5 = 0;
+  state.enteredStage5 = stageNo === 5;
+  createEmptyGrid();
+  if (stageNo === 4) applyPlusPattern(false);
 }
 
 function renderMissionPanel(){
@@ -434,7 +422,7 @@ function clearGrid(){
 }
 
 function resetCurrentStage(){
-  setupStage(state.currentStage, false);
+  setupStage(state.currentStage);
   renderAll();
   document.getElementById('stageFeedback').innerHTML = 'Tahap direset. Susun kembali piksel sesuai misi.';
 }
@@ -453,8 +441,10 @@ function applyPlusPattern(withMessage = true){
   }
 }
 
-function shiftGrid(direction, announce = true){
+function shiftGrid(direction){
+  const before = countActive();
   const newGrid = Array.from({ length:state.gridRows }, () => Array(state.gridCols).fill(0));
+  let dropped = 0;
   for (let row=0; row<state.gridRows; row++) {
     for (let col=0; col<state.gridCols; col++) {
       if (state.grid[row][col] !== 1) continue;
@@ -463,15 +453,19 @@ function shiftGrid(direction, announce = true){
       if (direction==='down') nr++;
       if (direction==='left') nc--;
       if (direction==='right') nc++;
-      if (nr>=0 && nr<state.gridRows && nc>=0 && nc<state.gridCols) newGrid[nr][nc] = 1;
+      if (nr<0 || nr>=state.gridRows || nc<0 || nc>=state.gridCols) { dropped++; continue; }
+      newGrid[nr][nc] = 1;
     }
   }
   state.grid = newGrid;
   state.shiftCount += 1;
+  const after = countActive();
   state.lastAction = `Pola digeser ke arah ${translateDirection(direction)}.`;
   state.lastPosition = `Perpindahan global ke ${translateDirection(direction)}`;
   renderBoard();
-  renderOutputs(announce ? `Pola digeser ke arah ${translateDirection(direction)}. Sekarang bandingkan posisi angka 1 sebelum dan sesudah pergeseran.` : undefined);
+  renderOutputs(dropped > 0
+    ? `Pola digeser ke arah ${translateDirection(direction)}. ${dropped} piksel aktif yang berada tepat di tepi grid keluar dari batas dan hilang, sehingga jumlah piksel aktif berubah dari ${before} menjadi ${after}. Ini menunjukkan bahwa posisi data yang keluar dari batas penyimpanan akan hilang.`
+    : `Pola digeser ke arah ${translateDirection(direction)}. Sekarang bandingkan posisi angka 1 sebelum dan sesudah pergeseran.`);
 }
 
 function translateDirection(direction){
@@ -555,7 +549,7 @@ function showStageResult(ok){
       : 'Kamu boleh lanjut ke tahap berikutnya.';
     iconWrap.className = 'w-20 h-20 rounded-full flex items-center justify-center bg-emerald-100';
     iconText.className = 'text-4xl font-black text-emerald-600';
-    iconText.textContent = '✓';
+    iconText.innerHTML = '<img src="assets/img/icons/icon-check-emerald.svg" style="width:36px;height:36px;" alt="">';
   } else {
     title.textContent = 'Coba Lagi';
     message.textContent = failMessage(state.currentStage);
@@ -606,7 +600,7 @@ function failMessage(stageNo){
     2:'Belum tepat. Buat satu garis mendatar atau tegak dengan minimal lima piksel aktif yang berurutan. Cek lagi apakah angka 1 milikmu masih terpencar.',
     3:'Belum tepat. Bentuk pola plus utuh dengan menyusun piksel pada baris dan kolom yang tepat. Jika ada satu bagian bergeser, bentuk plus belum terbaca jelas.',
     4:'Belum tepat. Geser pola minimal satu kali ke arah mana pun. Fokusnya bukan mengganti jumlah piksel, tetapi mengamati perpindahan posisinya.',
-    5:`Belum tepat. Lakukan minimal tiga perubahan manual setelah pola digeser, lalu periksa lagi. Saat ini jumlah piksel aktifmu ${active}, jadi jelaskan juga perubahan apa yang kamu buat.`
+    5:`Belum tepat. Buat polamu sendiri dengan minimal tiga perubahan manual hingga ada minimal delapan piksel aktif, lalu periksa lagi. Saat ini jumlah piksel aktifmu ${active}, jadi jelaskan juga perubahan apa yang kamu buat.`
   }[stageNo];
 }
 
@@ -631,9 +625,8 @@ function updateNextButton(){
 function goNextStage(){
   if (!state.completed[state.currentStage] || state.currentStage >= TOTAL_STAGES) return;
   const next = state.currentStage + 1;
-  const preserve = state.currentStage === 4 && next === 5;
   state.currentStage = next;
-  setupStage(next, preserve);
+  setupStage(next);
   renderAll();
 }
 
@@ -765,7 +758,7 @@ function simpanRefleksi() {
   }
   const btn = document.getElementById('simpanRefleksiBtn');
   if (btn) {
-    btn.textContent = '✅ Tersimpan!';
+    btn.textContent = 'Tersimpan!';
     btn.style.background = '#16a34a';
     setTimeout(() => {
       btn.textContent = 'Simpan Refleksi';
@@ -882,9 +875,9 @@ function checkTebak() {
   const res = document.getElementById('tebakResult');
   if (!res) return;
   if (correct === 25) {
-    res.innerHTML = '<span style="color:#16a34a;font-weight:bold">✅ Sempurna! Kamu berhasil membaca matrix dan merekonstruksi gambar dengan benar.</span>';
+    res.innerHTML = '<span style="color:#16a34a;font-weight:bold"><img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Sempurna! Kamu berhasil membaca matrix dan merekonstruksi gambar dengan benar.</span>';
   } else {
-    res.innerHTML = `<span style="color:#dc2626;font-weight:bold">❌ ${correct}/25 sel benar.</span> Sel <span style="background:#fbbf24;padding:1px 5px;border-radius:4px;font-weight:bold;">kuning</span> = piksel aktif yang terlewat.`;
+    res.innerHTML = `<span style="color:#dc2626;font-weight:bold"><img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">${correct}/25 sel benar.</span> Sel <span style="background:#fbbf24;padding:1px 5px;border-radius:4px;font-weight:bold;">kuning</span> = piksel aktif yang terlewat.`;
   }
   const btn = document.getElementById('tebakCheckBtn');
   if (btn) btn.disabled = true;
@@ -1042,9 +1035,9 @@ function checkDetektif() {
   const res = document.getElementById('detektifResult');
   if (!res) return;
   if (found === bugKeys.length && detektifSelected.length === bugKeys.length) {
-    res.innerHTML = '<span style="color:#16a34a;font-weight:bold">✅ Hebat! Kamu berhasil menemukan semua sel yang salah.</span>';
+    res.innerHTML = '<span style="color:#16a34a;font-weight:bold"><img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Hebat! Kamu berhasil menemukan semua sel yang salah.</span>';
   } else {
-    res.innerHTML = `<span style="color:#dc2626;font-weight:bold">❌ Belum tepat.</span> Sel <span style="background:#22c55e;padding:1px 5px;border-radius:4px;font-weight:bold;color:white;">hijau</span> = posisi yang seharusnya diperbaiki.`;
+    res.innerHTML = `<span style="color:#dc2626;font-weight:bold"><img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Belum tepat.</span> Sel <span style="background:#22c55e;padding:1px 5px;border-radius:4px;font-weight:bold;color:white;">hijau</span> = posisi yang seharusnya diperbaiki.`;
   }
 }
 
@@ -1075,7 +1068,7 @@ const JUMLAH_SAMA_PAIRS = [
     count: 9,
     gridA: [[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,0]],
     labelA: 'Pola A — 9 piksel aktif (dua garis)',
-    gridB: [[1,0,1,0,1],[0,1,0,1,0],[1,0,1,0,1],[0,0,0,0,0],[0,0,0,0,0]],
+    gridB: [[1,0,1,0,1],[0,1,0,1,0],[1,0,1,0,1],[0,1,0,0,0],[0,0,0,0,0]],
     labelB: 'Pola B — 9 piksel aktif (pola kotak-kotak)'
   }
 ];
@@ -1202,7 +1195,7 @@ function startAnimasi() {
     if (!animRunning || i >= flat.length) {
       if (i >= flat.length) {
         const log = document.getElementById('animLog');
-        if (log) log.innerHTML = `✅ <b>Selesai!</b> Komputer membaca semua ${flat.length} sel. Ditemukan <b>${flat.filter(v=>v).length} piksel aktif</b>. Susunan posisi itulah yang membentuk gambar.`;
+        if (log) log.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""><b>Selesai!</b> Komputer membaca semua ${flat.length} sel. Ditemukan <b>${flat.filter(v=>v).length} piksel aktif</b>. Susunan posisi itulah yang membentuk gambar.`;
         if (btn) { btn.textContent = '↺ Ulangi Animasi'; btn.disabled = false; }
       }
       animRunning = false;

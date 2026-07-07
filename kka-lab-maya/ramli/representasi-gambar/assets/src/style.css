@@ -13,6 +13,9 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ── Display ──────────────────────────────────────────────── */
 .hidden  { display: none !important; }
+.btn-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px; flex-shrink: 0; }
+.title-icon { width: 26px; height: 26px; display: inline-block; vertical-align: -4px; margin-right: 6px; flex-shrink: 0; }
+.feedback-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: text-bottom; margin-right: 3px; }
 .flex    { display: flex; }
 .grid    { display: grid; }
 .block   { display: block; }
@@ -245,8 +248,8 @@ body {
   margin: 0;
   color: #0f172a;
   overflow-x: hidden;
-  --grid-cols: 13;
-  --grid-rows: 10;
+  --grid-cols: 11;
+  --grid-rows: 11;
   --cell-size: 40px;
   --axis-width: 46px;
   --axis-top-size: 22px;
@@ -1345,7 +1348,7 @@ body {
   display:grid;
   grid-template-columns:minmax(0, 1fr) 320px;
   gap:16px;
-  align-items:start;
+  align-items:center;
   margin-top:8px;
 }
 .canvas-board-area{

@@ -65,7 +65,7 @@
                 <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8z"/>
               </svg>
             </span>
-            <span class="menu-btn-label purple">Tujuan Praktikum<span id="check-tujuan" class="read-check">✓</span></span>
+            <span class="menu-btn-label purple">Tujuan Praktikum<span id="check-tujuan" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span></span>
           </button>
 
           <button class="menu-btn" onclick="openCaraModal()">
@@ -74,7 +74,7 @@
                 <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c1.68 0 3.282.515 4.75 1.357a.75.75 0 001-.707V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
               </svg>
             </span>
-            <span class="menu-btn-label orange">Cara Penggunaan<span id="check-cara" class="read-check">✓</span></span>
+            <span class="menu-btn-label orange">Cara Penggunaan<span id="check-cara" class="read-check"><img src="assets/img/icons/icon-check-white.svg" style="width:12px;height:12px;" alt=""></span></span>
           </button>
 
           <button id="btnStart"
@@ -289,8 +289,15 @@
           <h2>Lab Maya: Logika Percabangan — Pemilah Sampah Pintar</h2>
           <p>Susun aturan <strong>If &rarr; Else If &rarr; Else</strong> agar sistem dapat memilah sampah secara otomatis, akurat, dan tetap benar ketika ada kondisi yang saling bertumpuk.</p>
         </div>
-        <div class="lab-top-actions">
-          <button class="top-action indigo" onclick="openModal('menuBelajarModal')">Menu Belajar</button>
+        <div class="menu-belajar-row">
+          <button class="pill-btn indigo small" onclick="openModal('exampleModal');">Contoh Aturan</button>
+          <button class="pill-btn sky small" onclick="openModal('istilahModal');">Istilah Penting</button>
+          <button class="pill-btn emerald small" onclick="openRefleksiInteraktifLogika();"><img src="assets/img/icons/icon-pencil-white.svg" class="btn-icon" alt="">Refleksi</button>
+          <button class="pill-btn amber small" onclick="openPohonKeputusan();"><img src="assets/img/icons/icon-tree-white.svg" class="btn-icon" alt="">Pohon Keputusan</button>
+          <button class="pill-btn orange small" onclick="openKasusTepi();"><img src="assets/img/icons/icon-warning-white.svg" class="btn-icon" alt="">Kasus Tepi</button>
+          <button class="pill-btn rose small" onclick="openDetektifLogika();"><img src="assets/img/icons/icon-bug-white.svg" class="btn-icon" alt="">Detektif Logika</button>
+          <button class="pill-btn lime small" onclick="openKuisUrutan();"><img src="assets/img/icons/icon-sort-white.svg" class="btn-icon" alt="">Kuis Urutan</button>
+          <button class="pill-btn rose small" onclick="openDebugModal();">Mode Tantangan Debug</button>
           <button class="top-action sky" onclick="showPage('homePage')">Kembali ke Beranda</button>
         </div>
       </div>
@@ -440,26 +447,6 @@
     </div>
   </div>
 
-  <!-- Menu Belajar -->
-  <div id="menuBelajarModal" class="modal-backdrop">
-    <div class="modal-card" style="max-width:640px;">
-      <h2 class="modal-title indigo">Menu Belajar</h2>
-      <p style="color:#64748b; font-size:15px; line-height:1.7; margin-bottom:18px;">Pilih bantuan atau latihan tambahan yang ingin dibuka tanpa memenuhi tampilan utama.</p>
-      <div class="menu-belajar-grid">
-        <button class="pill-btn indigo" onclick="closeModal('menuBelajarModal'); openModal('exampleModal');">Contoh Aturan</button>
-        <button class="pill-btn sky" onclick="closeModal('menuBelajarModal'); openModal('istilahModal');">Istilah Penting</button>
-        <button class="pill-btn emerald" onclick="closeModal('menuBelajarModal'); openRefleksiInteraktifLogika();">✍️ Refleksi</button>
-        <button class="pill-btn amber" onclick="closeModal('menuBelajarModal'); openPohonKeputusan();">🌳 Pohon Keputusan</button>
-        <button class="pill-btn orange" onclick="closeModal('menuBelajarModal'); openKasusTepi();">⚠️ Kasus Tepi</button>
-        <button class="pill-btn rose" onclick="closeModal('menuBelajarModal'); openDetektifLogika();">🐛 Detektif Logika</button>
-        <button class="pill-btn lime" onclick="closeModal('menuBelajarModal'); openKuisUrutan();">🔢 Kuis Urutan</button>
-        <button class="pill-btn rose" onclick="closeModal('menuBelajarModal'); openDebugModal();">Mode Tantangan Debug</button>
-      </div>
-      <div class="modal-actions center">
-        <button class="pill-btn sky" onclick="closeModal('menuBelajarModal')">Tutup</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Contoh Aturan -->
   <div id="exampleModal" class="modal-backdrop">
@@ -629,13 +616,13 @@ masukkan ke Tong Hitam</div>
   <div id="refleksiModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:700px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="modal-title indigo">✍️ Refleksi Interaktif</h2>
+        <h2 class="modal-title indigo"><img src="assets/img/icons/icon-pencil-indigo.svg" class="title-icon" alt="">Refleksi Interaktif</h2>
         <button onclick="closeModal('refleksiModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p style="color:#64748b; font-size:14px; margin-bottom:18px;">Tulis jawabanmu sendiri — tidak ada jawaban yang salah!</p>
       <div id="refleksiLogikaList" class="space-y-5"></div>
       <div class="modal-actions" style="justify-content:flex-end; gap:10px;">
-        <button onclick="simpanRefleksiLogika()" id="simpanRefleksiLogikaBtn" class="pill-btn indigo">Simpan Refleksi ✓</button>
+        <button onclick="simpanRefleksiLogika()" id="simpanRefleksiLogikaBtn" class="pill-btn indigo">Simpan Refleksi</button>
         <button onclick="closeModal('refleksiModal')" class="pill-btn sky">Tutup</button>
       </div>
     </div>
@@ -645,7 +632,7 @@ masukkan ke Tong Hitam</div>
   <div id="pohonModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:680px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="modal-title indigo">🌳 Pohon Keputusan If–Else If–Else</h2>
+        <h2 class="modal-title indigo"><img src="assets/img/icons/icon-tree-indigo.svg" class="title-icon" alt="">Pohon Keputusan If–Else If–Else</h2>
         <button onclick="closeModal('pohonModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p style="color:#64748b; font-size:14px; margin-bottom:10px;">Pilih item sampah, lalu lihat bagaimana sistem menelusuri aturan satu per satu sampai ada yang cocok!</p>
@@ -662,7 +649,7 @@ masukkan ke Tong Hitam</div>
   <div id="kasusTepiModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:640px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="modal-title rose">⚠️ Tantangan Kasus Tepi</h2>
+        <h2 class="modal-title rose"><img src="assets/img/icons/icon-warning-rose.svg" class="title-icon" alt="">Tantangan Kasus Tepi</h2>
         <button onclick="closeModal('kasusTepiModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p style="color:#64748b; font-size:14px; margin-bottom:14px;">Item-item ini bisa cocok dengan lebih dari satu kondisi. Pilih tong yang <strong>paling tepat</strong> berdasarkan aturan prioritas!</p>
@@ -679,7 +666,7 @@ masukkan ke Tong Hitam</div>
   <div id="detektifLogikaModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:640px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="modal-title rose">🐛 Detektif Bug Logika</h2>
+        <h2 class="modal-title rose"><img src="assets/img/icons/icon-bug-rose.svg" class="title-icon" alt="">Detektif Bug Logika</h2>
         <button onclick="closeModal('detektifLogikaModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <div id="detektifLogikaBody"></div>
@@ -695,7 +682,7 @@ masukkan ke Tong Hitam</div>
   <div id="kuisUrutanModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:600px;">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="modal-title indigo">🔢 Kuis Urutan Aturan</h2>
+        <h2 class="modal-title indigo"><img src="assets/img/icons/icon-sort-indigo.svg" class="title-icon" alt="">Kuis Urutan Aturan</h2>
         <button onclick="closeModal('kuisUrutanModal')" class="text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
       </div>
       <p style="color:#64748b; font-size:14px; margin-bottom:14px;" id="kuisUrutanDesc">Susun aturan-aturan berikut dari yang <strong>paling khusus</strong> ke <strong>paling umum</strong>!</p>

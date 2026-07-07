@@ -116,7 +116,7 @@ function updateBioSlideView() {
 
 // MODAL CARA PENGGUNAAN & SLIDER
 let currentSlide = 0;
-const totalSlides = 8;
+const totalSlides = 7;
 
 function openCaraModal() {
     document.getElementById('caraModal').classList.remove('hidden');

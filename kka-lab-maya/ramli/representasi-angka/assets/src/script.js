@@ -356,26 +356,6 @@ document.addEventListener('DOMContentLoaded', function(){
     updateOutput();
   }
 
-  // =========================
-  // KEYBOARD SHORTCUTS
-  // 1..8 toggle bits (left-to-right 128..1), R reset, M open Tujuan, C open Cara
-  // =========================
-  document.addEventListener('keydown', function(e){
-    const activeTag = document.activeElement && document.activeElement.tagName;
-    if(activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-    const k = e.key.toLowerCase();
-    if(k >= '1' && k <= '8'){
-      const idx = parseInt(k,10) - 1;
-      // toggle mapped bit
-      toggleBit(idx);
-      e.preventDefault();
-      return;
-    }
-    if(k === 'r') { resetBits(); e.preventDefault(); return; }
-    if(k === 'm') { openTujuanModal(); e.preventDefault(); return; }
-    if(k === 'c') { openCaraModal(); e.preventDefault(); return; }
-  });
-
   function renderHeroPreview(){
     const demoBits = [0,1,0,0,0,0,0,1]; // 65 = A
     const demoWeights = [128,64,32,16,8,4,2,1];
@@ -681,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
     const btn = document.getElementById('repangSimpanBtn');
-    btn.textContent = 'Simpan ✓'; btn.style.background = '';
+    btn.textContent = 'Simpan'; btn.style.background = '';
     const status = document.getElementById('repangRefleksiStatus');
     if(status) status.className = 'refleksi-status hidden';
     refleksiModal.classList.remove('hidden');
@@ -711,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function(){
       setRefleksiStatus(`Jawaban nomor ${emptyIndex + 1} masih kosong. Isi dulu sebelum menyimpan.`, 'error');
       btn.textContent = 'Lengkapi dulu';
       btn.style.background = '#dc2626';
-      setTimeout(() => { btn.textContent = 'Simpan ✓'; btn.style.background = ''; }, 1800);
+      setTimeout(() => { btn.textContent = 'Simpan'; btn.style.background = ''; }, 1800);
       return;
     }
 
@@ -719,10 +699,10 @@ document.addEventListener('DOMContentLoaded', function(){
       localStorage.setItem(REFLEKSI_STORAGE_KEY, JSON.stringify(answers));
     } catch(e) {}
 
-    btn.textContent = '✅ Tersimpan!';
+    btn.textContent = 'Tersimpan!';
     btn.style.background = '#16a34a';
     setRefleksiStatus('Refleksi berhasil disimpan di browser perangkat ini.', 'success');
-    setTimeout(() => { btn.textContent = 'Simpan ✓'; btn.style.background = ''; }, 2000);
+    setTimeout(() => { btn.textContent = 'Simpan'; btn.style.background = ''; }, 2000);
   };
 
   /* ══════════════════════════════════════════════════════════
@@ -857,13 +837,13 @@ document.addEventListener('DOMContentLoaded', function(){
       clickedCell.classList.add('correct-flip');
       document.getElementById('retryD1BBtn').classList.add('hidden');
       fb.style.background = '#f0fdf4'; fb.style.color = '#15803d'; fb.style.border = '2px solid #22c55e';
-      fb.textContent = `✅ Tepat! Bit ke-${i} (nilai ${KAL_WEIGHTS[i]}) yang terbalik. Kode benar: ${ch.correctCode} = "${ch.correctChar}".`;
+      fb.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Tepat! Bit ke-${i} (nilai ${KAL_WEIGHTS[i]}) yang terbalik. Kode benar: ${ch.correctCode} = "${ch.correctChar}".`;
       if (d1bIdx < D1B_CHALLENGES.length - 1) document.getElementById('nextD1BBtn').classList.remove('hidden');
     } else {
       clickedCell.classList.add('wrong-flip', 'eliminated-flip');
       clickedCell.removeAttribute('onclick');
       fb.style.background = '#fef2f2'; fb.style.color = '#dc2626'; fb.style.border = '2px solid #ef4444';
-      fb.textContent = '❌ Bukan itu. Bit tersebut dihapus dari pilihan. Silakan pilih bit lain.';
+      fb.innerHTML = '<img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Bukan itu. Bit tersebut dihapus dari pilihan. Silakan pilih bit lain.';
       document.getElementById('retryD1BBtn').classList.remove('hidden');
     }
   };
