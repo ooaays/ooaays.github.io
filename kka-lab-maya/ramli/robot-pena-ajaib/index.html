@@ -1251,7 +1251,6 @@
             <button onclick="runScript()" id="runBtnFs" class="toolbar-btn sky">Jalankan</button>
             <button onclick="runStepByStep()" id="stepBtnFs" class="toolbar-btn amber">Langkah per Langkah</button>
             <button onclick="resetWorkspace()" class="toolbar-btn rose">Reset</button>
-            <button onclick="showPage('homePage')" class="toolbar-btn cyan">Kembali</button>
           </div>
 
           <div id="canvasViewport" class="canvas-viewport">
@@ -1271,6 +1270,11 @@
           <div id="stepInfoBar" class="hidden mt-3 bg-amber-500/20 border border-amber-400/40 rounded-2xl px-4 py-2 text-amber-200 text-sm font-bold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 shrink-0 text-amber-400"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
             <span id="stepInfoText">Mode Langkah per Langkah — 1 kotak grid = 40 px, klik tombol untuk menjalankan satu instruksi</span>
+          </div>
+
+          <div id="boundsWarningBar" class="hidden mt-3 bg-rose-500/20 border border-rose-400/40 rounded-2xl px-4 py-2 text-rose-200 text-sm font-bold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 shrink-0 text-rose-400"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+            <span id="boundsWarningText"></span>
           </div>
 
           <div class="status-card">
@@ -1812,7 +1816,11 @@
         return;
       }
       showPage('labPage');
-      setTimeout(() => openIntroLabModal(), 400);
+      let introShown = false;
+      try { introShown = sessionStorage.getItem('robot_introLabShown') === 'true'; } catch(e){}
+      if (!introShown) {
+        setTimeout(() => openIntroLabModal(), 400);
+      }
     }
 
     function showPage(id){
@@ -1895,7 +1903,11 @@
 
     const introLabModal = document.getElementById('introLabModal');
     function openIntroLabModal(){ introLabModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
-    function closeIntroLabModal(){ introLabModal.classList.add('hidden'); document.body.style.overflow='auto'; }
+    function closeIntroLabModal(){
+      introLabModal.classList.add('hidden');
+      document.body.style.overflow='auto';
+      try { sessionStorage.setItem('robot_introLabShown', 'true'); } catch(e){}
+    }
 
     const materiSingkatModal = document.getElementById('materiSingkatModal');
     function openMateriSingkatModal(){ materiSingkatModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
@@ -1994,10 +2006,12 @@
     const GRID_SIZE = 40;
     const START_X = 1120;
     const START_Y = 880;
-    const PAPER_X = 140;
+    const PAPER_X = 120;
     const PAPER_Y = 120;
     const PAPER_WIDTH = STAGE_WIDTH - (PAPER_X * 2);
     const PAPER_HEIGHT = STAGE_HEIGHT - (PAPER_Y * 2);
+    const PAPER_COLS = PAPER_WIDTH / GRID_SIZE;
+    const PAPER_ROWS = PAPER_HEIGHT / GRID_SIZE;
 
     canvas.width = STAGE_WIDTH;
     canvas.height = STAGE_HEIGHT;
@@ -2513,6 +2527,21 @@
       document.getElementById('angleStat').textContent = `${normalizeAngle(turtle.angle)}°`;
       document.getElementById('penStat').textContent = turtle.pen ? 'Turun' : 'Naik';
       document.getElementById('countStat').textContent = scriptBlocks.length;
+      updateBoundsWarning(gridX, gridY);
+    }
+
+    function updateBoundsWarning(gridX, gridY) {
+      const bar = document.getElementById('boundsWarningBar');
+      const text = document.getElementById('boundsWarningText');
+      if (!bar || !text) return;
+      const outOfBounds = turtle.x < PAPER_X || turtle.x > PAPER_X + PAPER_WIDTH
+        || turtle.y < PAPER_Y || turtle.y > PAPER_Y + PAPER_HEIGHT;
+      if (outOfBounds) {
+        text.textContent = `Robot sudah keluar dari area grid (${PAPER_COLS} × ${PAPER_ROWS} kotak). Posisi grid sekarang: kolom ${formatGridValue(gridX)}, baris ${formatGridValue(gridY)}.`;
+        bar.classList.remove('hidden');
+      } else {
+        bar.classList.add('hidden');
+      }
     }
 
     async function animateForward(distance) {
@@ -2639,10 +2668,6 @@
       finalizeActiveChallengeFeedback();
       finalizeActiveBugFeedback();
       updatePredictionBox('post');
-      if (!refleksiAutoTriggered) {
-        refleksiAutoTriggered = true;
-        setTimeout(() => openRefleksiModal(), 1200);
-      }
     }
 
     let stepIndex = 0;
@@ -3461,8 +3486,6 @@
     }
 
     // ============ REFLEKSI INTERAKTIF ============
-    let refleksiAutoTriggered = false;
-
     function simpanRefleksi() {
       const r1 = (document.getElementById('refleksi1') || {}).value || '';
       const r2 = (document.getElementById('refleksi2') || {}).value || '';
