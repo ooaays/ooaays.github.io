@@ -245,8 +245,8 @@ body {
   margin: 0;
   color: #0f172a;
   overflow-x: hidden;
-  --grid-cols: 13;
-  --grid-rows: 10;
+  --grid-cols: 11;
+  --grid-rows: 11;
   --cell-size: 40px;
   --axis-width: 46px;
   --axis-top-size: 22px;
@@ -1345,7 +1345,7 @@ body {
   display:grid;
   grid-template-columns:minmax(0, 1fr) 320px;
   gap:16px;
-  align-items:start;
+  align-items:center;
   margin-top:8px;
 }
 .canvas-board-area{
