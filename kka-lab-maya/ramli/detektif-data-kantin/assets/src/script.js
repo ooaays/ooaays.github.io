@@ -2,7 +2,7 @@
    Python Data Lab – Detektif Data Kantin  (v2)
    script.js  |  Direktorat SMP – Kemendikdasmen
    Fitur baru: Tahap 5 (zip), Progress Bar, Kuis Refleksi,
-               Sertifikat, Mode Guru
+               Sertifikat
    ========================================================== */
 
 const TOTAL_STAGES = 5;
@@ -350,11 +350,6 @@ let currentBioSlide = 0;
 
 /* Quiz state */
 let currentQuizQ    = 0;
-
-/* Mode Guru */
-let isGuruMode      = false;
-let logoClickCount  = 0;
-let logoClickTimer  = null;
 
 const PROGRESS_STORAGE_KEY = 'detektif_data_kantin_progress';
 
@@ -1041,79 +1036,6 @@ function printSertifikat() {
 }
 
 /* ────────────────────────────────────────────────────────── */
-/*  MODE GURU                                                 */
-/* ────────────────────────────────────────────────────────── */
-function handleLogoClick() {
-  logoClickCount++;
-  clearTimeout(logoClickTimer);
-  logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
-  if (logoClickCount >= 5) {
-    logoClickCount = 0;
-    toggleGuruMode();
-  }
-}
-
-function toggleGuruMode() {
-  isGuruMode = !isGuruMode;
-  if (isGuruMode) {
-    renderGuruPanel();
-    openModal('guruModal');
-  }
-}
-
-function renderGuruPanel() {
-  const body = document.getElementById('guruBody');
-  if (!body) return;
-
-  let html = '';
-  for (let i = 1; i <= TOTAL_STAGES; i++) {
-    const s = STAGES[i];
-    const answersHtml = s.slots.map(slotKey =>
-      `<div class="guru-answer-row">
-        <span class="guru-slot-label">${slotKey}</span>
-        <code class="guru-answer-code">${escapeHtml(s.answers[slotKey])}</code>
-      </div>`
-    ).join('');
-
-    html += `
-      <div class="guru-stage-card">
-        <div class="guru-stage-header">
-          <span class="guru-stage-num">${i}</span>
-          <span class="guru-stage-title">${s.title}</span>
-          <span class="guru-stage-tag">${s.tag}</span>
-        </div>
-        <div class="guru-section-label">Jawaban Benar</div>
-        ${answersHtml}
-        <div class="guru-section-label mt-2">Catatan Pedagogis</div>
-        <div class="guru-notes">${s.concept}</div>
-        <div class="guru-section-label mt-2">Output yang Diharapkan</div>
-        <pre class="guru-output">${escapeHtml(s.output)}</pre>
-      </div>
-    `;
-  }
-
-  /* Tambah kunci jawaban kuis */
-  html += `<div class="guru-stage-card">
-    <div class="guru-stage-header">
-      <span class="guru-stage-num" style="background:#7c3aed;">K</span>
-      <span class="guru-stage-title">Kuis Refleksi — Kunci Jawaban</span>
-    </div>`;
-  QUIZ_QUESTIONS.forEach((q, i) => {
-    html += `
-      <div class="guru-answer-row" style="flex-direction:column; gap:4px; margin-bottom:10px;">
-        <div style="font-weight:700; color:#1e293b;">Soal ${i+1}:</div>
-        <div style="color:#475569; font-size:14px;">${q.q}</div>
-        <div style="color:#16a34a; font-weight:700; font-size:14px;">
-          Jawaban: ${String.fromCharCode(65+q.correct)}. ${q.options[q.correct]}
-        </div>
-      </div>`;
-  });
-  html += `</div>`;
-
-  body.innerHTML = html;
-}
-
-/* ────────────────────────────────────────────────────────── */
 /*  UTILITIES                                                 */
 /* ────────────────────────────────────────────────────────── */
 function resetFeedbackOnly() {
@@ -1136,11 +1058,6 @@ function escapeHtml(str) {
     .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
     .replaceAll('"','&quot;').replaceAll("'",'&#039;');
 }
-
-/* ── Keyboard shortcut: Ctrl+Shift+G = Mode Guru ─────────── */
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'G') { e.preventDefault(); toggleGuruMode(); }
-});
 
 /* ══════════════════════════════════════════════════════════
    FITUR 1 – REFLEKSI INTERAKTIF

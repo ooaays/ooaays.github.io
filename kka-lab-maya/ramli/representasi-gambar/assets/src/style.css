@@ -13,6 +13,9 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ── Display ──────────────────────────────────────────────── */
 .hidden  { display: none !important; }
+.btn-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px; flex-shrink: 0; }
+.title-icon { width: 26px; height: 26px; display: inline-block; vertical-align: -4px; margin-right: 6px; flex-shrink: 0; }
+.feedback-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: text-bottom; margin-right: 3px; }
 .flex    { display: flex; }
 .grid    { display: grid; }
 .block   { display: block; }

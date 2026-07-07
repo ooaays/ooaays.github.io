@@ -198,6 +198,9 @@ body{
 .lab-tool-rose{ background:#e11d48; }
 .lab-tool-amber{ background:#d97706; }
 .lab-tool-blue{ background:#2563eb; }
+.btn-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 4px; flex-shrink: 0; }
+.title-icon { width: 26px; height: 26px; display: inline-block; vertical-align: -4px; margin-right: 6px; flex-shrink: 0; }
+.feedback-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: text-bottom; margin-right: 3px; }
 .lab-layout{ display:grid; grid-template-columns:330px 1fr; gap:24px; align-items:start; }
 .lab-right{ display:grid; gap:18px; }
 .ascii-table-wrap{ max-height:620px; overflow-y:auto; overflow-x:hidden; border-radius:18px; border:1px solid #e2e8f0; }

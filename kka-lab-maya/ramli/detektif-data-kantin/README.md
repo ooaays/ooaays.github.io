@@ -23,7 +23,6 @@ Tahap 5: Gabungkan — zip() (BARU)
 - Progress Bar visual
 - Kuis Refleksi: 5 soal kontekstual
 - Sertifikat: bisa dicetak
-- Mode Guru: Ctrl+Shift+G atau klik logo 5x
 - Kotak Konsep Kunci per tahap
 - Offline 100%
 

@@ -549,7 +549,7 @@ function showStageResult(ok){
       : 'Kamu boleh lanjut ke tahap berikutnya.';
     iconWrap.className = 'w-20 h-20 rounded-full flex items-center justify-center bg-emerald-100';
     iconText.className = 'text-4xl font-black text-emerald-600';
-    iconText.textContent = '✓';
+    iconText.innerHTML = '<img src="assets/img/icons/icon-check-emerald.svg" style="width:36px;height:36px;" alt="">';
   } else {
     title.textContent = 'Coba Lagi';
     message.textContent = failMessage(state.currentStage);
@@ -758,7 +758,7 @@ function simpanRefleksi() {
   }
   const btn = document.getElementById('simpanRefleksiBtn');
   if (btn) {
-    btn.textContent = '✅ Tersimpan!';
+    btn.textContent = 'Tersimpan!';
     btn.style.background = '#16a34a';
     setTimeout(() => {
       btn.textContent = 'Simpan Refleksi';
@@ -875,9 +875,9 @@ function checkTebak() {
   const res = document.getElementById('tebakResult');
   if (!res) return;
   if (correct === 25) {
-    res.innerHTML = '<span style="color:#16a34a;font-weight:bold">✅ Sempurna! Kamu berhasil membaca matrix dan merekonstruksi gambar dengan benar.</span>';
+    res.innerHTML = '<span style="color:#16a34a;font-weight:bold"><img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Sempurna! Kamu berhasil membaca matrix dan merekonstruksi gambar dengan benar.</span>';
   } else {
-    res.innerHTML = `<span style="color:#dc2626;font-weight:bold">❌ ${correct}/25 sel benar.</span> Sel <span style="background:#fbbf24;padding:1px 5px;border-radius:4px;font-weight:bold;">kuning</span> = piksel aktif yang terlewat.`;
+    res.innerHTML = `<span style="color:#dc2626;font-weight:bold"><img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">${correct}/25 sel benar.</span> Sel <span style="background:#fbbf24;padding:1px 5px;border-radius:4px;font-weight:bold;">kuning</span> = piksel aktif yang terlewat.`;
   }
   const btn = document.getElementById('tebakCheckBtn');
   if (btn) btn.disabled = true;
@@ -1035,9 +1035,9 @@ function checkDetektif() {
   const res = document.getElementById('detektifResult');
   if (!res) return;
   if (found === bugKeys.length && detektifSelected.length === bugKeys.length) {
-    res.innerHTML = '<span style="color:#16a34a;font-weight:bold">✅ Hebat! Kamu berhasil menemukan semua sel yang salah.</span>';
+    res.innerHTML = '<span style="color:#16a34a;font-weight:bold"><img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt="">Hebat! Kamu berhasil menemukan semua sel yang salah.</span>';
   } else {
-    res.innerHTML = `<span style="color:#dc2626;font-weight:bold">❌ Belum tepat.</span> Sel <span style="background:#22c55e;padding:1px 5px;border-radius:4px;font-weight:bold;color:white;">hijau</span> = posisi yang seharusnya diperbaiki.`;
+    res.innerHTML = `<span style="color:#dc2626;font-weight:bold"><img src="assets/img/icons/icon-check-err.svg" class="feedback-icon-sm" alt="">Belum tepat.</span> Sel <span style="background:#22c55e;padding:1px 5px;border-radius:4px;font-weight:bold;color:white;">hijau</span> = posisi yang seharusnya diperbaiki.`;
   }
 }
 
@@ -1195,7 +1195,7 @@ function startAnimasi() {
     if (!animRunning || i >= flat.length) {
       if (i >= flat.length) {
         const log = document.getElementById('animLog');
-        if (log) log.innerHTML = `✅ <b>Selesai!</b> Komputer membaca semua ${flat.length} sel. Ditemukan <b>${flat.filter(v=>v).length} piksel aktif</b>. Susunan posisi itulah yang membentuk gambar.`;
+        if (log) log.innerHTML = `<img src="assets/img/icons/icon-check-ok.svg" class="feedback-icon-sm" alt=""><b>Selesai!</b> Komputer membaca semua ${flat.length} sel. Ditemukan <b>${flat.filter(v=>v).length} piksel aktif</b>. Susunan posisi itulah yang membentuk gambar.`;
         if (btn) { btn.textContent = '↺ Ulangi Animasi'; btn.disabled = false; }
       }
       animRunning = false;
