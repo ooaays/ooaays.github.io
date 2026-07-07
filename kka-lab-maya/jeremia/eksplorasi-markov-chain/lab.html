@@ -136,10 +136,37 @@
             color: var(--a); font-size: 20px; font-weight: bold; position: sticky; bottom: 0; 
             box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 20; line-height: 1.5;
         }
+
+        /* Word Picker Section */
+        .word-picker-section { 
+            background: #f8f9fa; padding: 15px; border-radius: 10px; 
+            margin-bottom: 15px; border: 2px solid var(--s); display: none;
+        }
+        .word-picker-section.visible { display: block; animation: fadeInUp 0.5s; }
+        .word-picker-title { font-weight: bold; color: var(--p); margin-bottom: 10px; font-size: 13px; }
+        .word-picker-grid { 
+            display: flex; flex-wrap: wrap; gap: 8px; 
+            max-height: 150px; overflow-y: auto; padding: 10px;
+            background: white; border-radius: 8px; border: 1px solid #ddd;
+        }
+        .word-option { 
+            padding: 6px 12px; background: white; border: 2px solid #ddd; 
+            border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;
+            transition: all 0.2s; color: var(--p);
+        }
+        .word-option:hover { background: #f0f0f0; }
+        .word-option.selected { background: var(--s); color: white; border-color: var(--s); }
+        .selected-words-display { 
+            background: #fff3cd; padding: 8px 12px; border-radius: 6px; 
+            margin-top: 10px; font-size: 12px; font-weight: bold; color: #856404;
+        }
         
         @keyframes pop { from { scale: 0; } to { scale: 1; } }
         @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Modal Explain Styles */
+        #explainModal[style*="display: flex"] { display: flex !important; }
         
         /* Responsive adjust untuk layar kecil */
         @media (max-width: 900px) {
@@ -178,13 +205,11 @@
         <div class="view-dataset-bar">
             <button class="btn-view" onclick="inspect('pendidikan')">🔍 Data Edukasi</button>
             <button class="btn-view" onclick="inspect('kesehatan')">🔍 Data Kesehatan</button>
-            <button class="btn-view" onclick="inspect('otomotif')">🔍 Data Otomotif</button>
         </div>
 
         <div class="cards-shelf">
             <div class="flash-card" id="card-pendidikan" onclick="selectCard('pendidikan')"><i>🎓</i><b>Edukasi</b></div>
             <div class="flash-card" id="card-kesehatan" onclick="selectCard('kesehatan')"><i>🏥</i><b>Kesehatan</b></div>
-            <div class="flash-card" id="card-otomotif" onclick="selectCard('otomotif')"><i>🏎️</i><b>Otomotif</b></div>
         </div>
 
         <div class="wadah-latihan" id="wadahTarget">
@@ -198,24 +223,18 @@
             <div style="margin: 15px 0;">
                 <label style="font-size:12px; font-weight:bold;">Memori Mesin (N-Gram):</label>
                 <select id="orde" style="width:100%; padding:10px; border-radius:8px; margin-top:5px; border: 1px solid #ccc;">
-                    <option value="1">Orde 1 (Memori 1 Kata - Lebih Acak)</option>
-                    <option value="2" selected>Orde 2 (Memori 2 Kata - Lebih Logis)</option>
+                    <option value="1">Orde 1: Memori 1 Kata</option>
+                    <option value="2" selected>Orde 2: Memori 2 Kata</option>
                 </select>
+                <p style="font-size:11px; color:#7f8c8d; margin-top:8px;">💡 Orde 1 = Kurang bergantung konteks. Orde 2 = Lebih mengikuti pola bahasa.</p>
             </div>
             
             <button class="btn-process" onclick="doAnalyze()">2. Analisis Peta Probabilitas</button>
-            
-            <div class="slider-box">
-                <label style="font-size:12px; font-weight:bold; display:flex; justify-content:space-between;">
-                    <span>Suhu Kreativitas (Temperature):</span>
-                    <span id="tempVal" style="color:var(--a); font-size:14px;">1.0</span>
-                </label>
-                <input type="range" id="temp" min="0.1" max="2.0" step="0.1" value="1.0" style="width:100%; margin-top:10px;" oninput="document.getElementById('tempVal').innerText = this.value">
-                <div class="slider-labels">
-                    <span>Kaku (0.1)</span>
-                    <span>Normal (1.0)</span>
-                    <span>Kreatif (2.0)</span>
-                </div>
+
+            <div class="word-picker-section" id="wordPickerSection">
+                <div class="word-picker-title" id="wordPickerTitle">Pilih Kata Awal untuk Memulai Generasi Kalimat:</div>
+                <div class="word-picker-grid" id="wordPickerGrid"></div>
+                <div class="selected-words-display" id="selectedWordsDisplay" style="display:none;"></div>
             </div>
 
             <button class="btn-process" style="background:var(--s); color:#1e272e; font-size: 16px;" onclick="doGenerate()">3. Cetak Kalimat Prediksi</button>
@@ -236,6 +255,22 @@
     </div>
 </div>
 
+<div id="explainModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1001; align-items:center; justify-content:center;">
+    <div style="background:white; width:60%; padding:30px; border-radius:20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position:relative; max-height:80vh; overflow-y:auto;">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-weight:bold; font-size:24px; color:#ccc;" onclick="document.getElementById('explainModal').style.display='none'">×</span>
+        <h2 style="margin-top:0; color:#2c3e50;">❓ Mengapa Kata Ini Dipilih?</h2>
+        <div id="explainContent" style="font-size:16px; line-height:1.8; color:#2c3e50;">
+            <p><strong>🔤 Konteks sebelumnya:</strong> <span id="contextBefore" style="background:#f0f0f0; padding:8px 12px; border-radius:5px; font-family:monospace; font-weight:bold;"></span></p>
+            <p><strong>✅ Kata yang dipilih:</strong> <span id="wordSelected" style="color:#ff9f43; font-size:18px; font-weight:bold;"></span></p>
+            <p><strong>📊 Kemungkinan alternatif:</strong></p>
+            <div id="alternatives" style="background:#f8f9fa; padding:15px; border-radius:10px; border-left:4px solid #ff9f43;"></div>
+            <p style="font-size:14px; color:#7f8c8d; margin-top:20px; padding-top:15px; border-top:1px solid #eee;">
+                💡 <strong>Penjelasan:</strong> Mesin memilih kata berdasarkan <strong>frekuensi statistik</strong> dari dataset. Setiap kata yang muncul setelah konteks yang sama dihitung. Kata dengan frekuensi tertinggi memiliki probabilitas terpilih yang lebih besar.
+            </p>
+        </div>
+    </div>
+</div>
+
 <script>
 // Menampilkan speech bubble sejenak saat halaman dimuat
 setTimeout(() => {
@@ -246,17 +281,1059 @@ setTimeout(() => {
     }
 }, 1000);
 
-// Dataset Terintegrasi
-const dataSet = {
-    pendidikan: `siswa belajar matematika di kelas pagi bersama guru\nsiswa belajar sejarah di perpustakaan sekolah dengan teman\nsiswa belajar bahasa inggris di kelas pagi dengan semangat\nguru mengajar matematika dasar di sekolah setiap hari\nguru mengajar sejarah bangsa di kelas pagi ini\nperpustakaan sekolah memiliki buku pelajaran lengkap untuk siswa\nperpustakaan sekolah sangat sejuk dan nyaman untuk belajar\nujian semester sangat penting untuk kelulusan siswa kelas enam\nujian semester dilaksanakan di kelas pagi dengan tertib\nbuku pelajaran disimpan di laci meja kelas oleh siswa\nbuku pelajaran matematika sangat tebal dan sulit dibaca\nsiswa kelas enam rajin membaca di perpustakaan sekolah\nsiswa kelas enam belajar matematika di kelas pagi\nsiswa bermain di halaman sekolah saat istirahat siang\nsiswa bermain bola di halaman sekolah bersama teman\nguru menulis materi pelajaran di papan tulis kelas\nguru menulis soal ujian di papan tulis pagi ini\nkelas pagi sangat sejuk dan nyaman untuk belajar matematika\nkelas pagi dimulai saat bel sekolah berbunyi nyaring\nkepala sekolah memantau siswa belajar di kelas pagi\nguru menjelaskan materi fisika sederhana kepada siswa\nguru memberikan tugas rumah kepada siswa kelas tujuh\nsiswa mengerjakan tugas kelompok di ruang kelas\nsiswa membaca buku cerita di perpustakaan sekolah\nsiswa berdiskusi tentang pelajaran sejarah indonesia\nguru memeriksa hasil pekerjaan rumah siswa\nsiswa menulis rangkuman pelajaran di buku catatan\nsiswa mengangkat tangan untuk menjawab pertanyaan guru\nguru memberikan kuis singkat di kelas pagi\nkelas menjadi hening saat ujian berlangsung\nsiswa mempresentasikan hasil penelitian kecil di kelas\nsiswa belajar menggunakan komputer di laboratorium sekolah\nguru menjelaskan cara menggunakan aplikasi presentasi\nsiswa mengikuti kegiatan ekstrakurikuler robotik sekolah\nsiswa mengikuti lomba cerdas cermat antar kelas\nguru memberikan motivasi belajar kepada siswa\nsiswa meminjam buku pelajaran dari perpustakaan\nsiswa membaca artikel pendidikan di majalah sekolah\nkepala sekolah memberikan pengarahan kepada guru\nguru mengikuti rapat kurikulum di ruang guru\nsiswa berlatih pidato bahasa indonesia di kelas\nsiswa menulis esai tentang lingkungan sekolah\nguru menilai hasil ujian siswa dengan teliti\nsiswa belajar kelompok sebelum ujian matematika\nsiswa membuat poster pendidikan tentang kebersihan\nguru menjelaskan pentingnya disiplin belajar\nsiswa mengerjakan latihan soal matematika di kelas\nsiswa belajar menggunakan internet untuk mencari informasi\nguru membimbing siswa saat praktikum sains\nsiswa melakukan percobaan sederhana di laboratorium\nsiswa membersihkan ruang kelas bersama sama\nsiswa menyusun jadwal belajar di rumah\nguru memberikan penghargaan kepada siswa berprestasi\nsiswa membaca puisi di depan kelas\nsiswa menulis cerita pendek untuk tugas bahasa\nguru memberikan contoh soal di papan tulis\nsiswa belajar peta dunia pada pelajaran geografi\nsiswa memahami konsep energi pada pelajaran sains\nguru menjelaskan sejarah kemerdekaan indonesia\nsiswa menonton video pembelajaran di kelas\nsiswa mengikuti kegiatan pramuka di sekolah\nguru menyiapkan bahan ajar untuk kelas pagi\nsiswa mencatat hal penting dari penjelasan guru\nsiswa berdiskusi tentang solusi masalah lingkungan\nsiswa membaca buku pengetahuan umum di perpustakaan\nguru memberikan evaluasi pembelajaran kepada siswa\nsiswa belajar menggunakan alat ukur di laboratorium\nsiswa menghafal rumus matematika dasar\nsiswa membuat laporan praktikum sains\nsiswa mempresentasikan hasil diskusi kelompok\nguru menjelaskan materi baru dengan contoh sederhana\nsiswa menyimak cerita sejarah dari guru\nsiswa mengikuti ujian praktek komputer di sekolah\nguru mengawasi jalannya ujian di kelas\nsiswa belajar menghitung luas bangun datar\nsiswa belajar mengenal tata surya di kelas\nguru memberikan tugas membaca buku cerita\nsiswa mengikuti kegiatan literasi pagi di sekolah\nsiswa menulis jurnal harian tentang kegiatan belajar\nsiswa bertanya kepada guru tentang materi sulit\nguru menjelaskan kembali materi yang belum dipahami\nsiswa belajar menggunakan peta konsep pelajaran\nsiswa membuat rangkuman bab pelajaran sejarah\nsiswa berdiskusi tentang teknologi pendidikan\nguru memberikan contoh penggunaan bahasa yang baik\nsiswa mengikuti simulasi ujian nasional di sekolah\nsiswa membaca buku biografi tokoh pendidikan\nguru mengajak siswa berpikir kritis dalam diskusi\nsiswa belajar memahami grafik pada pelajaran matematika\nsiswa membuat karya tulis ilmiah sederhana\nsiswa mempelajari ekosistem pada pelajaran biologi\nguru memandu siswa melakukan pengamatan ilmiah\nsiswa mempersiapkan presentasi kelompok di kelas\nsiswa menyusun laporan hasil penelitian sederhana\nguru memberikan umpan balik pada tugas siswa\nsiswa belajar menulis surat resmi di kelas\nsiswa mengamati percobaan kimia sederhana\nguru memotivasi siswa untuk terus belajar\nsiswa belajar menghargai pendapat teman saat diskusi`,
-
-    kesehatan: `dokter spesialis periksa jantung pasien di rumah sakit besar\ndokter spesialis periksa paru paru pasien di klinik sehat\nperawat berikan obat resep kepada pasien gawat darurat\nperawat berikan suntikan vitamin kepada pasien di ruang inap\nrumah sakit melayani pasien gawat darurat setiap hari libur\nrumah sakit besar punya dokter spesialis handal dan ramah\nolahraga pagi menjaga imun tubuh agar tetap kuat selalu\nolahraga pagi sangat penting untuk kesehatan jantung pasien\nmakan sayur sehat setiap hari baik untuk jantung kita\nmakan sayur sehat sangat disarankan oleh dokter spesialis anak\ndokter spesialis bekerja di klinik besar kota jakarta\ndokter spesialis anak memeriksa kesehatan balita di klinik\npasien minum obat resep secara teratur pagi ini\npasien minum vitamin C untuk menjaga imun tubuh\nambulans membawa pasien gawat darurat ke rumah sakit besar\nambulans melaju cepat menuju rumah sakit di pusat kota\napoteker menyiapkan obat resep dari dokter spesialis jantung\napoteker menjelaskan cara minum obat kepada pasien gawat\nmenjaga pola makan sehat penting untuk mencegah penyakit jantung\nmenjaga kebersihan lingkungan rumah sakit adalah tugas perawat\ndokter memeriksa tekanan darah pasien di ruang periksa\nperawat memeriksa suhu tubuh pasien setiap pagi\npasien menjalani pemeriksaan laboratorium darah\ndokter memberikan saran pola hidup sehat kepada pasien\npasien melakukan terapi fisik untuk pemulihan otot\nrumah sakit menyediakan ruang perawatan intensif\npasien menjalani operasi kecil di ruang bedah\ndokter menjelaskan hasil pemeriksaan kesehatan kepada pasien\nperawat membantu pasien berjalan setelah operasi\npasien mengikuti program rehabilitasi kesehatan\npasien melakukan pemeriksaan mata di klinik optik\ndokter gigi memeriksa kesehatan gigi pasien\npasien membersihkan gigi dengan sikat setiap pagi\npasien mencuci tangan dengan sabun sebelum makan\ndokter menyarankan olahraga ringan setiap hari\npasien minum air putih untuk menjaga kesehatan tubuh\npasien makan buah segar untuk meningkatkan imun\nperawat mengganti perban luka pasien dengan hati hati\ndokter melakukan pemeriksaan kesehatan rutin\npasien menjalani pemeriksaan rontgen dada\ndokter memantau kondisi pasien di ruang perawatan\nperawat membantu pasien minum obat tepat waktu\npasien melakukan peregangan tubuh setiap pagi\ndokter memberi vaksin kepada anak anak di klinik\npasien menjaga pola tidur yang cukup setiap malam\ndokter memeriksa kadar gula darah pasien\npasien mengurangi makanan berlemak tinggi\npasien mengikuti program diet sehat dari dokter\npasien berolahraga ringan di taman rumah sakit\ndokter memeriksa kondisi paru paru pasien\npasien menjalani tes kesehatan sebelum bekerja\ndokter memeriksa denyut nadi pasien\npasien menghindari makanan cepat saji berlebihan\ndokter menjelaskan pentingnya menjaga kesehatan mental\npasien melakukan meditasi untuk mengurangi stres\npasien berjalan kaki setiap pagi untuk kebugaran\ndokter memeriksa kesehatan ibu hamil di klinik\npasien mengonsumsi vitamin sesuai anjuran dokter\nperawat menyiapkan alat medis di ruang operasi\ndokter melakukan pemeriksaan telinga pasien\npasien menjaga kebersihan tubuh setiap hari\ndokter memantau perkembangan kesehatan pasien\npasien menjalani konsultasi kesehatan di klinik\nperawat mencatat kondisi pasien di buku laporan\ndokter memberikan resep obat kepada pasien\npasien melakukan pemeriksaan kesehatan tahunan\npasien menjaga berat badan ideal\ndokter memberikan edukasi kesehatan kepada masyarakat\npasien mengikuti penyuluhan kesehatan di puskesmas\nperawat membantu dokter saat tindakan medis\npasien beristirahat cukup untuk memulihkan tubuh\ndokter memeriksa hasil tes laboratorium pasien\npasien menghindari rokok untuk menjaga paru paru\ndokter memeriksa kondisi kulit pasien\npasien minum susu untuk kesehatan tulang\npasien melakukan latihan pernapasan secara rutin\ndokter memantau kondisi pasien pasca operasi\nperawat memastikan pasien merasa nyaman di ruang rawat\ndokter memeriksa kesehatan anak balita\npasien mengonsumsi makanan bergizi seimbang\npasien melakukan senam pagi di taman kota\ndokter memberikan penyuluhan tentang gizi seimbang\npasien mengikuti pemeriksaan kesehatan gratis\nperawat membantu pasien lanjut usia berjalan\ndokter memeriksa kondisi jantung pasien secara rutin\npasien memeriksa kesehatan mata setiap tahun\npasien mengurangi konsumsi gula berlebih\ndokter menyarankan olahraga teratur untuk pasien\npasien menjaga kesehatan dengan pola hidup sehat`,
-
-    otomotif: `bengkel motor resmi melayani ganti oli mesin setiap hari\nbengkel motor kecil memperbaiki ban motor bocor di pinggir jalan\nmobil listrik sangat ramah lingkungan dan hemat energi baterai\nmobil listrik melaju sangat cepat di jalan tol baru\nmekanik ahli bengkel perbaiki mesin mobil balap rusak parah\nmekanik ahli bengkel resmi bekerja sangat teliti dan cepat\nbalap mobil di sirkuit sangat cepat dan berbahaya sekali\nbalap motor di sirkuit resmi ditonton banyak penggemar otomotif\nban motor bocor karena terkena paku di jalan raya\nban mobil balap harus diganti sebelum masuk ke sirkuit\nlampu sein berguna untuk belok kendaraan aman di jalan\nlampu depan mobil listrik sangat terang di malam hari\nmobil balap melaju sangat cepat di sirkuit internasional sentul\nmobil balap keluaran terbaru memiliki mesin sangat kuat\npengendara motor wajib memakai helm standar untuk keselamatan jalan\npengendara mobil sport memacu kendaraan sangat cepat di tol\noli mesin harus diganti secara rutin di bengkel resmi\noli mesin yang bagus membuat suara motor sangat halus\nsirkuit balap mobil ditutup sementara untuk perbaikan jalan aspal\nsirkuit balap motor dipenuhi penonton yang sangat antusias\nmekanik memeriksa kondisi rem mobil di bengkel\nmekanik mengganti kampas rem mobil yang sudah tipis\npengendara motor memeriksa tekanan ban sebelum perjalanan\nmobil keluarga melaju stabil di jalan tol\nmesin mobil menghasilkan tenaga besar untuk akselerasi\nmekanik memperbaiki sistem pendingin mesin mobil\nmobil baru memiliki teknologi keamanan canggih\npengendara mobil mematuhi rambu lalu lintas di jalan\nmekanik membersihkan filter udara mesin mobil\nmotor sport melaju cepat di jalan raya\npengendara motor berhenti saat lampu merah menyala\nmekanik memeriksa aki mobil di bengkel resmi\npengendara mobil menyalakan lampu sein sebelum belok\nmobil listrik mengisi daya di stasiun pengisian\nmekanik mengganti oli mesin motor secara rutin\npengendara motor menggunakan jaket pelindung saat berkendara\nmobil sedan melaju halus di jalan kota\nmekanik memperbaiki mesin motor yang rusak\npengendara mobil memarkir kendaraan di area parkir\nmobil balap diuji coba di sirkuit sebelum lomba\nmekanik memeriksa sistem suspensi mobil\nmotor matic populer digunakan di kota besar\npengendara motor berhati hati di jalan licin\nmobil pickup membawa barang ke pasar kota\nmekanik mengganti busi mesin motor lama\nmobil baru memiliki fitur pengereman otomatis\npengendara motor memeriksa lampu depan kendaraan\nmobil listrik tidak menghasilkan asap knalpot\nmekanik memeriksa sistem transmisi mobil\nmotor touring digunakan untuk perjalanan jauh\npengendara mobil menjaga jarak aman di jalan\nmobil sport memiliki desain aerodinamis modern\nmekanik membersihkan karburator motor lama\npengendara motor memakai sarung tangan pelindung\nmobil van digunakan untuk transportasi keluarga\nmekanik mengganti rantai motor yang aus\nmobil offroad melintasi jalan berbatu\npengendara mobil menyalakan lampu utama saat malam\nmekanik memeriksa sistem kemudi mobil\nmotor bebek irit bahan bakar untuk perjalanan harian\nmobil hatchback populer di kalangan anak muda\nmekanik memperbaiki sistem rem hidrolik mobil\npengendara motor berhenti di zebra cross\nmobil polisi melaju cepat menuju lokasi kejadian\nmekanik mengganti filter oli mesin mobil\npengendara mobil mematuhi batas kecepatan jalan\nmobil listrik menggunakan baterai berkapasitas besar\nmekanik memeriksa radiator mobil agar tidak panas\nmotor trail digunakan di medan pegunungan\npengendara mobil menjaga kondisi mesin kendaraan\nmobil SUV cocok untuk perjalanan keluarga jauh\nmekanik memperbaiki sistem knalpot mobil rusak\npengendara motor memeriksa kaca spion sebelum berkendara\nmobil balap diuji di lintasan sirkuit internasional\nmekanik memeriksa tekanan oli mesin kendaraan\npengendara mobil menyalakan wiper saat hujan\nmotor klasik dirawat oleh penggemar otomotif\nmobil hybrid menggabungkan mesin listrik dan bensin\nmekanik mengganti ban mobil yang aus\npengendara motor mematuhi aturan lalu lintas\nmobil baru dilengkapi sistem navigasi modern\nmekanik memeriksa sistem pengereman kendaraan\nmobil listrik bergerak sangat senyap di jalan\npengendara mobil berhenti saat lampu merah\nmotor sport memiliki mesin berkapasitas besar`
+// Dataset dari file eksternal
+let dataSet = {
+    pendidikan: "",
+    kesehatan: ""
 };
+
+// Load dataset dari file eksternal
+async function loadDatasets() {
+    try {
+        // Get directory path
+        const scriptPath = document.currentScript?.src || './lab.html';
+        const basePath = scriptPath.substring(0, scriptPath.lastIndexOf('/'));
+        
+        // Fetch pendidikan.txt
+        const pendidikanResponse = await fetch(basePath + '/pendidikan.txt');
+        if(pendidikanResponse.ok) {
+            dataSet.pendidikan = await pendidikanResponse.text();
+            console.log('✓ Pendidikan dataset loaded: ' + dataSet.pendidikan.split('\n').length + ' sentences');
+        } else {
+            console.warn('Could not load pendidikan.txt');
+        }
+        
+        // Fetch kesehatan.txt
+        const kesehatanResponse = await fetch(basePath + '/kesehatan.txt');
+        if(kesehatanResponse.ok) {
+            dataSet.kesehatan = await kesehatanResponse.text();
+            console.log('✓ Kesehatan dataset loaded: ' + dataSet.kesehatan.split('\n').length + ' sentences');
+        } else {
+            console.warn('Could not load kesehatan.txt');
+        }
+        
+        // Update UI to show data is ready
+        document.getElementById('placeholderText').innerHTML = '<p style="color: #1dd1a1; font-weight: bold;">✓ Data berhasil dimuat! Pilih kategori untuk memulai.</p>';
+    } catch(err) {
+        console.error('Error loading datasets:', err);
+        document.getElementById('placeholderText').innerHTML = '<p style="color: #ff6b6b;">Error loading datasets</p>';
+    }
+}
+
+// ORIGINAL Dataset Terintegrasi (fallback jika file eksternal gagal)
+const dataSetFallback = {
+    pendidikan: `siswa belajar matematika di kelas pagi bersama guru
+siswa belajar sejarah di perpustakaan sekolah dengan teman
+guru mengajar matematika dasar di sekolah setiap hari
+siswa belajar matematika di kelas pagi
+siswa belajar matematika di kelas siang
+siswa belajar matematika di kelas sore
+siswa belajar matematika di perpustakaan pagi
+siswa belajar matematika di perpustakaan siang
+siswa belajar matematika di perpustakaan sore
+siswa belajar matematika di laboratorium pagi
+siswa belajar matematika di laboratorium siang
+siswa belajar matematika di laboratorium sore
+siswa belajar matematika di aula pagi
+siswa belajar matematika di aula siang
+siswa belajar matematika di aula sore
+siswa mengajar matematika di kelas pagi
+siswa mengajar matematika di kelas siang
+siswa mengajar matematika di kelas sore
+siswa mengajar matematika di perpustakaan pagi
+siswa mengajar matematika di perpustakaan siang
+siswa mengajar matematika di perpustakaan sore
+siswa mengajar matematika di laboratorium pagi
+siswa mengajar matematika di laboratorium siang
+siswa mengajar matematika di laboratorium sore
+siswa mengajar matematika di aula pagi
+siswa mengajar matematika di aula siang
+siswa mengajar matematika di aula sore
+siswa menjelaskan matematika di kelas pagi
+siswa menjelaskan matematika di kelas siang
+siswa menjelaskan matematika di kelas sore
+siswa menjelaskan matematika di perpustakaan pagi
+siswa menjelaskan matematika di perpustakaan siang
+siswa menjelaskan matematika di perpustakaan sore
+siswa menjelaskan matematika di laboratorium pagi
+siswa menjelaskan matematika di laboratorium siang
+siswa menjelaskan matematika di laboratorium sore
+siswa menjelaskan matematika di aula pagi
+siswa menjelaskan matematika di aula siang
+siswa menjelaskan matematika di aula sore
+siswa mempelajari matematika di kelas pagi
+siswa mempelajari matematika di kelas siang
+siswa mempelajari matematika di kelas sore
+siswa mempelajari matematika di perpustakaan pagi
+siswa mempelajari matematika di perpustakaan siang
+siswa mempelajari matematika di perpustakaan sore
+siswa mempelajari matematika di laboratorium pagi
+siswa mempelajari matematika di laboratorium siang
+siswa mempelajari matematika di laboratorium sore
+siswa mempelajari matematika di aula pagi
+siswa mempelajari matematika di aula siang
+siswa mempelajari matematika di aula sore
+siswa mengerjakan matematika di kelas pagi
+siswa mengerjakan matematika di kelas siang
+siswa mengerjakan matematika di kelas sore
+siswa mengerjakan matematika di perpustakaan pagi
+siswa mengerjakan matematika di perpustakaan siang
+siswa mengerjakan matematika di perpustakaan sore
+siswa mengerjakan matematika di laboratorium pagi
+siswa mengerjakan matematika di laboratorium siang
+siswa mengerjakan matematika di laboratorium sore
+siswa mengerjakan matematika di aula pagi
+siswa mengerjakan matematika di aula siang
+siswa mengerjakan matematika di aula sore
+siswa belajar bahasa di kelas pagi
+siswa belajar bahasa di kelas siang
+siswa belajar bahasa di kelas sore
+siswa belajar bahasa di perpustakaan pagi
+siswa belajar bahasa di perpustakaan siang
+siswa belajar bahasa di perpustakaan sore
+siswa belajar bahasa di laboratorium pagi
+siswa belajar bahasa di laboratorium siang
+siswa belajar bahasa di laboratorium sore
+siswa belajar bahasa di aula pagi
+siswa belajar bahasa di aula siang
+siswa belajar bahasa di aula sore
+siswa mengajar bahasa di kelas pagi
+siswa mengajar bahasa di kelas siang
+siswa mengajar bahasa di kelas sore
+siswa mengajar bahasa di perpustakaan pagi
+siswa mengajar bahasa di perpustakaan siang
+siswa mengajar bahasa di perpustakaan sore
+siswa mengajar bahasa di laboratorium pagi
+siswa mengajar bahasa di laboratorium siang
+siswa mengajar bahasa di laboratorium sore
+siswa mengajar bahasa di aula pagi
+siswa mengajar bahasa di aula siang
+siswa mengajar bahasa di aula sore
+siswa menjelaskan bahasa di kelas pagi
+siswa menjelaskan bahasa di kelas siang
+siswa menjelaskan bahasa di kelas sore
+siswa menjelaskan bahasa di perpustakaan pagi
+siswa menjelaskan bahasa di perpustakaan siang
+siswa menjelaskan bahasa di perpustakaan sore
+siswa menjelaskan bahasa di laboratorium pagi
+siswa menjelaskan bahasa di laboratorium siang
+siswa menjelaskan bahasa di laboratorium sore
+siswa menjelaskan bahasa di aula pagi
+siswa menjelaskan bahasa di aula siang
+siswa menjelaskan bahasa di aula sore
+siswa mempelajari bahasa di kelas pagi
+siswa mempelajari bahasa di kelas siang
+siswa mempelajari bahasa di kelas sore
+siswa mempelajari bahasa di perpustakaan pagi
+siswa mempelajari bahasa di perpustakaan siang
+siswa mempelajari bahasa di perpustakaan sore
+siswa mempelajari bahasa di laboratorium pagi
+siswa mempelajari bahasa di laboratorium siang
+siswa mempelajari bahasa di laboratorium sore
+siswa mempelajari bahasa di aula pagi
+siswa mempelajari bahasa di aula siang
+siswa mempelajari bahasa di aula sore
+siswa mengerjakan bahasa di kelas pagi
+siswa mengerjakan bahasa di kelas siang
+siswa mengerjakan bahasa di kelas sore
+siswa mengerjakan bahasa di perpustakaan pagi
+siswa mengerjakan bahasa di perpustakaan siang
+siswa mengerjakan bahasa di perpustakaan sore
+siswa mengerjakan bahasa di laboratorium pagi
+siswa mengerjakan bahasa di laboratorium siang
+siswa mengerjakan bahasa di laboratorium sore
+siswa mengerjakan bahasa di aula pagi
+siswa mengerjakan bahasa di aula siang
+siswa mengerjakan bahasa di aula sore
+siswa belajar sejarah di kelas pagi
+siswa belajar sejarah di kelas siang
+siswa belajar sejarah di kelas sore
+siswa belajar sejarah di perpustakaan pagi
+siswa belajar sejarah di perpustakaan siang
+siswa belajar sejarah di perpustakaan sore
+siswa belajar sejarah di laboratorium pagi
+siswa belajar sejarah di laboratorium siang
+siswa belajar sejarah di laboratorium sore
+siswa belajar sejarah di aula pagi
+siswa belajar sejarah di aula siang
+siswa belajar sejarah di aula sore
+siswa mengajar sejarah di kelas pagi
+siswa mengajar sejarah di kelas siang
+siswa mengajar sejarah di kelas sore
+siswa mengajar sejarah di perpustakaan pagi
+siswa mengajar sejarah di perpustakaan siang
+siswa mengajar sejarah di perpustakaan sore
+siswa mengajar sejarah di laboratorium pagi
+siswa mengajar sejarah di laboratorium siang
+siswa mengajar sejarah di laboratorium sore
+siswa mengajar sejarah di aula pagi
+siswa mengajar sejarah di aula siang
+siswa mengajar sejarah di aula sore
+siswa menjelaskan sejarah di kelas pagi
+siswa menjelaskan sejarah di kelas siang
+siswa menjelaskan sejarah di kelas sore
+siswa menjelaskan sejarah di perpustakaan pagi
+siswa menjelaskan sejarah di perpustakaan siang
+siswa menjelaskan sejarah di perpustakaan sore
+siswa menjelaskan sejarah di laboratorium pagi
+siswa menjelaskan sejarah di laboratorium siang
+siswa menjelaskan sejarah di laboratorium sore
+siswa menjelaskan sejarah di aula pagi
+siswa menjelaskan sejarah di aula siang
+siswa menjelaskan sejarah di aula sore
+siswa mempelajari sejarah di kelas pagi
+siswa mempelajari sejarah di kelas siang
+siswa mempelajari sejarah di kelas sore
+siswa mempelajari sejarah di perpustakaan pagi
+siswa mempelajari sejarah di perpustakaan siang
+siswa mempelajari sejarah di perpustakaan sore
+siswa mempelajari sejarah di laboratorium pagi
+siswa mempelajari sejarah di laboratorium siang
+siswa mempelajari sejarah di laboratorium sore
+siswa mempelajari sejarah di aula pagi
+siswa mempelajari sejarah di aula siang
+siswa mempelajari sejarah di aula sore
+siswa mengerjakan sejarah di kelas pagi
+siswa mengerjakan sejarah di kelas siang
+siswa mengerjakan sejarah di kelas sore
+siswa mengerjakan sejarah di perpustakaan pagi
+siswa mengerjakan sejarah di perpustakaan siang
+siswa mengerjakan sejarah di perpustakaan sore
+siswa mengerjakan sejarah di laboratorium pagi
+siswa mengerjakan sejarah di laboratorium siang
+siswa mengerjakan sejarah di laboratorium sore
+siswa mengerjakan sejarah di aula pagi
+siswa mengerjakan sejarah di aula siang
+siswa mengerjakan sejarah di aula sore
+siswa belajar geografi di kelas pagi
+siswa belajar geografi di kelas siang
+siswa belajar geografi di kelas sore
+siswa belajar geografi di perpustakaan pagi
+siswa belajar geografi di perpustakaan siang
+siswa belajar geografi di perpustakaan sore
+siswa belajar geografi di laboratorium pagi
+siswa belajar geografi di laboratorium siang
+siswa belajar geografi di laboratorium sore
+siswa belajar geografi di aula pagi
+siswa belajar geografi di aula siang
+siswa belajar geografi di aula sore
+siswa mengajar geografi di kelas pagi
+siswa mengajar geografi di kelas siang
+siswa mengajar geografi di kelas sore
+siswa mengajar geografi di perpustakaan pagi
+siswa mengajar geografi di perpustakaan siang
+siswa mengajar geografi di perpustakaan sore
+siswa mengajar geografi di laboratorium pagi
+siswa mengajar geografi di laboratorium siang
+siswa mengajar geografi di laboratorium sore
+siswa mengajar geografi di aula pagi
+siswa mengajar geografi di aula siang
+siswa mengajar geografi di aula sore
+siswa menjelaskan geografi di kelas pagi
+siswa menjelaskan geografi di kelas siang
+siswa menjelaskan geografi di kelas sore
+siswa menjelaskan geografi di perpustakaan pagi
+siswa menjelaskan geografi di perpustakaan siang
+siswa menjelaskan geografi di perpustakaan sore
+siswa menjelaskan geografi di laboratorium pagi
+siswa menjelaskan geografi di laboratorium siang
+siswa menjelaskan geografi di laboratorium sore
+siswa menjelaskan geografi di aula pagi
+siswa menjelaskan geografi di aula siang
+siswa menjelaskan geografi di aula sore
+siswa mempelajari geografi di kelas pagi
+siswa mempelajari geografi di kelas siang
+siswa mempelajari geografi di kelas sore
+siswa mempelajari geografi di perpustakaan pagi
+siswa mempelajari geografi di perpustakaan siang
+siswa mempelajari geografi di perpustakaan sore
+siswa mempelajari geografi di laboratorium pagi
+siswa mempelajari geografi di laboratorium siang
+siswa mempelajari geografi di laboratorium sore
+siswa mempelajari geografi di aula pagi
+siswa mempelajari geografi di aula siang
+siswa mempelajari geografi di aula sore
+siswa mengerjakan geografi di kelas pagi
+siswa mengerjakan geografi di kelas siang
+siswa mengerjakan geografi di kelas sore
+siswa mengerjakan geografi di perpustakaan pagi
+siswa mengerjakan geografi di perpustakaan siang
+siswa mengerjakan geografi di perpustakaan sore
+siswa mengerjakan geografi di laboratorium pagi
+siswa mengerjakan geografi di laboratorium siang
+siswa mengerjakan geografi di laboratorium sore
+siswa mengerjakan geografi di aula pagi
+siswa mengerjakan geografi di aula siang
+siswa mengerjakan geografi di aula sore
+siswa belajar sains di kelas pagi
+siswa belajar sains di kelas siang
+siswa belajar sains di kelas sore
+siswa belajar sains di perpustakaan pagi
+siswa belajar sains di perpustakaan siang
+siswa belajar sains di perpustakaan sore
+siswa belajar sains di laboratorium pagi
+siswa belajar sains di laboratorium siang
+siswa belajar sains di laboratorium sore
+siswa belajar sains di aula pagi
+siswa belajar sains di aula siang
+siswa belajar sains di aula sore
+siswa mengajar sains di kelas pagi
+siswa mengajar sains di kelas siang
+siswa mengajar sains di kelas sore
+siswa mengajar sains di perpustakaan pagi
+siswa mengajar sains di perpustakaan siang
+siswa mengajar sains di perpustakaan sore
+siswa mengajar sains di laboratorium pagi
+siswa mengajar sains di laboratorium siang
+siswa mengajar sains di laboratorium sore
+siswa mengajar sains di aula pagi
+siswa mengajar sains di aula siang
+siswa mengajar sains di aula sore
+siswa menjelaskan sains di kelas pagi
+siswa menjelaskan sains di kelas siang
+siswa menjelaskan sains di kelas sore
+siswa menjelaskan sains di perpustakaan pagi
+siswa menjelaskan sains di perpustakaan siang
+siswa menjelaskan sains di perpustakaan sore
+siswa menjelaskan sains di laboratorium pagi
+siswa menjelaskan sains di laboratorium siang
+siswa menjelaskan sains di laboratorium sore
+siswa menjelaskan sains di aula pagi
+siswa menjelaskan sains di aula siang
+siswa menjelaskan sains di aula sore
+siswa mempelajari sains di kelas pagi
+siswa mempelajari sains di kelas siang
+siswa mempelajari sains di kelas sore
+siswa mempelajari sains di perpustakaan pagi
+siswa mempelajari sains di perpustakaan siang
+siswa mempelajari sains di perpustakaan sore
+siswa mempelajari sains di laboratorium pagi
+siswa mempelajari sains di laboratorium siang
+siswa mempelajari sains di laboratorium sore
+siswa mempelajari sains di aula pagi
+siswa mempelajari sains di aula siang
+siswa mempelajari sains di aula sore
+siswa mengerjakan sains di kelas pagi
+siswa mengerjakan sains di kelas siang
+siswa mengerjakan sains di kelas sore
+siswa mengerjakan sains di perpustakaan pagi
+siswa mengerjakan sains di perpustakaan siang
+siswa mengerjakan sains di perpustakaan sore
+siswa mengerjakan sains di laboratorium pagi
+siswa mengerjakan sains di laboratorium siang
+siswa mengerjakan sains di laboratorium sore
+siswa mengerjakan sains di aula pagi
+siswa mengerjakan sains di aula siang
+siswa mengerjakan sains di aula sore
+siswa belajar fisika di kelas pagi
+siswa belajar fisika di kelas siang
+siswa belajar fisika di kelas sore
+siswa belajar fisika di perpustakaan pagi
+siswa belajar fisika di perpustakaan siang
+siswa belajar fisika di perpustakaan sore
+siswa belajar fisika di laboratorium pagi
+siswa belajar fisika di laboratorium siang
+siswa belajar fisika di laboratorium sore
+siswa belajar fisika di aula pagi
+siswa belajar fisika di aula siang
+siswa belajar fisika di aula sore
+siswa mengajar fisika di kelas pagi
+siswa mengajar fisika di kelas siang
+siswa mengajar fisika di kelas sore
+siswa mengajar fisika di perpustakaan pagi
+siswa mengajar fisika di perpustakaan siang
+siswa mengajar fisika di perpustakaan sore
+siswa mengajar fisika di laboratorium pagi
+siswa mengajar fisika di laboratorium siang
+siswa mengajar fisika di laboratorium sore
+siswa mengajar fisika di aula pagi
+siswa mengajar fisika di aula siang
+siswa mengajar fisika di aula sore
+siswa menjelaskan fisika di kelas pagi
+siswa menjelaskan fisika di kelas siang
+siswa menjelaskan fisika di kelas sore
+siswa menjelaskan fisika di perpustakaan pagi
+siswa menjelaskan fisika di perpustakaan siang
+siswa menjelaskan fisika di perpustakaan sore
+siswa menjelaskan fisika di laboratorium pagi
+siswa menjelaskan fisika di laboratorium siang
+siswa menjelaskan fisika di laboratorium sore
+siswa menjelaskan fisika di aula pagi
+siswa menjelaskan fisika di aula siang
+siswa menjelaskan fisika di aula sore
+siswa mempelajari fisika di kelas pagi
+siswa mempelajari fisika di kelas siang
+siswa mempelajari fisika di kelas sore
+siswa mempelajari fisika di perpustakaan pagi
+siswa mempelajari fisika di perpustakaan siang
+siswa mempelajari fisika di perpustakaan sore
+siswa mempelajari fisika di laboratorium pagi
+siswa mempelajari fisika di laboratorium siang
+siswa mempelajari fisika di laboratorium sore
+siswa mempelajari fisika di aula pagi
+siswa mempelajari fisika di aula siang
+siswa mempelajari fisika di aula sore
+siswa mengerjakan fisika di kelas pagi
+siswa mengerjakan fisika di kelas siang
+siswa mengerjakan fisika di kelas sore
+siswa mengerjakan fisika di perpustakaan pagi
+siswa mengerjakan fisika di perpustakaan siang
+siswa mengerjakan fisika di perpustakaan sore
+siswa mengerjakan fisika di laboratorium pagi
+siswa mengerjakan fisika di laboratorium siang
+siswa mengerjakan fisika di laboratorium sore
+siswa mengerjakan fisika di aula pagi
+siswa mengerjakan fisika di aula siang
+siswa mengerjakan fisika di aula sore
+siswa belajar kimia di kelas pagi
+siswa belajar kimia di kelas siang
+siswa belajar kimia di kelas sore
+siswa belajar kimia di perpustakaan pagi
+siswa belajar kimia di perpustakaan siang
+siswa belajar kimia di perpustakaan sore
+siswa belajar kimia di laboratorium pagi
+siswa belajar kimia di laboratorium siang
+siswa belajar kimia di laboratorium sore
+siswa belajar kimia di aula pagi
+siswa belajar kimia di aula siang
+siswa belajar kimia di aula sore
+siswa mengajar kimia di kelas pagi
+siswa mengajar kimia di kelas siang
+siswa mengajar kimia di kelas sore
+siswa mengajar kimia di perpustakaan pagi
+siswa mengajar kimia di perpustakaan siang
+siswa mengajar kimia di perpustakaan sore
+siswa mengajar kimia di laboratorium pagi
+siswa mengajar kimia di laboratorium siang
+siswa mengajar kimia di laboratorium sore
+siswa mengajar kimia di aula pagi
+siswa mengajar kimia di aula siang
+siswa mengajar kimia di aula sore
+siswa menjelaskan kimia di kelas pagi
+siswa menjelaskan kimia di kelas siang
+siswa menjelaskan kimia di kelas sore
+siswa menjelaskan kimia di perpustakaan pagi
+siswa menjelaskan kimia di perpustakaan siang
+siswa menjelaskan kimia di perpustakaan sore
+siswa menjelaskan kimia di laboratorium pagi
+siswa menjelaskan kimia di laboratorium siang
+siswa menjelaskan kimia di laboratorium sore
+siswa menjelaskan kimia di aula pagi
+siswa menjelaskan kimia di aula siang
+siswa menjelaskan kimia di aula sore
+siswa mempelajari kimia di kelas pagi
+siswa mempelajari kimia di kelas siang
+siswa mempelajari kimia di kelas sore
+siswa mempelajari kimia di perpustakaan pagi
+siswa mempelajari kimia di perpustakaan siang
+siswa mempelajari kimia di perpustakaan sore
+siswa mempelajari kimia di laboratorium pagi
+siswa mempelajari kimia di laboratorium siang
+siswa mempelajari kimia di laboratorium sore
+siswa mempelajari kimia di aula pagi
+siswa mempelajari kimia di aula siang
+siswa mempelajari kimia di aula sore
+siswa mengerjakan kimia di kelas pagi
+siswa mengerjakan kimia di kelas siang
+siswa mengerjakan kimia di kelas sore
+siswa mengerjakan kimia di perpustakaan pagi
+siswa mengerjakan kimia di perpustakaan siang
+siswa mengerjakan kimia di perpustakaan sore
+siswa mengerjakan kimia di laboratorium pagi
+siswa mengerjakan kimia di laboratorium siang
+siswa mengerjakan kimia di laboratorium sore
+siswa mengerjakan kimia di aula pagi
+siswa mengerjakan kimia di aula siang
+siswa mengerjakan kimia di aula sore
+siswa belajar biologi di kelas pagi
+siswa belajar biologi di kelas siang
+siswa belajar biologi di kelas sore
+siswa belajar biologi di perpustakaan pagi
+siswa belajar biologi di perpustakaan siang
+siswa belajar biologi di perpustakaan sore
+siswa belajar biologi di laboratorium pagi
+siswa belajar biologi di laboratorium siang
+siswa belajar biologi di laboratorium sore
+siswa belajar biologi di aula pagi
+siswa belajar biologi di aula siang
+siswa belajar biologi di aula sore
+siswa mengajar biologi di kelas pagi
+siswa mengajar biologi di kelas siang
+siswa mengajar biologi di kelas sore
+siswa mengajar biologi di perpustakaan pagi
+siswa mengajar biologi di perpustakaan siang
+siswa mengajar biologi di perpustakaan sore
+siswa mengajar biologi di laboratorium pagi
+siswa mengajar biologi di laboratorium siang
+siswa mengajar biologi di laboratorium sore
+siswa mengajar biologi di aula pagi
+siswa mengajar biologi di aula siang
+siswa mengajar biologi di aula sore
+siswa menjelaskan biologi di kelas pagi
+siswa menjelaskan biologi di kelas siang
+siswa menjelaskan biologi di kelas sore
+siswa menjelaskan biologi di perpustakaan pagi
+siswa menjelaskan biologi di perpustakaan siang
+siswa menjelaskan biologi di perpustakaan sore
+siswa menjelaskan biologi di laboratorium pagi
+siswa menjelaskan biologi di laboratorium siang
+siswa menjelaskan biologi di laboratorium sore
+siswa menjelaskan biologi di aula pagi
+siswa menjelaskan biologi di aula siang
+siswa menjelaskan biologi di aula sore
+siswa mempelajari biologi di kelas pagi
+siswa mempelajari biologi di kelas siang
+siswa mempelajari biologi di kelas sore
+siswa mempelajari biologi di perpustakaan pagi
+siswa mempelajari biologi di perpustakaan siang
+siswa mempelajari biologi di perpustakaan sore
+siswa mempelajari biologi di laboratorium pagi
+siswa mempelajari biologi di laboratorium siang
+siswa mempelajari biologi di laboratorium sore
+siswa mempelajari biologi di aula pagi
+siswa mempelajari biologi di aula siang
+siswa mempelajari biologi di aula sore
+siswa mengerjakan biologi di kelas pagi
+siswa mengerjakan biologi di kelas siang
+siswa mengerjakan biologi di kelas sore
+siswa mengerjakan biologi di perpustakaan pagi
+siswa mengerjakan biologi di perpustakaan siang
+siswa mengerjakan biologi di perpustakaan sore
+siswa mengerjakan biologi di laboratorium pagi
+siswa mengerjakan biologi di laboratorium siang
+siswa mengerjakan biologi di laboratorium sore
+siswa mengerjakan biologi di aula pagi
+siswa mengerjakan biologi di aula siang
+siswa mengerjakan biologi di aula sore
+siswa belajar olahraga di kelas pagi
+siswa belajar olahraga di kelas siang
+siswa belajar olahraga di kelas sore
+siswa belajar olahraga di perpustakaan pagi
+siswa belajar olahraga di perpustakaan siang
+siswa belajar olahraga di perpustakaan sore
+siswa belajar olahraga di laboratorium pagi
+siswa belajar olahraga di laboratorium siang
+siswa belajar olahraga di laboratorium sore
+siswa belajar olahraga di aula pagi
+siswa belajar olahraga di aula siang
+siswa belajar olahraga di aula sore
+siswa mengajar olahraga di kelas pagi
+siswa mengajar olahraga di kelas siang
+siswa mengajar olahraga di kelas sore
+siswa mengajar olahraga di perpustakaan pagi
+siswa mengajar olahraga di perpustakaan siang`,
+    kesehatan: `dokter periksa jantung pasien di rumah sakit
+dokter periksa jantung pasien di klinik
+dokter periksa jantung pasien di puskesmas
+dokter periksa jantung pasien di laboratorium
+dokter periksa jantung pasien di apotek
+dokter periksa paru pasien di rumah sakit
+dokter periksa paru pasien di klinik
+dokter periksa paru pasien di puskesmas
+dokter periksa paru pasien di laboratorium
+dokter periksa paru pasien di apotek
+dokter periksa gigi pasien di rumah sakit
+dokter periksa gigi pasien di klinik
+dokter periksa gigi pasien di puskesmas
+dokter periksa gigi pasien di laboratorium
+dokter periksa gigi pasien di apotek
+dokter periksa mata pasien di rumah sakit
+dokter periksa mata pasien di klinik
+dokter periksa mata pasien di puskesmas
+dokter periksa mata pasien di laboratorium
+dokter periksa mata pasien di apotek
+dokter periksa telinga pasien di rumah sakit
+dokter periksa telinga pasien di klinik
+dokter periksa telinga pasien di puskesmas
+dokter periksa telinga pasien di laboratorium
+dokter periksa telinga pasien di apotek
+dokter periksa tulang pasien di rumah sakit
+dokter periksa tulang pasien di klinik
+dokter periksa tulang pasien di puskesmas
+dokter periksa tulang pasien di laboratorium
+dokter periksa tulang pasien di apotek
+dokter terapi jantung pasien di rumah sakit
+dokter terapi jantung pasien di klinik
+dokter terapi jantung pasien di puskesmas
+dokter terapi jantung pasien di laboratorium
+dokter terapi jantung pasien di apotek
+dokter terapi paru pasien di rumah sakit
+dokter terapi paru pasien di klinik
+dokter terapi paru pasien di puskesmas
+dokter terapi paru pasien di laboratorium
+dokter terapi paru pasien di apotek
+dokter terapi gigi pasien di rumah sakit
+dokter terapi gigi pasien di klinik
+dokter terapi gigi pasien di puskesmas
+dokter terapi gigi pasien di laboratorium
+dokter terapi gigi pasien di apotek
+dokter terapi mata pasien di rumah sakit
+dokter terapi mata pasien di klinik
+dokter terapi mata pasien di puskesmas
+dokter terapi mata pasien di laboratorium
+dokter terapi mata pasien di apotek
+dokter terapi telinga pasien di rumah sakit
+dokter terapi telinga pasien di klinik
+dokter terapi telinga pasien di puskesmas
+dokter terapi telinga pasien di laboratorium
+dokter terapi telinga pasien di apotek
+dokter terapi tulang pasien di rumah sakit
+dokter terapi tulang pasien di klinik
+dokter terapi tulang pasien di puskesmas
+dokter terapi tulang pasien di laboratorium
+dokter terapi tulang pasien di apotek
+dokter vaksin jantung pasien di rumah sakit
+dokter vaksin jantung pasien di klinik
+dokter vaksin jantung pasien di puskesmas
+dokter vaksin jantung pasien di laboratorium
+dokter vaksin jantung pasien di apotek
+dokter vaksin paru pasien di rumah sakit
+dokter vaksin paru pasien di klinik
+dokter vaksin paru pasien di puskesmas
+dokter vaksin paru pasien di laboratorium
+dokter vaksin paru pasien di apotek
+dokter vaksin gigi pasien di rumah sakit
+dokter vaksin gigi pasien di klinik
+dokter vaksin gigi pasien di puskesmas
+dokter vaksin gigi pasien di laboratorium
+dokter vaksin gigi pasien di apotek
+dokter vaksin mata pasien di rumah sakit
+dokter vaksin mata pasien di klinik
+dokter vaksin mata pasien di puskesmas
+dokter vaksin mata pasien di laboratorium
+dokter vaksin mata pasien di apotek
+dokter vaksin telinga pasien di rumah sakit
+dokter vaksin telinga pasien di klinik
+dokter vaksin telinga pasien di puskesmas
+dokter vaksin telinga pasien di laboratorium
+dokter vaksin telinga pasien di apotek
+dokter vaksin tulang pasien di rumah sakit
+dokter vaksin tulang pasien di klinik
+dokter vaksin tulang pasien di puskesmas
+dokter vaksin tulang pasien di laboratorium
+dokter vaksin tulang pasien di apotek
+dokter rehab jantung pasien di rumah sakit
+dokter rehab jantung pasien di klinik
+dokter rehab jantung pasien di puskesmas
+dokter rehab jantung pasien di laboratorium
+dokter rehab jantung pasien di apotek
+dokter rehab paru pasien di rumah sakit
+dokter rehab paru pasien di klinik
+dokter rehab paru pasien di puskesmas
+dokter rehab paru pasien di laboratorium
+dokter rehab paru pasien di apotek
+dokter rehab gigi pasien di rumah sakit
+dokter rehab gigi pasien di klinik
+dokter rehab gigi pasien di puskesmas
+dokter rehab gigi pasien di laboratorium
+dokter rehab gigi pasien di apotek
+dokter rehab mata pasien di rumah sakit
+dokter rehab mata pasien di klinik
+dokter rehab mata pasien di puskesmas
+dokter rehab mata pasien di laboratorium
+dokter rehab mata pasien di apotek
+dokter rehab telinga pasien di rumah sakit
+dokter rehab telinga pasien di klinik
+dokter rehab telinga pasien di puskesmas
+dokter rehab telinga pasien di laboratorium
+dokter rehab telinga pasien di apotek
+dokter rehab tulang pasien di rumah sakit
+dokter rehab tulang pasien di klinik
+dokter rehab tulang pasien di puskesmas
+dokter rehab tulang pasien di laboratorium
+dokter rehab tulang pasien di apotek
+dokter operasi jantung pasien di rumah sakit
+dokter operasi jantung pasien di klinik
+dokter operasi jantung pasien di puskesmas
+dokter operasi jantung pasien di laboratorium
+dokter operasi jantung pasien di apotek
+dokter operasi paru pasien di rumah sakit
+dokter operasi paru pasien di klinik
+dokter operasi paru pasien di puskesmas
+dokter operasi paru pasien di laboratorium
+dokter operasi paru pasien di apotek
+dokter operasi gigi pasien di rumah sakit
+dokter operasi gigi pasien di klinik
+dokter operasi gigi pasien di puskesmas
+dokter operasi gigi pasien di laboratorium
+dokter operasi gigi pasien di apotek
+dokter operasi mata pasien di rumah sakit
+dokter operasi mata pasien di klinik
+dokter operasi mata pasien di puskesmas
+dokter operasi mata pasien di laboratorium
+dokter operasi mata pasien di apotek
+dokter operasi telinga pasien di rumah sakit
+dokter operasi telinga pasien di klinik
+dokter operasi telinga pasien di puskesmas
+dokter operasi telinga pasien di laboratorium
+dokter operasi telinga pasien di apotek
+dokter operasi tulang pasien di rumah sakit
+dokter operasi tulang pasien di klinik
+dokter operasi tulang pasien di puskesmas
+dokter operasi tulang pasien di laboratorium
+dokter operasi tulang pasien di apotek
+dokter konsultasi jantung pasien di rumah sakit
+dokter konsultasi jantung pasien di klinik
+dokter konsultasi jantung pasien di puskesmas
+dokter konsultasi jantung pasien di laboratorium
+dokter konsultasi jantung pasien di apotek
+dokter konsultasi paru pasien di rumah sakit
+dokter konsultasi paru pasien di klinik
+dokter konsultasi paru pasien di puskesmas
+dokter konsultasi paru pasien di laboratorium
+dokter konsultasi paru pasien di apotek
+dokter konsultasi gigi pasien di rumah sakit
+dokter konsultasi gigi pasien di klinik
+dokter konsultasi gigi pasien di puskesmas
+dokter konsultasi gigi pasien di laboratorium
+dokter konsultasi gigi pasien di apotek
+dokter konsultasi mata pasien di rumah sakit
+dokter konsultasi mata pasien di klinik
+dokter konsultasi mata pasien di puskesmas
+dokter konsultasi mata pasien di laboratorium
+dokter konsultasi mata pasien di apotek
+dokter konsultasi telinga pasien di rumah sakit
+dokter konsultasi telinga pasien di klinik
+dokter konsultasi telinga pasien di puskesmas
+dokter konsultasi telinga pasien di laboratorium
+dokter konsultasi telinga pasien di apotek
+dokter konsultasi tulang pasien di rumah sakit
+dokter konsultasi tulang pasien di klinik
+dokter konsultasi tulang pasien di puskesmas
+dokter konsultasi tulang pasien di laboratorium
+dokter konsultasi tulang pasien di apotek
+dokter monitor jantung pasien di rumah sakit
+dokter monitor jantung pasien di klinik
+dokter monitor jantung pasien di puskesmas
+dokter monitor jantung pasien di laboratorium
+dokter monitor jantung pasien di apotek
+dokter monitor paru pasien di rumah sakit
+dokter monitor paru pasien di klinik
+dokter monitor paru pasien di puskesmas
+dokter monitor paru pasien di laboratorium
+dokter monitor paru pasien di apotek
+dokter monitor gigi pasien di rumah sakit
+dokter monitor gigi pasien di klinik
+dokter monitor gigi pasien di puskesmas
+dokter monitor gigi pasien di laboratorium
+dokter monitor gigi pasien di apotek
+dokter monitor mata pasien di rumah sakit
+dokter monitor mata pasien di klinik
+dokter monitor mata pasien di puskesmas
+dokter monitor mata pasien di laboratorium
+dokter monitor mata pasien di apotek
+dokter monitor telinga pasien di rumah sakit
+dokter monitor telinga pasien di klinik
+dokter monitor telinga pasien di puskesmas
+dokter monitor telinga pasien di laboratorium
+dokter monitor telinga pasien di apotek
+dokter monitor tulang pasien di rumah sakit
+dokter monitor tulang pasien di klinik
+dokter monitor tulang pasien di puskesmas
+dokter monitor tulang pasien di laboratorium
+dokter monitor tulang pasien di apotek
+dokter diagnosis jantung pasien di rumah sakit
+dokter diagnosis jantung pasien di klinik
+dokter diagnosis jantung pasien di puskesmas
+dokter diagnosis jantung pasien di laboratorium
+dokter diagnosis jantung pasien di apotek
+dokter diagnosis paru pasien di rumah sakit
+dokter diagnosis paru pasien di klinik
+dokter diagnosis paru pasien di puskesmas
+dokter diagnosis paru pasien di laboratorium
+dokter diagnosis paru pasien di apotek
+dokter diagnosis gigi pasien di rumah sakit
+dokter diagnosis gigi pasien di klinik
+dokter diagnosis gigi pasien di puskesmas
+dokter diagnosis gigi pasien di laboratorium
+dokter diagnosis gigi pasien di apotek
+dokter diagnosis mata pasien di rumah sakit
+dokter diagnosis mata pasien di klinik
+dokter diagnosis mata pasien di puskesmas
+dokter diagnosis mata pasien di laboratorium
+dokter diagnosis mata pasien di apotek
+dokter diagnosis telinga pasien di rumah sakit
+dokter diagnosis telinga pasien di klinik
+dokter diagnosis telinga pasien di puskesmas
+dokter diagnosis telinga pasien di laboratorium
+dokter diagnosis telinga pasien di apotek
+dokter diagnosis tulang pasien di rumah sakit
+dokter diagnosis tulang pasien di klinik
+dokter diagnosis tulang pasien di puskesmas
+dokter diagnosis tulang pasien di laboratorium
+dokter diagnosis tulang pasien di apotek
+dokter spesialis periksa jantung pasien di rumah sakit
+dokter spesialis periksa jantung pasien di klinik
+dokter spesialis periksa jantung pasien di puskesmas
+dokter spesialis periksa jantung pasien di laboratorium
+dokter spesialis periksa jantung pasien di apotek
+dokter spesialis periksa paru pasien di rumah sakit
+dokter spesialis periksa paru pasien di klinik
+dokter spesialis periksa paru pasien di puskesmas
+dokter spesialis periksa paru pasien di laboratorium
+dokter spesialis periksa paru pasien di apotek
+dokter spesialis periksa gigi pasien di rumah sakit
+dokter spesialis periksa gigi pasien di klinik
+dokter spesialis periksa gigi pasien di puskesmas
+dokter spesialis periksa gigi pasien di laboratorium
+dokter spesialis periksa gigi pasien di apotek
+dokter spesialis periksa mata pasien di rumah sakit
+dokter spesialis periksa mata pasien di klinik
+dokter spesialis periksa mata pasien di puskesmas
+dokter spesialis periksa mata pasien di laboratorium
+dokter spesialis periksa mata pasien di apotek
+dokter spesialis periksa telinga pasien di rumah sakit
+dokter spesialis periksa telinga pasien di klinik
+dokter spesialis periksa telinga pasien di puskesmas
+dokter spesialis periksa telinga pasien di laboratorium
+dokter spesialis periksa telinga pasien di apotek
+dokter spesialis periksa tulang pasien di rumah sakit
+dokter spesialis periksa tulang pasien di klinik
+dokter spesialis periksa tulang pasien di puskesmas
+dokter spesialis periksa tulang pasien di laboratorium
+dokter spesialis periksa tulang pasien di apotek
+dokter spesialis terapi jantung pasien di rumah sakit
+dokter spesialis terapi jantung pasien di klinik
+dokter spesialis terapi jantung pasien di puskesmas
+dokter spesialis terapi jantung pasien di laboratorium
+dokter spesialis terapi jantung pasien di apotek
+dokter spesialis terapi paru pasien di rumah sakit
+dokter spesialis terapi paru pasien di klinik
+dokter spesialis terapi paru pasien di puskesmas
+dokter spesialis terapi paru pasien di laboratorium
+dokter spesialis terapi paru pasien di apotek
+dokter spesialis terapi gigi pasien di rumah sakit
+dokter spesialis terapi gigi pasien di klinik
+dokter spesialis terapi gigi pasien di puskesmas
+dokter spesialis terapi gigi pasien di laboratorium
+dokter spesialis terapi gigi pasien di apotek
+dokter spesialis terapi mata pasien di rumah sakit
+dokter spesialis terapi mata pasien di klinik
+dokter spesialis terapi mata pasien di puskesmas
+dokter spesialis terapi mata pasien di laboratorium
+dokter spesialis terapi mata pasien di apotek
+dokter spesialis terapi telinga pasien di rumah sakit
+dokter spesialis terapi telinga pasien di klinik
+dokter spesialis terapi telinga pasien di puskesmas
+dokter spesialis terapi telinga pasien di laboratorium
+dokter spesialis terapi telinga pasien di apotek
+dokter spesialis terapi tulang pasien di rumah sakit
+dokter spesialis terapi tulang pasien di klinik
+dokter spesialis terapi tulang pasien di puskesmas
+dokter spesialis terapi tulang pasien di laboratorium
+dokter spesialis terapi tulang pasien di apotek
+dokter spesialis vaksin jantung pasien di rumah sakit
+dokter spesialis vaksin jantung pasien di klinik
+dokter spesialis vaksin jantung pasien di puskesmas
+dokter spesialis vaksin jantung pasien di laboratorium
+dokter spesialis vaksin jantung pasien di apotek
+dokter spesialis vaksin paru pasien di rumah sakit
+dokter spesialis vaksin paru pasien di klinik
+dokter spesialis vaksin paru pasien di puskesmas
+dokter spesialis vaksin paru pasien di laboratorium
+dokter spesialis vaksin paru pasien di apotek
+dokter spesialis vaksin gigi pasien di rumah sakit
+dokter spesialis vaksin gigi pasien di klinik
+dokter spesialis vaksin gigi pasien di puskesmas
+dokter spesialis vaksin gigi pasien di laboratorium
+dokter spesialis vaksin gigi pasien di apotek
+dokter spesialis vaksin mata pasien di rumah sakit
+dokter spesialis vaksin mata pasien di klinik
+dokter spesialis vaksin mata pasien di puskesmas
+dokter spesialis vaksin mata pasien di laboratorium
+dokter spesialis vaksin mata pasien di apotek
+dokter spesialis vaksin telinga pasien di rumah sakit
+dokter spesialis vaksin telinga pasien di klinik
+dokter spesialis vaksin telinga pasien di puskesmas
+dokter spesialis vaksin telinga pasien di laboratorium
+dokter spesialis vaksin telinga pasien di apotek
+dokter spesialis vaksin tulang pasien di rumah sakit
+dokter spesialis vaksin tulang pasien di klinik
+dokter spesialis vaksin tulang pasien di puskesmas
+dokter spesialis vaksin tulang pasien di laboratorium
+dokter spesialis vaksin tulang pasien di apotek
+dokter spesialis rehab jantung pasien di rumah sakit
+dokter spesialis rehab jantung pasien di klinik
+dokter spesialis rehab jantung pasien di puskesmas
+dokter spesialis rehab jantung pasien di laboratorium
+dokter spesialis rehab jantung pasien di apotek
+dokter spesialis rehab paru pasien di rumah sakit
+dokter spesialis rehab paru pasien di klinik
+dokter spesialis rehab paru pasien di puskesmas
+dokter spesialis rehab paru pasien di laboratorium
+dokter spesialis rehab paru pasien di apotek
+dokter spesialis rehab gigi pasien di rumah sakit
+dokter spesialis rehab gigi pasien di klinik
+dokter spesialis rehab gigi pasien di puskesmas
+dokter spesialis rehab gigi pasien di laboratorium
+dokter spesialis rehab gigi pasien di apotek
+dokter spesialis rehab mata pasien di rumah sakit
+dokter spesialis rehab mata pasien di klinik
+dokter spesialis rehab mata pasien di puskesmas
+dokter spesialis rehab mata pasien di laboratorium
+dokter spesialis rehab mata pasien di apotek
+dokter spesialis rehab telinga pasien di rumah sakit
+dokter spesialis rehab telinga pasien di klinik
+dokter spesialis rehab telinga pasien di puskesmas
+dokter spesialis rehab telinga pasien di laboratorium
+dokter spesialis rehab telinga pasien di apotek
+dokter spesialis rehab tulang pasien di rumah sakit
+dokter spesialis rehab tulang pasien di klinik
+dokter spesialis rehab tulang pasien di puskesmas
+dokter spesialis rehab tulang pasien di laboratorium
+dokter spesialis rehab tulang pasien di apotek
+dokter spesialis operasi jantung pasien di rumah sakit
+dokter spesialis operasi jantung pasien di klinik
+dokter spesialis operasi jantung pasien di puskesmas
+dokter spesialis operasi jantung pasien di laboratorium
+dokter spesialis operasi jantung pasien di apotek
+dokter spesialis operasi paru pasien di rumah sakit
+dokter spesialis operasi paru pasien di klinik
+dokter spesialis operasi paru pasien di puskesmas
+dokter spesialis operasi paru pasien di laboratorium
+dokter spesialis operasi paru pasien di apotek
+dokter spesialis operasi gigi pasien di rumah sakit
+dokter spesialis operasi gigi pasien di klinik
+dokter spesialis operasi gigi pasien di puskesmas
+dokter spesialis operasi gigi pasien di laboratorium
+dokter spesialis operasi gigi pasien di apotek
+dokter spesialis operasi mata pasien di rumah sakit
+dokter spesialis operasi mata pasien di klinik
+dokter spesialis operasi mata pasien di puskesmas
+dokter spesialis operasi mata pasien di laboratorium
+dokter spesialis operasi mata pasien di apotek
+dokter spesialis operasi telinga pasien di rumah sakit
+dokter spesialis operasi telinga pasien di klinik
+dokter spesialis operasi telinga pasien di puskesmas
+dokter spesialis operasi telinga pasien di laboratorium
+dokter spesialis operasi telinga pasien di apotek
+dokter spesialis operasi tulang pasien di rumah sakit
+dokter spesialis operasi tulang pasien di klinik
+dokter spesialis operasi tulang pasien di puskesmas
+dokter spesialis operasi tulang pasien di laboratorium
+dokter spesialis operasi tulang pasien di apotek
+dokter spesialis konsultasi jantung pasien di rumah sakit
+dokter spesialis konsultasi jantung pasien di klinik
+dokter spesialis konsultasi jantung pasien di puskesmas
+dokter spesialis konsultasi jantung pasien di laboratorium
+dokter spesialis konsultasi jantung pasien di apotek
+dokter spesialis konsultasi paru pasien di rumah sakit
+dokter spesialis konsultasi paru pasien di klinik
+dokter spesialis konsultasi paru pasien di puskesmas
+dokter spesialis konsultasi paru pasien di laboratorium
+dokter spesialis konsultasi paru pasien di apotek
+dokter spesialis konsultasi gigi pasien di rumah sakit
+dokter spesialis konsultasi gigi pasien di klinik
+dokter spesialis konsultasi gigi pasien di puskesmas
+dokter spesialis konsultasi gigi pasien di laboratorium
+dokter spesialis konsultasi gigi pasien di apotek
+dokter spesialis konsultasi mata pasien di rumah sakit
+dokter spesialis konsultasi mata pasien di klinik
+dokter spesialis konsultasi mata pasien di puskesmas
+dokter spesialis konsultasi mata pasien di laboratorium
+dokter spesialis konsultasi mata pasien di apotek
+dokter spesialis konsultasi telinga pasien di rumah sakit
+dokter spesialis konsultasi telinga pasien di klinik
+dokter spesialis konsultasi telinga pasien di puskesmas
+dokter spesialis konsultasi telinga pasien di laboratorium
+dokter spesialis konsultasi telinga pasien di apotek
+dokter spesialis konsultasi tulang pasien di rumah sakit
+dokter spesialis konsultasi tulang pasien di klinik
+dokter spesialis konsultasi tulang pasien di puskesmas
+dokter spesialis konsultasi tulang pasien di laboratorium
+dokter spesialis konsultasi tulang pasien di apotek
+dokter spesialis monitor jantung pasien di rumah sakit
+dokter spesialis monitor jantung pasien di klinik
+dokter spesialis monitor jantung pasien di puskesmas
+dokter spesialis monitor jantung pasien di laboratorium
+dokter spesialis monitor jantung pasien di apotek
+dokter spesialis monitor paru pasien di rumah sakit
+dokter spesialis monitor paru pasien di klinik
+dokter spesialis monitor paru pasien di puskesmas
+dokter spesialis monitor paru pasien di laboratorium
+dokter spesialis monitor paru pasien di apotek
+dokter spesialis monitor gigi pasien di rumah sakit
+dokter spesialis monitor gigi pasien di klinik
+dokter spesialis monitor gigi pasien di puskesmas
+dokter spesialis monitor gigi pasien di laboratorium
+dokter spesialis monitor gigi pasien di apotek
+dokter spesialis monitor mata pasien di rumah sakit
+dokter spesialis monitor mata pasien di klinik
+dokter spesialis monitor mata pasien di puskesmas
+dokter spesialis monitor mata pasien di laboratorium
+dokter spesialis monitor mata pasien di apotek
+dokter spesialis monitor telinga pasien di rumah sakit
+dokter spesialis monitor telinga pasien di klinik
+dokter spesialis monitor telinga pasien di puskesmas
+dokter spesialis monitor telinga pasien di laboratorium
+dokter spesialis monitor telinga pasien di apotek
+dokter spesialis monitor tulang pasien di rumah sakit
+dokter spesialis monitor tulang pasien di klinik
+dokter spesialis monitor tulang pasien di puskesmas
+dokter spesialis monitor tulang pasien di laboratorium
+dokter spesialis monitor tulang pasien di apotek
+dokter spesialis diagnosis jantung pasien di rumah sakit
+dokter spesialis diagnosis jantung pasien di klinik
+dokter spesialis diagnosis jantung pasien di puskesmas
+dokter spesialis diagnosis jantung pasien di laboratorium
+dokter spesialis diagnosis jantung pasien di apotek
+dokter spesialis diagnosis paru pasien di rumah sakit
+dokter spesialis diagnosis paru pasien di klinik
+dokter spesialis diagnosis paru pasien di puskesmas
+dokter spesialis diagnosis paru pasien di laboratorium
+dokter spesialis diagnosis paru pasien di apotek
+dokter spesialis diagnosis gigi pasien di rumah sakit
+dokter spesialis diagnosis gigi pasien di klinik
+dokter spesialis diagnosis gigi pasien di puskesmas
+dokter spesialis diagnosis gigi pasien di laboratorium
+dokter spesialis diagnosis gigi pasien di apotek
+dokter spesialis diagnosis mata pasien di rumah sakit
+dokter spesialis diagnosis mata pasien di klinik
+dokter spesialis diagnosis mata pasien di puskesmas
+dokter spesialis diagnosis mata pasien di laboratorium
+dokter spesialis diagnosis mata pasien di apotek
+dokter spesialis diagnosis telinga pasien di rumah sakit
+dokter spesialis diagnosis telinga pasien di klinik
+dokter spesialis diagnosis telinga pasien di puskesmas
+dokter spesialis diagnosis telinga pasien di laboratorium
+dokter spesialis diagnosis telinga pasien di apotek
+dokter spesialis diagnosis tulang pasien di rumah sakit
+dokter spesialis diagnosis tulang pasien di klinik
+dokter spesialis diagnosis tulang pasien di puskesmas
+dokter spesialis diagnosis tulang pasien di laboratorium
+dokter spesialis diagnosis tulang pasien di apotek
+perawat periksa jantung pasien di rumah sakit
+perawat periksa jantung pasien di klinik
+perawat periksa jantung pasien di puskesmas
+perawat periksa jantung pasien di laboratorium
+perawat periksa jantung pasien di apotek
+perawat periksa paru pasien di rumah sakit
+perawat periksa paru pasien di klinik
+perawat periksa paru pasien di puskesmas
+perawat periksa paru pasien di laboratorium
+perawat periksa paru pasien di apotek
+perawat periksa gigi pasien di rumah sakit
+perawat periksa gigi pasien di klinik
+perawat periksa gigi pasien di puskesmas
+perawat periksa gigi pasien di laboratorium
+perawat periksa gigi pasien di apotek
+perawat periksa mata pasien di rumah sakit
+perawat periksa mata pasien di klinik
+perawat periksa mata pasien di puskesmas
+perawat periksa mata pasien di laboratorium
+perawat periksa mata pasien di apotek`
+};
+
+// Use fallback data if fetch fails
+if(!dataSet.pendidikan) dataSet = dataSetFallback;
+
+// Initialize page with dataset loading
+window.addEventListener('DOMContentLoaded', loadDatasets);
 
 let activeCat = "";
 let brainMap = {};
+let allSubjects = [];  // Menyimpan daftar subjek unik
+let selectedStartingWords = [];  // Menyimpan 1 subjek yang dipilih
 
 function inspect(cat) {
     document.getElementById('modalTitle').innerText = "Dataset: " + cat.toUpperCase();
@@ -269,11 +1346,27 @@ function selectCard(cat) {
     setTimeout(() => {
         document.getElementById('card-' + cat).classList.add('in-wadah');
         activeCat = cat;
+        selectedStartingWords = [];
+        document.getElementById('wordPickerSection').classList.remove('visible');
         document.getElementById('placeholderText').style.display = 'none';
         document.getElementById('controls').classList.add('visible');
         document.getElementById('monTitle').innerText = "Bahan Baku: " + cat.toUpperCase();
         document.getElementById('monContent').innerHTML = "<p style='color:var(--s)'>[READY] Data berhasil dimuat ke memori sementara.</p>";
     }, 100);
+}
+
+function tokenizeForNgram(line) {
+    const tokens = line
+        .split(/\s+/)
+        .map(token => token.trim())
+        .filter(Boolean)
+        .map(token => {
+            if (/^[.,;:!?]+$/.test(token)) return ".";
+            return token.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
+        })
+        .filter(Boolean);
+
+    return tokens.filter(token => token !== ".").concat(".");
 }
 
 async function doTokenize() {
@@ -283,7 +1376,7 @@ async function doTokenize() {
     
     let rawData = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
     for(let line of rawData) {
-        let words = line.split(" ");
+        let words = tokenizeForNgram(line).filter(w => w !== ".");
         for(let w of words) {
             let p = document.createElement('span');
             p.className = 'token-pill';
@@ -301,10 +1394,30 @@ async function doAnalyze() {
     const orde = parseInt(document.getElementById('orde').value);
     mon.innerHTML = `<h4>Membangun N-Gram Orde ${orde}...</h4>`;
     brainMap = {};
+    allSubjects = [];
+    selectedStartingWords = [];
 
     let lines = dataSet[activeCat].split('\n').filter(l => l.trim() !== "");
+    let uniqueStarters = new Set();
+    
     lines.forEach(line => {
-        let words = line.split(" ").concat(".");
+        let words = tokenizeForNgram(line);
+        
+        // Extract starters based on orde
+        let contentWords = words.filter(word => word !== ".");
+        if(orde === 1) {
+            // Orde 1: extract subject (first word)
+            if(contentWords.length > 0) {
+                uniqueStarters.add(contentWords[0]);
+            }
+        } else if(orde === 2) {
+            // Orde 2: extract 2-gram (first two words)
+            if(contentWords.length >= 2) {
+                uniqueStarters.add(contentWords[0] + " " + contentWords[1]);
+            }
+        }
+        
+        // Build n-gram map
         for(let j=0; j <= words.length - (orde + 1); j++) {
             let key = words.slice(j, j+orde).join(" ");
             let next = words[j+orde];
@@ -313,21 +1426,97 @@ async function doAnalyze() {
         }
     });
     
+    // Store unique starters
+    allSubjects = Array.from(uniqueStarters).sort();
+    
     mon.innerHTML += "<p style='color:var(--s)'>[DONE] Peta probabilitas terbentuk!</p>";
+    
+    // Show word picker
+    showWordPicker(orde);
+}
+
+function showWordPicker(orde) {
+    const picker = document.getElementById('wordPickerSection');
+    const grid = document.getElementById('wordPickerGrid');
+    const title = document.getElementById('wordPickerTitle');
+    
+    // Clear previous state
+    selectedStartingWords = [];
+    grid.innerHTML = '';
+    
+    // Set title based on orde
+    if(orde === 1) {
+        title.innerText = `Pilih 1 Subjek Awal untuk Memulai Generasi Kalimat:`;
+    } else if(orde === 2) {
+        title.innerText = `Pilih 1 Konteks (2 Kata) Awal untuk Memulai Generasi Kalimat:`;
+    }
+    
+    // Create option buttons
+    allSubjects.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'word-option';
+        btn.innerText = item;
+        btn.onclick = () => toggleWordSelection(btn, item, orde);
+        grid.appendChild(btn);
+    });
+    
+    // Show picker section
+    picker.classList.add('visible');
+}
+
+function toggleWordSelection(btn, subject, orde) {
+    // Deselect semua tombol lainnya dulu (hanya 1 pilihan)
+    document.querySelectorAll('.word-option.selected').forEach(b => {
+        if(b !== btn) b.classList.remove('selected');
+    });
+    
+    if(btn.classList.contains('selected')) {
+        // Deselect
+        btn.classList.remove('selected');
+        selectedStartingWords = [];
+    } else {
+        // Select this subject
+        btn.classList.add('selected');
+        selectedStartingWords = [subject];
+    }
+    
+    // Update display
+    updateSelectedWordsDisplay(orde);
+}
+
+function updateSelectedWordsDisplay(orde) {
+    const display = document.getElementById('selectedWordsDisplay');
+    
+    if(selectedStartingWords.length > 0) {
+        display.style.display = 'block';
+        if(orde === 1) {
+            display.innerText = `✓ Subjek Terpilih: ${selectedStartingWords[0]} (1/1)`;
+        } else if(orde === 2) {
+            display.innerText = `✓ Konteks Terpilih: ${selectedStartingWords[0]} (1/1)`;
+        }
+    } else {
+        display.style.display = 'none';
+    }
 }
 
 async function doGenerate() {
     const mon = document.getElementById('monContent');
-    const temp = parseFloat(document.getElementById('temp').value);
     const orde = parseInt(document.getElementById('orde').value);
     
     if (Object.keys(brainMap).length === 0) { alert("Analisis data dulu!"); return; }
-
-    mon.innerHTML = `<h4 style="color:#feca57">Audit Probabilitas (Suhu: ${temp}):</h4><div id='logsArea' style='padding-bottom:100px;'></div><div class='current-sentence-box'>Output: <br><span id='dynSentence' style="color:white; font-weight:normal;"></span></div>`;    
     
-    let keys = Object.keys(brainMap);
-    let current = keys[Math.floor(Math.random() * keys.length)];
+    // Check if user selected a subject
+    if(selectedStartingWords.length !== 1) {
+        alert(`Pilih 1 subjek awal terlebih dahulu!`);
+        return;
+    }
+
+    mon.innerHTML = `<h4 style="color:#feca57">Audit Probabilitas & Pilihan Kata (Mulai dari Subjek: <b>${selectedStartingWords[0]}</b>):</h4><div id='logsArea' style='padding-bottom:120px;'></div><div class='current-sentence-box'>Output: <br><span id='dynSentence' style="color:white; font-weight:normal;"></span></div>`;    
+    
+    // Use selected starting words
+    let current = selectedStartingWords[0];
     let sentence = current;
+    let lastChoice = null;
     document.getElementById('dynSentence').innerText = sentence;
 
     for(let i=0; i<25; i++) {
@@ -336,26 +1525,35 @@ async function doGenerate() {
         let candidates = brainMap[current];
         let words = Object.keys(candidates);
         
-        // --- Logika Temperature Sampling ---
-        let adjustedWeights = words.map(w => Math.pow(candidates[w], 1/temp));
-        let totalAdjusted = adjustedWeights.reduce((a,b) => a+b, 0);
+        // --- Pilihan Probabilitas Standard (Temperature = 1.0) ---
+        let weights = words.map(w => candidates[w]);
+        let totalWeight = weights.reduce((a,b) => a+b, 0);
         
-        let r = Math.random() * totalAdjusted;
+        let r = Math.random() * totalWeight;
         let nextWord = words[0], runSum = 0;
         for(let j=0; j<words.length; j++) {
-            runSum += adjustedWeights[j];
+            runSum += weights[j];
             if(r <= runSum) { nextWord = words[j]; break; }
         }
+        
+        // Store choice for modal
+        lastChoice = { context: current, chosen: nextWord, candidates: words, weights: weights, total: totalWeight };
         
         // Render Audit Log
         let audit = document.createElement('div');
         audit.className = 'audit-box';
-        let html = `<div style="color:#aaa; font-size:11px;">Konteks: [${current}] &rarr; <b>${nextWord}</b></div>`;
+        let choiceId = 'choice_' + i;
+        let html = `<div style="color:#aaa; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>Konteks: [${current}] &rarr; <b>${nextWord}</b></span>
+                        <button onclick="showExplanationById('${choiceId}')" style="background:#ff9f43; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:bold; color:white;">❓ Mengapa?</button>
+                    </div>`;
         words.forEach((w, idx) => {
-            let p = ((adjustedWeights[idx]/totalAdjusted)*100).toFixed(1);
+            let p = ((weights[idx]/totalWeight)*100).toFixed(1);
             html += `<div class="prob-row"><div style="width:70px;">${w}</div><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${p}%; background:${w===nextWord?'var(--a)':'var(--s)'}"></div></div><div>${p}%</div></div>`;
         });
         audit.innerHTML = html;
+        audit.id = choiceId;
+        audit.dataset.choice = JSON.stringify(lastChoice);
         document.getElementById('logsArea').appendChild(audit);
         
         if(nextWord === ".") break;
@@ -365,6 +1563,36 @@ async function doGenerate() {
         mon.parentElement.scrollTop = mon.parentElement.scrollHeight;
         await new Promise(r => setTimeout(r, 600));
     }
+}
+
+function showExplanationById(choiceId) {
+    const elem = document.getElementById(choiceId);
+    const choice = JSON.parse(elem.dataset.choice);
+    showExplanation(choice);
+}
+
+function showExplanation(choice) {
+    document.getElementById('contextBefore').innerText = choice.context;
+    document.getElementById('wordSelected').innerText = choice.chosen;
+    
+    let altHtml = '';
+    choice.candidates.forEach((w, idx) => {
+        if(w !== choice.chosen) {
+            let p = ((choice.weights[idx]/choice.total)*100).toFixed(1);
+            altHtml += `<div style="margin:8px 0; padding:8px; background:white; border-radius:5px; border-left:3px solid #999;">
+                <strong>${w}</strong>: ${p}% (${choice.weights[idx]} kemunculan)
+            </div>`;
+        }
+    });
+    
+    let p_chosen = ((choice.weights[choice.candidates.indexOf(choice.chosen)]/choice.total)*100).toFixed(1);
+    altHtml = `<div style="margin:8px 0; padding:10px; background:#e8f5e9; border-radius:5px; border-left:4px solid #1dd1a1; font-weight:bold;">
+        <strong>${choice.chosen}</strong> (DIPILIH): ${p_chosen}% (${choice.weights[choice.candidates.indexOf(choice.chosen)]} kemunculan)
+    </div>` + altHtml;
+    
+    document.getElementById('alternatives').innerHTML = altHtml;
+    const modal = document.getElementById('explainModal');
+    modal.style.display = 'flex';
 }
 </script>
 
