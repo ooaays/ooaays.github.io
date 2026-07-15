@@ -90,14 +90,14 @@
             <div class="menu-btn-label" style="background:#06b6d4;">Mulai Percobaan</div>
           </button>
 
-          <!-- 4. Biodata Pengembang -->
+          <!-- 4. Profil Pengembang -->
           <button onclick="openBioModal()" class="menu-btn">
             <div class="menu-btn-icon" style="background:#65a30d;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <div class="menu-btn-label" style="background:#84cc16;">Biodata Pengembang</div>
+            <div class="menu-btn-label" style="background:#84cc16;">Profil Pengembang</div>
           </button>
 
         </div><!-- /hero-buttons -->
@@ -648,122 +648,57 @@ Klik kotak kosong, pilih komponen kode, lalu tekan Jalankan Kode.</div>
   <div id="bioModal" class="modal-backdrop">
     <div class="modal-card">
       <div class="shrink-0 mb-6">
-        <h2 class="text-4xl font-black text-lime-700 text-center">Biodata Pengembang</h2>
+        <h2 class="text-4xl font-black text-lime-700 text-center">Profil Pengembang</h2>
       </div>
 
       <div class="flex-1 overflow-y-auto pr-1 pb-4">
 
-        <!-- Slide 1: Pengembang Materi + Media -->
+                <!-- Slide 1: Penulis Naskah + Pengembang Media -->
         <div class="bio-slide">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <!-- Pengembang Materi -->
             <div class="bg-lime-50 p-6 rounded-3xl border-t-8 border-lime-500 flex flex-col items-center shadow-md">
-              <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner overflow-hidden">
-                <img src="assets/img/pengembang-materi.jpg"
-                     alt="Foto Pengembang Materi"
-                     class="w-full h-full object-cover">
-              </div>
-              <h3 class="text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">
-                Pengembang Materi
-              </h3>
+              
+              <h3 class="text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">Penulis Naskah</h3>
               <div class="w-full space-y-4 text-lg text-slate-700">
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span>
-                  <span class="font-semibold text-slate-900">Ramli Jainal Muttaqin, S.Pd.</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span>
-                  <span class="font-semibold text-slate-900">SMP Labschool Jakarta</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span>
-                  <span class="font-semibold text-slate-900">ramlimuttaqin42@guru.smp.belajar.id</span>
-                </p>
+                <p class="font-semibold text-slate-900">Dr. Noris Rahmatullah, S.T., M.T. (Direktorat SMP)</p>
+                <p class="font-semibold text-slate-900">Johan Winarni, S.P., M.Pd. (Direktorat SMP)</p>
+                <p class="font-semibold text-slate-900">Rindhy Anthika Nadya, S.Kom. (Direktorat SMP)</p>
               </div>
             </div>
-
-            <!-- Pengembang Media -->
             <div class="bg-teal-50 p-6 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
-              <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner overflow-hidden">
-                <img src="assets/img/pengembang-materi.jpg"
-                     alt="Foto Pengembang Media"
-                     class="w-full h-full object-cover">
-              </div>
-              <h3 class="text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">
-                Pengembang Media
-              </h3>
+              
+              <h3 class="text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Pengembang Media</h3>
               <div class="w-full space-y-4 text-lg text-slate-700">
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Nama</span>
-                  <span class="font-semibold text-slate-900">Ramli Jainal Muttaqin, S.Pd.</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Instansi</span>
-                  <span class="font-semibold text-slate-900">SMP Labschool Jakarta</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Email</span>
-                  <span class="font-semibold text-slate-900">ramlimuttaqin42@guru.smp.belajar.id</span>
-                </p>
+                <p class="font-semibold text-slate-900">Kunto Imbar Nursetyo, M.Pd. (Universitas Negeri Jakarta)</p>
+                <p class="font-semibold text-slate-900">Rizki Fadillah, S.Kom., M.T. (Universitas Negeri Jakarta)</p>
+                <p class="font-semibold text-slate-900">Muhammad Rizky Ramadhan, S.Kom., M.T. (Universitas Negeri Jakarta)</p>
               </div>
             </div>
-
           </div>
-        </div><!-- /bio-slide 1 -->
+        </div>
 
-        <!-- Slide 2: Penanggung Jawab + Penyunting -->
+        <!-- Slide 2: Penanggung Jawab + Penyunting + Reviewer -->
         <div class="bio-slide hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <!-- Penanggung Jawab -->
-            <div class="bg-lime-50 p-6 rounded-3xl border-t-8 border-lime-500 flex flex-col items-center shadow-md">
-              <div class="w-28 h-28 bg-lime-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                <img src="assets/img/kemendikdasmen.webp"
-                     alt="Logo Kemendikdasmen"
-                     class="w-16 h-16 object-contain">
-              </div>
-              <h3 class="text-2xl font-bold text-lime-900 mb-6 text-center border-b-2 border-lime-200 pb-2 w-full">
-                Penanggung Jawab
-              </h3>
+            <div class="bg-cyan-50 p-6 rounded-3xl border-t-8 border-cyan-500 flex flex-col items-center shadow-md">
+              
+              <h3 class="text-2xl font-bold text-cyan-900 mb-6 text-center border-b-2 border-cyan-200 pb-2 w-full">Reviewer</h3>
               <div class="w-full space-y-4 text-lg text-slate-700">
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Direktur SMP</span>
-                  <span class="font-semibold text-slate-900">Maulani Mega Hapsari, S.IP, M.A.</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Kasubag Tata Usaha Direktorat SMP</span>
-                  <span class="font-semibold text-slate-900">Roelly Herdyanto, S.E., M.Si.</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="text-lime-700 font-bold text-sm uppercase tracking-wider">Pejabat Pembuat Komitmen</span>
-                  <span class="font-semibold text-slate-900">Cepy Lukman Rusdiana, S.Kom., M.Si.</span>
-                </p>
+                <p class="font-semibold text-slate-900">ZE. Ferdi Fauzan Putra, M.Pd.T. (Universitas Negeri Jakarta)</p>
+                <p class="font-semibold text-slate-900">Bambang Satrio, S.Pd., M.Kom. (Universitas Negeri Jakarta)</p>
               </div>
             </div>
-
-            <!-- Penyunting -->
             <div class="bg-teal-50 p-6 rounded-3xl border-t-8 border-teal-500 flex flex-col items-center shadow-md">
-              <div class="w-28 h-28 bg-teal-200 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-inner">
-                <img src="assets/img/kemendikdasmen.webp"
-                     alt="Logo Kemendikdasmen"
-                     class="w-16 h-16 object-contain">
-              </div>
-              <h3 class="text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">
-                Penyunting
-              </h3>
+              
+              <h3 class="text-2xl font-bold text-teal-900 mb-6 text-center border-b-2 border-teal-200 pb-2 w-full">Penulis Naskah dan Pengembang Media</h3>
               <div class="w-full space-y-4 text-lg text-slate-700">
-                <p class="flex flex-col">
-                  <span class="font-semibold text-slate-900">Sri Sumarni Styati, S.Pd., M.A.</span>
-                </p>
-                <p class="flex flex-col">
-                  <span class="font-semibold text-slate-900">Iswadi</span>
-                </p>
+                <p class="font-semibold text-slate-900">Syahidah Humairoh, S.Pd. (SMP Negeri 126 Jakarta)</p>
+                <p class="font-semibold text-slate-900">Ramli Jainal Muttaqin, S.Pd. (SMP Labschool Rawamangun)</p>
+                <p class="font-semibold text-slate-900">Jeremia Reinnatal, S.Pd. (SMP Negeri 150 Jakarta)</p>
               </div>
             </div>
-
           </div>
-        </div><!-- /bio-slide 2 -->
+        </div>
 
       </div><!-- /overflow -->
 
