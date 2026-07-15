@@ -62,22 +62,17 @@ body {
 }
 
 .read-check {
+    display: none;
+    line-height: 0;
+    margin-left: 0.5rem;
+}
+.read-check.visible {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 26px;
-    min-height: 26px;
-    padding: 0 6px;
-    border-radius: 9999px;
-    background: #22c55e;
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.read-check.visible {
-    opacity: 1;
-    transform: scale(1);
+.read-check svg {
+    width: 1.2rem;
+    height: 1.2rem;
 }
+

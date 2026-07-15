@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Virtual Instruksi untuk Roborumdik</title>
+    <title>Eksperimen NLP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/src/style.css">
     <script src="assets/src/script.js" defer></script>
@@ -46,6 +46,8 @@ Language Processing (NLP)
         </div>
 
         <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+            
+
             <button onclick="openCPModal()" class="flex w-full h-20 md:h-24 rounded-[20px] overflow-hidden shadow-[0_8px_0_rgba(0,0,0,0.25)] active:shadow-[0_0px_0_rgba(0,0,0,0.25)] active:translate-y-[8px] transition-all duration-150 cursor-pointer border-none p-0 text-left">
                 <div class="w-20 md:w-28 bg-[#404040] flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
@@ -54,7 +56,7 @@ Language Processing (NLP)
                 </div>
                 <div class="flex-1 bg-[#9c27b0] flex items-center justify-center px-2 gap-2">
                     <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Tujuan Praktikum</span>
-                    <span id="check-tujuan" class="read-check hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span id="check-tujuan" class="read-check hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><circle cx="12" cy="12" r="11" fill="#10b981" stroke="none"/><polyline points="20 6 9 17 4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
                 </div>
             </button>
 
@@ -66,7 +68,7 @@ Language Processing (NLP)
                 </div>
                 <div class="flex-1 bg-[#ff5722] flex items-center justify-center px-2 gap-2">
                     <span class="text-white text-lg md:text-xl font-semibold tracking-wide uppercase text-center leading-tight">Cara Penggunaan</span>
-                    <span id="check-cara" class="read-check hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span id="check-cara" class="read-check hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;"><circle cx="12" cy="12" r="11" fill="#10b981" stroke="none"/><polyline points="20 6 9 17 4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
                 </div>
             </button>
 
@@ -128,6 +130,7 @@ Language Processing (NLP)
             
             <div class="shrink-0 mb-4">
                 <h2 class="text-3xl md:text-4xl font-black text-[#ff5722] text-center mb-4">Cara Penggunaan</h2>
+                <p class="text-center text-slate-600 mb-4 max-w-2xl mx-auto">Buka modal ini sebelum memulai. Baca semua langkah sampai selesai, lalu tutup modal untuk mengaktifkan tombol <strong>Mulai Percobaan</strong>.</p>
                 <div class="flex justify-center gap-2 flex-wrap">
                     <div id="dot-0" class="h-3 rounded-full transition-all duration-300 w-8 bg-orange-500"></div>
                     <div id="dot-1" class="h-3 rounded-full transition-all duration-300 w-3 bg-slate-300"></div>
@@ -311,7 +314,7 @@ Language Processing (NLP)
                     &larr; <span class="hidden md:inline">Sebelumnya</span>
                 </button>
                 <div class="flex-1 flex justify-end gap-4">
-                    <button id="closeCaraBtn" onclick="closeCaraModal()" style="display: none;" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#e82e09] active:shadow-[0_0px_0_#e82e09] active:translate-y-[4px] transition-all">
+                    <button id="closeCaraBtn" onclick="closeCaraModal()" style="display: none;" class="bg-[#ba0404] hover:bg-[#940101] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#d32f2f] active:shadow-[0_0px_0_#d32f2f] active:translate-y-[4px] transition-all">
                         Tutup
                     </button>
                     <button id="nextBtn" onclick="changeSlide(1)" class="bg-[#ff5722] hover:bg-[#e64a19] text-white text-lg font-bold py-3 px-4 md:px-6 rounded-xl shadow-[0_4px_0_#bf360c] active:shadow-[0_0px_0_#bf360c] active:translate-y-[4px] transition-all flex gap-2 items-center">

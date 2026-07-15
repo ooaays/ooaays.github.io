@@ -28,7 +28,15 @@ body {
 
 .read-check {
     display: none;
+    line-height: 0;
+    margin-left: 0.5rem;
 }
 .read-check.visible {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.read-check svg {
+    width: 1.2rem;
+    height: 1.2rem;
 }
