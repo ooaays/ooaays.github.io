@@ -10,6 +10,9 @@
   --card-border: #dbeafe;
   --shadow-soft: 0 14px 30px rgba(15, 23, 42, 0.08);
 }
+/* Ensure hero/menu buttons auto-size so long labels are not clipped */
+.hero-buttons button,
+.hero-buttons .menu-btn { height: auto !important; min-height: 64px; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -28,7 +31,7 @@ img { max-width: 100%; display: block; }
 
 /* ── Header ────────────────────────────────────────────────── */
 .header-bg {
-  background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+  background: #fff;
   color: #fff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
@@ -175,6 +178,8 @@ img { max-width: 100%; display: block; }
   font-weight: 900;
   border-radius: 0 20px 20px 0;
   position: relative;
+  white-space: normal; /* allow wrapping */
+  word-break: break-word;
 }
 .menu-btn-label.purple { background: #a855f7; }
 .menu-btn-label.orange { background: #f97316; }

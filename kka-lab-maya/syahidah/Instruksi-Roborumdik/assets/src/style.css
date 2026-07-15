@@ -73,7 +73,12 @@ border-color:white transparent transparent transparent;
 
 .menu-btn-label {
   flex: 1; display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 900; font-size: 20px; text-transform: uppercase; 
-  line-height: 1.15;
+  color: white; font-weight: 900; font-size: 20px; text-transform: uppercase;
+  padding: 8px 12px; line-height: 1.15;
   border-radius: 0 20px 20px 0; position: relative;
+  white-space: normal;
+  word-break: break-word;
 }
+
+.hero-buttons button,
+.hero-buttons .menu-btn { height: auto !important; min-height: 64px; }
