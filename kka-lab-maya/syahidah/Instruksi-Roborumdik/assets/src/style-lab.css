@@ -115,4 +115,3 @@ body { font-family: 'Nunito', sans-serif; }
 #dots-container button:not(:disabled):not(.bg-slate-200) {
     cursor: pointer;
 }
-}

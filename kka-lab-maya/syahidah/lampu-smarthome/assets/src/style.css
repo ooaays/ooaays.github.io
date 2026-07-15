@@ -3,7 +3,7 @@
 .page.active{display:block;}
 
 .header-bg{
-    background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+    background: #fff;
     color:white;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
@@ -207,8 +207,7 @@
 			margin: 0 auto;
 			box-sizing: border-box;
 			overflow: visible;
-			background: rgba(255,255,255,0.96);
-			border-radius: 32px;
+			background: rgb(243 244 250 / 96%);
 			border: 1px solid rgba(15,23,42,0.08);
 			box-shadow: 0 40px 80px rgba(15,23,42,0.12);
 		}
