@@ -23,7 +23,7 @@ overflow-x:auto;
 
 /* HEADER */
 .header-bg{
-background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+background: #fff;
 color:white;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
@@ -73,7 +73,12 @@ border-color:white transparent transparent transparent;
 
 .menu-btn-label {
   flex: 1; display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 900; font-size: 20px; text-transform: uppercase; 
-  line-height: 1.15;
+  color: white; font-weight: 900; font-size: 20px; text-transform: uppercase;
+  padding: 8px 12px; line-height: 1.15;
   border-radius: 0 20px 20px 0; position: relative;
+  white-space: normal;
+  word-break: break-word;
 }
+
+.hero-buttons button,
+.hero-buttons .menu-btn { height: auto !important; min-height: 64px; }

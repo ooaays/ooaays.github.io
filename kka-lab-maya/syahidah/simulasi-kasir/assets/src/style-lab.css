@@ -581,7 +581,7 @@ button:hover {
 }
 
 .header-bg {
-    background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+    background: #fff;
     color: white;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }

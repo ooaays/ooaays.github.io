@@ -21,15 +21,12 @@ body {
 
 /* HEADER */
 .header-bg {
-    background: linear-gradient(90deg, #4338ca, #4f46e5, #6366f1);
+    background: #fff;
     color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Stroke/outline tipis pada logo header agar tetap terlihat jelas di atas gradient */
-.header-bg img {
-    filter: drop-shadow(0 0 1px rgba(0,0,0,0.55)) drop-shadow(0 0 1px rgba(0,0,0,0.55));
-}
+
 
 /* SPEECH */
 .speech {
