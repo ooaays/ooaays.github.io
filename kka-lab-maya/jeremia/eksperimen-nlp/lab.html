@@ -92,27 +92,48 @@
            ========================================================= */
         .header-bg {
             background: #fff;
-            color: white;
+            color: var(--text-main);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             margin: -20px -20px 30px -20px;
         }
 
-        /* Stroke/outline tipis pada logo agar tetap terlihat jelas di atas gradient */
-        .header-bg img {
-            filter: drop-shadow(0 0 1px rgba(0,0,0,0.55)) drop-shadow(0 0 1px rgba(0,0,0,0.55));
-        }
-
-        /* Judul halaman + tombol Kembali ke Home */
+        /* Judul halaman */
         .page-title-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; position: relative; }
-        .btn-home {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--primary-light); color: var(--primary);
-            border: 1px solid var(--primary); text-decoration: none;
-            font-weight: 600; font-size: 13px; padding: 8px 16px;
-            border-radius: 20px; transition: 0.2s; white-space: nowrap;
-        }
-        .btn-home:hover { background: var(--primary); color: white; }
         @media (max-width: 640px) { .page-title-row { flex-direction: column; } }
+
+        /* =========================================================
+           TOMBOL KEMBALI KE BERANDA
+           Dibuat menyerupai tombol menu di halaman index (panel ikon
+           gelap di kiri + panel abu-abu di kanan), hanya ukurannya kecil.
+           ========================================================= */
+        .beranda-wrap { display: flex; justify-content: center; margin-top: 32px; }
+        .btn-beranda {
+            display: inline-flex; width: 256px; height: 48px;
+            border-radius: 14px; overflow: hidden; text-decoration: none;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+            transition: all 0.15s; cursor: pointer;
+        }
+        .btn-beranda:active { box-shadow: 0 0 0 rgba(0,0,0,0.25); transform: translateY(5px); }
+        .btn-beranda-ikon {
+            width: 48px; background: #404040; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-beranda-ikon svg { width: 24px; height: 24px; color: #fff; }
+        .btn-beranda-label {
+            flex: 1; background: #6b7280; padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-beranda-label span {
+            color: #fff; font-size: 14px; font-weight: 600;
+            letter-spacing: 0.025em; text-transform: uppercase;
+            text-align: center; line-height: 1.25;
+        }
+        @media (min-width: 768px) {
+            .btn-beranda { width: 288px; height: 56px; }
+            .btn-beranda-ikon { width: 64px; }
+            .btn-beranda-ikon svg { width: 28px; height: 28px; }
+            .btn-beranda-label span { font-size: 16px; }
+        }
 
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
@@ -151,6 +172,36 @@
         .modal-icon { font-size: 48px; margin-bottom: 15px; }
         .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); color: var(--primary); }
+
+        /* Isi modal yang berupa kalimat panjang tetap rata kiri agar mudah dibaca */
+        .modal-body-left { text-align: left; }
+
+        /* Tombol tahap yang sudah ditekan dinonaktifkan, supaya menekannya lagi
+           tidak menghapus pilihan stopword yang sudah dibuat murid */
+        .btn-lanjut:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        .btn-lanjut:disabled:hover { background: #cbd5e1; }
+
+        /* Rincian perhitungan skor bobot tiap kalimat */
+        .skor-badge {
+            margin-top: 6px; font-size: 11px; font-weight: bold; color: white;
+            background: var(--primary); display: inline-block; padding: 3px 8px; border-radius: 4px;
+        }
+        .skor-rincian {
+            margin-top: 6px; font-size: 12px; color: #475569;
+            background: #eef2ff; border: 1px solid #c7d2fe;
+            padding: 6px 10px; border-radius: 6px; line-height: 1.6;
+        }
+        .skor-rincian b { color: var(--primary); }
+        .skor-kosong { margin-top: 6px; font-size: 12px; color: #94a3b8; font-style: italic; }
+
+        /* ATURAN RATA TEKS
+           Rata tengah  : judul, tombol, label pendek.
+           Rata kiri    : apa pun yang dibaca sebagai kalimat. */
+        .text-center { text-align: center; }
+        .hasil-box, .step-box, .info-box, .kalimat-box, .summary-disclaimer,
+        .stopword-feedback, .token-workspace { text-align: left; }
+        .slider-container label { display: block; text-align: center; }
+        #slider-max-note { text-align: center; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -159,7 +210,7 @@
 
 <div class="header-bg flex justify-between items-center px-6 py-4">
     <div class="flex items-center gap-4">
-        <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="lab-header-main-logo">
+        <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="h-14">
         
     </div>
     <div class="flex items-center gap-6">
@@ -173,24 +224,23 @@
     <div class="page-title-row">
         <h1 style="margin-bottom:0;"><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.05em; margin-right:0.15em;"><path d="M9 3h6M10 3v6.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.5V3"></path><path d="M7.5 15h9"></path></svg>Percobaan Ringkasan Teks dengan Eksperimen NLP</h1>
     </div>
-    <div style="text-align:center; margin-bottom:16px;">
-        <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-home">&larr; Kembali ke Beranda</a>
-    </div>
     <p class="sub">Jadilah peneliti AI. Ikuti proses mesin memahami bahasa manusia tahap demi tahap.</p>
 
     <div class="info-box" style="margin-bottom:20px;">
         <h4><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> Apa itu NLP (Natural Language Processing)?</h4>
-        <p>NLP adalah cara komputer belajar memahami bahasa manusia — mulai dari membaca teks, memecahnya menjadi kata-kata, mencari kata penting, sampai membuat rangkuman secara otomatis. Yuk, coba sendiri prosesnya tahap demi tahap menggunakan artikel jurnal di bawah ini!</p>
+        <p>NLP adalah cara komputer belajar memahami bahasa manusia — mulai dari membaca teks, memecahnya menjadi kata-kata, mencari kata penting, sampai membuat rangkuman secara otomatis. Yuk, coba sendiri prosesnya tahap demi tahap. Pilih dulu jenis teks yang ingin kamu analisis di bawah ini!</p>
     </div>
 
     <div class="article-selector">
-        <button class="btn-select" style="background: var(--primary); color: white; font-size: 15px; padding: 12px 24px;" onclick="generateArtikelJurnal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="8.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="8.5" cy="15.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="15.5" r="1.25" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.25" fill="currentColor" stroke="none"></circle></svg>Generate Artikel Jurnal</button>
+        <button class="btn-select" style="background: var(--primary); color: white; font-size: 15px; padding: 12px 24px;" onclick="generateArtikel('jurnal')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>Artikel Jurnal</button>
+        <button class="btn-select" style="background: #0d9488; color: white; border-color: #0d9488; font-size: 15px; padding: 12px 24px;" onclick="generateArtikel('berita')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6z"></path></svg>Artikel Berita</button>
+        <button class="btn-select" style="background: #b45309; color: white; border-color: #b45309; font-size: 15px; padding: 12px 24px;" onclick="generateArtikel('english')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>English Article</button>
     </div>
-    <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:-10px; margin-bottom:20px;">Artikel awal berisi sekitar 100 kata agar proses tokenisasi dapat diamati dengan lebih jelas.</p>
+    <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:-10px; margin-bottom:20px;">Setiap artikel berisi sekitar 100 kata agar proses tokenisasi dapat diamati dengan lebih jelas. Tekan tombol yang sama lagi untuk mendapat artikel acak lainnya.</p>
 
     <!-- Badge Disclaimer AI (Baru ditambahkan) -->
     <div id="ai-disclaimer" class="ai-disclaimer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M9 8V6a3 3 0 0 1 6 0v2"></path><line x1="9" y1="13" x2="9" y2="14"></line><line x1="15" y1="13" x2="15" y2="14"></line><line x1="12" y1="4" x2="12" y2="2"></line></svg> <i><strong>Disclaimer:</strong> Artikel jurnal yang ditampilkan di bawah ini dibuat secara otomatis (generated) untuk keperluan eksperimen NLP ini.</i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M9 8V6a3 3 0 0 1 6 0v2"></path><line x1="9" y1="13" x2="9" y2="14"></line><line x1="15" y1="13" x2="15" y2="14"></line><line x1="12" y1="4" x2="12" y2="2"></line></svg> <i><strong>Disclaimer:</strong> <span id="teks-disclaimer">Artikel</span> yang ditampilkan di bawah ini dibuat secara otomatis (generated) untuk keperluan eksperimen NLP ini.</i>
     </div>
 
     <div id="artikel-judul" style="font-weight:700; color:var(--primary); text-align:center; margin-bottom:8px; display:none;"></div>
@@ -199,7 +249,7 @@
         <button id="btn-lihat-sumber" class="btn-select" style="display:none; font-size:13px; padding:6px 14px;" onclick="bukaSumberModal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.2em;"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>Lihat Lampiran Sumber</button>
     </div>
 
-    <textarea id="teks-awal" readonly placeholder="Klik &quot;Generate Artikel Jurnal&quot; di atas untuk memulai eksperimen..."></textarea>
+    <textarea id="teks-awal" readonly placeholder="Pilih salah satu jenis artikel di atas (Jurnal, Berita, atau English) untuk memulai eksperimen..."></textarea>
     
     <!-- Tombol Tahap 1: Mengonfirmasi Bacaan -->
     <button id="btn-selesai-baca" class="btn-lanjut" style="display:none; width:100%; font-size: 16px; padding: 15px; background-color: #10b981;" onclick="bukaModal()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em; margin-right:0.25em;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>Saya Sudah Selesai Membaca</button>
@@ -211,18 +261,18 @@
         
         <div id="step-1" class="step-box">
             <span class="step-title">Tahap 1: Normalisasi Teks</span>
-            <p style="font-size: 14px; color: #475569;">Mesin menghapus semua tanda baca dan mengubah huruf menjadi kecil agar seragam. Tanda hubung (-) juga diubah menjadi spasi, misalnya kata <strong>"real-time"</strong> menjadi <strong>"real time"</strong>.</p>
+            <p style="font-size: 14px; color: #475569;">Mesin mengubah semua huruf menjadi kecil, lalu menghapus tanda baca termasuk tanda kurung agar seragam. Tanda hubung (-) diubah menjadi spasi, misalnya kata <strong>"real-time"</strong> menjadi <strong>"real time"</strong>. Angka desimal seperti <strong>0,8</strong> sengaja dibiarkan utuh.</p>
             <div id="out-normalisasi" class="kalimat-box" style="font-family: monospace; color: #64748b; max-height: 150px; overflow-y: auto;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(2)">Lanjut ke Tokenisasi & Stopwords <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+            <button class="btn-lanjut btn-step" onclick="lanjutKe(2, this)">Lanjut ke Tokenisasi & Stopwords <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-2" class="step-box">
             <span class="step-title">Tahap 2: Tokenisasi & Seleksi Stopwords (Tugas Anda!)</span>
-            <p style="font-size: 14px; color: #475569;">Teks telah dipecah menjadi kata (Token). <strong style="color:var(--primary)">Tugas Anda:</strong> Klik kata-kata yang menurut Anda tidak memiliki arti penting (kata hubung, imbuhan) untuk mencoretnya. Mesin akan mengabaikan kata yang Anda coret.</p>
+            <p style="font-size: 14px; color: #475569;">Teks telah dipecah menjadi kata (Token). <strong style="color:var(--primary)">Tugas Anda:</strong> Klik kata-kata yang menurut Anda tidak memiliki arti penting (kata hubung, imbuhan) untuk mencoretnya. Mesin akan mengabaikan kata yang Anda coret. <strong>Seluruh kata unik dari teks ditampilkan di sini</strong>, jadi tidak ada kata yang luput dari pilihanmu.</p>
             
             <div id="workspace-token" class="token-workspace"></div>
             
-            <button class="btn-lanjut" onclick="lanjutKe(3)">Selesai Memilih, Lanjut Hitung Kata Kunci <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+            <button class="btn-lanjut btn-step" onclick="lanjutKe(3, this)">Selesai Memilih, Lanjut Hitung Kata Kunci <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-3" class="step-box">
@@ -230,14 +280,14 @@
             <p style="font-size: 14px; color: #475569;">Berdasarkan sisa kata yang tidak Anda coret, mesin menghitung kata apa yang paling sering muncul.</p>
             <div id="stopword-feedback" class="stopword-feedback"></div>
             <div id="out-frekuensi" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(4)">Lanjut ke Pembobotan Kalimat <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+            <button class="btn-lanjut btn-step" onclick="lanjutKe(4, this)">Lanjut ke Pembobotan Kalimat <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-4" class="step-box">
             <span class="step-title">Tahap 4: Pembobotan Kalimat</span>
-            <p style="font-size: 14px; color: #475569;">Mesin membaca ulang teks awal dan memberikan skor pada tiap kalimat berdasarkan jumlah kata kunci di dalamnya.</p>
+            <p style="font-size: 14px; color: #475569;">Mesin membaca ulang teks awal dan memberi skor pada tiap kalimat. <strong>Cara hitungnya:</strong> setiap kata kunci di dalam kalimat menyumbang angka sebesar jumlah kemunculan kata itu di seluruh teks, lalu semuanya dijumlahkan. Perhatikan rincian di bawah tiap kalimat — di situ terlihat mesin hanya <em>menghitung</em>, bukan memahami maknanya.</p>
             <div id="out-pembobotan" style="max-height: 250px; overflow-y: auto;"></div>
-            <button class="btn-lanjut" onclick="lanjutKe(5)">Lanjut ke Tahap Rangkuman <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+            <button class="btn-lanjut btn-step" onclick="lanjutKe(5, this)">Lanjut ke Tahap Rangkuman <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-0.15em;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
         </div>
 
         <div id="step-5" class="step-box">
@@ -263,6 +313,21 @@
         </div>
 
     </div>
+
+    <!-- TOMBOL KEMBALI KE BERANDA (selalu tampil, posisinya paling bawah) -->
+    <div class="beranda-wrap">
+        <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-beranda">
+            <div class="btn-beranda-ikon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.47 3.841a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.061l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 101.061 1.06l8.69-8.689z" />
+                    <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                </svg>
+            </div>
+            <div class="btn-beranda-label">
+                <span>Kembali ke Beranda</span>
+            </div>
+        </a>
+    </div>
 </div>
 
 <!-- ==========================================
@@ -273,7 +338,7 @@
         <div class="modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg></div>
         <h2 style="color: var(--primary); margin-top: 0;">Kerja Bagus!</h2>
         <p style="color: #475569; font-size: 15px;">Sebagai peneliti, kita harus mengerti isi teksnya terlebih dahulu sebelum mengajarkan mesin (AI) untuk memahaminya.</p>
-        <p style="font-weight: bold; margin-bottom: 25px;">Apakah kamu sudah paham inti dari artikel jurnal ini?</p>
+        <p style="font-weight: bold; margin-bottom: 25px;">Apakah kamu sudah paham inti dari artikel ini?</p>
         
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
             <button class="btn-lanjut btn-outline" style="margin-top: 0;" onclick="tutupModal()">Belum, mau baca lagi</button>
@@ -286,11 +351,11 @@
      MODAL POP-UP LAMPIRAN SUMBER
      ========================================== -->
 <div id="sumber-modal" class="modal-overlay">
-    <div class="modal-content" style="text-align: left;">
+    <div class="modal-content">
         <div class="modal-icon" style="text-align: center;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.19 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></div>
-        <h2 style="color: var(--primary); margin-top: 0; text-align: center;">Lampiran Sumber</h2>
+        <h2 style="color: var(--primary); margin-top: 0;">Lampiran Sumber</h2>
 
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px; color: #334155; line-height: 1.7;">
+        <div class="modal-body-left" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-size: 13px; color: #334155; line-height: 1.7;">
             <p style="margin: 0 0 6px 0;"><strong>Judul Sumber:</strong> <span id="sumber-judul"></span></p>
             <p style="margin: 0 0 6px 0;"><strong>Penulis/Instansi:</strong> <span id="sumber-penulis"></span></p>
             <p style="margin: 0 0 6px 0;"><strong>Diterbitkan di:</strong> <span id="sumber-instansi"></span></p>
@@ -310,7 +375,9 @@
 <script>
 // Artikel jurnal sederhana (~100 kata tiap artikel), dipilih acak tiap kali tombol "Generate Artikel Jurnal" ditekan
 const dummyArticles = [
+    /* ===================== ARTIKEL JURNAL (Bahasa Indonesia) ===================== */
     {
+        jenis: "jurnal", bahasa: "id",
         topik: "AI dalam Pembelajaran",
         judul: "Pemanfaatan Kecerdasan Buatan dalam Pembelajaran Siswa SMP",
         isi: `Penelitian ini membahas pemanfaatan teknologi kecerdasan buatan generatif dalam dunia pendidikan di Indonesia. Sebuah studi percontohan di Telkom University menerapkan teknologi ini pada lima mata kuliah selama satu semester. Peneliti ingin mengetahui apakah teknologi ini dapat meringankan beban pengajar dan meningkatkan kualitas pembelajaran. Hasil pengamatan menunjukkan teknologi ini berpotensi memberi manfaat langsung, seperti motivasi belajar yang meningkat secara real-time, maupun manfaat tidak langsung, seperti waktu tambahan bagi pengajar untuk mendampingi siswa. Meskipun penelitian dilakukan di tingkat perguruan tinggi, temuannya relevan untuk sekolah menengah karena tantangan penggunaan kecerdasan buatan juga dihadapi siswa SMP. Pengawasan guru penting agar teknologi ini membantu belajar, bukan menggantikan proses berpikir siswa.`,
@@ -322,9 +389,10 @@ const dummyArticles = [
         }
     },
     {
-        topik: "Literasi Digital Siswa",
-        judul: "Kebiasaan Membaca dan Literasi Digital di Kalangan Siswa",
-        isi: `Penelitian ini membahas tingkat pemahaman literasi data pada siswa sekolah menengah di Indonesia. Sekelompok akademisi dari Monash University, Universitas Brawijaya, dan Universitas Binawan mengadakan pelatihan singkat literasi data bagi siswa di beberapa kota. Pelatihan ini bertujuan meningkatkan kesadaran siswa akan pentingnya kemampuan mengolah data untuk kebutuhan belajar maupun pekerjaan di masa depan. Hasil pengamatan menunjukkan siswa merasa lebih sadar akan manfaat literasi data setelah mengikuti pelatihan tersebut. Materi yang paling dirasakan bermanfaat adalah konsep statistik dasar yang dipraktikkan langsung menggunakan program pengolah angka sederhana. Temuan ini menunjukkan literasi digital perlu mulai diperkenalkan sejak jenjang sekolah menengah agar siswa siap menghadapi tantangan di era digital.`,
+        jenis: "jurnal", bahasa: "id",
+        topik: "Literasi Data Siswa",
+        judul: "Kesadaran Literasi Data pada Siswa Sekolah Menengah",
+        isi: `Penelitian ini membahas tingkat pemahaman literasi data pada siswa sekolah menengah di Indonesia. Sekelompok akademisi dari Monash University, Universitas Brawijaya, dan Universitas Binawan mengadakan pelatihan singkat literasi data bagi siswa di beberapa kota. Pelatihan ini bertujuan meningkatkan kesadaran siswa akan pentingnya kemampuan mengolah data untuk kebutuhan belajar maupun pekerjaan di masa depan. Hasil pengamatan menunjukkan siswa merasa lebih sadar akan manfaat literasi data setelah mengikuti pelatihan tersebut. Materi yang paling dirasakan bermanfaat adalah konsep statistik dasar yang dipraktikkan langsung menggunakan program pengolah angka sederhana. Temuan ini menunjukkan literasi data perlu mulai diperkenalkan sejak jenjang sekolah menengah agar siswa siap menghadapi tantangan di era digital.`,
         sumber: {
             judul: "Exploring Data Literacy Self-Perception among Indonesian High School Students",
             penulis: "Tim peneliti Monash University, Universitas Brawijaya, dan Universitas Binawan",
@@ -333,6 +401,7 @@ const dummyArticles = [
         }
     },
     {
+        jenis: "jurnal", bahasa: "id",
         topik: "Transportasi dan Keterlambatan Sekolah",
         judul: "Identifikasi Penyebab Siswa Terlambat Datang Setiap Pagi ke Sekolah",
         isi: `Penelitian ini membahas penyebab siswa sering terlambat datang ke sekolah setiap pagi. Berdasarkan kajian pustaka, penyebab keterlambatan dibagi menjadi faktor internal dan eksternal. Faktor internal berasal dari kebiasaan siswa sendiri, misalnya bangun kesiangan karena kurang disiplin, terlalu lama menggunakan gawai pada malam hari, atau menunda mengerjakan tugas hingga larut malam. Faktor eksternal berkaitan dengan tanggung jawab di rumah, seperti membantu pekerjaan rumah tangga atau mengantar adik ke sekolah sebelum berangkat sendiri. Peneliti merekomendasikan bimbingan konseling, penerapan aturan disiplin, dan keterlibatan orang tua untuk membantu siswa membangun tanggung jawab terhadap waktu. Dengan memahami akar penyebabnya, sekolah dan keluarga dapat bekerja sama mengurangi angka keterlambatan siswa.`,
@@ -344,6 +413,7 @@ const dummyArticles = [
         }
     },
     {
+        jenis: "jurnal", bahasa: "id",
         topik: "Cuaca dan Aktivitas Harian",
         judul: "Pengaruh Cuaca terhadap Aktivitas Belajar dan Bermain Siswa",
         isi: `Penelitian ini membahas data perubahan suhu di Indonesia berdasarkan catatan Badan Meteorologi, Klimatologi, dan Geofisika (BMKG). Data BMKG menunjukkan suhu rata-rata di Indonesia meningkat sekitar 0,8 derajat Celsius sejak tahun 1981, dengan rekor suhu tertinggi tercatat pada tahun 2024. Tren peningkatan suhu ini berpotensi memengaruhi kenyamanan aktivitas harian, termasuk aktivitas belajar dan bermain siswa di sekolah maupun di rumah. Cuaca yang semakin panas dapat membuat siswa cepat lelah atau kurang bersemangat mengikuti kegiatan di luar ruangan seperti olahraga. Oleh karena itu, sekolah perlu mempertimbangkan penjadwalan kegiatan luar ruangan pada waktu lebih sejuk serta menyediakan alternatif kegiatan di dalam ruangan agar belajar tetap nyaman.`,
@@ -355,6 +425,7 @@ const dummyArticles = [
         }
     },
     {
+        jenis: "jurnal", bahasa: "id",
         topik: "Kebiasaan Membaca Siswa",
         judul: "Kebiasaan Membaca dan Kemampuan Memahami Teks",
         isi: `Penelitian ini membahas kebiasaan membaca siswa dikaitkan dengan program pemerintah bernama Gerakan Tujuh Kebiasaan Anak Indonesia Hebat yang disusun oleh Kementerian Pendidikan Dasar dan Menengah. Salah satu kebiasaan yang dianjurkan adalah membaca buku non pelajaran selama lebih kurang lima belas menit sebelum kegiatan belajar dimulai di sekolah. Kajian akademik lain juga menunjukkan adanya hubungan antara kebiasaan membaca dan kemampuan siswa memahami suatu bacaan secara menyeluruh. Siswa yang terbiasa membaca rutin cenderung lebih mudah menemukan gagasan utama dalam sebuah teks. Oleh karena itu, pembiasaan membaca setiap hari perlu terus didukung oleh sekolah maupun keluarga agar kemampuan literasi siswa meningkat.`,
@@ -363,6 +434,130 @@ const dummyArticles = [
             penulis: "Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen)",
             instansi: "Direktorat Cerdas Berkarakter, Kemendikdasmen, 2025",
             tautan: "https://cerdasberkarakter.kemendikdasmen.go.id/wp-content/uploads/2025/04/BUKU-PANDUAN-PENERAPAN-GERAKAN-7KAIH-JENJANG-SMP.pdf"
+        }
+    },
+
+    /* ===================== ARTIKEL BERITA (Bahasa Indonesia) ===================== */
+    {
+        jenis: "berita", bahasa: "id",
+        topik: "Sepak Bola",
+        judul: "Perjalanan Timnas Indonesia di Kualifikasi Piala Dunia 2026",
+        isi: `Perjalanan tim nasional sepak bola Indonesia di kualifikasi Piala Dunia 2026 resmi berakhir pada Oktober 2025. Langkah timnas dimulai pada tahun 2023 dengan mengalahkan Brunei Darussalam secara telak pada dua pertandingan ronde pertama. Timnas kemudian melaju ke ronde kedua, lalu bertahan sampai ronde ketiga dengan mencatat kemenangan bersejarah atas Arab Saudi dan China. Pada ronde keempat, timnas menghadapi dua lawan berat. Timnas kalah dua tiga dari Arab Saudi, kemudian kalah nol satu dari Irak, sehingga gagal melangkah lebih jauh. Meski gagal lolos, perjalanan panjang ini menjadi pencapaian terbaik timnas sepanjang sejarah kualifikasi Piala Dunia. Pemain timnas menyatakan akan mencoba lagi menuju Piala Dunia 2030.`,
+        sumber: {
+            judul: "Hasil Lengkap Timnas Indonesia di Kualifikasi Piala Dunia 2026",
+            penulis: "Redaksi detikSport",
+            instansi: "detikSport, 12 Oktober 2025",
+            tautan: "https://sport.detik.com/sepakbola/liga-indonesia/d-8156781/hasil-lengkap-timnas-indonesia-di-kualifikasi-piala-dunia-2026"
+        }
+    },
+    {
+        jenis: "berita", bahasa: "id",
+        topik: "Prestasi Pelajar",
+        judul: "Lima Murid Indonesia Raih Medali Olimpiade Fisika Internasional",
+        isi: `Lima murid Indonesia berhasil meraih medali pada Olimpiade Fisika Internasional ke-56 yang berlangsung di Kolombia pada Juli 2026. Tim Indonesia membawa pulang satu medali emas, dua medali perak, dan dua medali perunggu. Kompetisi ini diikuti 381 peserta dari 93 negara, sehingga persaingan berlangsung sangat ketat. Olimpiade Fisika Internasional menguji kemampuan murid dalam teori sekaligus eksperimen laboratorium. Materi yang diujikan meliputi mekanika, termodinamika, medan elektromagnetik, optik, hingga fisika modern. Kelima murid tersebut merupakan hasil seleksi nasional dan dibimbing dosen pembina dari Universitas Indonesia serta Institut Teknologi Bandung. Kementerian Pendidikan Dasar dan Menengah berharap prestasi murid ini menginspirasi murid lain untuk terus mencintai ilmu pengetahuan.`,
+        sumber: {
+            judul: "Kemendikdasmen: Lima Murid Harumkan Bangsa Raih Medali IPhO",
+            penulis: "Hana Dewi Kinarina Kaban",
+            instansi: "ANTARA News, Juli 2026",
+            tautan: "https://www.antaranews.com/berita/5651253/kemendikdasmen-lima-murid-harumkan-bangsa-raih-medali-ipho"
+        }
+    },
+    {
+        jenis: "berita", bahasa: "id",
+        topik: "Konservasi Satwa",
+        judul: "Bayi Orangutan Sumatera Lahir di Cagar Alam Jantho, Aceh",
+        isi: `Seekor bayi orangutan sumatera lahir di Pusat Reintroduksi Orangutan Jantho, Cagar Alam Jantho, Kabupaten Aceh Besar. Kelahiran ini dikonfirmasi tim pemantau pada Mei 2026, saat induk orangutan bernama Bulan terlihat bergerak aktif di tajuk hutan sambil menggendong bayinya. Bulan merupakan orangutan hasil rehabilitasi yang telah hidup bebas di alam liar sejak tahun 2018. Sebelumnya, Bulan adalah korban perdagangan satwa liar. Bayi orangutan berjenis kelamin jantan itu diberi nama Badar, yang bermakna bulan purnama. Keberhasilan orangutan rehabilitasi berkembang biak di alam menjadi tanda penting bahwa program pelepasliaran berhasil. Keberhasilan konservasi seperti ini hanya dapat berlanjut apabila habitat hutan tetap terlindungi.`,
+        sumber: {
+            judul: "Generasi Baru Orangutan Sumatera Lahir di Cagar Alam Jantho",
+            penulis: "Siaran Pers Kementerian Kehutanan Republik Indonesia",
+            instansi: "Kementerian Kehutanan, 3 Juni 2026",
+            tautan: "https://www.kehutanan.go.id/news/generasi-baru-orangutan-sumatera-lahir-di-cagar-alam-jantho"
+        }
+    },
+    {
+        jenis: "berita", bahasa: "id",
+        topik: "Astronomi",
+        judul: "Meteor Besar Melintas di Langit Jawa, Ini Penjelasan Peneliti",
+        isi: `Fenomena benda langit terang yang melintas di langit Pulau Jawa pada Sabtu malam, 11 Juli 2026, menjadi perbincangan luas di media sosial. Peneliti astronomi Badan Riset dan Inovasi Nasional memastikan fenomena tersebut adalah meteor berukuran besar yang memasuki atmosfer bumi. Meteor berasal dari batuan antariksa yang mengorbit matahari. Ketika lintasannya berpapasan dengan orbit bumi, batuan tersebut memasuki atmosfer dengan kecepatan sangat tinggi lalu terbakar. Setiap hari bumi menerima jutaan batuan antariksa, tetapi sebagian besar berukuran sangat kecil sehingga habis terbakar dan hanya tampak sebagai bintang jatuh. Atmosfer bumi berfungsi sebagai pelindung alami yang sangat efektif terhadap batuan antariksa tersebut.`,
+        sumber: {
+            judul: "Viral Meteor Jatuh di Langit Jawa: Ukuran, Warna, Dentuman",
+            penulis: "Redaksi Tempo, mengutip analisis Thomas Djamaluddin (BRIN)",
+            instansi: "Tempo.co, 13 Juli 2026",
+            tautan: "https://www.tempo.co/sains/viral-meteor-jatuh-di-langit-jawa-ukuran-warna-dentuman-2275383"
+        }
+    },
+    {
+        jenis: "berita", bahasa: "id",
+        topik: "Kesehatan Remaja",
+        judul: "Empat Kebiasaan Sehat dalam Gerakan Anak Indonesia Hebat",
+        isi: `Kementerian Pendidikan Dasar dan Menengah menjalankan Gerakan Tujuh Kebiasaan Anak Indonesia Hebat di sekolah seluruh Indonesia. Dari tujuh kebiasaan tersebut, empat berkaitan langsung dengan kesehatan tubuh, yaitu bangun pagi, berolahraga, makan sehat dan bergizi, serta tidur cepat. Bangun pagi membantu tubuh menyesuaikan diri dengan ritme alami sehingga murid lebih segar saat belajar. Berolahraga secara rutin melancarkan peredaran darah dan menjaga kebugaran tubuh. Makan sehat dan bergizi menyediakan energi yang dibutuhkan otak untuk berkonsentrasi. Tidur cepat memberi waktu bagi tubuh memulihkan tenaga setelah beraktivitas. Program ini diterapkan mulai jenjang pendidikan anak usia dini hingga sekolah menengah atas sejak tahun 2025.`,
+        sumber: {
+            judul: "Gerakan Tujuh Kebiasaan Anak Indonesia Hebat",
+            penulis: "Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen)",
+            instansi: "Direktorat Cerdas Berkarakter, Kemendikdasmen",
+            tautan: "https://cerdasberkarakter.kemendikdasmen.go.id/gerakan7kebiasaan/"
+        }
+    },
+
+    /* ===================== ENGLISH ARTICLES (Bahasa Inggris) ===================== */
+    {
+        jenis: "english", bahasa: "en",
+        topik: "AI and Teachers",
+        judul: "How Artificial Intelligence Can Help Teachers in the Classroom",
+        isi: `Artificial intelligence can help teachers reduce the time they spend on routine administrative work. According to guidance published by UNESCO, artificial intelligence should support teachers rather than replace them. Teachers can use these tools to prepare activity sheets, simplify instructions, or design reading plans for students who speak different languages. When teachers spend less time on paperwork, they have more time to guide their students directly. However, UNESCO also warns that every school must check whether a tool is safe and suitable for young students. The guidance explains that meaningful interaction between teachers and students must remain at the heart of every classroom.`,
+        sumber: {
+            judul: "Guidance for Generative AI in Education and Research",
+            penulis: "Fengchun Miao dan Wayne Holmes (UNESCO)",
+            instansi: "UNESCO, 2023",
+            tautan: "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research"
+        }
+    },
+    {
+        jenis: "english", bahasa: "en",
+        topik: "AI and Homework",
+        judul: "Artificial Intelligence, Homework, and Honest Learning",
+        isi: `Many junior high school students now use artificial intelligence to help them finish homework. UNESCO guidance warns that using artificial intelligence to produce text without thinking can weaken learning. When a student asks a machine to write an answer, that student may submit the work without understanding it. Some experts describe this habit as writing without thinking. Schools therefore need clear rules about when these tools may be used and when they may not. Students should treat artificial intelligence as a helper for checking ideas, not as a replacement for their own effort. Honest work remains the foundation of real learning in every subject.`,
+        sumber: {
+            judul: "Guidance for Generative AI in Education and Research",
+            penulis: "Fengchun Miao dan Wayne Holmes (UNESCO)",
+            instansi: "UNESCO, 2023",
+            tautan: "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research"
+        }
+    },
+    {
+        jenis: "english", bahasa: "en",
+        topik: "AI as a Tutor",
+        judul: "Can Artificial Intelligence Become a Personal Tutor?",
+        isi: `Artificial intelligence can act as a personal tutor for students who need extra practice. UNESCO guidance describes one to one coaching for foundational skills as one possible use of artificial intelligence in education. A student who struggles with reading or mathematics can practise at their own pace, asking the same question many times without feeling embarrassed. The machine never becomes tired or impatient. However, UNESCO warns that these tools can produce wrong answers that still sound convincing. Students should always check important information with their teacher or their textbook. A tutor made of software can support learning, but it cannot replace human guidance.`,
+        sumber: {
+            judul: "Guidance for Generative AI in Education and Research",
+            penulis: "Fengchun Miao dan Wayne Holmes (UNESCO)",
+            instansi: "UNESCO, 2023",
+            tautan: "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research"
+        }
+    },
+    {
+        jenis: "english", bahasa: "en",
+        topik: "AI Literacy",
+        judul: "Why Students Need Artificial Intelligence Literacy",
+        isi: `Students today need a new skill called artificial intelligence literacy. UNESCO has prepared competency frameworks to help schools teach this skill to both teachers and students. Since 2024, UNESCO has supported fifty eight countries in designing or improving these frameworks. Students who understand how artificial intelligence works are less likely to be misled by it. They learn that a machine does not truly understand meaning; it only predicts patterns from data. They also learn that data can contain bias, so the results are not always fair. Schools are encouraged to include artificial intelligence literacy inside their regular digital citizenship lessons for young students.`,
+        sumber: {
+            judul: "What You Need to Know about AI and the Right to Education",
+            penulis: "UNESCO",
+            instansi: "UNESCO, 2025",
+            tautan: "https://www.unesco.org/en/articles/what-you-need-know-about-ai-and-right-education"
+        }
+    },
+    {
+        jenis: "english", bahasa: "en",
+        topik: "Limits of AI",
+        judul: "The Limits of Artificial Intelligence in Education",
+        isi: `Artificial intelligence has clear limits that every student should understand. UNESCO guidance notes that most countries still have no national rules for these tools, so schools are largely unprepared to check whether a tool is safe. Without clear rules, students may trust machine answers too easily. Machines cannot feel, cannot judge right from wrong, and cannot understand the situation of a particular student. A teacher notices when a student looks tired, confused, or worried. A machine only processes text and predicts words. UNESCO guidance states that artificial intelligence should support the role of teachers rather than replace it.`,
+        sumber: {
+            judul: "Guidance for Generative AI in Education and Research",
+            penulis: "Fengchun Miao dan Wayne Holmes (UNESCO)",
+            instansi: "UNESCO, 2023",
+            tautan: "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research"
         }
     }
 ];
@@ -374,38 +569,74 @@ let tokensUnik = [];
 let userStopwords = new Set();
 let frekuensiKata = {};
 let skorKalimatData = [];
-let indexArtikelTerakhir = -1;
 
-// Daftar rujukan stopword umum Bahasa Indonesia, dipakai untuk menilai pilihan coretan murid di Tahap 2
-const STANDARD_STOPWORDS = new Set([
-    "dan","di","ke","dari","yang","untuk","dengan","ini","itu","atau","juga",
-    "akan","adalah","pada","dalam","secara","karena","agar","dapat","tidak",
-    "sudah","telah","oleh","para","seperti","bagi","saat","jika","maka","serta",
-    "namun","tersebut","sehingga","hal","bahwa","hingga","antara","lebih",
-    "sangat","masih","kini","saja","pun","tanpa","tetap","tentang","semua",
-    "setiap","satu","dua","suatu","begitu","bisa","sebagai","kita","mereka",
-    "kami","saya","kamu","nya","yaitu","meskipun","demikian"
-]);
+// Artikel yang sedang ditampilkan, dipakai Lampiran Sumber & penilaian stopword
+let artikelAktif = null;
+// Ingat artikel terakhir PER kategori, supaya tiap tombol punya catatannya sendiri
+let indexTerakhir = { jurnal: -1, berita: -1, english: -1 };
 
-function generateArtikelJurnal() {
-    // Pilih artikel jurnal secara acak, hindari mengulang artikel yang sama persis dua kali berturut-turut
-    let idx = Math.floor(Math.random() * dummyArticles.length);
-    if (dummyArticles.length > 1) {
-        while (idx === indexArtikelTerakhir) {
-            idx = Math.floor(Math.random() * dummyArticles.length);
+/* Daftar rujukan stopword, dipakai untuk menilai pilihan coretan murid di Tahap 2.
+   Tiap bahasa punya daftarnya sendiri: mesin tidak "tahu" bahasa, ia hanya
+   mencocokkan kata dengan daftar yang kita berikan. */
+const STOPWORDS = {
+    id: new Set([
+        "dan","di","ke","dari","yang","untuk","dengan","ini","itu","atau","juga",
+        "akan","adalah","pada","dalam","secara","karena","agar","dapat","tidak",
+        "sudah","telah","oleh","para","seperti","bagi","saat","jika","maka","serta",
+        "namun","tersebut","sehingga","hal","bahwa","hingga","antara","lebih",
+        "sangat","masih","kini","saja","pun","tanpa","tetap","tentang","semua",
+        "setiap","satu","dua","suatu","begitu","bisa","sebagai","kita","mereka",
+        "kami","saya","kamu","nya","yaitu","meskipun","demikian","adanya","ada",
+        "kemudian","lalu","hanya","yakni","bahkan","apabila","sekitar","selama"
+    ]),
+    en: new Set([
+        "the","a","an","and","or","but","if","of","to","in","on","at","for","from",
+        "with","without","by","as","is","are","was","were","be","been","being",
+        "this","that","these","those","it","its","they","them","their","there",
+        "here","he","she","his","her","we","our","you","your","i","my",
+        "can","could","may","might","must","should","would","will","shall",
+        "do","does","did","done","have","has","had","not","no","so","than","then",
+        "when","while","where","which","who","whom","what","how","why",
+        "also","more","most","some","any","all","every","each","many","much",
+        "very","too","only","just","still","even","other","another","such",
+        "into","about","after","before","between","because","however","therefore"
+    ])
+};
+
+// Nama bahasa untuk ditampilkan pada umpan balik Tahap 3
+const NAMA_BAHASA = { id: "Bahasa Indonesia", en: "Bahasa Inggris" };
+
+// Label jenis artikel untuk badge disclaimer
+const LABEL_JENIS = {
+    jurnal: "Artikel jurnal",
+    berita: "Artikel berita",
+    english: "Artikel berbahasa Inggris"
+};
+
+function generateArtikel(jenis) {
+    // Saring artikel sesuai kategori tombol yang ditekan
+    const kandidat = dummyArticles.filter(a => a.jenis === jenis);
+    if (kandidat.length === 0) return;
+
+    // Pilih acak, hindari mengulang artikel yang sama persis dua kali berturut-turut
+    let idx = Math.floor(Math.random() * kandidat.length);
+    if (kandidat.length > 1) {
+        while (idx === indexTerakhir[jenis]) {
+            idx = Math.floor(Math.random() * kandidat.length);
         }
     }
-    indexArtikelTerakhir = idx;
+    indexTerakhir[jenis] = idx;
 
-    const artikel = dummyArticles[idx];
-    teksRaw = artikel.isi;
+    artikelAktif = kandidat[idx];
+    teksRaw = artikelAktif.isi;
     document.getElementById('teks-awal').value = teksRaw;
 
     const judulEl = document.getElementById('artikel-judul');
-    judulEl.textContent = artikel.judul;
+    judulEl.textContent = artikelAktif.judul;
     judulEl.style.display = 'block';
 
-    // Tampilkan label/badge disclaimer AI
+    // Badge disclaimer menyesuaikan jenis artikel yang sedang tampil
+    document.getElementById('teks-disclaimer').textContent = LABEL_JENIS[jenis] || "Artikel";
     document.getElementById('ai-disclaimer').style.display = 'block';
 
     // Tampilkan tombol Lampiran Sumber
@@ -419,6 +650,14 @@ function generateArtikelJurnal() {
     document.getElementById('jalur-eksperimen').style.display = 'none';
     for(let i=1; i<=5; i++) { document.getElementById('step-'+i).style.display = 'none'; }
     document.getElementById('hasil-akhir').style.display = 'none';
+
+    // Aktifkan kembali semua tombol tahap untuk artikel baru
+    document.querySelectorAll('.btn-step').forEach(b => { b.disabled = false; });
+
+    // Bersihkan sisa data eksperimen artikel sebelumnya
+    userStopwords.clear();
+    frekuensiKata = {};
+    skorKalimatData = [];
 }
 
 /* ==========================================
@@ -450,7 +689,7 @@ function konfirmasiLanjut() {
 const sumberModal = document.getElementById('sumber-modal');
 
 function bukaSumberModal() {
-    const artikel = dummyArticles[indexArtikelTerakhir];
+    const artikel = artikelAktif;
     if (!artikel) return;
 
     document.getElementById('sumber-judul').textContent = artikel.sumber.judul;
@@ -479,27 +718,43 @@ function tutupSumberModal() {
 /* ==========================================
    LOGIKA EKSPERIMEN NLP
    ========================================== */
+
+/* Satu fungsi normalisasi yang dipakai bersama oleh Tahap 1 dan Tahap 4,
+   supaya kata yang dihitung di Tahap 4 persis sama dengan token di Tahap 2.
+   Contoh: "real-time" -> "real time", "(BMKG)" -> "bmkg", "0,8" tetap "0,8". */
+function normalisasiTeks(teks) {
+    return teks
+        .toLowerCase()
+        // Lindungi koma desimal (0,8) agar tidak ikut terhapus sebagai tanda baca
+        .replace(/(\d),(\d)/g, "$1<KOMA>$2")
+        // Tanda hubung jadi spasi: real-time -> real time
+        .replace(/-/g, " ")
+        // Hapus tanda baca, termasuk tanda kurung dan tanda kutip
+        .replace(/[.,!?'"“”‘’();:\/]/g, " ")
+        // Kembalikan koma desimal
+        .replace(/<KOMA>/g, ",")
+        // Rapikan enter dan spasi ganda
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 function mulaiEksperimen() {
     document.getElementById('jalur-eksperimen').style.display = 'block';
     document.getElementById('btn-mulai').style.display = 'none';
     document.getElementById('step-1').style.display = 'block';
-    
+
     // Eksekusi Logika Tahap 1
-    // Normalisasi: huruf kecil semua, tanda hubung (-) jadi spasi (real-time -> real time),
-    // hapus tanda baca, lalu rapikan spasi ganda
-    teksNormal = teksRaw
-        .toLowerCase()
-        .replace(/-/g, " ")
-        .replace(/[.,!?'"]/g, "")
-        .replace(/\n+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+    teksNormal = normalisasiTeks(teksRaw);
     document.getElementById('out-normalisasi').innerText = teksNormal;
 }
 
-function lanjutKe(step) {
+function lanjutKe(step, btn) {
+    // Nonaktifkan tombolnya setelah ditekan. Tanpa ini, menekan tombol yang sama
+    // dua kali akan menghapus semua coretan stopword yang sudah dibuat murid.
+    if (btn) btn.disabled = true;
+
     document.getElementById('step-'+step).style.display = 'block';
-    
+
     if(step === 2) siapkanTahap2();
     if(step === 3) siapkanTahap3();
     if(step === 4) siapkanTahap4();
@@ -520,9 +775,12 @@ function siapkanTahap2() {
     workspace.innerHTML = "";
     userStopwords.clear();
 
-    // Ambil kata unik dari teks untuk dijadikan label (Maksimal 60 kata agar bervariasi)
+    /* Tampilkan SELURUH kata unik dari teks, tanpa dipotong.
+       Sebelumnya daftar ini dipotong di kata ke-60, padahal Tahap 3 tetap menghitung
+       seluruh teks. Akibatnya ada stopword yang tidak bisa dicoret murid tetapi tetap
+       ikut terhitung sebagai kata kunci. */
     let semuaTokens = teksNormal.split(/\s+/);
-    tokensUnik = [...new Set(semuaTokens)].slice(0, 60); 
+    tokensUnik = [...new Set(semuaTokens)].filter(k => k);
 
     tokensUnik.forEach(kata => {
         if(!kata) return;
@@ -551,16 +809,22 @@ function evaluasiPilihanStopword() {
 
     const dicoret = [...userStopwords];
 
+    // Pilih daftar rujukan sesuai bahasa artikel yang sedang dianalisis
+    const kodeBahasa = (artikelAktif && artikelAktif.bahasa) ? artikelAktif.bahasa : 'id';
+    const daftarRujukan = STOPWORDS[kodeBahasa];
+    const namaBahasa = NAMA_BAHASA[kodeBahasa];
+    const contohKata = kodeBahasa === 'en' ? '"the", "and", "of", "to"' : '"dan", "di", "yang", "untuk"';
+
     if (dicoret.length === 0) {
         box.className = 'stopword-feedback warn';
-        box.innerHTML = `<p>Kamu belum mencoret kata apa pun di Tahap 2. Coba kembali dan coret kata hubung/imbuhan yang tidak penting (misalnya "dan", "di", "yang", "untuk") agar kata kunci yang dihitung lebih akurat.</p>`;
+        box.innerHTML = `<p>Kamu belum mencoret kata apa pun di Tahap 2. Coba kembali dan coret kata hubung/imbuhan yang tidak penting (misalnya ${contohKata}) agar kata kunci yang dihitung lebih akurat.</p>`;
         return;
     }
 
-    const stopwordUmum = dicoret.filter(k => STANDARD_STOPWORDS.has(k));
-    const kataKontenTercoret = dicoret.filter(k => !STANDARD_STOPWORDS.has(k));
+    const stopwordUmum = dicoret.filter(k => daftarRujukan.has(k));
+    const kataKontenTercoret = dicoret.filter(k => !daftarRujukan.has(k));
 
-    let html = `<p><strong>${stopwordUmum.length}</strong> dari <strong>${dicoret.length}</strong> kata yang kamu coret memang termasuk stopword umum (kata hubung/imbuhan) dalam Bahasa Indonesia`;
+    let html = `<p><strong>${stopwordUmum.length}</strong> dari <strong>${dicoret.length}</strong> kata yang kamu coret memang termasuk stopword umum (kata hubung/imbuhan) dalam ${namaBahasa}`;
     html += stopwordUmum.length ? `, misalnya: ${stopwordUmum.slice(0, 6).map(k => `"${k}"`).join(', ')}.</p>` : `.</p>`;
 
     if (kataKontenTercoret.length > 0) {
@@ -590,8 +854,12 @@ function siapkanTahap3() {
     let outFreq = document.getElementById('out-frekuensi');
     outFreq.innerHTML = "";
     
-    // Urutkan dari yang terbanyak
-    let sortedFreq = Object.entries(frekuensiKata).sort((a,b)=>b[1]-a[1]).slice(0, 10); // Ambil Top 10
+    /* Urutkan dari yang terbanyak. Jika jumlahnya SAMA, urutkan sesuai abjad
+       supaya hasilnya konsisten setiap kali diulang — bukan bergantung pada
+       urutan kemunculan kata di dalam teks. */
+    let sortedFreq = Object.entries(frekuensiKata)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 10); // Ambil Top 10
     
     sortedFreq.forEach(([kata, jumlah]) => {
         outFreq.innerHTML += `<div style="background:var(--primary-light); padding:8px 15px; border-radius:8px; border:1px solid var(--primary); font-weight:bold; color:var(--primary);">
@@ -611,17 +879,39 @@ function siapkanTahap4() {
 
     kalimatList.forEach((k, idx) => {
         let skor = 0;
-        let words = k.toLowerCase().replace(/[.,]/g,"").split(/\s+/);
-        
-        words.forEach(w => { if(frekuensiKata[w]) skor += frekuensiKata[w]; });
-        
-        skorKalimatData.push({teks: k, skor: skor, idAsli: idx}); 
-        
+        // Pakai fungsi normalisasi yang SAMA dengan Tahap 1, supaya kata seperti
+        // "real-time" atau "(BMKG)" dihitung dengan cara yang sama persis
+        let words = normalisasiTeks(k).split(/\s+/);
+
+        // Catat sumbangan tiap kata kunci agar perhitungannya bisa ditampilkan
+        let kontribusi = {};
+        words.forEach(w => {
+            if (frekuensiKata[w]) {
+                skor += frekuensiKata[w];
+                kontribusi[w] = (kontribusi[w] || 0) + frekuensiKata[w];
+            }
+        });
+
+        skorKalimatData.push({teks: k, skor: skor, idAsli: idx});
+
+        // Susun rincian: kata penyumbang terbesar lebih dulu
+        let rincianList = Object.entries(kontribusi).sort((a, b) => b[1] - a[1]);
+        let rincianHtml = '';
+
+        if (rincianList.length === 0) {
+            rincianHtml = `<div class="skor-kosong">Tidak ada kata kunci di kalimat ini, sehingga skornya 0.</div>`;
+        } else {
+            const tampil = rincianList.slice(0, 6);
+            const sisa = rincianList.length - tampil.length;
+            let potongan = tampil.map(([w, n]) => `<b>${w}</b> (${n})`).join(' + ');
+            if (sisa > 0) potongan += ` + ${sisa} kata lain`;
+            rincianHtml = `<div class="skor-rincian">Asal skor: ${potongan} = <b>${skor}</b></div>`;
+        }
+
         outPembobotan.innerHTML += `<div class='kalimat-box'>
             ${k}. <br>
-            <div style="margin-top:5px; font-size:11px; font-weight:bold; color:white; background:var(--primary); display:inline-block; padding:3px 8px; border-radius:4px;">
-                Skor Bobot: ${skor}
-            </div>
+            <div class="skor-badge">Skor Bobot: ${skor}</div>
+            ${rincianHtml}
         </div>`;
     });
 
