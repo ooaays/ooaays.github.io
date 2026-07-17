@@ -3,85 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Misi Analisis Data & Visualisasi Grafik</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Misi Analisis Data &amp; Visualisasi Grafik</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: #2c3e50; text-align: center; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; }
-        
-        .dashboard { display: flex; flex-wrap: wrap; gap: 20px; }
-        .panel { background: #fff; border: 1px solid #e1e8ed; padding: 20px; border-radius: 8px; flex: 1; min-width: 350px; }
-        .panel-header { font-weight: bold; margin-bottom: 15px; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
-        
-        select, button { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #bdc3c7; font-size: 16px; }
-        button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background-color: #2980b9; }
-        button.success { background-color: #2ecc71; }
-        
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #ecf0f1; }
+
+        /* Container dilebarkan dari 1050px -> 1280px.
+           Lab ini satu-satunya yang berbentuk dashboard dua panel, jadi 1050px
+           membuat tabel terjepit di kiri dan alat kerja berdesakan di kanan. */
+        .container { max-width: 1280px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 6px; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 26px; }
+
+        .dashboard { display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start; }
+        .panel { background: #fff; border: 1px solid #e1e8ed; padding: 20px; border-radius: 10px; flex: 1; min-width: 340px; }
+        .panel-kiri { flex: 1; }
+        .panel-kanan { flex: 1.4; }
+        .panel-header { font-weight: bold; margin-bottom: 15px; color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 6px; }
+
+        select, .btn { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #bdc3c7; font-size: 15px; font-family: inherit; }
+        .btn { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.25s; }
+        .btn:hover { background-color: #2980b9; }
+        .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        .btn-hijau { background-color: #2ecc71; }
+        .btn-hijau:hover { background-color: #27ae60; }
+        .btn-kecil { width: auto; padding: 7px 14px; font-size: 13px; margin-bottom: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 9px 8px; text-align: center; }
+        th { background-color: #ecf0f1; color: #2c3e50; }
         tr:hover { background-color: #f9f9f9; }
+        .tabel-catatan { font-size: 12px; color: #94a3b8; font-style: italic; text-align: center; }
+        .tabel-kosong { text-align: center; color: #94a3b8; padding: 30px 10px; font-size: 14px; }
 
-        .mission-box { background-color: #e8f4f8; border-left: 5px solid #3498db; padding: 15px; margin-bottom: 20px; font-size: 15px; }
-        
-        .slider-group { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .slider-label { width: 90px; font-weight: bold; font-size: 14px; }
-        input[type="range"] { flex: 1; }
-        .slider-value { width: 45px; text-align: center; font-weight: bold; background: #ecf0f1; padding: 5px; border-radius: 4px; }
+        .mission-box { background-color: #e8f4f8; border-left: 5px solid #3498db; padding: 14px; margin-bottom: 14px; font-size: 15px; line-height: 1.6; }
 
-        .canvas-container { height: 350px; position: relative; margin-bottom: 20px; }
-        #feedback { font-weight: bold; padding: 15px; margin-top: 15px; border-radius: 5px; display: none; line-height: 1.5; }
+        /* ===== DETEKTIF + BALON PERCAKAPAN =====
+           CSS .speech sebelumnya sudah ada di file ini tetapi tidak pernah dipakai.
+           Sekarang dihidupkan, dengan ekor balon mengarah ke kiri (ke arah detektif). */
+        .detektif-area { display: flex; align-items: center; gap: 14px; background: #f8fbfd; border: 1px solid #dbe7f0; border-radius: 12px; padding: 14px; margin-bottom: 18px; }
+        .detektif-svg { width: 92px; flex-shrink: 0; }
+        .speech {
+            position: relative; flex: 1;
+            background: white; border: 2px solid #cbd5e1; border-radius: 14px;
+            padding: 12px 15px; font-weight: bold; color: #1e293b;
+            font-size: 14px; line-height: 1.5;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            transition: opacity .4s;
+        }
+        .speech::after {
+            content: ""; position: absolute; left: -11px; top: 50%;
+            transform: translateY(-50%);
+            border-width: 9px 11px 9px 0; border-style: solid;
+            border-color: transparent white transparent transparent;
+        }
+        .speech::before {
+            content: ""; position: absolute; left: -14px; top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px 12px 10px 0; border-style: solid;
+            border-color: transparent #cbd5e1 transparent transparent;
+        }
+
+        /* ===== TAHAP BERTAHAP =====
+           Tahap berikutnya baru muncul setelah tahap sebelumnya selesai,
+           supaya alurnya seragam dengan lab Eksperimen NLP. */
+        .tahap { display: none; border: 1px solid #e1e8ed; border-radius: 10px; padding: 16px; margin-bottom: 14px; background: #fff; }
+        .tahap.aktif { display: block; animation: munculPelan .4s ease-out; }
+        .tahap-judul { font-weight: bold; color: #2c3e50; margin-bottom: 12px; display: flex; align-items: center; gap: 9px; font-size: 15px; }
+        .tahap-nomor { background: #3498db; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+        .tahap.selesai .tahap-nomor { background: #2ecc71; }
+        @keyframes munculPelan { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Info tujuan grafik, ditampilkan SAAT memilih grafik (bukan disimpan sampai murid salah) */
+        .info-grafik { background: #eef7fd; border: 1px solid #b8dff5; border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.6; margin-top: 4px; display: none; color: #1b4f72; }
+        .info-grafik.tampil { display: block; animation: munculPelan .3s; }
+
+        /* Slider + kotak angka. Slider saja terlalu sulit dipakai untuk angka persis. */
+        .nilai-baris { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+        .nilai-label { width: 96px; font-weight: bold; font-size: 13px; color: #34495e; flex-shrink: 0; }
+        input[type="range"] { flex: 1; min-width: 60px; }
+        .nilai-angka { width: 62px; padding: 6px; text-align: center; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 14px; font-weight: bold; color: #2c3e50; font-family: inherit; }
+        .nilai-angka:focus { outline: none; border-color: #3498db; box-shadow: 0 0 0 2px #d6eaf8; }
+
+        .canvas-container { height: 320px; position: relative; margin-bottom: 14px; }
+        .reason-box { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #bdc3c7; font-size: 14px; font-family: inherit; resize: vertical; box-sizing: border-box; line-height: 1.5; }
+        .wajib-catatan { font-size: 12px; color: #e67e22; margin: -6px 0 10px 0; }
+
+        #feedback { font-weight: bold; padding: 15px; margin-top: 14px; border-radius: 6px; display: none; line-height: 1.6; }
         .feedback-correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-left: 6px solid #2ecc71; }
         .feedback-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-left: 6px solid #f5c518; }
         .feedback-orange { background-color: #ffe8d1; color: #9a3d00; border: 1px solid #fdba8c; border-left: 6px solid #f97316; }
         .feedback-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-left: 6px solid #dc2626; }
-        .feedback-icon { font-size: 20px; margin-right: 6px; }
+        .feedback-icon { font-size: 19px; margin-right: 6px; }
 
-        .reason-box { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #bdc3c7; font-size: 14px; font-family: inherit; resize: vertical; box-sizing: border-box; }
-        .var-hint { font-size: 13px; color: #34495e; background: #ffffff; border: 1px dashed #b0c4de; border-radius: 5px; padding: 8px 10px; margin-top: 8px; }
+        /* ===== PANEL REFLEKSI =====
+           Mesin TIDAK menilai tulisan murid. Murid membandingkan sendiri
+           alasannya dengan penjelasan ahli, lalu menilai diri. */
+        .refleksi { background: #fdf6e3; border: 1px solid #f0d9a0; border-left: 6px solid #f1c40f; border-radius: 6px; padding: 16px; margin-top: 14px; display: none; }
+        .refleksi.tampil { display: block; animation: munculPelan .4s; }
+        .refleksi-judul { font-weight: bold; color: #7d6608; margin-bottom: 12px; font-size: 15px; }
+        .refleksi-banding { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        @media (max-width: 700px) { .refleksi-banding { grid-template-columns: 1fr; } }
+        .refleksi-kotak { background: #fff; border: 1px solid #e8d9a8; border-radius: 6px; padding: 11px; font-size: 13px; line-height: 1.6; }
+        .refleksi-kotak h4 { margin: 0 0 6px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #9a7d0a; }
+        .refleksi-tanya { background: #fffdf5; border: 1px dashed #d4b106; border-radius: 6px; padding: 11px; font-size: 13px; color: #6b5900; line-height: 1.7; }
 
-        /* HEADER */
-        .header-bg {
-            background: #fff;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin: -20px -20px 20px -20px; /* Ditambahkan agar memenuhi layar melewati padding body */
+        /* ===== TOMBOL KEMBALI KE BERANDA =====
+           Menyerupai tombol menu di halaman index, ukuran kecil. */
+        .beranda-wrap { display: flex; justify-content: center; margin-top: 30px; }
+        .btn-beranda { display: inline-flex; width: 256px; height: 48px; border-radius: 14px; overflow: hidden; text-decoration: none; box-shadow: 0 5px 0 rgba(0,0,0,0.25); transition: all 0.15s; cursor: pointer; }
+        .btn-beranda:active { box-shadow: 0 0 0 rgba(0,0,0,0.25); transform: translateY(5px); }
+        .btn-beranda-ikon { width: 48px; background: #404040; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .btn-beranda-ikon svg { width: 24px; height: 24px; color: #fff; }
+        .btn-beranda-label { flex: 1; background: #6b7280; padding: 0 8px; display: flex; align-items: center; justify-content: center; }
+        .btn-beranda-label span { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.025em; text-transform: uppercase; text-align: center; line-height: 1.25; }
+        @media (min-width: 768px) {
+            .btn-beranda { width: 288px; height: 56px; }
+            .btn-beranda-ikon { width: 64px; }
+            .btn-beranda-ikon svg { width: 28px; height: 28px; }
+            .btn-beranda-label span { font-size: 16px; }
         }
 
-        /* SPEECH */
-        .speech {
-            position: absolute;
-            top: -90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            border-radius: 14px;
-            padding: 12px 16px;
-            font-weight: bold;
-            border: 2px solid #cbd5e1;
-            box-shadow: 0 6px 10px rgba(0,0,0,0.1);
-            opacity: 0;
-            transition: opacity .5s;
-            color: #1e293b;
-            width: 250px;
-            text-align: center;
-        }
+        /* HEADER. Sebelumnya ada color:white di atas background putih (sisa desain lama). */
+        .header-bg { background: #fff; color: #2c3e50; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin: -20px -20px 20px -20px; }
 
-        .speech::after {
-            content: "";
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 10px;
-            border-style: solid;
-            border-color: white transparent transparent transparent;
-        }
-
-        /* CSS Support untuk utility classes di dalam HTML Header Anda */
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
         .items-center { align-items: center; }
@@ -91,287 +136,651 @@
         .gap-6 { gap: 1.5rem; }
         .h-14 { height: 3.5rem; }
         .h-12 { height: 3rem; }
-        .text-sm { font-size: 0.875rem; }
-        .leading-tight { line-height: 1.25; }
-        .font-semibold { font-weight: 600; }
         .hidden { display: none; }
         @media (min-width: 640px) { .sm\:block { display: block; } }
-        @media (min-width: 768px) { .md\:block { display: block; } }
     </style>
 </head>
 <body>
 
-    <div class="header-bg flex justify-between items-center px-6 py-4">
-        <div class="flex items-center gap-4">
-            <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="h-14">
-        
-        </div>
-        <div class="flex items-center gap-6">
-            <img src="assets/img/pendidikanbermutu.webp" class="h-12 hidden sm:block" alt="Logo Pendidikan Bermutu untuk Semua">
-            <img src="assets/img/ramah.webp" class="h-12 hidden sm:block" alt="Logo Ramah">
-            <img src="assets/img/sobatsmp.png" class="h-12 hidden sm:block" alt="Logo Sobat SMP">
-        </div>
+<div class="header-bg flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-4">
+        <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="h-14">
     </div>
-
-<div class="container">
-    <h1><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="#2c3e50" style="display: inline-block; vertical-align: -0.1em; margin-right: 0.2em;"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"></path></svg>Misi Analisis Data & Visualisasi Grafik</h1>
-    <p class="subtitle">Baca tabel data dengan teliti, perhatikan misi yang diminta, lalu pilih dan rakit grafik yang paling tepat!</p>
-
-    <div class="dashboard">
-        <div class="panel">
-            <div class="panel-header">1. Pilih Dataset</div>
-            <select id="datasetSelect" onchange="loadDataset()">
-                <option value="buah">Data Penjualan Buah (Toko Makmur)</option>
-                <option value="tanaman">Data Pertumbuhan Bibit Tanaman</option>
-                <option value="uang">Data Kebiasaan Keuangan Siswa</option>
-            </select>
-
-            <div class="panel-header" style="margin-top: 20px;">2. Tabel Data Referensi</div>
-            <div id="tableContainer"></div>
-            <p style="font-size: 12px; color: #7f8c8d; text-align: center;">Tabel ini memuat banyak informasi. Baca perlahan.</p>
-        </div>
-
-        <div class="panel" style="flex: 1.5;">
-            <div class="mission-box" id="missionText"></div>
-
-            <div class="panel-header">3. Area Merakit Grafik</div>
-            <label for="chartType">Pilih Jenis Grafik:</label>
-            <select id="chartType" onchange="updateChartType()">
-                <option value="bar">Diagram Batang</option>
-                <option value="line">Diagram Garis</option>
-                <option value="pie">Diagram Lingkaran</option>
-            </select>
-            
-            <div class="canvas-container">
-                <canvas id="myChart"></canvas>
-            </div>
-
-            <div class="panel-header">4. Alat Pengatur Nilai (Sesuai Misi)</div>
-            <div id="builderControls"></div>
-
-            <div class="panel-header">5. Alasan Pemilihan Grafik</div>
-            <textarea id="reasonText" class="reason-box" rows="3" placeholder="Tulis alasanmu di sini: mengapa jenis grafik ini paling cocok untuk misi di atas?"></textarea>
-
-            <button id="checkBtn" onclick="checkAnswer()">Cek Grafik & Pilihan Saya!</button>
-            <div id="feedback"></div>
-        </div>
+    <div class="flex items-center gap-6">
+        <img src="assets/img/pendidikanbermutu.webp" alt="Logo Pendidikan Bermutu" class="h-12 hidden sm:block">
+        <img src="assets/img/ramah.webp" alt="Logo Ramah" class="h-12 hidden sm:block">
+        <img src="assets/img/sobatsmp.png" alt="Logo Sobat SMP" class="h-12 hidden sm:block">
     </div>
 </div>
 
+<div class="container">
+    <h1>Misi Analisis Data &amp; Visualisasi Grafik</h1>
+    <p class="subtitle">Jadilah detektif data. Baca buktinya, pilih grafik yang tepat, lalu buktikan alasanmu.</p>
+
+    <div class="dashboard">
+
+        <div class="panel panel-kiri">
+            <div class="panel-header">Meja Bukti &mdash; Tabel Data</div>
+            <div id="area-tabel">
+                <p class="tabel-kosong">Pilih berkas kasus terlebih dahulu di panel sebelah kanan.<br>Tabel buktinya akan terbuka di sini.</p>
+            </div>
+        </div>
+
+        <div class="panel panel-kanan">
+
+            <div class="detektif-area">
+                <svg class="detektif-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Karakter detektif data">
+                    <path d="M58 212 L68 138 Q100 126 132 138 L142 212 Z" fill="#c8a06a" stroke="#8b6f47" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M86 130 L100 156 L114 130 Z" fill="#f8f4ec" stroke="#8b6f47" stroke-width="1.5" stroke-linejoin="round"/>
+                    <rect x="96" y="152" width="8" height="30" rx="3" fill="#2c3e50"/>
+                    <circle cx="100" cy="100" r="30" fill="#f2d3b3" stroke="#c9a87c" stroke-width="1.5"/>
+                    <ellipse cx="100" cy="74" rx="45" ry="9" fill="#6b4f33"/>
+                    <path d="M72 74 Q72 48 100 48 Q128 48 128 74 Z" fill="#7d5c3c" stroke="#6b4f33" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="136" y1="192" x2="150" y2="176" stroke="#5b4630" stroke-width="7" stroke-linecap="round"/>
+                    <circle cx="159" cy="165" r="17" fill="#d6eaf8" fill-opacity="0.7" stroke="#2c3e50" stroke-width="4"/>
+                    <g id="wajah-normal">
+                        <circle cx="90" cy="100" r="3.5" fill="#2c3e50"/>
+                        <circle cx="110" cy="100" r="3.5" fill="#2c3e50"/>
+                        <path d="M92 113 Q100 120 108 113" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                    <g id="wajah-berpikir" style="display:none">
+                        <circle cx="90" cy="102" r="3.5" fill="#2c3e50"/>
+                        <circle cx="110" cy="102" r="3.5" fill="#2c3e50"/>
+                        <path d="M82 88 Q90 83 98 87" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M102 86 Q110 82 118 88" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M92 116 Q100 112 108 116" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                    </g>
+                    <g id="wajah-senang" style="display:none">
+                        <path d="M84 100 Q90 93 96 100" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M104 100 Q110 93 116 100" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M88 110 Q100 123 112 110 Z" fill="#a0392f" stroke="#2c3e50" stroke-width="2" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+                <div class="speech" id="balon">Halo, detektif! Pilih berkas kasus di bawah untuk memulai penyelidikan.</div>
+            </div>
+
+            <div class="tahap aktif" id="tahap-1">
+                <div class="tahap-judul"><span class="tahap-nomor">1</span> Pilih Berkas Kasus</div>
+                <select id="pilihDataset" onchange="pilihDataset()">
+                    <option value="">-- Pilih berkas kasus --</option>
+                    <option value="buah">Berkas A &mdash; Penjualan Buah Toko Makmur</option>
+                    <option value="tanaman">Berkas B &mdash; Pertumbuhan Bibit Tanaman</option>
+                    <option value="uang">Berkas C &mdash; Kebiasaan Keuangan Siswa</option>
+                </select>
+            </div>
+
+            <div class="tahap" id="tahap-2">
+                <div class="tahap-judul"><span class="tahap-nomor">2</span> Baca Misi</div>
+                <div class="mission-box" id="kotak-misi"></div>
+                <button class="btn btn-kecil" onclick="ambilMisiBaru()">Minta Misi Lain</button>
+            </div>
+
+            <div class="tahap" id="tahap-3">
+                <div class="tahap-judul"><span class="tahap-nomor">3</span> Data Mana yang Kamu Butuhkan?</div>
+                <p style="font-size:14px; color:#5a6c7d; margin-top:0; line-height:1.6;">Periksa tabel di sebelah kiri. Bagian mana dari tabel itu yang berisi data yang diminta misi?</p>
+                <select id="pilihSumber"></select>
+                <button class="btn" id="btn-cek-sumber" onclick="cekSumberData()">Periksa Pilihan Saya</button>
+                <div class="info-grafik" id="hasil-sumber"></div>
+            </div>
+
+            <div class="tahap" id="tahap-4">
+                <div class="tahap-judul"><span class="tahap-nomor">4</span> Pilih Jenis Grafik</div>
+                <select id="pilihGrafik" onchange="pilihGrafik()">
+                    <option value="">-- Pilih jenis grafik --</option>
+                    <option value="bar">Diagram Batang</option>
+                    <option value="line">Diagram Garis</option>
+                    <option value="pie">Diagram Lingkaran</option>
+                </select>
+                <div class="info-grafik" id="info-grafik"></div>
+            </div>
+
+            <div class="tahap" id="tahap-5">
+                <div class="tahap-judul"><span class="tahap-nomor">5</span> Masukkan Nilai dari Tabel</div>
+                <p style="font-size:14px; color:#5a6c7d; margin-top:0; line-height:1.6;">Geser slider <b>atau ketik langsung</b> angkanya di kotak sebelah kanan.</p>
+                <div id="area-nilai"></div>
+                <div class="canvas-container"><canvas id="chartCanvas"></canvas></div>
+            </div>
+
+            <div class="tahap" id="tahap-6">
+                <div class="tahap-judul"><span class="tahap-nomor">6</span> Tulis Alasanmu</div>
+                <textarea id="reasonText" class="reason-box" rows="3" placeholder="Mengapa jenis grafik ini paling cocok untuk misi di atas?" oninput="cekAlasanTerisi()"></textarea>
+                <p class="wajib-catatan" id="catatan-wajib">Alasan wajib diisi sebelum jawaban dapat diperiksa.</p>
+                <button class="btn btn-hijau" id="btn-cek" onclick="cekJawaban()" disabled>Cek Grafik &amp; Pilihan Saya</button>
+                <div id="feedback"></div>
+                <div class="refleksi" id="refleksi"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="beranda-wrap">
+        <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-beranda">
+            <div class="btn-beranda-ikon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.47 3.841a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.061l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 101.061 1.06l8.69-8.689z" />
+                    <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+                </svg>
+            </div>
+            <div class="btn-beranda-label"><span>Kembali ke Beranda</span></div>
+        </a>
+    </div>
+</div>
 <script>
-    // Dataset dengan struktur tabel multi-kolom
+    /* =========================================================================
+       DATA TABEL (BUKTI)
+       Tabel dipisahkan dari misi. Satu tabel yang sama bisa dipakai beberapa
+       misi berbeda dengan jawaban grafik yang berbeda pula. Tujuannya agar
+       murid paham: jenis grafik ditentukan oleh PERTANYAANNYA, bukan datanya.
+       ========================================================================= */
     const datasets = {
         buah: {
-            title: "Penjualan Jeruk (kg)",
+            nama: "Berkas A — Penjualan Buah Toko Makmur",
             tableHeaders: ["Bulan", "Apel (kg)", "Jeruk (kg)", "Mangga (kg)"],
             tableRows: [
                 ["Januari", 20, 15, 10],
                 ["Februari", 18, 22, 12],
                 ["Maret", 25, 30, 15],
                 ["April", 22, 28, 20]
-            ],
-            labels: ["Januari", "Februari", "Maret", "April"],
-            targetData: [15, 22, 30, 28], // Kunci jawaban: Kolom Jeruk
-            missionContext: "Bos toko ingin melihat perbandingan <b>penjualan Jeruk</b> setiap bulannya.",
-            varX: "Bulan (waktu penjualan)",
-            varY: "Jumlah penjualan Jeruk (kg)",
-            max: 35,
-            idealChart: "bar",
-            explanation: "<b>Diagram Batang</b> sangat cocok untuk membandingkan jumlah yang jelas antar kategori/bulan secara langsung."
+            ]
         },
         tanaman: {
-            title: "Pertumbuhan Cabai (cm)",
+            nama: "Berkas B — Pertumbuhan Bibit Tanaman",
             tableHeaders: ["Waktu", "Tomat (cm)", "Cabai (cm)", "Terong (cm)"],
             tableRows: [
                 ["Minggu 1", 5, 3, 4],
                 ["Minggu 2", 12, 8, 9],
                 ["Minggu 3", 18, 15, 14],
                 ["Minggu 4", 25, 22, 20]
-            ],
-            labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
-            targetData: [3, 8, 15, 22], // Kunci jawaban: Kolom Cabai
-            missionContext: "Seorang peneliti ingin melihat tren pertumbuhan tanaman <b>Cabai</b> dari minggu ke minggu.",
-            varX: "Minggu (waktu pengukuran)",
-            varY: "Tinggi tanaman Cabai (cm)",
-            max: 30,
-            idealChart: "line",
-            explanation: "<b>Diagram Garis</b> adalah pilihan terbaik untuk melihat tren, perkembangan, atau pergerakan naik-turun dari waktu ke waktu."
+            ]
         },
         uang: {
-            title: "Komposisi Uang Siti (%)",
+            nama: "Berkas C — Kebiasaan Keuangan Siswa",
             tableHeaders: ["Kategori", "Andi (%)", "Siti (%)", "Budi (%)"],
             tableRows: [
                 ["Ditabung", 10, 40, 20],
                 ["Jajan", 60, 35, 50],
                 ["Transport", 30, 25, 30]
-            ],
-            labels: ["Ditabung", "Jajan", "Transport"],
-            targetData: [40, 35, 25], // Kunci jawaban: Kolom Siti
-            missionContext: "Kita ingin melihat ke mana saja perginya uang saku milik <b>Siti</b>, dari seluruh uang yang dimilikinya.",
-            varX: "Kategori pengeluaran (Ditabung, Jajan, Transport)",
-            varY: "Persentase uang Siti (%) pada tiap kategori",
-            max: 100,
-            idealChart: "pie",
-            explanation: "<b>Diagram Lingkaran</b> paling tepat untuk menunjukkan proporsi atau bagian-bagian dari suatu total keseluruhan (100%)."
+            ]
         }
     };
 
-    // Info tujuan & alasan tiap jenis grafik, dipakai untuk umpan balik otomatis
+    /* =========================================================================
+       DAFTAR MISI
+       Tiap tabel punya 3 misi. Sebaran jawaban: 3 batang, 3 garis, 3 lingkaran.
+       Tidak ada tabel yang selalu berpasangan dengan satu jenis grafik, jadi
+       murid tidak bisa menebak lewat eliminasi.
+
+       sumber: bagian tabel yang dibutuhkan.
+               "kolom-N" = kolom ke-N (0 = kolom kategori)
+               "baris-N" = baris ke-N
+       ========================================================================= */
+    const misiList = [
+        /* ---------- BERKAS A: PENJUALAN BUAH ---------- */
+        {
+            dataset: "buah",
+            teks: "Bos Toko Makmur ingin tahu <b>bulan mana penjualan Jeruk paling banyak</b>. Bandingkan jumlah penjualan Jeruk pada tiap bulan.",
+            sumber: "kolom-2",
+            varX: "Bulan (kategori yang dibandingkan)",
+            varY: "Jumlah penjualan Jeruk dalam kg (nilai yang diukur)",
+            labels: ["Januari", "Februari", "Maret", "April"],
+            targetData: [15, 22, 30, 28],
+            max: 35,
+            idealChart: "bar",
+            explanation: "<b>Diagram Batang</b> sangat cocok untuk membandingkan jumlah antar kategori. Tinggi tiap batang langsung menunjukkan bulan mana yang paling banyak."
+        },
+        {
+            dataset: "buah",
+            teks: "Bos Toko Makmur curiga penjualan <b>Mangga terus meningkat</b> dari Januari sampai April. Tunjukkan bagaimana perubahannya dari waktu ke waktu.",
+            sumber: "kolom-3",
+            varX: "Bulan (urutan waktu)",
+            varY: "Jumlah penjualan Mangga dalam kg (nilai yang diukur)",
+            labels: ["Januari", "Februari", "Maret", "April"],
+            targetData: [10, 12, 15, 20],
+            max: 25,
+            idealChart: "line",
+            explanation: "<b>Diagram Garis</b> paling tepat untuk melihat tren atau perubahan dari waktu ke waktu. Garis yang menanjak langsung memperlihatkan penjualan Mangga memang terus naik."
+        },
+        {
+            dataset: "buah",
+            teks: "Pada <b>bulan Maret</b>, bos ingin tahu <b>berapa bagian</b> dari seluruh penjualan yang disumbang oleh masing-masing jenis buah.",
+            sumber: "baris-2",
+            varX: "Jenis buah (bagian-bagian)",
+            varY: "Penjualan bulan Maret dalam kg (bagian dari total)",
+            labels: ["Apel", "Jeruk", "Mangga"],
+            targetData: [25, 30, 15],
+            max: 35,
+            idealChart: "pie",
+            explanation: "<b>Diagram Lingkaran</b> paling tepat karena misinya menanyakan <i>bagian dari keseluruhan</i>. Total penjualan Maret adalah satu lingkaran penuh, dan tiap buah mengambil sepotong darinya."
+        },
+
+        /* ---------- BERKAS B: PERTUMBUHAN TANAMAN ---------- */
+        {
+            dataset: "tanaman",
+            teks: "Seorang peneliti ingin melihat <b>tren pertumbuhan tanaman Cabai</b> dari minggu ke minggu.",
+            sumber: "kolom-2",
+            varX: "Minggu (urutan waktu pengukuran)",
+            varY: "Tinggi tanaman Cabai dalam cm (nilai yang diukur)",
+            labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+            targetData: [3, 8, 15, 22],
+            max: 30,
+            idealChart: "line",
+            explanation: "<b>Diagram Garis</b> adalah pilihan terbaik untuk melihat tren, perkembangan, atau pergerakan naik-turun dari waktu ke waktu."
+        },
+        {
+            dataset: "tanaman",
+            teks: "Pada <b>Minggu 4</b>, peneliti ingin <b>membandingkan tinggi ketiga tanaman</b>. Tanaman mana yang tumbuh paling tinggi?",
+            sumber: "baris-3",
+            varX: "Jenis tanaman (kategori yang dibandingkan)",
+            varY: "Tinggi pada Minggu 4 dalam cm (nilai yang diukur)",
+            labels: ["Tomat", "Cabai", "Terong"],
+            targetData: [25, 22, 20],
+            max: 30,
+            idealChart: "bar",
+            explanation: "<b>Diagram Batang</b> tepat karena kita membandingkan tiga hal berbeda (Tomat, Cabai, Terong) pada satu waktu yang sama. Ini bukan soal waktu, melainkan soal perbandingan."
+        },
+        {
+            dataset: "tanaman",
+            teks: "Peneliti ingin melihat <b>perkembangan tinggi tanaman Tomat</b> sejak Minggu 1 sampai Minggu 4. Apakah pertumbuhannya stabil?",
+            sumber: "kolom-1",
+            varX: "Minggu (urutan waktu pengukuran)",
+            varY: "Tinggi tanaman Tomat dalam cm (nilai yang diukur)",
+            labels: ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"],
+            targetData: [5, 12, 18, 25],
+            max: 30,
+            idealChart: "line",
+            explanation: "<b>Diagram Garis</b> tepat karena misinya menanyakan perkembangan sepanjang waktu. Kemiringan garis memperlihatkan cepat atau lambatnya pertumbuhan tiap minggu."
+        },
+
+        /* ---------- BERKAS C: KEUANGAN SISWA ---------- */
+        {
+            dataset: "uang",
+            teks: "Kita ingin melihat <b>ke mana saja perginya uang saku Siti</b>, dari seluruh uang yang dimilikinya.",
+            sumber: "kolom-2",
+            varX: "Kategori pengeluaran (bagian-bagian)",
+            varY: "Persentase uang Siti (bagian dari total 100%)",
+            labels: ["Ditabung", "Jajan", "Transport"],
+            targetData: [40, 35, 25],
+            max: 100,
+            idealChart: "pie",
+            explanation: "<b>Diagram Lingkaran</b> paling tepat untuk menunjukkan proporsi atau bagian-bagian dari suatu total keseluruhan (100%)."
+        },
+        {
+            dataset: "uang",
+            teks: "Bagaimana <b>komposisi pengeluaran uang saku Andi</b>? Tunjukkan bagian tiap kategori dari total uang sakunya.",
+            sumber: "kolom-1",
+            varX: "Kategori pengeluaran (bagian-bagian)",
+            varY: "Persentase uang Andi (bagian dari total 100%)",
+            labels: ["Ditabung", "Jajan", "Transport"],
+            targetData: [10, 60, 30],
+            max: 100,
+            idealChart: "pie",
+            explanation: "<b>Diagram Lingkaran</b> tepat karena kata <i>komposisi</i> berarti bagian-bagian dari satu keseluruhan. Sekali lihat, potongan Jajan milik Andi langsung terlihat paling besar."
+        },
+        {
+            dataset: "uang",
+            teks: "Guru BK ingin <b>membandingkan berapa persen uang yang ditabung</b> oleh Andi, Siti, dan Budi. Siapa yang paling rajin menabung?",
+            sumber: "baris-0",
+            varX: "Nama siswa (kategori yang dibandingkan)",
+            varY: "Persentase uang yang ditabung (nilai yang diukur)",
+            labels: ["Andi", "Siti", "Budi"],
+            targetData: [10, 40, 20],
+            max: 100,
+            idealChart: "bar",
+            explanation: "<b>Diagram Batang</b> tepat karena kita membandingkan tiga orang berbeda pada satu hal yang sama. Kita tidak sedang melihat bagian dari keseluruhan, melainkan membandingkan siapa yang lebih besar."
+        }
+    ];
+
+    /* Info tujuan & alasan tiap jenis grafik.
+       Sebelumnya hanya muncul di SATU cabang umpan balik. Sekarang dinaikkan:
+       tampil begitu murid memilih jenis grafik, supaya memilih dengan sadar. */
     const chartInfo = {
-        bar: { name: "Diagram Batang", purpose: "membandingkan jumlah antar-kategori", reason: "perbedaan nilai antar kategori dapat terlihat lebih jelas" },
-        line: { name: "Diagram Garis", purpose: "menunjukkan tren atau perubahan dari waktu ke waktu", reason: "garis dapat memperlihatkan naik-turunnya nilai dengan jelas" },
-        pie: { name: "Diagram Lingkaran", purpose: "menunjukkan proporsi atau bagian dari keseluruhan", reason: "besar kecilnya tiap bagian dapat dibandingkan sebagai persentase dari keseluruhan" }
+        bar: {
+            name: "Diagram Batang",
+            purpose: "membandingkan jumlah antar-kategori",
+            reason: "perbedaan nilai antar kategori dapat terlihat lebih jelas",
+            kapan: "Gunakan saat misi memakai kata <b>bandingkan</b>, <b>paling banyak</b>, atau <b>paling sedikit</b>."
+        },
+        line: {
+            name: "Diagram Garis",
+            purpose: "menunjukkan tren atau perubahan dari waktu ke waktu",
+            reason: "garis dapat memperlihatkan naik-turunnya nilai dengan jelas",
+            kapan: "Gunakan saat misi memakai kata <b>tren</b>, <b>perkembangan</b>, <b>dari waktu ke waktu</b>, atau <b>terus naik/turun</b>."
+        },
+        pie: {
+            name: "Diagram Lingkaran",
+            purpose: "menunjukkan proporsi atau bagian dari keseluruhan",
+            reason: "besar kecilnya tiap bagian dapat dibandingkan sebagai persentase dari keseluruhan",
+            kapan: "Gunakan saat misi memakai kata <b>bagian dari total</b>, <b>komposisi</b>, <b>proporsi</b>, atau <b>persentase</b>."
+        }
     };
 
     const chartColors = ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(231, 76, 60, 0.7)'];
     const borderColors = ['rgba(41, 128, 185, 1)', 'rgba(39, 174, 96, 1)', 'rgba(243, 156, 18, 1)', 'rgba(192, 57, 43, 1)'];
 
-    let currentDataset = 'buah';
-    let chartInstance = null;
+    let datasetAktif = null;
+    let misiAktif = null;
+    let misiTerakhir = {};
     let studentData = [];
+    let chartInstance = null;
+    let sumberBenar = false;
 
-    function buildMissionHTML(ds) {
-        return `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="1.5" style="display: inline-block; vertical-align: -0.15em; margin-right: 0.2em;"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5.5"></circle><circle cx="12" cy="12" r="2" fill="#3498db"></circle></svg><b>Misi Kamu:</b> ${ds.missionContext} Analisislah tabel data di sebelah kiri dengan teliti, temukan informasi penting, lalu pilih data yang sesuai dengan misi ini. Tentukan <b>variabel X</b> dan <b>variabel Y</b>-nya, lalu sajikan dalam bentuk grafik yang paling tepat. Setelah grafik selesai dibuat, jelaskan mengapa jenis grafik tersebut sesuai dengan tujuan analisis ini (tulis di kotak "Alasan Pemilihan Grafik").
-        <div class="var-hint">
-            <b>Variabel X</b> = kategori atau waktu yang dibandingkan → <i>${ds.varX}</i><br>
-            <b>Variabel Y</b> = nilai atau jumlah yang dianalisis → <i>${ds.varY}</i>
-        </div>`;
+    /* ===== DETEKTIF ===== */
+    function setEkspresi(nama) {
+        ['normal', 'berpikir', 'senang'].forEach(e => {
+            const el = document.getElementById('wajah-' + e);
+            if (el) el.style.display = (e === nama) ? '' : 'none';
+        });
     }
 
-    function loadDataset() {
-        currentDataset = document.getElementById('datasetSelect').value;
-        const ds = datasets[currentDataset];
+    function detektifBicara(teks, ekspresi) {
+        const balon = document.getElementById('balon');
+        balon.style.opacity = '0';
+        setTimeout(() => {
+            balon.innerHTML = teks;
+            balon.style.opacity = '1';
+            setEkspresi(ekspresi || 'normal');
+        }, 200);
+    }
 
-        studentData = new Array(ds.targetData.length).fill(0);
-        document.getElementById('missionText').innerHTML = buildMissionHTML(ds);
+    /* ===== TAHAP ===== */
+    function bukaTahap(n) {
+        const el = document.getElementById('tahap-' + n);
+        if (el) el.classList.add('aktif');
+    }
+
+    function tutupTahapDari(n) {
+        for (let i = n; i <= 6; i++) {
+            const el = document.getElementById('tahap-' + i);
+            if (el) { el.classList.remove('aktif'); el.classList.remove('selesai'); }
+        }
+    }
+
+    function tandaiSelesai(n) {
+        const el = document.getElementById('tahap-' + n);
+        if (el) el.classList.add('selesai');
+    }
+
+    /* ===== TAHAP 1: PILIH BERKAS ===== */
+    function pilihDataset() {
+        const key = document.getElementById('pilihDataset').value;
+        if (!key) return;
+        datasetAktif = key;
+        tampilkanTabel(key);
+        tandaiSelesai(1);
+        ambilMisi(key);
+    }
+
+    function tampilkanTabel(key) {
+        const ds = datasets[key];
+        let html = '<table><thead><tr>';
+        ds.tableHeaders.forEach(h => { html += `<th>${h}</th>`; });
+        html += '</tr></thead><tbody>';
+        ds.tableRows.forEach(baris => {
+            html += '<tr>';
+            baris.forEach((sel, i) => {
+                html += (i === 0) ? `<td><b>${sel}</b></td>` : `<td>${sel}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        html += '<p class="tabel-catatan">Tabel ini tetap terbuka selama penyelidikan. Bukti tidak pernah ditutup.</p>';
+        document.getElementById('area-tabel').innerHTML = html;
+    }
+
+    /* ===== TAHAP 2: MISI ===== */
+    function ambilMisi(key) {
+        const kandidat = misiList.filter(m => m.dataset === key);
+        let idx = Math.floor(Math.random() * kandidat.length);
+        if (kandidat.length > 1) {
+            while (idx === misiTerakhir[key]) idx = Math.floor(Math.random() * kandidat.length);
+        }
+        misiTerakhir[key] = idx;
+        misiAktif = kandidat[idx];
+
+        document.getElementById('kotak-misi').innerHTML =
+            '<b>Misi Kamu:</b><br>' + misiAktif.teks;
+
+        tutupTahapDari(3);
+        sumberBenar = false;
+        bukaTahap(2);
+        bukaTahap(3);
+        siapkanPilihanSumber();
+
+        document.getElementById('pilihGrafik').value = '';
+        document.getElementById('info-grafik').classList.remove('tampil');
         document.getElementById('reasonText').value = '';
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('refleksi').classList.remove('tampil');
+        document.getElementById('btn-cek-sumber').disabled = false;
+        document.getElementById('hasil-sumber').classList.remove('tampil');
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
 
-        renderTable(ds);
-        renderBuilders(ds);
-        initChart();
-        hideFeedback();
+        detektifBicara('Bukti sudah di meja. Baca misinya baik-baik, lalu tentukan bagian tabel mana yang kita butuhkan.', 'normal');
     }
 
-    function renderTable(ds) {
-        let html = `<table><tr>`;
-        ds.tableHeaders.forEach(header => html += `<th>${header}</th>`);
-        html += `</tr>`;
-        
-        ds.tableRows.forEach(row => {
-            html += `<tr>`;
-            row.forEach(cell => html += `<td>${cell}</td>`);
-            html += `</tr>`;
+    function ambilMisiBaru() {
+        if (datasetAktif) ambilMisi(datasetAktif);
+    }
+
+    /* ===== TAHAP 3: SUMBER DATA =====
+       Sebelumnya misi langsung memberi tahu variabel X dan Y, jadi murid tinggal
+       menyalin angka. Sekarang murid harus menemukannya sendiri dari tabel. */
+    function siapkanPilihanSumber() {
+        const ds = datasets[datasetAktif];
+        const sel = document.getElementById('pilihSumber');
+        let html = '<option value="">-- Pilih bagian tabel --</option>';
+        for (let i = 1; i < ds.tableHeaders.length; i++) {
+            html += `<option value="kolom-${i}">Kolom ${ds.tableHeaders[i]}</option>`;
+        }
+        ds.tableRows.forEach((baris, i) => {
+            html += `<option value="baris-${i}">Baris ${baris[0]}</option>`;
         });
-        html += `</table>`;
-        document.getElementById('tableContainer').innerHTML = html;
+        sel.innerHTML = html;
     }
 
-    function renderBuilders(ds) {
-        const container = document.getElementById('builderControls');
-        container.innerHTML = '';
-        
-        ds.labels.forEach((label, index) => {
-            const div = document.createElement('div');
-            div.className = 'slider-group';
-            div.innerHTML = `
-                <div class="slider-label">${label}</div>
-                <input type="range" min="0" max="${ds.max}" value="0" 
-                       oninput="updateStudentData(${index}, this.value)">
-                <div class="slider-value" id="val-${index}">0</div>
-            `;
-            container.appendChild(div);
+    function cekSumberData() {
+        const pilihan = document.getElementById('pilihSumber').value;
+        const kotak = document.getElementById('hasil-sumber');
+        kotak.classList.add('tampil');
+
+        if (!pilihan) {
+            kotak.style.background = '#fff3cd';
+            kotak.style.borderColor = '#ffeeba';
+            kotak.style.color = '#856404';
+            kotak.innerHTML = 'Pilih dulu salah satu bagian tabel.';
+            return;
+        }
+
+        if (pilihan === misiAktif.sumber) {
+            sumberBenar = true;
+            kotak.style.background = '#d4edda';
+            kotak.style.borderColor = '#c3e6cb';
+            kotak.style.color = '#155724';
+            kotak.innerHTML = `<b>Tepat!</b> Dari bagian tabel itu kita dapat:<br>
+                &bull; <b>Variabel X</b> (mendatar) = ${misiAktif.varX}<br>
+                &bull; <b>Variabel Y</b> (tegak) = ${misiAktif.varY}`;
+            document.getElementById('btn-cek-sumber').disabled = true;
+            tandaiSelesai(2);
+            tandaiSelesai(3);
+            bukaTahap(4);
+            detektifBicara('Bagus! Sekarang pertanyaan pentingnya: grafik apa yang paling pas untuk menjawab misi ini?', 'senang');
+        } else {
+            sumberBenar = false;
+            kotak.style.background = '#f8d7da';
+            kotak.style.borderColor = '#f5c6cb';
+            kotak.style.color = '#721c24';
+            kotak.innerHTML = '<b>Belum tepat.</b> Baca ulang misinya, lalu cocokkan dengan judul kolom dan baris di tabel sebelah kiri.';
+            detektifBicara('Hmm, belum pas. Coba baca lagi misinya &mdash; nama apa yang disebut di situ?', 'berpikir');
+        }
+    }
+
+    /* ===== TAHAP 4: PILIH GRAFIK ===== */
+    function pilihGrafik() {
+        const jenis = document.getElementById('pilihGrafik').value;
+        const kotak = document.getElementById('info-grafik');
+
+        if (!jenis) { kotak.classList.remove('tampil'); return; }
+
+        const info = chartInfo[jenis];
+        kotak.style.background = '#eef7fd';
+        kotak.style.borderColor = '#b8dff5';
+        kotak.style.color = '#1b4f72';
+        kotak.innerHTML = `<b>${info.name}</b> berguna untuk ${info.purpose}, karena ${info.reason}.<br><br>${info.kapan}`;
+        kotak.classList.add('tampil');
+
+        tandaiSelesai(4);
+        bukaTahap(5);
+        siapkanNilai();
+        bukaTahap(6);
+        cekAlasanTerisi();
+        detektifBicara('Sekarang salin angkanya dari tabel. Boleh geser slider, boleh juga ketik langsung.', 'normal');
+    }
+
+    /* ===== TAHAP 5: NILAI (SLIDER + KOTAK ANGKA) ===== */
+    function siapkanNilai() {
+        const area = document.getElementById('area-nilai');
+        studentData = new Array(misiAktif.labels.length).fill(0);
+        let html = '';
+        misiAktif.labels.forEach((label, i) => {
+            html += `<div class="nilai-baris">
+                <span class="nilai-label">${label}</span>
+                <input type="range" id="slider-${i}" min="0" max="${misiAktif.max}" value="0" step="1"
+                       oninput="ubahNilai(${i}, this.value, 'slider')">
+                <input type="number" id="angka-${i}" class="nilai-angka" min="0" max="${misiAktif.max}" value="0"
+                       oninput="ubahNilai(${i}, this.value, 'angka')">
+            </div>`;
         });
+        area.innerHTML = html;
+        gambarGrafik();
     }
 
-    function updateStudentData(index, value) {
-        studentData[index] = parseInt(value);
-        document.getElementById(`val-${index}`).innerText = value;
-        chartInstance.update();
-        hideFeedback();
+    function ubahNilai(i, nilai, asal) {
+        let n = parseInt(nilai);
+        if (isNaN(n)) n = 0;
+        if (n < 0) n = 0;
+        if (n > misiAktif.max) n = misiAktif.max;
+        studentData[i] = n;
+
+        if (asal === 'slider') {
+            document.getElementById('angka-' + i).value = n;
+        } else {
+            document.getElementById('slider-' + i).value = n;
+        }
+        gambarGrafik();
     }
 
-    function updateChartType() {
-        initChart();
-        hideFeedback();
-    }
+    function gambarGrafik() {
+        const jenis = document.getElementById('pilihGrafik').value;
+        if (!jenis || !misiAktif) return;
 
-    function initChart() {
-        const ds = datasets[currentDataset];
-        const type = document.getElementById('chartType').value;
-        
+        const ctx = document.getElementById('chartCanvas').getContext('2d');
         if (chartInstance) chartInstance.destroy();
-        
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const bgColors = type === 'pie' ? chartColors : chartColors[0];
-        const bdColors = type === 'pie' ? borderColors : borderColors[0];
-
-        const scaleOptions = type === 'pie' ? {} : { y: { beginAtZero: true, max: ds.max } };
 
         chartInstance = new Chart(ctx, {
-            type: type,
+            type: jenis,
             data: {
-                labels: ds.labels,
+                labels: misiAktif.labels,
                 datasets: [{
-                    label: ds.title,
+                    label: 'Data Kamu',
                     data: studentData,
-                    backgroundColor: bgColors,
-                    borderColor: bdColors,
+                    backgroundColor: (jenis === 'line') ? 'rgba(52, 152, 219, 0.2)' : chartColors,
+                    borderColor: (jenis === 'line') ? 'rgba(41, 128, 185, 1)' : borderColors,
                     borderWidth: 2,
+                    fill: (jenis === 'line'),
                     tension: 0.1
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: scaleOptions, animation: { duration: 300 } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: (jenis === 'pie') ? {} : {
+                    y: { beginAtZero: true, max: misiAktif.max }
+                },
+                plugins: { legend: { display: (jenis === 'pie') } }
+            }
         });
     }
 
-    function checkAnswer() {
-        const ds = datasets[currentDataset];
-        const selectedType = document.getElementById('chartType').value;
-        
-        let isDataCorrect = true;
-        let errors = [];
-
-        for (let i = 0; i < ds.targetData.length; i++) {
-            if (studentData[i] !== ds.targetData[i]) {
-                isDataCorrect = false;
-                errors.push(ds.labels[i]);
-            }
-        }
-
-        const isChartCorrect = (selectedType === ds.idealChart);
-        const feedbackEl = document.getElementById('feedback');
-        feedbackEl.style.display = 'block';
-
-        if (isDataCorrect && isChartCorrect) {
-            feedbackEl.className = 'feedback-correct';
-            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg></span><b>Sempurna!</b> Kamu berhasil memilih data yang benar dari tabel, DAN kamu memilih grafik yang tepat.<br><br><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-3px;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"></path></svg> <i>${ds.explanation}</i>`;
-            document.getElementById('checkBtn').classList.add('success');
-        }
-        else if (isDataCorrect && !isChartCorrect) {
-            const ideal = chartInfo[ds.idealChart];
-            feedbackEl.className = 'feedback-warning';
-            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><path d="M12 3 1 21h22L12 3z"></path><line x1="12" y1="9" x2="12" y2="14"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span><b>Hampir Tepat!</b> Data yang kamu masukkan sudah benar, tetapi jenis grafik belum paling tepat. Untuk ${ideal.purpose}, <b>${ideal.name}</b> lebih sesuai karena ${ideal.reason}.`;
-            document.getElementById('checkBtn').classList.remove('success');
-        }
-        else if (!isDataCorrect && isChartCorrect) {
-            feedbackEl.className = 'feedback-orange';
-            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span><b>Grafik Sudah Tepat, Tapi...</b> Jenis grafik yang kamu pilih sudah benar, namun angka untuk <b>${errors.join(', ')}</b> belum sesuai dengan tabel. Periksa kembali data pada tabel, lalu perbaiki nilainya sesuai misi.`;
-            document.getElementById('checkBtn').classList.remove('success');
-        }
-        else {
-            feedbackEl.className = 'feedback-error';
-            feedbackEl.innerHTML = `<span class="feedback-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></span><b>Data dan grafik masih salah.</b> Periksa kembali angka pada tabel, pastikan data yang dipilih sesuai dengan misi, lalu pilih jenis grafik yang tepat berdasarkan tujuan analisis.`;
-            document.getElementById('checkBtn').classList.remove('success');
-        }
+    /* ===== TAHAP 6: ALASAN & PEMERIKSAAN ===== */
+    function cekAlasanTerisi() {
+        const teks = document.getElementById('reasonText').value.trim();
+        const tombol = document.getElementById('btn-cek');
+        const catatan = document.getElementById('catatan-wajib');
+        const cukup = teks.length >= 15;
+        tombol.disabled = !cukup;
+        catatan.style.display = cukup ? 'none' : 'block';
     }
 
-    function hideFeedback() {
-        document.getElementById('feedback').style.display = 'none';
-        document.getElementById('checkBtn').classList.remove('success');
+    function cekJawaban() {
+        const jenis = document.getElementById('pilihGrafik').value;
+        const kotak = document.getElementById('feedback');
+        const alasanMurid = document.getElementById('reasonText').value.trim();
+
+        let dataBenar = true;
+        for (let i = 0; i < misiAktif.targetData.length; i++) {
+            if (studentData[i] !== misiAktif.targetData[i]) { dataBenar = false; break; }
+        }
+        const grafikBenar = (jenis === misiAktif.idealChart);
+
+        kotak.style.display = 'block';
+
+        if (dataBenar && grafikBenar) {
+            kotak.className = 'feedback-correct';
+            kotak.innerHTML = `<span class="feedback-icon">&#127881;</span> <b>Sempurna, Detektif!</b><br>
+                Data yang kamu salin sudah tepat, dan jenis grafiknya juga paling sesuai dengan misi.<br><br>
+                ${misiAktif.explanation}`;
+            detektifBicara('Kasus terpecahkan! Kerja bagus, detektif.', 'senang');
+        } else if (dataBenar && !grafikBenar) {
+            const ideal = chartInfo[misiAktif.idealChart];
+            kotak.className = 'feedback-warning';
+            kotak.innerHTML = `<span class="feedback-icon">&#128269;</span> <b>Hampir Tepat!</b><br>
+                Data yang kamu salin dari tabel sudah <b>benar</b>. Tetapi jenis grafiknya kurang sesuai.<br><br>
+                Untuk misi ini, <b>${ideal.name}</b> lebih tepat karena ${ideal.reason}.`;
+            detektifBicara('Angkanya benar semua! Tinggal jenis grafiknya yang perlu dipikir ulang.', 'berpikir');
+        } else if (!dataBenar && grafikBenar) {
+            kotak.className = 'feedback-orange';
+            kotak.innerHTML = `<span class="feedback-icon">&#128202;</span> <b>Grafik Tepat, Data Belum Pas!</b><br>
+                Pilihan jenis grafikmu sudah benar. Tetapi ada angka yang belum sesuai dengan tabel.<br><br>
+                Periksa kembali baris demi baris di tabel sebelah kiri.`;
+            detektifBicara('Grafiknya sudah pas! Tapi coba periksa lagi angkanya satu per satu.', 'berpikir');
+        } else {
+            kotak.className = 'feedback-error';
+            kotak.innerHTML = `<span class="feedback-icon">&#129300;</span> <b>Ayo Periksa Lagi</b><br>
+                Data dan jenis grafiknya sama-sama belum tepat. Tidak apa-apa, detektif sejati memang memeriksa berkali-kali.<br><br>
+                Baca ulang misinya, cocokkan angkanya dengan tabel, lalu pikirkan grafik apa yang paling menjawab pertanyaan itu.`;
+            detektifBicara('Belum berhasil, tapi jangan menyerah. Detektif sejati memeriksa berkali-kali.', 'berpikir');
+        }
+
+        tampilkanRefleksi(alasanMurid);
     }
 
-    loadDataset();
+    /* ===== REFLEKSI =====
+       Mesin TIDAK menilai tulisan murid. Menilai bahasa bebas dengan pencocokan
+       kata kunci akan menyalahkan murid yang menulis benar dengan kata berbeda.
+       Jadi murid yang membandingkan sendiri alasannya dengan penjelasan ahli. */
+    function tampilkanRefleksi(alasanMurid) {
+        const kotak = document.getElementById('refleksi');
+        const ideal = chartInfo[misiAktif.idealChart];
+        kotak.innerHTML = `
+            <div class="refleksi-judul">Refleksi &mdash; Bandingkan Sendiri</div>
+            <div class="refleksi-banding">
+                <div class="refleksi-kotak">
+                    <h4>Alasan yang kamu tulis</h4>
+                    ${alasanMurid.replace(/</g, '&lt;')}
+                </div>
+                <div class="refleksi-kotak">
+                    <h4>Alasan yang tepat untuk misi ini</h4>
+                    ${misiAktif.explanation}
+                </div>
+            </div>
+            <div class="refleksi-tanya">
+                Sekarang jawab dalam hati atau tulis di bukumu:<br>
+                1. Apakah alasanmu sudah sama maksudnya dengan alasan di sebelah kanan?<br>
+                2. Kata apa dalam misi tadi yang menjadi petunjuk utama? (<i>bandingkan</i>, <i>tren</i>, atau <i>bagian dari total</i>)<br>
+                3. Kalau misinya berubah, apakah jenis grafiknya juga ikut berubah? Mengapa?
+            </div>`;
+        kotak.classList.add('tampil');
+    }
 </script>
-
 </body>
 </html>
