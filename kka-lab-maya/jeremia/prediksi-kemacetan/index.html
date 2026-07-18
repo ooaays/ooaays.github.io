@@ -243,24 +243,24 @@ Pilih jam yang ingin dianalisis oleh sistem AI.
 </h3>
 
 <p class="text-lg text-slate-700 mb-4">
-Cuaca dapat memengaruhi jumlah kendaraan di jalan.
+Cuaca buruk <b>menurunkan kapasitas jalan</b> — bukan menambah jumlah kendaraan. Jalan yang basah atau tergenang membuat lebih sedikit kendaraan bisa lewat tiap jam.
 </p>
 
 <div class="space-y-3">
 
 <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
 <div class="text-3xl">☀️</div>
-<div>Cerah</div>
+<div><b>Cerah</b> — kapasitas jalan penuh (100%)</div>
 </div>
 
 <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
 <div class="text-3xl">🌧️</div>
-<div>Hujan Lebat</div>
+<div><b>Hujan Lebat</b> — kapasitas turun 15%</div>
 </div>
 
 <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 shadow-sm">
 <div class="text-3xl">🌊</div>
-<div>Banjir</div>
+<div><b>Banjir</b> — kapasitas turun 40%</div>
 </div>
 
 </div>
@@ -274,11 +274,11 @@ Cuaca dapat memengaruhi jumlah kendaraan di jalan.
 <div class="bg-orange-50 p-6 rounded-2xl border-l-8 border-orange-500 mb-4">
 
 <h3 class="text-2xl font-bold text-orange-900 mb-4 border-b-2 border-orange-200 pb-2">
-<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 0.3em;"><circle cx="12" cy="12" r="10" fill="#ef4444"></circle><text x="12" y="16" text-anchor="middle" font-size="14" font-weight="bold" fill="white">5</text></svg>Atur Ambang Kemacetan
+<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 0.3em;"><circle cx="12" cy="12" r="10" fill="#ef4444"></circle><text x="12" y="16" text-anchor="middle" font-size="14" font-weight="bold" fill="white">5</text></svg>Atur Kapasitas Jalan
 </h3>
 
 <p class="text-lg text-slate-700 mb-6">
-Gunakan slider untuk menentukan jumlah kendaraan yang dianggap macet.
+Gunakan slider untuk menentukan berapa kendaraan yang mampu dilewatkan jalan ini tiap jam saat cuaca cerah. Jalan lebar berkapasitas besar, gang sempit berkapasitas kecil. Geser slider dan lihat <b>warna tabel ikut berubah</b>.
 </p>
 
 <div class="bg-white p-6 border border-slate-200 rounded-xl shadow-sm text-center">
@@ -298,8 +298,12 @@ Gunakan slider untuk menentukan jumlah kendaraan yang dianggap macet.
 </h3>
 
 <p class="text-lg text-slate-700 mb-4">
-Klik tombol <b>Jalankan Prediksi Kemacetan Kota oleh AI</b>.
+Sebelum menjalankan, kamu diminta <b>menebak</b> rata-rata kendaraan per jam dan kondisinya (Lancar / Padat / Macet Parah). Setelah itu klik tombol <b>Jalankan Prediksi</b>.
 </p>
+
+<div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-blue-900 shadow-sm mb-4">
+Ingin tahu cara AI menghitung? Tekan <b>Checking (Lihat Rumus &amp; Sumbernya)</b> untuk melihat rumus <i>Beban Jalan = Volume &divide; (Kapasitas &times; Faktor Cuaca)</i>.
+</div>
 
 <div class="text-center">
 <span class="text-6xl">🤖</span>
