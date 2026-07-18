@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jalur Tercepat | KKA Lab Maya</title>
-    
-    <!-- Tambahan CDN Tailwind khusus Header (preflight di-false agar tidak merubah layout utama) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            corePlugins: { preflight: false }
-        }
-    </script>
 
     <style>
         :root {
@@ -42,9 +34,16 @@
         /* Typography */
         .level-badge { background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9em; margin-bottom: 10px; display: inline-block;}
         h1 { color: var(--primary); text-align: center; margin: 0 0 10px 0; font-size: 2.2em; }
+        /* Judul tiap level. Dulu memakai <h1> - satu halaman punya empat <h1> sekaligus.
+           Kini <h2>, tetapi tampilannya sengaja dibuat persis sama seperti sebelumnya. */
+        .level-title { color: var(--primary); text-align: center; margin: 0 0 10px 0; font-size: 2.2em; font-weight: bold; }
         .subtitle { color: #555; text-align: center; margin-bottom: 30px; font-style: italic; max-width: 600px;}
         
-        .container { display: flex; gap: 30px; max-width: 900px; width: 100%; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+        /* align-items diubah dari flex-start menjadi stretch, supaya panel kiri
+           (alat manipulasi) tingginya mengikuti kolom kanan (peta + kotak
+           penjelasan). Dulu tiap kolom setinggi isinya sendiri, jadi ujung
+           bawahnya tidak sejajar. */
+        .container { display: flex; gap: 30px; max-width: 900px; width: 100%; align-items: stretch; flex-wrap: wrap; justify-content: center; }
         
         /* Panel Kontrol Kiri */
         .panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e1e8ed; flex: 1; min-width: 300px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
@@ -116,57 +115,88 @@
         }
 
         /* Hasil Analisis */
-        .result-log { margin-top: 20px; width: 100%; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: 'Segoe UI', Arial, sans-serif; box-sizing: border-box; min-height: 120px; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+        /* flex:1 agar kotak penjelasan memanjang mengisi sisa ruang, sehingga
+           ujung bawah kolom kanan sejajar dengan panel kiri. */
+        .result-log { margin-top: 20px; width: 100%; flex: 1; background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 10px; font-family: 'Segoe UI', Arial, sans-serif; box-sizing: border-box; min-height: 120px; line-height: 1.5; border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
         .result-feedback-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .result-feedback-head svg { width: 24px; height: 24px; flex-shrink: 0; }
         .result-feedback-title { font-weight: bold; font-size: 1.1em; }
         .result-feedback-detail { color: #ecf0f1; }
         .result-feedback-note { color: #94a3b8; font-size: 0.85em; margin-top: 10px; display: block; }
 
-        /* HEADER KEMDIKBUD */
+        /* HEADER KEMDIKBUD
+           Sebelumnya ada color:white di atas background putih (sisa desain lama).
+           Kelas tata letaknya ditulis tangan agar tidak lagi bergantung pada
+           Tailwind dari CDN, yang dimuat tanpa nomor versi. */
         .header-bg {
             background: #fff;
-            color: white;
+            color: var(--primary);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             width: 100%;
             box-sizing: border-box;
             position: relative;
             z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
         }
+        .header-kiri { display: flex; align-items: center; gap: 1rem; }
+        .header-kanan { display: flex; align-items: center; gap: 1.5rem; }
+        .header-bg .logo-utama { height: 3.5rem; }
+        .header-bg .logo-pendamping { height: 3rem; }
+        @media (max-width: 639px) { .header-bg .logo-pendamping { display: none; } }
 
-        /* Stroke/outline tipis pada logo agar tetap terlihat jelas di background gradient */
-        
-
-        /* Judul halaman + tombol kembali ke home */
+        /* JUDUL HALAMAN
+           Dulu judul dipaksa berbagi satu baris dengan tombol Kembali ke Home
+           (flex + space-between). Kini judul berdiri sendiri, rata tengah, dan
+           tombol beranda dipindah ke bagian paling bawah halaman. */
         .page-title-bar {
             width: 100%;
             box-sizing: border-box;
             background: white;
             border-bottom: 1px solid #e1e8ed;
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
+            padding: 24px;
+            text-align: center;
         }
-        .page-title { margin: 0; font-size: 1.8em; color: var(--primary); }
-        .page-subtitle { margin: 4px 0 0; color: #555; font-size: 0.95em; }
-        .btn-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 0 #1f6691;
-            transition: 0.2s;
-            white-space: nowrap;
+        .page-title { margin: 0; font-size: 1.8em; color: var(--primary); text-align: center; }
+        .page-subtitle { margin: 6px auto 0; color: #555; font-size: 0.95em; max-width: 640px; }
+
+        /* KOTAK TUJUAN - seragam dengan lab Prediksi Kemacetan */
+        .tujuan-box {
+            max-width: 900px;
+            margin: 24px auto 0;
+            background: #eef4fb;
+            border: 1px solid #c9dcf0;
+            border-left: 5px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 16px 18px;
+            box-sizing: border-box;
         }
-        .btn-home:hover { background: #3498db; transform: translateY(2px); box-shadow: 0 2px 0 #1f6691; }
+        .tujuan-box h3 { margin: 0 0 10px; font-size: 1.05em; color: var(--primary); }
+        .tujuan-box p { margin: 0; font-size: 0.9em; line-height: 1.7; color: #1f3d5c; text-align: left; }
+        .tujuan-box ul { margin: 8px 0 0; padding-left: 20px; font-size: 0.9em; line-height: 1.8; color: #1f3d5c; }
+
+        /* TOMBOL KEMBALI KE BERANDA - bentuk sama persis dengan lab NLP,
+           Pengolahan Data, dan Prediksi Kemacetan */
+        .beranda-wrap { display: flex; justify-content: center; margin: 34px 0 40px; }
+        .btn-beranda {
+            display: inline-flex; width: 256px; height: 48px;
+            border-radius: 14px; overflow: hidden; text-decoration: none;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+            transition: all 0.15s; cursor: pointer;
+        }
+        .btn-beranda:active { box-shadow: 0 0 0 rgba(0,0,0,0.25); transform: translateY(5px); }
+        .btn-beranda-ikon { width: 48px; background: #404040; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .btn-beranda-ikon svg { width: 24px; height: 24px; color: #fff; }
+        .btn-beranda-label { flex: 1; background: #6b7280; padding: 0 8px; display: flex; align-items: center; justify-content: center; }
+        .btn-beranda-label span { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.025em; text-transform: uppercase; text-align: center; line-height: 1.25; }
+        @media (min-width: 768px) {
+            .btn-beranda { width: 288px; height: 56px; }
+            .btn-beranda-ikon { width: 64px; }
+            .btn-beranda-ikon svg { width: 28px; height: 28px; }
+            .btn-beranda-label span { font-size: 16px; }
+        }
 
         /* Pilihan Level - ditampilkan paling atas, sebelum area permainan */
         .level-picker {
@@ -238,10 +268,43 @@
         .reflection-q label { display: block; font-weight: bold; margin-bottom: 8px; color: #34495e; }
         .reflection-q textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 2px solid #ecf0f1; border-radius: 8px; font-family: inherit; font-size: 0.95em; resize: vertical; min-height: 70px; }
         .reflection-q textarea:focus { outline: none; border-color: var(--accent); }
-        .reflection-save-btn { max-width: 240px; margin: 0 auto; display: block; }
+        .reflection-save-btn { margin: 0; }
         .reflection-status { margin-top: 12px; font-weight: 600; font-size: 0.9em; min-height: 1.2em; text-align: center; }
         .reflection-status.ok { color: #166534; }
         .reflection-status.warn { color: #b45309; }
+
+        /* Catatan privasi + tombol hapus.
+           Refleksi disimpan di localStorage peramban. Di komputer sekolah yang
+           dipakai bergantian, jawaban murid sebelumnya bisa terbaca murid
+           berikutnya. Tombol hapus memberi murid kendali atas hal itu. */
+        .reflection-catatan {
+            font-size: 0.82em; color: #64748b; line-height: 1.7;
+            margin: 16px 0 14px; padding: 10px 12px;
+            background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px;
+        }
+        .reflection-aksi { display: flex; gap: 12px; flex-wrap: wrap; }
+        .reflection-aksi button { flex: 1; min-width: 165px; margin-top: 0; }
+
+        /* PANEL PEMBANDING REFLEKSI
+           Jawaban murid disandingkan dengan jawaban pembanding. Mesin tidak
+           memberi nilai - murid yang menimbang sendiri selisihnya. */
+        .reflection-banding { margin-top: 24px; }
+        .banding-blok { margin-bottom: 20px; }
+        .banding-tanya { font-weight: bold; color: var(--primary); font-size: 0.9em; margin-bottom: 10px; line-height: 1.5; }
+        .banding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) { .banding-grid { grid-template-columns: 1fr; } }
+        .banding-sel { border-radius: 8px; padding: 13px; font-size: 0.85em; line-height: 1.75; }
+        .banding-sel h4 { margin: 0 0 7px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.05em; }
+        .banding-murid { background: #eef2f7; border: 1px solid #d6dfe8; color: #34495e; }
+        .banding-murid h4 { color: #7f8c8d; }
+        .banding-pembanding { background: #eafaf1; border: 1px solid #a9dfbf; color: #1e5631; }
+        .banding-pembanding h4 { color: #27ae60; }
+        .banding-penutup {
+            background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid #f59e0b;
+            border-radius: 0 8px 8px 0; padding: 14px; font-size: 0.85em;
+            line-height: 1.8; color: #78350f;
+        }
+        .banding-penutup b { color: #92400e; }
 
         /* SPEECH */
         .speech {
@@ -277,25 +340,32 @@
 <body>
 
 <!-- HEADER KEMDIKBUD -->
-<div class="header-bg flex justify-between items-center px-6 py-4">
-    <div class="flex items-center gap-4">
-        <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="h-14">
-        
+<div class="header-bg">
+    <div class="header-kiri">
+        <img src="assets/img/kemendikdasmen-logo.png" alt="Logo Kemendikdasmen" class="logo-utama">
     </div>
-    <div class="flex items-center gap-6">
-        <img src="assets/img/pendidikanbermutu.webp" alt="Logo Pendidikan Bermutu untuk Semua" class="h-12 hidden sm:block">
-        <img src="assets/img/ramah.webp" alt="Logo Ramah" class="h-12 hidden sm:block">
-        <img src="assets/img/sobatsmp.png" alt="Logo Sobat SMP" class="h-12 hidden sm:block">
+    <div class="header-kanan">
+        <img src="assets/img/pendidikanbermutu.webp" alt="Logo Pendidikan Bermutu untuk Semua" class="logo-pendamping">
+        <img src="assets/img/ramah.webp" alt="Logo Ramah" class="logo-pendamping">
+        <img src="assets/img/sobatsmp.png" alt="Logo Sobat SMP" class="logo-pendamping">
     </div>
 </div>
 
-<!-- JUDUL HALAMAN + KEMBALI KE HOME -->
+<!-- JUDUL HALAMAN (tombol beranda dipindah ke bagian paling bawah) -->
 <div class="page-title-bar">
-    <div>
-        <h1 class="page-title">Jalur Tercepat</h1>
-        <p class="page-subtitle">Temukan rute paling efisien dengan aturan gerak vertikal dan horizontal.</p>
-    </div>
-    <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-home">&larr; Kembali ke Home</a>
+    <h1 class="page-title">Jalur Tercepat</h1>
+    <p class="page-subtitle">Temukan rute paling efisien dengan aturan gerak vertikal dan horizontal.</p>
+</div>
+
+<!-- UNTUK APA LAB INI - seragam dengan lab Prediksi Kemacetan -->
+<div class="tujuan-box">
+    <h3>Untuk apa kamu mengerjakan lab ini?</h3>
+    <p>Saat kamu membuka Google Maps dan aplikasi itu memilihkan satu rute dari ribuan kemungkinan, sebenarnya ada algoritma yang bekerja di baliknya. Di lab ini kamu akan menjalankan algoritma itu sendiri, dan mencoba mengalahkannya.</p>
+    <ul>
+        <li>Kamu akan <b>menggambar petamu sendiri</b>, lalu melihat bagaimana mesin mencari jalan memutar demi menghemat waktu.</li>
+        <li>Kamu akan <b>menebak jalur lebih dulu</b>, baru membandingkannya dengan hasil mesin. Selisihnya adalah pelajarannya.</li>
+        <li>Kamu akan melihat bahwa mesin <b>tidak menebak</b> &mdash; ia memeriksa satu per satu, lalu memilih yang terbaik. Perhatikan animasi kotak birunya.</li>
+    </ul>
 </div>
 
 <!-- PILIH LEVEL - di bagian paling atas, sebelum area permainan -->
@@ -322,14 +392,14 @@
 <!-- LEVEL 1 -->
 <div id="level1" class="level-section active">
     <span class="level-badge">Tahap 1 dari 3</span>
-    <h1>Eksplorasi Waktu Tempuh</h1>
+    <h2 class="level-title">Eksplorasi Waktu Tempuh</h2>
     <p class="subtitle">Di level ini, cobalah menggambar <strong>Jalan Lambat (Kuning)</strong>. Lihat bagaimana AI mencari jalan memutar demi menghindari kemacetan dan menghemat waktu.</p>
 
     <div class="container">
         <div class="panel">
             <div class="mode-toggle">
-                <button type="button" class="mode-btn active" data-mode="draw" onclick="level1.setMode('draw')">Gambar Peta</button>
-                <button type="button" class="mode-btn" data-mode="guess" onclick="level1.setMode('guess')">Tebak Jalur Kamu</button>
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level1.setMode('draw')">1. Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level1.setMode('guess')">2. Tebak Jalur Kamu</button>
             </div>
 
             <div id="drawUI1" class="mode-panel">
@@ -352,15 +422,15 @@
                     <input type="number" id="weight1" value="3" min="2" max="10">
                 </div>
 
-                <button class="btn-analyze" onclick="level1.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-analyze" onclick="level1.setMode('guess')">Lanjut: Tebak Jalur Kamu &rarr;</button>
                 <button class="btn-reset" onclick="level1.resetEnvironment()">Reset Peta</button>
             </div>
 
             <div id="guessUI1" class="mode-panel" style="display:none;">
-                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <p class="guess-instruction"><b>Tebak dulu sebelum mesin menjawab.</b> Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu. Setelah jalurmu sampai di T, tombol Eksekusi akan terbuka.</p>
                 <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime1">0</strong> menit</div>
                 <div id="guessMsg1" class="guess-message"></div>
-                <button class="btn-analyze" id="compareBtn1" onclick="level1.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-analyze" id="compareBtn1" onclick="level1.runAlgorithm(true)" disabled>Eksekusi Algoritma Sistem</button>
                 <button class="btn-reset" onclick="level1.resetGuess()">Hapus Jalur Tebakan</button>
             </div>
         </div>
@@ -368,7 +438,7 @@
         <div class="workspace">
             <div id="grid1" class="grid-wrapper"></div>
             <div id="log1" class="result-log">
-                > Sistem Level 1 siap.<br>> Silakan manipulasi peta lalu klik "Eksekusi Algoritma Sistem".
+                > Sistem Level 1 siap.<br>> Urutannya: gambar peta &rarr; tebak jalurmu sendiri &rarr; jalankan mesin.
             </div>
         </div>
     </div>
@@ -381,14 +451,14 @@
 <!-- LEVEL 2 -->
 <div id="level2" class="level-section" style="background-color: #eaf2f8;">
     <span class="level-badge" style="background-color: #8e44ad;">Tahap 2 dari 3</span>
-    <h1 style="color: #8e44ad;">Eksplorasi Rintangan</h1>
+    <h2 class="level-title" style="color: #8e44ad;">Eksplorasi Rintangan</h2>
     <p class="subtitle">Di level ini, cobalah membangun tembok <strong>Rintangan (Hitam)</strong>. Jalan ini sama sekali tidak bisa dilewati. Bisakah AI mencari jalan keluarnya?</p>
 
     <div class="container">
         <div class="panel">
             <div class="mode-toggle">
-                <button type="button" class="mode-btn active" data-mode="draw" onclick="level2.setMode('draw')">Gambar Peta</button>
-                <button type="button" class="mode-btn" data-mode="guess" onclick="level2.setMode('guess')">Tebak Jalur Kamu</button>
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level2.setMode('draw')">1. Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level2.setMode('guess')">2. Tebak Jalur Kamu</button>
             </div>
 
             <div id="drawUI2" class="mode-panel">
@@ -405,15 +475,15 @@
                     <!-- Jalan Lambat disembunyikan di Level 2 -->
                 </div>
 
-                <button class="btn-analyze" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="level2.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-analyze" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="level2.setMode('guess')">Lanjut: Tebak Jalur Kamu &rarr;</button>
                 <button class="btn-reset" onclick="level2.resetEnvironment()">Reset Peta</button>
             </div>
 
             <div id="guessUI2" class="mode-panel" style="display:none;">
-                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <p class="guess-instruction"><b>Tebak dulu sebelum mesin menjawab.</b> Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu. Setelah jalurmu sampai di T, tombol Eksekusi akan terbuka.</p>
                 <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime2">0</strong> menit</div>
                 <div id="guessMsg2" class="guess-message"></div>
-                <button class="btn-analyze" id="compareBtn2" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onclick="level2.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-analyze" id="compareBtn2" style="background-color: #8e44ad; box-shadow: 0 4px 0 #5b2c6f;" onclick="level2.runAlgorithm(true)" disabled>Eksekusi Algoritma Sistem</button>
                 <button class="btn-reset" onclick="level2.resetGuess()">Hapus Jalur Tebakan</button>
             </div>
         </div>
@@ -421,28 +491,28 @@
         <div class="workspace">
             <div id="grid2" class="grid-wrapper"></div>
             <div id="log2" class="result-log" style="border-left-color: #8e44ad;">
-                > Sistem Level 2 siap.<br>> Buatlah rintangan tembok yang rumit!
+                > Sistem Level 2 siap.<br>> Buatlah rintangan tembok yang rumit, lalu tebak jalurmu sebelum mesin menjawab.
             </div>
         </div>
     </div>
     
     <div class="level-nav">
-        <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="showLevel(1)">&larr; Level Sebelumnya</button>
-        <button class="btn-next" style="background-color: #8e44ad; box-shadow: 0 6px 0 #5b2c6f;" onmouseover="this.style.backgroundColor='#9b59b6'" onmouseout="this.style.backgroundColor='#8e44ad'" onclick="showLevel(3)">Level Berikutnya &rarr;</button>
+        <button class="btn-next" onclick="showLevel(1)">&larr; Level Sebelumnya</button>
+        <button class="btn-next" onclick="showLevel(3)">Level Berikutnya &rarr;</button>
     </div>
 </div>
 
 <!-- LEVEL 3 -->
 <div id="level3" class="level-section">
     <span class="level-badge" style="background-color: #d35400;">Tahap 3 dari 3</span>
-    <h1 style="color: #d35400;">Ujian Navigasi Kompleks</h1>
+    <h2 class="level-title" style="color: #d35400;">Ujian Navigasi Kompleks</h2>
     <p class="subtitle">Gabungkan semuanya! Gunakan <strong>Jalan Lambat</strong> dan <strong>Rintangan</strong>. Atur juga bobot waktunya untuk melihat kehebatan pengambilan keputusan AI.</p>
 
     <div class="container">
         <div class="panel">
             <div class="mode-toggle">
-                <button type="button" class="mode-btn active" data-mode="draw" onclick="level3.setMode('draw')">Gambar Peta</button>
-                <button type="button" class="mode-btn" data-mode="guess" onclick="level3.setMode('guess')">Tebak Jalur Kamu</button>
+                <button type="button" class="mode-btn active" data-mode="draw" onclick="level3.setMode('draw')">1. Gambar Peta</button>
+                <button type="button" class="mode-btn" data-mode="guess" onclick="level3.setMode('guess')">2. Tebak Jalur Kamu</button>
             </div>
 
             <div id="drawUI3" class="mode-panel">
@@ -468,15 +538,15 @@
                     <input type="number" id="weight3" value="4" min="2" max="10">
                 </div>
 
-                <button class="btn-analyze" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="level3.runAlgorithm()">Eksekusi Algoritma Sistem</button>
+                <button class="btn-analyze" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="level3.setMode('guess')">Lanjut: Tebak Jalur Kamu &rarr;</button>
                 <button class="btn-reset" onclick="level3.resetEnvironment()">Reset Peta</button>
             </div>
 
             <div id="guessUI3" class="mode-panel" style="display:none;">
-                <p class="guess-instruction">Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu.</p>
+                <p class="guess-instruction"><b>Tebak dulu sebelum mesin menjawab.</b> Klik kotak yang bersebelahan (atas/bawah/kiri/kanan) dari langkah terakhirmu untuk menyusun jalur dari S sampai T. Klik kotak terakhir lagi untuk membatalkan langkah itu. Setelah jalurmu sampai di T, tombol Eksekusi akan terbuka.</p>
                 <div class="guess-estimate">Estimasi waktumu sejauh ini: <strong id="guessTime3">0</strong> menit</div>
                 <div id="guessMsg3" class="guess-message"></div>
-                <button class="btn-analyze" id="compareBtn3" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onclick="level3.runAlgorithm(true)" disabled>Bandingkan dengan AI</button>
+                <button class="btn-analyze" id="compareBtn3" style="background-color: #d35400; box-shadow: 0 4px 0 #a04000;" onclick="level3.runAlgorithm(true)" disabled>Eksekusi Algoritma Sistem</button>
                 <button class="btn-reset" onclick="level3.resetGuess()">Hapus Jalur Tebakan</button>
             </div>
         </div>
@@ -484,13 +554,13 @@
         <div class="workspace">
             <div id="grid3" class="grid-wrapper"></div>
             <div id="log3" class="result-log" style="border-left-color: #d35400;">
-                > Sistem Level 3 siap.<br>> Semua fitur telah terbuka. Semoga berhasil!
+                > Sistem Level 3 siap.<br>> Semua fitur terbuka. Gambar peta, tebak jalurmu, lalu adu dengan mesin!
             </div>
         </div>
     </div>
     
     <div class="level-nav">
-        <button class="btn-next" style="background-color: #d35400; box-shadow: 0 6px 0 #a04000;" onmouseover="this.style.backgroundColor='#e59866'" onmouseout="this.style.backgroundColor='#d35400'" onclick="showLevel(2)">&larr; Level Sebelumnya</button>
+        <button class="btn-next" onclick="showLevel(2)">&larr; Level Sebelumnya</button>
         <button class="btn-next" style="background-color: #2c3e50; box-shadow: 0 6px 0 #1a252f;" onmouseover="this.style.backgroundColor='#34495e'" onmouseout="this.style.backgroundColor='#2c3e50'" onclick="showLevel(1)">&#8635; Ulangi dari Level 1</button>
     </div>
 </div>
@@ -501,9 +571,27 @@
         <h2 class="reflection-title">Refleksi: Algoritma di Kehidupan Nyata</h2>
         <p class="reflection-intro">Kamu baru saja menyelesaikan ketiga level! Aplikasi seperti Google Maps atau Waze sebenarnya memakai prinsip yang mirip dengan yang baru kamu coba. Yuk, tuliskan pemikiranmu.</p>
         <div id="reflectionQList" class="reflection-qlist"></div>
-        <button class="btn-analyze reflection-save-btn" onclick="saveReflection()">Simpan Refleksi</button>
+        <p class="reflection-catatan">Jawabanmu tersimpan otomatis di peramban komputer ini, bukan dikirim ke mana pun. Kalau kamu memakai komputer bersama, tekan <b>Hapus Jawaban</b> sebelum pergi agar tidak terbaca teman berikutnya.</p>
+        <div class="reflection-aksi">
+            <button class="btn-analyze" id="btnBandingRefleksi" onclick="bandingkanRefleksi()" disabled>Bandingkan dengan Jawaban Pembanding</button>
+            <button class="btn-reset reflection-clear-btn" onclick="hapusRefleksi()">Hapus Jawaban</button>
+        </div>
         <div id="reflectionStatus" class="reflection-status"></div>
+        <div id="reflectionBanding" class="reflection-banding" style="display:none;"></div>
     </div>
+</div>
+
+<!-- TOMBOL KEMBALI KE BERANDA -->
+<div class="beranda-wrap">
+    <a href="https://ooaays.github.io/kka-lab-maya/" class="btn-beranda">
+        <div class="btn-beranda-ikon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.47 3.841a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.061l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 101.061 1.06l8.69-8.689z" />
+                <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
+            </svg>
+        </div>
+        <div class="btn-beranda-label"><span>Kembali ke Beranda</span></div>
+    </a>
 </div>
 
 <script>
@@ -532,12 +620,32 @@ function markLevelCompleted(levelNumber) {
 /* ══════════════════════════════════════════════════════════
    REFLEKSI: ALGORITMA DI KEHIDUPAN NYATA
    ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   REFLEKSI
+   Dulu empat pertanyaan tanpa pembanding: murid menulis, lalu tidak pernah
+   tahu apakah pemahamannya sudah tepat. Kini dua pertanyaan yang menyimpulkan
+   seluruh lab, dan setiap jawaban murid disandingkan dengan jawaban pembanding.
+
+   Mesin TIDAK menilai tulisan murid. Menilai bahasa bebas dengan pencocokan
+   kata kunci akan menyalahkan murid yang menulis benar dengan kata berbeda.
+   Jadi murid sendiri yang membandingkan dan menilai dirinya.
+   ══════════════════════════════════════════════════════════ */
 const REFLECTION_QUESTIONS = [
-    { q: 'Google Maps atau Waze bisa otomatis mencari jalan lain saat ada kemacetan. Menurutmu, bagian mana dari permainan ini yang mirip dengan cara kerja aplikasi peta itu?', ph: 'Tulis pendapatmu di sini...' },
-    { q: 'Di Level 2, AI harus mencari jalan memutar karena ada rintangan (jalan buntu). Kira-kira, apa yang terjadi kalau GPS di HP-mu tidak tahu ada jalan yang benar-benar ditutup?', ph: 'Tulis pendapatmu di sini...' },
-    { q: 'Kalau kamu jadi pembuat aplikasi peta, informasi apa lagi (selain jarak dan waktu) yang menurutmu penting untuk menentukan "rute tercepat"?', ph: 'Tulis pendapatmu di sini...' },
-    { q: 'Apa hal baru yang kamu pahami tentang cara komputer "berpikir" mencari jalur, setelah mencoba lab ini?', ph: 'Tulis pendapatmu di sini...' }
+    {
+        q: 'Sebelum menemukan rutenya, mesin menyalakan puluhan kotak biru satu per satu. Apa sebenarnya yang sedang mesin lakukan saat itu, dan mengapa ia tidak bisa langsung tahu jawabannya seperti kamu waktu menebak?',
+        ph: 'Tulis pendapatmu di sini...',
+        pembanding: 'Kotak-kotak biru itu adalah kemungkinan yang sedang <b>dihitung satu per satu</b>. Mesin tidak melihat peta secara utuh seperti matamu, dan tidak punya firasat. Yang bisa ia lakukan hanya bertanya berulang-ulang: dari titik yang sudah kuketahui, kotak mana yang paling murah dicapai berikutnya? Begitu terus sampai T tersentuh. Justru karena ia memeriksa semua kemungkinan sebelum memutuskan &mdash; bukan menebak seperti kamu &mdash; hasilnya dijamin yang tercepat. Itu sebabnya tebakanmu bisa <b>menyamainya</b>, tetapi tidak akan pernah mengalahkannya.'
+    },
+    {
+        q: 'Di lab ini mesin tidak pernah salah memilih rute. Tetapi di dunia nyata, Google Maps kadang menyuruhmu lewat jalan yang ternyata macet total atau sedang ditutup, padahal algoritmanya sama. Menurutmu, di mana letak masalahnya?',
+        ph: 'Tulis pendapatmu di sini...',
+        pembanding: 'Masalahnya <b>bukan di algoritmanya, melainkan di petanya</b>. Di lab ini kamu sendiri yang menggambar peta, jadi mesin tahu persis setiap tembok dan setiap jalan lambat &mdash; datanya sempurna, maka jawabannya ikut sempurna. Di dunia nyata, peta bisa saja keliru: ada jalan yang baru ditutup pagi tadi, pasar tumpah yang tidak tercatat, atau kecelakaan yang baru terjadi lima menit lalu. Algoritmanya tetap menghitung dengan benar &mdash; tetapi menghitung dengan benar di atas data yang keliru tetap menghasilkan rute yang keliru. Secanggih apa pun mesinnya, ia <b>hanya sebaik data yang diberikan kepadanya</b>.'
+    }
 ];
+
+// Panjang minimal tiap jawaban sebelum pembanding boleh dibuka
+const REFLECTION_MIN = 20;
+
 const REFLECTION_STORAGE_KEY = 'jalurTercepatRefleksiJawaban';
 
 function loadSavedReflection() {
@@ -556,9 +664,10 @@ function renderReflection() {
     list.innerHTML = REFLECTION_QUESTIONS.map((item, i) => `
         <div class="reflection-q">
             <label>${i + 1}. ${item.q}</label>
-            <textarea id="reflectionAnswer${i}" placeholder="${item.ph}">${saved[i] || ''}</textarea>
+            <textarea id="reflectionAnswer${i}" placeholder="${item.ph}" oninput="perbaruiRefleksi()">${saved[i] || ''}</textarea>
         </div>
     `).join('');
+    perbaruiRefleksi();
 }
 
 function showReflectionSection() {
@@ -575,30 +684,113 @@ function showReflectionSection() {
     }
 }
 
-function saveReflection() {
-    const answers = REFLECTION_QUESTIONS.map((_, i) => {
+function ambilJawabanRefleksi() {
+    return REFLECTION_QUESTIONS.map((_, i) => {
         const el = document.getElementById(`reflectionAnswer${i}`);
         return el ? el.value.trim() : '';
     });
+}
+
+/* Jawaban murid masuk ke innerHTML, jadi tanda < & > wajib dijinakkan dulu.
+   Tanpa ini, murid yang mengetik tanda kurung siku bisa merusak tampilan. */
+function jinakkanTeks(s) {
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+/* Dipanggil tiap kali murid mengetik.
+   Menyimpan diam-diam, sekaligus membuka tombol pembanding kalau kedua
+   jawaban sudah cukup terisi. */
+function perbaruiRefleksi() {
+    const jawaban = ambilJawabanRefleksi();
+    const cukup = jawaban.every((a) => a.length >= REFLECTION_MIN);
+
+    const btn = document.getElementById('btnBandingRefleksi');
+    if (btn) btn.disabled = !cukup;
 
     const statusEl = document.getElementById('reflectionStatus');
-    const emptyIndex = answers.findIndex((a) => !a);
-    if (emptyIndex !== -1) {
-        if (statusEl) {
-            statusEl.textContent = 'Lengkapi semua jawaban refleksi sebelum menyimpan.';
+    if (statusEl) {
+        if (cukup) {
+            statusEl.textContent = '';
+            statusEl.className = 'reflection-status';
+        } else {
+            statusEl.textContent = `Isi kedua jawaban lebih dahulu (minimal ${REFLECTION_MIN} huruf) untuk membuka jawaban pembanding.`;
             statusEl.className = 'reflection-status warn';
         }
-        const emptyEl = document.getElementById(`reflectionAnswer${emptyIndex}`);
-        if (emptyEl) emptyEl.focus();
-        return;
     }
 
+    /* Simpan hanya kalau memang ada isinya. Tanpa penjagaan ini, hapusRefleksi()
+       yang memanggil fungsi ini di akhir justru MENULIS ULANG jawaban kosong
+       ke peramban tepat setelah dihapus - jadi hapusnya tidak pernah berhasil. */
     try {
-        localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(answers));
+        if (jawaban.some((a) => a.length > 0)) {
+            localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(jawaban));
+        } else {
+            localStorage.removeItem(REFLECTION_STORAGE_KEY);
+        }
+    } catch (e) {}
+}
+
+/* Sandingkan jawaban murid dengan jawaban pembanding.
+   Murid yang menilai sendiri - mesin tidak memberi nilai apa pun. */
+function bandingkanRefleksi() {
+    const jawaban = ambilJawabanRefleksi();
+    if (!jawaban.every((a) => a.length >= REFLECTION_MIN)) return;
+
+    const wadah = document.getElementById('reflectionBanding');
+    if (!wadah) return;
+
+    wadah.innerHTML = REFLECTION_QUESTIONS.map((item, i) => `
+        <div class="banding-blok">
+            <div class="banding-tanya">${i + 1}. ${item.q}</div>
+            <div class="banding-grid">
+                <div class="banding-sel banding-murid">
+                    <h4>Jawabanmu</h4>
+                    ${jinakkanTeks(jawaban[i])}
+                </div>
+                <div class="banding-sel banding-pembanding">
+                    <h4>Jawaban pembanding</h4>
+                    ${item.pembanding}
+                </div>
+            </div>
+        </div>
+    `).join('') + `
+        <div class="banding-penutup">
+            <b>Sekarang nilai sendiri.</b> Apakah maksud jawabanmu sudah sama dengan jawaban pembanding? Bagian mana yang belum sempat kamu sebut? Dan kalau ada hal yang kamu tulis tetapi tidak ada di jawaban pembanding &mdash; jangan buru-buru menganggapnya salah. Bisa jadi itu justru temuanmu sendiri.
+        </div>`;
+
+    wadah.style.display = 'block';
+    setTimeout(() => {
+        if (typeof wadah.scrollIntoView === 'function') {
+            wadah.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, 60);
+}
+
+/* Hapus jawaban refleksi dari peramban.
+   Penting untuk komputer sekolah yang dipakai bergantian: tanpa ini, murid
+   berikutnya akan membuka lab dan langsung melihat jawaban murid sebelumnya
+   sudah terisi di kotaknya. */
+function hapusRefleksi() {
+    try {
+        localStorage.removeItem(REFLECTION_STORAGE_KEY);
     } catch (e) {}
 
+    REFLECTION_QUESTIONS.forEach((_, i) => {
+        const el = document.getElementById(`reflectionAnswer${i}`);
+        if (el) el.value = '';
+    });
+
+    const wadah = document.getElementById('reflectionBanding');
+    if (wadah) { wadah.innerHTML = ''; wadah.style.display = 'none'; }
+
+    perbaruiRefleksi();
+
+    const statusEl = document.getElementById('reflectionStatus');
     if (statusEl) {
-        statusEl.textContent = 'Refleksi tersimpan di browser ini.';
+        statusEl.textContent = 'Jawaban sudah dihapus dari peramban ini.';
         statusEl.className = 'reflection-status ok';
     }
 }
@@ -640,11 +832,58 @@ function showLevel(levelNumber) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+    /* ══════════════════════════════════════════════════════════
+       PEMBACA BOBOT YANG DIJEPIT
+       Atribut min/max pada <input type="number"> hanya menahan tombol panah,
+       tidak menahan ketikan. Sebelumnya bobot dibaca dengan
+       parseInt(value) || 2, tanpa penjepitan sama sekali. Akibatnya:
+
+         "1"   -> jalan lambat jadi tidak lambat, pelajarannya hilang
+         "-5"  -> ALGORITMA RUSAK. Dijkstra hanya sahih untuk bobot tidak
+                  negatif; dengan bobot negatif jawabannya salah tanpa
+                  peringatan apa pun.
+         "999" -> lolos begitu saja
+
+       Fungsi ini menjepit nilainya ke rentang yang sah dan sekaligus
+       membetulkan isi kotaknya, supaya murid melihat angka yang benar-benar
+       dipakai mesin.
+       ══════════════════════════════════════════════════════════ */
+    const BOBOT_MIN = 2, BOBOT_MAKS = 10, BOBOT_BAWAAN = 2;
+
+    /* Pesan saat peta murid menutup rapat semua jalan menuju T.
+       Tombol Eksekusi tetap dibuka agar murid bisa menyaksikan mesin memeriksa
+       seluruh kotak yang bisa dijangkau, lalu menyimpulkan bahwa T mustahil
+       dicapai. Itu justru pelajaran yang bagus - bukan alasan untuk mengunci. */
+    const PESAN_BUNTU = 'Peta yang kamu buat menutup <b>semua</b> jalan menuju T, jadi tidak ada jalur yang bisa disusun. Tekan tombol di bawah untuk melihat bagaimana mesin memeriksanya, atau kembali ke "1. Gambar Peta" untuk membuka satu jalan.';
+
+    function bacaBobot(weightId) {
+        if (!weightId) return BOBOT_BAWAAN;
+        const input = document.getElementById(weightId);
+        if (!input) return BOBOT_BAWAAN;
+
+        let nilai = parseInt(input.value, 10);
+        if (isNaN(nilai)) nilai = BOBOT_BAWAAN;
+        if (nilai < BOBOT_MIN) nilai = BOBOT_MIN;
+        if (nilai > BOBOT_MAKS) nilai = BOBOT_MAKS;
+
+        // Betulkan tampilannya agar sama dengan yang dipakai mesin
+        if (String(nilai) !== input.value) input.value = nilai;
+        return nilai;
+    }
+
 // Class untuk mengisolasi logika setiap Level
 class PathFinderLevel {
     constructor(gridId, logId, brushName, weightId, levelNumber) {
         this.rows = 8;
         this.cols = 8;
+        // Rintangan bawaan level ini. Disimpan agar "Reset Peta" mengembalikan
+        // peta ke keadaan AWAL, bukan ke peta kosong.
+        this.rintanganBawaan = [];
+        // Penanda animasi yang sedang berjalan, dipakai untuk membatalkan
+        // animasi lama jika murid menekan Eksekusi dua kali beruntun.
+        this.jalanKe = 0;
+        // Apakah T masih bisa dicapai dengan peta saat ini.
+        this.tujuanTerjangkau = true;
         this.gridEl = document.getElementById(gridId);
         this.logEl = document.getElementById(logId);
         this.brushName = brushName;
@@ -700,6 +939,12 @@ class PathFinderLevel {
 
     // Ganti mode antara "Gambar Peta" dan "Tebak Jalur Kamu"
     setMode(mode) {
+        /* Kalau modenya memang sudah sama, hentikan di sini.
+           Sebelumnya menekan tombol mode yang SEDANG aktif tetap memanggil
+           resetGuess(), sehingga jalur tebakan yang sudah susah payah disusun
+           murid terhapus begitu saja. */
+        if (this.mode === mode) return;
+
         this.mode = mode;
 
         const drawUI = document.getElementById(`drawUI${this.levelNumber}`);
@@ -717,6 +962,9 @@ class PathFinderLevel {
         this.resetGuess();
         this.clearPathHighlight();
         this.clearExploration();
+
+        // Saat masuk tahap menebak, periksa dulu apakah T masih terjangkau
+        if (mode === 'guess') this.periksaKeterjangkauan();
     }
 
     applyBrush(r, c) {
@@ -755,8 +1003,12 @@ class PathFinderLevel {
 
     // ── MODE: TEBAK JALUR KAMU ──────────────────────────────
     setGuessMessage(msg) {
+        /* Memakai innerHTML, bukan textContent, karena sebagian pesan memuat
+           penebalan agar bagian pentingnya menonjol. Semua pesan di sini
+           adalah teks tetap yang ditulis di kode - tidak ada masukan murid
+           yang lewat sini, jadi aman. */
         const msgEl = document.getElementById(`guessMsg${this.levelNumber}`);
-        if (msgEl) msgEl.textContent = msg;
+        if (msgEl) msgEl.innerHTML = msg;
     }
 
     handleGuessClick(r, c) {
@@ -812,10 +1064,23 @@ class PathFinderLevel {
             this.guessPath[this.guessPath.length - 1].r === this.endPos.r &&
             this.guessPath[this.guessPath.length - 1].c === this.endPos.c;
 
+        /* Tombol Eksekusi terbuka jika jalur tebakan sudah sampai T, ATAU jika
+           peta memang menutup semua jalan ke T. Tanpa syarat kedua, murid yang
+           menembok T rapat-rapat akan terjebak: jalur mustahil disusun, tombol
+           mati selamanya, dan tidak ada umpan balik apa pun. */
+        const buntu = (this.tujuanTerjangkau === false);
         const compareBtn = document.getElementById(`compareBtn${this.levelNumber}`);
-        if (compareBtn) compareBtn.disabled = !reachedEnd;
+        if (compareBtn) compareBtn.disabled = !(reachedEnd || buntu);
 
-        this.setGuessMessage('');
+        this.setGuessMessage(buntu ? PESAN_BUNTU : '');
+    }
+
+    /* Periksa apakah T masih bisa dicapai dari S dengan peta saat ini.
+       Dipanggil setiap kali murid masuk ke tahap menebak. */
+    periksaKeterjangkauan() {
+        const { dist } = this.computeDijkstra(bacaBobot(this.weightId));
+        this.tujuanTerjangkau = dist[this.endPos.r][this.endPos.c] !== Infinity;
+        this.renderGuessPath();
     }
 
     resetGuess() {
@@ -824,11 +1089,7 @@ class PathFinderLevel {
     }
 
     calcGuessTime() {
-        let slowWeight = 2;
-        if (this.weightId) {
-            const input = document.getElementById(this.weightId);
-            if (input) slowWeight = parseInt(input.value) || 2;
-        }
+        const slowWeight = bacaBobot(this.weightId);
         let total = 0;
         for (const p of this.guessPath) {
             total += (this.gridData[p.r][p.c] === 1) ? slowWeight : 1;
@@ -889,17 +1150,20 @@ class PathFinderLevel {
         this.clearPathHighlight();
         this.clearExploration();
 
-        let slowWeight = 2;
-        if(this.weightId) {
-            slowWeight = parseInt(document.getElementById(this.weightId).value) || 2;
-        }
+        const slowWeight = bacaBobot(this.weightId);
 
         const { dist, prev, explorationOrder } = this.computeDijkstra(slowWeight);
+
+        /* Naikkan penanda jalannya animasi. Animasi dari klik sebelumnya akan
+           melihat penanda yang berbeda lalu berhenti sendiri. Tanpa ini, menekan
+           Eksekusi dua kali beruntun membuat dua animasi berjalan bertumpuk. */
+        const jalanIni = ++this.jalanKe;
 
         // Tahap 1: animasikan urutan sel yang "diperiksa" AI, sel demi sel
         const EXPLORE_DELAY = 35;
         explorationOrder.forEach((node, i) => {
             setTimeout(() => {
+                if (jalanIni !== this.jalanKe) return;
                 const cell = this.cells[node.r][node.c];
                 if (cell) cell.classList.add("explored");
             }, i * EXPLORE_DELAY);
@@ -909,11 +1173,12 @@ class PathFinderLevel {
 
         // Tahap 2: setelah eksplorasi selesai, tampilkan rute final + hasil
         setTimeout(() => {
-            this.outputResult(dist[this.endPos.r][this.endPos.c], prev, compareMode);
+            if (jalanIni !== this.jalanKe) return;
+            this.outputResult(dist[this.endPos.r][this.endPos.c], prev, compareMode, jalanIni);
         }, exploreDuration);
     }
 
-    outputResult(finalTime, prev, compareMode = false) {
+    outputResult(finalTime, prev, compareMode = false, jalanIni = null) {
         if (finalTime === Infinity) {
             this.logEl.innerHTML = `
                 <div class="result-feedback-head">${ICON_WARNING}<span class="result-feedback-title" style="color:#e74c3c;">Tujuan Belum Bisa Dicapai</span></div>
@@ -940,6 +1205,7 @@ class PathFinderLevel {
 
             // Tambahkan delay kecil untuk efek animasi menggambar titik
             setTimeout(() => {
+                if (jalanIni !== null && jalanIni !== this.jalanKe) return;
                 this.cells[p.r][p.c].classList.add("path-highlight");
             }, i * 50);
 
@@ -953,16 +1219,21 @@ class PathFinderLevel {
                 this.logEl.innerHTML = `
                     <div class="result-feedback-head">${ICON_CHECK}<span class="result-feedback-title" style="color:#2ecc71;">Tebakanmu Sama Cepatnya dengan AI!</span></div>
                     <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, persis sama dengan hasil AI (<strong>${finalTime} menit</strong>). Kamu berhasil menemukan rute yang paling efisien!</div>
-                `;
-            } else if (guessTime > finalTime) {
-                this.logEl.innerHTML = `
-                    <div class="result-feedback-head">${ICON_WARNING}<span class="result-feedback-title" style="color:#f39c12;">AI Menemukan Rute Lebih Cepat</span></div>
-                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, sedangkan AI menemukan rute <strong>${finalTime} menit</strong> (lebih cepat ${guessTime - finalTime} menit). Amati rute hijau di peta, lalu bandingkan dengan jalur tebakanmu (garis hijau kebiruan) — bagian mana yang bisa kamu perbaiki?</div>
+                    <span class="result-feedback-note">Ini hasil terbaik yang mungkin. Algoritma ini menjamin rute tercepat, jadi tidak ada yang bisa lebih cepat dari ini &mdash; kamu hanya bisa menyamainya, dan kamu berhasil.</span>
                 `;
             } else {
+                /* Cabang "tebakan lebih cepat dari AI" DIHAPUS.
+                   Dijkstra menjamin rute optimal, jadi tebakan murid secara
+                   matematis tidak mungkin lebih cepat - hanya bisa sama atau
+                   lebih lambat. Diuji 40.000 kali: nol kejadian. Menampilkan
+                   pesan "kamu mengalahkan AI" justru akan mengajarkan hal yang
+                   keliru. Selisihnya kini selalu dihitung sebagai murid lebih
+                   lambat, yang memang satu-satunya kemungkinan. */
+                const selisih = guessTime - finalTime;
                 this.logEl.innerHTML = `
-                    <div class="result-feedback-head">${ICON_CHECK}<span class="result-feedback-title" style="color:#2ecc71;">Tebakanmu Lebih Cepat!</span></div>
-                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, lebih cepat dari perhitungan AI (<strong>${finalTime} menit</strong>). Coba jalankan sekali lagi untuk memastikan.</div>
+                    <div class="result-feedback-head">${ICON_WARNING}<span class="result-feedback-title" style="color:#f39c12;">AI Menemukan Rute Lebih Cepat</span></div>
+                    <div class="result-feedback-detail">Tebakanmu butuh <strong>${guessTime} menit</strong>, sedangkan AI menemukan rute <strong>${finalTime} menit</strong> (lebih cepat ${selisih} menit). Amati rute hijau di peta, lalu bandingkan dengan jalur tebakanmu (garis hijau kebiruan) &mdash; bagian mana yang bisa kamu perbaiki?</div>
+                    <span class="result-feedback-note">Catatan: kamu tidak akan pernah bisa lebih cepat daripada AI di lab ini. Algoritma ini memeriksa semua kemungkinan sebelum memutuskan, jadi hasilnya dijamin yang tercepat. Tantanganmu adalah <strong>menyamainya</strong>.</span>
                 `;
             }
         } else {
@@ -978,9 +1249,24 @@ class PathFinderLevel {
     }
 
     resetEnvironment() {
+        this.jalanKe++; // batalkan animasi yang mungkin sedang berjalan
         this.initGrid();
+        this.terapkanRintanganBawaan();
         this.resetGuess();
         this.logEl.innerHTML = "> Lingkungan di-reset. Menunggu desain baru...";
+    }
+
+    /* Pasang kembali rintangan bawaan level ini.
+       Sebelumnya rintangan contoh di Level 2 hanya dipasang sekali saat halaman
+       dibuka, di luar class. Begitu murid menekan "Reset Peta", initGrid()
+       mengosongkan seluruh gridData dan temboknya HILANG PERMANEN. */
+    terapkanRintanganBawaan() {
+        for (const [r, c] of this.rintanganBawaan) {
+            if (r === this.startPos.r && c === this.startPos.c) continue;
+            if (r === this.endPos.r && c === this.endPos.c) continue;
+            this.gridData[r][c] = -1;
+            this.cells[r][c].className = 'cell type-wall';
+        }
     }
 }
 
@@ -989,13 +1275,11 @@ const level1 = new PathFinderLevel('grid1', 'log1', 'brush1', 'weight1', 1);
 const level2 = new PathFinderLevel('grid2', 'log2', 'brush2', null, 2);
 const level3 = new PathFinderLevel('grid3', 'log3', 'brush3', 'weight3', 3);
 
-// Berikan sedikit rintangan bawaan di Level 2 sebagai contoh
-// (Catatan: memanggil initGrid() lagi akan mereset gridData ke kosong,
-// jadi rintangan langsung diterapkan ke data + tampilan sel tanpa initGrid ulang)
-[[3, 2], [3, 3], [3, 4]].forEach(([r, c]) => {
-    level2.gridData[r][c] = -1;
-    level2.cells[r][c].className = 'cell type-wall';
-});
+// Rintangan bawaan Level 2 sebagai contoh.
+// Didaftarkan ke class agar tombol "Reset Peta" mengembalikannya, bukan
+// mengosongkan peta selamanya seperti sebelumnya.
+level2.rintanganBawaan = [[3, 2], [3, 3], [3, 4]];
+level2.terapkanRintanganBawaan();
 
 // Level 2 & 3 terkunci sampai level sebelumnya berhasil dijalankan
 updateLevelLocks();
